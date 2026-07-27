@@ -1,0 +1,4 @@
+{"type":"stream_event","event":{"type":"content_block_delta","delta":{"type":"text_delta","text":"I'll search"}}}
+{"type":"assistant","message":{"content":[{"type":"text","text":"I'll search for Python files."},{"type":"tool_use","id":"toolu_glob_02","name":"Glob","input":{"pattern":"**/*.py"}}]}}
+{"type":"assistant","message":{"content":[{"type":"tool_result","tool_use_id":"toolu_glob_02","content":"main.py\nutils.py","is_error":false}]}}
+{"type":"result","subtype":"success","duration_ms":2100,"is_error":false,"result":"Found 2 Python files."}

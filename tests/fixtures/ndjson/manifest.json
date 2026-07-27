@@ -1,0 +1,62 @@
+{
+  "files": {
+    "assistant_text.ndjson": {
+      "description": "Simple assistant text reply",
+      "expect": [
+        {"type": "assistant_text", "text": "Hello from CoCo"}
+      ]
+    },
+    "assistant_tool_glob.ndjson": {
+      "description": "Assistant invokes Glob",
+      "expect": [
+        {"type": "tool_use", "name": "Glob"}
+      ]
+    },
+    "assistant_tool_result.ndjson": {
+      "description": "Tool result block on assistant message",
+      "expect": [
+        {"type": "tool_result", "is_error": false}
+      ]
+    },
+    "user_tool_result.ndjson": {
+      "description": "Tool result on user message (SDK path)",
+      "expect": [
+        {"type": "tool_result", "is_error": false}
+      ]
+    },
+    "result_success.ndjson": {
+      "description": "Successful turn completion",
+      "expect": [
+        {"type": "result", "subtype": "success", "is_error": false}
+      ]
+    },
+    "result_structured.ndjson": {
+      "description": "Structured output on result message",
+      "expect": [
+        {"type": "result", "structured_output": {"features": [{"name": "foo"}]}}
+      ]
+    },
+    "stream_delta.ndjson": {
+      "description": "Streaming text delta",
+      "expect": [
+        {"type": "stream_event", "delta": "Hello"}
+      ]
+    },
+    "system_init.ndjson": {
+      "description": "Session init system message",
+      "expect": [
+        {"type": "system", "subtype": "init"}
+      ]
+    },
+    "turn_glob.ndjson": {
+      "description": "Multi-line turn: stream + tool use + result + completion",
+      "expect": [
+        {"type": "stream_event"},
+        {"type": "assistant_text"},
+        {"type": "tool_use", "name": "Glob"},
+        {"type": "tool_result"},
+        {"type": "result", "subtype": "success"}
+      ]
+    }
+  }
+}

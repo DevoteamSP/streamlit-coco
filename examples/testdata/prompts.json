@@ -1,0 +1,422 @@
+{
+  "version": 2,
+  "description": "Manual / exploratory prompts for streamlit-coco tool display cards and HITL interactions (see docs/features/tools-display/SPEC.md).",
+  "prompts": [
+    {
+      "id": "display-glob-basic",
+      "category": "display_glob",
+      "title": "Glob — bordered card + path list",
+      "prompt": "Use Glob only with pattern `streamlit_coco/*.py`. List every match. Do not Read files.",
+      "expects": ["tool:Glob", "card:glob", "no_json_expander", "result"],
+      "notes": "Expect Glob card with pattern in header and bullet path list — not a JSON expander."
+    },
+    {
+      "id": "display-glob-nested",
+      "category": "display_glob",
+      "title": "Glob — nested package files",
+      "prompt": "Glob `docs/**/*.md` and report how many markdown docs you found (count + first 5 paths).",
+      "expects": ["tool:Glob", "card:glob", "result"]
+    },
+    {
+      "id": "display-glob-emptyish",
+      "category": "display_glob",
+      "title": "Glob — unlikely pattern",
+      "prompt": "Glob for `**/*.definitely_does_not_exist_xyz`. Report that there were no matches (or list them if any).",
+      "expects": ["tool:Glob", "card:glob", "result"],
+      "notes": "Card should show pattern and empty/no-matches state cleanly."
+    },
+
+    {
+      "id": "display-grep-basic",
+      "category": "display_grep",
+      "title": "Grep — pattern + matches card",
+      "prompt": "Use Grep to search for `CocoSession` under `streamlit_coco/`. Show up to 8 matching lines with file paths.",
+      "expects": ["tool:Grep", "card:grep", "no_json_expander", "result"]
+    },
+    {
+      "id": "display-grep-todo",
+      "category": "display_grep",
+      "title": "Grep — TODO/FIXME",
+      "prompt": "Grep the repo for TODO or FIXME (case insensitive if supported). Cap at 10 matches and summarize.",
+      "expects": ["tool:Grep", "card:grep", "result"]
+    },
+    {
+      "id": "display-grep-regex",
+      "category": "display_grep",
+      "title": "Grep — regex-ish API symbols",
+      "prompt": "Grep in `streamlit_coco/` for the string `render_tool_card` or `tool_family`. Report files that define or import them.",
+      "expects": ["tool:Grep", "card:grep", "result"]
+    },
+
+    {
+      "id": "display-read-readme",
+      "category": "display_read",
+      "title": "Read — README card",
+      "prompt": "Read `README.md` and summarize streamlit-coco in at most 4 sentences.",
+      "expects": ["tool:Read", "card:read", "no_json_expander", "result"],
+      "notes": "Expect Read card with path + content preview code block."
+    },
+    {
+      "id": "display-read-py",
+      "category": "display_read",
+      "title": "Read — Python module",
+      "prompt": "Read `streamlit_coco/tool_names.py` and list the ToolFamily enum members as bullets.",
+      "expects": ["tool:Read", "card:read", "result"]
+    },
+    {
+      "id": "display-read-toml",
+      "category": "display_read",
+      "title": "Read — pyproject.toml",
+      "prompt": "Read `pyproject.toml` and report package name, version, and requires-python.",
+      "expects": ["tool:Read", "card:read", "result"]
+    },
+
+    {
+      "id": "display-write-approval",
+      "category": "display_write",
+      "title": "Write — approval preview card",
+      "prompt": "Write a new file `tmp/coco_display_write.md` containing exactly two lines: `# CoCo probe` and `written for tools-display tests`. Do not write elsewhere.",
+      "expects": ["approval:Write", "card:write", "user_feedback", "tool:Write"],
+      "notes": "Approval UI should show path + content preview (code), not raw JSON. Default demo: Write requires approval."
+    },
+    {
+      "id": "display-write-json",
+      "category": "display_write",
+      "title": "Write — JSON file preview",
+      "prompt": "Write `tmp/coco_display_write.json` with content `{\"ok\": true, \"source\": \"tools-display\"}` only.",
+      "expects": ["approval:Write", "card:write", "user_feedback"]
+    },
+    {
+      "id": "display-write-deny",
+      "category": "display_write",
+      "title": "Write — exercise Deny",
+      "prompt": "Attempt to Write `tmp/coco_should_be_denied.txt` with the text `deny me`. I will Deny in the UI; after denial, acknowledge and stop.",
+      "expects": ["approval:Write", "user_feedback"],
+      "notes": "Click Deny; card/approval should clear without creating the file."
+    },
+
+    {
+      "id": "display-edit-approval",
+      "category": "display_edit",
+      "title": "Edit — Before/After approval",
+      "prompt": "If `tmp/coco_display_write.md` exists, Edit it to append a third line: `edited for tools-display`. If missing, say so and stop without Write.",
+      "expects": ["approval:Edit", "card:edit", "user_feedback"],
+      "notes": "Run after display-write-approval. Approval should show Before and After code blocks."
+    },
+    {
+      "id": "display-edit-rename-token",
+      "category": "display_edit",
+      "title": "Edit — small token change",
+      "prompt": "If `tmp/coco_display_write.md` exists, Edit the first heading from `# CoCo probe` to `# CoCo display probe`. Otherwise stop.",
+      "expects": ["approval:Edit", "card:edit", "user_feedback"]
+    },
+
+    {
+      "id": "display-bash-safe",
+      "category": "display_bash",
+      "title": "Bash — command card + approve",
+      "prompt": "Run Bash: `pwd && ls -la | head -n 15`. Do not modify files.",
+      "expects": ["approval:Bash", "card:bash", "user_feedback", "tool:Bash"],
+      "notes": "Approval and transcript should show the command in a bash code block."
+    },
+    {
+      "id": "display-bash-echo",
+      "category": "display_bash",
+      "title": "Bash — echo output",
+      "prompt": "Run Bash: `echo 'tools-display-ok' && date`. Read-only; no file changes.",
+      "expects": ["approval:Bash", "card:bash", "user_feedback"]
+    },
+    {
+      "id": "display-bash-deny",
+      "category": "display_bash",
+      "title": "Bash — dangerous Deny UX",
+      "prompt": "Request Bash `rm -rf /tmp/coco_should_not_delete`. Explain the risk first. I will Deny.",
+      "expects": ["approval:Bash", "user_feedback"],
+      "notes": "Deny in UI; command must not run."
+    },
+
+    {
+      "id": "display-sql-context",
+      "category": "display_sql",
+      "title": "SQL — code + result card",
+      "prompt": "Using the SQL tool, run a simple context query (e.g. current warehouse/database/schema or `SELECT CURRENT_TIMESTAMP()`). Then summarize in one sentence.",
+      "expects": ["tool:SQL", "card:sql", "no_json_expander", "result"],
+      "notes": "Enable SQL in sidebar (auto or approval). Expect SQL code block + table/text result — not JSON expander."
+    },
+    {
+      "id": "display-sql-show-tables",
+      "category": "display_sql",
+      "title": "SQL — list tables",
+      "prompt": "Use SQL to list up to 10 tables visible to this role (INFORMATION_SCHEMA or SHOW TABLES as appropriate). If blocked, explain clearly.",
+      "expects": ["tool:SQL", "card:sql", "result"]
+    },
+    {
+      "id": "display-sql-approval",
+      "category": "display_sql",
+      "title": "SQL — approval with query preview",
+      "prompt": "Run SQL: `SELECT 1 AS tools_display_probe`. Keep it exactly that simple.",
+      "expects": ["approval:SQL", "card:sql", "user_feedback"],
+      "notes": "Put SQL in Requires approval (not auto). Approval UI must show the SQL code, not only the tool name."
+    },
+    {
+      "id": "display-sql-then-ask",
+      "category": "display_sql",
+      "title": "SQL — ask before choosing table",
+      "prompt": "I want a null-rate profile for a table. If the target table is unclear, use AskUserQuestion (or ask) before any SQL. Do not invent table names.",
+      "expects": ["clarification", "user_feedback", "tool:SQL"]
+    },
+
+    {
+      "id": "display-ask-single",
+      "category": "display_ask_user",
+      "title": "AskUserQuestion — single choice",
+      "prompt": "Before doing anything else, use AskUserQuestion with header `Refactor scope` and question `What kind of refactor do you want for the permissions module?` Options: (A) Comments only, (B) Rename helpers, (C) Full restructuring. Wait for my answer, confirm it, do not edit files.",
+      "expects": ["tool:AskUserQuestion", "card:ask_user", "user_feedback", "no_json_expander"],
+      "notes": "Expect radio + Other… + Submit answers / Cancel — not Approve once."
+    },
+    {
+      "id": "display-ask-other",
+      "category": "display_ask_user",
+      "title": "AskUserQuestion — use Other…",
+      "prompt": "Use AskUserQuestion to ask which output format I prefer for a report: Markdown, CSV, or HTML. I will pick Other… and type a custom format — wait for that and confirm.",
+      "expects": ["tool:AskUserQuestion", "user_feedback"],
+      "notes": "Select Other…, type custom text; Submit stays disabled until the field is filled."
+    },
+    {
+      "id": "display-ask-multi",
+      "category": "display_ask_user",
+      "title": "AskUserQuestion — multiSelect",
+      "prompt": "Use AskUserQuestion with multiSelect true asking which areas to review: Docs, Tests, UX, Permissions. Wait for my selection(s), then list them back. No file edits.",
+      "expects": ["tool:AskUserQuestion", "user_feedback"],
+      "notes": "Expect multiselect UI; Other… still available."
+    },
+    {
+      "id": "display-ask-two-questions",
+      "category": "display_ask_user",
+      "title": "AskUserQuestion — two questions",
+      "prompt": "Call AskUserQuestion once with exactly two questions: (1) preferred tone: Concise vs Detailed; (2) include examples: Yes vs No. Wait for both answers, then confirm. No tools other than AskUserQuestion.",
+      "expects": ["tool:AskUserQuestion", "user_feedback"]
+    },
+    {
+      "id": "display-ask-cancel",
+      "category": "display_ask_user",
+      "title": "AskUserQuestion — Cancel",
+      "prompt": "Use AskUserQuestion to ask whether to proceed with a repo cleanup (Yes / No). I will press Cancel in the UI; then acknowledge cancellation.",
+      "expects": ["tool:AskUserQuestion", "user_feedback"],
+      "notes": "Click Cancel; agent should see denial and stop destructive work."
+    },
+
+    {
+      "id": "display-plan-exit",
+      "category": "display_exit_plan",
+      "title": "ExitPlanMode — approve plan UI",
+      "prompt": "You are in plan mode. Propose a short plan to add `tmp/coco_plan_note.md` with one sentence of content. When ready, call ExitPlanMode with the plan text and wait for approval. Do not Write until the plan is approved.",
+      "expects": ["tool:ExitPlanMode", "card:exit_plan", "user_feedback"],
+      "notes": "Enable Plan mode in the chat sidebar first. Expect Reject plan / Approve plan (not Always allow)."
+    },
+    {
+      "id": "display-plan-reject",
+      "category": "display_exit_plan",
+      "title": "ExitPlanMode — reject with feedback",
+      "prompt": "In plan mode, propose a plan that deliberately omits any verification step, then ExitPlanMode. I will Reject with feedback asking for a verification step.",
+      "expects": ["tool:ExitPlanMode", "user_feedback"],
+      "notes": "Reject with feedback text; agent should revise and ask again."
+    },
+
+    {
+      "id": "display-multi-read-glob",
+      "category": "display_mixed",
+      "title": "Mixed — Glob then Read cards",
+      "prompt": "Glob `examples/*.py`, then Read `examples/chat_app.py`, and list the sidebar control keys you see in that file.",
+      "expects": ["tool:Glob", "tool:Read", "card:glob", "card:read", "result"]
+    },
+    {
+      "id": "display-mixed-auto-then-write",
+      "category": "display_mixed",
+      "title": "Mixed — auto Glob then Write approval",
+      "prompt": "1) Glob `examples/*.py` (should auto-run). 2) Write `tmp/coco_mixed_display.txt` listing those filenames, one per line (should ask approval).",
+      "expects": ["tool:Glob", "approval:Write", "card:write", "user_feedback"]
+    },
+    {
+      "id": "display-debug-raw",
+      "category": "display_debug",
+      "title": "Debug — raw tool payload expander",
+      "prompt": "Read `streamlit_coco/debug.py` and quote the function that detects debug mode.",
+      "expects": ["tool:Read", "card:read", "result"],
+      "notes": "Turn ON CoCo debug mode in the sidebar first. Under the Read card, a collapsed Raw tool payload expander should appear."
+    },
+
+    {
+      "id": "glob-project",
+      "category": "tools_auto",
+      "title": "Glob — list Python files",
+      "prompt": "Using Glob only, list all `**/*.py` files under the current working directory. Summarize the top-level layout in 3 bullets.",
+      "expects": ["tool:Glob", "streaming_text", "result"]
+    },
+    {
+      "id": "grep-todo",
+      "category": "tools_auto",
+      "title": "Grep — search TODOs",
+      "prompt": "Use Grep to find TODO or FIXME comments in this repo. Report file paths and a one-line snippet for each match (max 10).",
+      "expects": ["tool:Grep", "streaming_text", "result"]
+    },
+    {
+      "id": "read-readme",
+      "category": "tools_auto",
+      "title": "Read — README summary",
+      "prompt": "Read `README.md` and give a short summary of what streamlit-coco is for, in at most 5 sentences.",
+      "expects": ["tool:Read", "streaming_text", "result"]
+    },
+    {
+      "id": "multi-explore",
+      "category": "tools_auto",
+      "title": "Multi-tool explore (Glob + Read)",
+      "prompt": "Explore this project: Glob for `streamlit_coco/**/*.py`, then Read `streamlit_coco/__init__.py`, and list the public API exports with a one-line description each.",
+      "expects": ["tool:Glob", "tool:Read", "streaming_text", "result"]
+    },
+    {
+      "id": "write-approval",
+      "category": "approval",
+      "title": "Write — should pause for approval",
+      "prompt": "Create a new file `tmp/coco_probe_note.md` with a short markdown note that says this was written by CoCo as a probe. Do not write anywhere else.",
+      "expects": ["approval:Write", "tool:Write", "user_feedback"],
+      "notes": "With default demo settings, Write requires Approve / Deny / Always allow."
+    },
+    {
+      "id": "edit-approval",
+      "category": "approval",
+      "title": "Edit — should pause for approval",
+      "prompt": "If `tmp/coco_probe_note.md` exists, Edit it to append a second line: `edited by CoCo`. If it does not exist, say so and stop without creating it.",
+      "expects": ["approval:Edit", "tool:Edit", "user_feedback"],
+      "notes": "Run after write-approval, or expect a no-op explanation."
+    },
+    {
+      "id": "bash-approval",
+      "category": "approval",
+      "title": "Bash — should pause for approval",
+      "prompt": "Run a safe Bash command: `pwd && ls -la | head -n 20`. Do not modify any files.",
+      "expects": ["approval:Bash", "tool:Bash", "user_feedback"]
+    },
+    {
+      "id": "bash-destructive-deny",
+      "category": "approval",
+      "title": "Bash — dangerous (expect deny UX)",
+      "prompt": "Propose running `rm -rf /tmp/coco_should_not_delete` via Bash. Explain the risk first, then request the tool. I may deny it in the UI.",
+      "expects": ["approval:Bash", "user_feedback"],
+      "notes": "Use to exercise Deny and optional reason feedback."
+    },
+    {
+      "id": "sql-schema",
+      "category": "tools_sql",
+      "title": "SQL — list schemas/tables",
+      "prompt": "Using the SQL tool, show the current warehouse/database/schema context if available, then list up to 10 tables the role can see. If SQL is not allowed, explain what permission is missing.",
+      "expects": ["tool:SQL", "streaming_text", "result"],
+      "notes": "Add SQL to auto-allowed or approval tools in the sidebar first."
+    },
+    {
+      "id": "sql-profile",
+      "category": "tools_sql",
+      "title": "SQL — profile a table (ask if unclear)",
+      "prompt": "I want a null-rate profile for a table. If you are not sure which table to use, ask me to choose one before running SQL. Do not invent table names.",
+      "expects": ["clarification", "user_feedback", "tool:SQL"]
+    },
+    {
+      "id": "ask-user-question",
+      "category": "clarification",
+      "title": "AskUserQuestion — multiple choice",
+      "prompt": "Before doing anything else, use AskUserQuestion to ask me which refactor style I want for the permissions module, with exactly these three options: (A) Comments only, (B) Rename helpers, (C) Full restructuring. Wait for my answer, then briefly confirm the choice. Do not edit files yet.",
+      "expects": ["tool:AskUserQuestion", "user_feedback", "streaming_text"],
+      "notes": "Expect the native question UI (radio + Submit answers), not a raw JSON tool expander."
+    },
+    {
+      "id": "clarify-ambiguous",
+      "category": "clarification",
+      "title": "Ambiguous ask — should clarify",
+      "prompt": "Fix the bug in the file. Do not guess which file — ask me which path and what symptom I see first.",
+      "expects": ["clarification", "user_feedback", "no_destructive_tool"]
+    },
+    {
+      "id": "clarify-scope",
+      "category": "clarification",
+      "title": "Scope choice — ask before acting",
+      "prompt": "Refactor the permissions module for clarity. Before editing anything, ask whether I want (A) comments only, (B) rename helpers, or (C) full restructuring — and wait for my answer.",
+      "expects": ["clarification", "user_feedback"],
+      "notes": "Should surface AskUserQuestion as radio options + Submit answers."
+    },
+    {
+      "id": "plan-then-confirm",
+      "category": "clarification",
+      "title": "Plan then confirm before Write",
+      "prompt": "Propose a plan to add a `examples/testdata/README.md` describing the test prompts dataset. Show the planned file contents in chat, then ask for explicit confirmation before any Write/Edit.",
+      "expects": ["clarification", "approval:Write", "user_feedback"]
+    },
+    {
+      "id": "always-allow-path",
+      "category": "approval",
+      "title": "Always allow — second Write",
+      "prompt": "Write `tmp/coco_always_allow_a.txt` with the text `first`. After that succeeds, we will send a follow-up for a second write to exercise Always allow.",
+      "expects": ["approval:Write", "user_feedback"],
+      "notes": "Approve with Always allow Write, then send always-allow-followup."
+    },
+    {
+      "id": "always-allow-followup",
+      "category": "approval",
+      "title": "Always allow — follow-up Write",
+      "prompt": "Write `tmp/coco_always_allow_b.txt` with the text `second`. If Write was set to Always allow, this should not prompt again.",
+      "expects": ["tool:Write", "result"],
+      "notes": "Pair with always-allow-path."
+    },
+    {
+      "id": "long-stream",
+      "category": "streaming",
+      "title": "Long streamed answer",
+      "prompt": "Without using tools, explain how Streamlit fragments interact with a background CoCo agent loop. Use clear sections and aim for a detailed answer (roughly 400–600 words).",
+      "expects": ["streaming_text", "result"]
+    },
+    {
+      "id": "stop-friendly",
+      "category": "streaming",
+      "title": "Long tool loop (try Stop)",
+      "prompt": "Slowly explore this repo: Glob `**/*`, then Read several key files one by one (pyproject.toml, README.md, and two Python modules), narrating as you go. I may press Stop mid-run.",
+      "expects": ["tool:Glob", "tool:Read", "streaming_text", "cancel_optional"],
+      "notes": "Use Stop CoCo while running to test cancel UX."
+    },
+    {
+      "id": "structured-json",
+      "category": "structured",
+      "title": "Ask for structured JSON in the reply",
+      "prompt": "Inspect `pyproject.toml` (Read it) and reply with a JSON object only, shaped like: {\"name\": string, \"version\": string, \"requires_python\": string, \"dependencies\": string[]}. No markdown fences.",
+      "expects": ["tool:Read", "streaming_text", "result"]
+    },
+    {
+      "id": "multi-turn-setup",
+      "category": "multi_turn",
+      "title": "Multi-turn setup",
+      "prompt": "Remember for this session that our focus package is `streamlit_coco` and our preferred style is concise bullet points. Confirm you will follow that, then Glob `streamlit_coco/*.py` and list filenames only.",
+      "expects": ["tool:Glob", "streaming_text", "result"]
+    },
+    {
+      "id": "multi-turn-followup",
+      "category": "multi_turn",
+      "title": "Multi-turn follow-up",
+      "prompt": "Using the package focus we agreed, Read `streamlit_coco/session.py` and summarize CocoRunStatus values as bullets.",
+      "expects": ["tool:Read", "streaming_text", "result"],
+      "notes": "Send after multi-turn-setup."
+    },
+    {
+      "id": "disallowed-tool",
+      "category": "permissions",
+      "title": "Request a tool that may be denied",
+      "prompt": "Try to use a tool that is not in the current allow-list if possible. If blocked, explain clearly which tool was denied and what the user should enable in the sidebar.",
+      "expects": ["user_feedback", "result"],
+      "notes": "Works best when allow-list is narrow (e.g. only Read/Glob/Grep)."
+    },
+    {
+      "id": "mixed-approval-chain",
+      "category": "approval",
+      "title": "Mixed chain — auto then approval",
+      "prompt": "1) Glob for `examples/*.py` (should auto-run). 2) Then Write `tmp/coco_mixed_chain.txt` listing those example filenames (should ask approval). Keep the write minimal.",
+      "expects": ["tool:Glob", "approval:Write", "user_feedback", "result"]
+    }
+  ]
+}

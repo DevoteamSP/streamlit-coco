@@ -1,0 +1,1 @@
+{"type":"assistant","message":{"content":[{"type":"tool_use","id":"toolu_glob_01","name":"Glob","input":{"pattern":"**/*.py","path":"."}}]}}
