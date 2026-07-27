@@ -584,7 +584,7 @@ Legacy CCv2 `chat()` keeps an all-in-one panel (header, transcript, approval car
 
 ### Phase 4 — Polish & release
 
-- [x] README + Makefile + GitHub repo (`DevoteamSP/streamlit-coco-dev`)
+- [x] README + Makefile + GitHub repos (`streamlit-coco-dev` + public `streamlit-coco`)
 - [ ] Theming / a11y pass (syntax highlight, copy, keyboard traps)
 - [ ] API docs / deployment topologies (Docker, SPCS)
 - [ ] PyPI publish `0.1.0`
@@ -639,7 +639,9 @@ Legacy CCv2 `chat()` keeps an all-in-one panel (header, transcript, approval car
 - [Streamlit CCv2 state vs triggers](https://docs.streamlit.io/develop/concepts/custom-components/components-v2/state-and-triggers)
 - Package: `cortex-code-agent-sdk` (`CortexCodeSDKClient`, `query`, `CortexCodeAgentOptions`, `can_use_tool`)
 - [Cortex Code Agent SDK docs](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
-- Repo: https://github.com/DevoteamSP/streamlit-coco-dev
+- Repo (public): https://github.com/DevoteamSP/streamlit-coco
+- Repo (dev): https://github.com/DevoteamSP/streamlit-coco-dev
+- Publish: [`docs/deployment/publish.md`](deployment/publish.md)
 
 ---
 
