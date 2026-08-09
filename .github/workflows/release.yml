@@ -48,14 +48,15 @@ jobs:
       - name: Generate SBOM (CycloneDX)
         run: |
           set -euo pipefail
-          mkdir -p dist
+          # Keep SBOM out of dist/ — pypa/gh-action-pypi-publish uploads everything there.
+          mkdir -p sbom
           uv sync --extra sdk
           uvx --from cyclonedx-bom==6.1.2 \
             cyclonedx-py environment \
             --pyproject pyproject.toml \
             --mc-type library \
             --output-format JSON \
-            --output-file "dist/sbom-${GITHUB_REF_NAME}.cdx.json" \
+            --output-file "sbom/sbom-${GITHUB_REF_NAME}.cdx.json" \
             --output-reproducible
 
       - name: Create GitHub Release
@@ -67,7 +68,7 @@ jobs:
           files: |
             dist/*.whl
             dist/*.tar.gz
-            dist/sbom-*.cdx.json
+            sbom/sbom-*.cdx.json
 
       # PyPI only from the public release repo (not streamlit-coco-dev).
       # Temporary: lletourmy/streamlit-coco until DevoteamSP org is PyPI-validated;
