@@ -1,0 +1,11 @@
+{
+  "id": "T-040",
+  "epic_id": "E-01",
+  "title": "CSV export for board filters",
+  "type": "feature",
+  "priority": "high",
+  "status": "done",
+  "points": 5,
+  "owner": "maya",
+  "description": "Export visible tickets as CSV. Acceptance: respects status/priority filters. Reviewed by jon."
+}

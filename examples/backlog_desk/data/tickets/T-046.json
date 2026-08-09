@@ -1,0 +1,11 @@
+{
+  "id": "T-046",
+  "epic_id": "E-03",
+  "title": "Recover after CoCo disconnect",
+  "type": "feature",
+  "priority": "high",
+  "status": "backlog",
+  "points": 5,
+  "owner": "sam",
+  "description": "Show reconnect CTA when the agent session dies mid-turn."
+}

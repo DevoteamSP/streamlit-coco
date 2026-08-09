@@ -1,0 +1,11 @@
+{
+  "id": "T-043",
+  "epic_id": "E-02",
+  "title": "Empty board sample dataset",
+  "type": "feature",
+  "priority": "high",
+  "status": "in_progress",
+  "points": 3,
+  "owner": "jon",
+  "description": "Ship sample epics/tickets when the board is empty. Acceptance: one-click Load sample."
+}

@@ -4,7 +4,7 @@ Dataset: [`prompts.json`](prompts.json) (v2)
 
 Use the **Test prompts** section in the chat app sidebar (`make chat`) to filter by category and **Send test prompt** one at a time.
 
-Full UX rules: [`docs/features/tools-display/SPEC.md`](../../docs/features/tools-display/SPEC.md).
+Full UX rules: [`doc/features/tools-display/SPEC.md`](../../doc/features/tools-display/SPEC.md).
 
 ## Categories (tools-display)
 

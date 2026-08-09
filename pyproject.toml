@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "streamlit-coco"
-version = "0.1.0"
+version = "0.1.5"
 description = "Streamlit component and Python library for Snowflake CoCo (Cortex Code)"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -26,21 +26,26 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-sdk = ["cortex-code-agent-sdk>=1.0.2"]
+sdk = ["cortex-code-agent-sdk>=1.0.7"]
 dev = [
-    "cortex-code-agent-sdk>=1.0.2",
+    "cortex-code-agent-sdk>=1.0.7",
     "pytest>=8.0",
     "pytest-asyncio>=0.24",
     "ruff>=0.8",
     "pip-audit>=2.7",
 ]
+e2e = [
+    "streamlit-coco[dev]",
+    "pytest-playwright>=0.6",
+]
 
 [project.urls]
-Homepage = "https://github.com/DevoteamSP/streamlit-coco"
-Documentation = "https://github.com/DevoteamSP/streamlit-coco#readme"
-Repository = "https://github.com/DevoteamSP/streamlit-coco"
-Issues = "https://github.com/DevoteamSP/streamlit-coco/issues"
-Changelog = "https://github.com/DevoteamSP/streamlit-coco/blob/main/CHANGELOG.md"
+# Temporary: personal release repo until DevoteamSP is PyPI-validated (see doc/deployment/publish.md).
+Homepage = "https://github.com/lletourmy/streamlit-coco"
+Documentation = "https://github.com/lletourmy/streamlit-coco#readme"
+Repository = "https://github.com/lletourmy/streamlit-coco"
+Issues = "https://github.com/lletourmy/streamlit-coco/issues"
+Changelog = "https://github.com/lletourmy/streamlit-coco/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["streamlit_coco"]
@@ -55,6 +60,7 @@ exclude = [
     "/.venv",
     "/tmp",
     "/dist",
+    "/doc-dev",
     "/.pytest_cache",
     "/.ruff_cache",
 ]
@@ -62,7 +68,9 @@ exclude = [
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
-
+markers = [
+    "e2e: browser Playwright tests against the UX harness (slow; needs Chromium)",
+]
 [tool.ruff]
 line-length = 100
 target-version = "py310"

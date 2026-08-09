@@ -3,6 +3,9 @@ name: Security
 # Gitleaks: use the MIT CLI binary (not gitleaks-action@v2).
 # The action wrapper requires GITLEAKS_LICENSE for GitHub organization repos
 # (DevoteamSP), even public ones. The CLI itself does not.
+#
+# CodeQL is omitted: private org repos need GitHub Advanced Security to upload
+# results; without a GHAS license the analyze step fails as a configuration error.
 
 on:
   schedule:
@@ -38,19 +41,6 @@ jobs:
 
       - name: Scan for secrets
         run: gitleaks git --verbose --redact --exit-code 1 .
-
-  codeql:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: github/codeql-action/init@v3
-        with:
-          languages: python
-      - uses: github/codeql-action/autobuild@v3
-      - uses: github/codeql-action/analyze@v3
 
   pip-audit:
     runs-on: ubuntu-latest

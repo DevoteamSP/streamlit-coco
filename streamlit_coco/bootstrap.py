@@ -3,14 +3,33 @@
 from __future__ import annotations
 
 import inspect
-from typing import Any
+from collections.abc import Sequence
+from typing import Any, Literal
 
 import streamlit as st
 
 from streamlit_coco.diagnostics import CocoEnvironment, check_environment
+from streamlit_coco.errors import CocoError, CwdUploadError
 from streamlit_coco.options import CocoOptions
 from streamlit_coco.session import CocoRunStatus, CocoSession
 from streamlit_coco.ui import send_prompt
+from streamlit_coco.upload import (
+    DEFAULT_ALLOWED_EXTENSIONS,
+    DEFAULT_MAX_BYTES,
+    DEFAULT_UPLOAD_SUBDIR,
+    OverwriteMode,
+    UploadedPath,
+    format_upload_prompt,
+    list_cwd_uploads,
+    upload_to_cwd,
+)
+
+
+def _extensions_from_file_type(file_type: str | Sequence[str] | None) -> list[str] | frozenset[str]:
+    if file_type is None:
+        return DEFAULT_ALLOWED_EXTENSIONS
+    types = [file_type] if isinstance(file_type, str) else list(file_type)
+    return [ext if str(ext).startswith(".") else f".{ext}" for ext in types]
 
 
 def render_environment_status(
@@ -170,29 +189,146 @@ def chat_input_bar(
     placeholder: str = "Ask CoCo…",
     connecting_placeholder: str = "Starting CoCo…",
     key: str | None = None,
+    accept_file: bool | Literal["multiple"] = False,
+    file_type: str | Sequence[str] | None = None,
+    max_upload_size: int | None = None,
+    upload_subdir: str = DEFAULT_UPLOAD_SUBDIR,
+    upload_overwrite: OverwriteMode = "replace",
+    inject_upload_paths: bool = True,
 ) -> str | None:
     """``st.chat_input`` wired for connect/run state; sends on submit.
 
     Stays enabled while CoCo is connecting (prompts are queued). Only a failed
     boot disables input. ``panel()`` triggers a full rerun when connect finishes
     so placeholder/status stay in sync.
+
+    When ``accept_file`` is enabled (Streamlit supports attachments on
+    ``st.chat_input``), files are written under ``cwd/<upload_subdir>/`` via
+    :func:`streamlit_coco.upload_to_cwd` and optionally injected into the prompt.
     """
     connecting = session.status == CocoRunStatus.CONNECTING
     failed_boot = session.status == CocoRunStatus.ERROR and not session.is_ready
+    chat_params = inspect.signature(st.chat_input).parameters
     kwargs: dict[str, Any] = {}
     if key is not None:
         kwargs["key"] = key
-    if "submit_mode" in inspect.signature(st.chat_input).parameters:
+    if "submit_mode" in chat_params:
         kwargs["disabled"] = failed_boot
         kwargs["submit_mode"] = "disable" if session.is_running else "submit"
     else:
         # Streamlit < 1.59: no submit_mode — disable input while a turn is running.
         kwargs["disabled"] = failed_boot or session.is_running
 
-    prompt = st.chat_input(
+    wants_files = bool(accept_file)
+    if wants_files and "accept_file" in chat_params:
+        kwargs["accept_file"] = accept_file
+        if file_type is not None:
+            kwargs["file_type"] = file_type
+        if max_upload_size is not None and "max_upload_size" in chat_params:
+            kwargs["max_upload_size"] = max_upload_size
+    elif wants_files:
+        st.caption("This Streamlit build does not support chat attachments; use `cwd_uploader`.")
+
+    value = st.chat_input(
         connecting_placeholder if connecting else placeholder,
         **kwargs,
     )
-    if prompt:
-        send_prompt(session, prompt)
-    return prompt
+    if not value:
+        return None
+
+    text = value
+    files: list[Any] = []
+    if not isinstance(value, str):
+        text = str(getattr(value, "text", "") or "")
+        raw_files = getattr(value, "files", None)
+        if raw_files:
+            files = list(raw_files)
+
+    prompt_text = text.strip()
+    if files:
+        try:
+            saved = upload_to_cwd(
+                session,
+                files,
+                subdir=upload_subdir,
+                overwrite=upload_overwrite,
+                max_bytes=max_upload_size or DEFAULT_MAX_BYTES,
+                allowed_extensions=_extensions_from_file_type(file_type),
+            )
+        except CwdUploadError as exc:
+            st.error(str(exc))
+            return None
+        except CocoError as exc:
+            st.error(str(exc))
+            return None
+
+        written = [item for item in saved if not item.skipped]
+        if written:
+            labels = ", ".join(f"`{item.relative}`" for item in written)
+            st.caption(f"Saved to workspace · {labels}")
+        if inject_upload_paths:
+            prompt_text = format_upload_prompt(saved, user_text=prompt_text)
+        elif not prompt_text and written:
+            prompt_text = format_upload_prompt(saved, user_text="")
+
+    if prompt_text:
+        send_prompt(session, prompt_text)
+        return prompt_text
+    return None
+
+
+def cwd_uploader(
+    target: CocoSession | CocoOptions | str,
+    *,
+    label: str = "Upload into agent workspace",
+    subdir: str = DEFAULT_UPLOAD_SUBDIR,
+    overwrite: OverwriteMode = "error",
+    accept_multiple_files: bool = True,
+    file_type: str | Sequence[str] | None = None,
+    max_bytes: int | None = DEFAULT_MAX_BYTES,
+    key: str = "coco_cwd_uploader",
+    show_inventory: bool = True,
+) -> list[UploadedPath]:
+    """``st.file_uploader`` + :func:`upload_to_cwd` for app chrome / sidebar.
+
+    Returns the list of :class:`~streamlit_coco.upload.UploadedPath` written on
+    this run (empty when idle or on validation error).
+    """
+    type_arg: Any
+    if file_type is not None:
+        type_arg = file_type
+    else:
+        type_arg = sorted(ext.lstrip(".") for ext in DEFAULT_ALLOWED_EXTENSIONS)
+
+    uploaded = st.file_uploader(
+        label,
+        type=type_arg,
+        accept_multiple_files=accept_multiple_files,
+        key=key,
+        help=f"Files are saved under `{subdir}/` in the CoCo working directory.",
+    )
+    saved: list[UploadedPath] = []
+    if uploaded:
+        files = uploaded if isinstance(uploaded, list) else [uploaded]
+        try:
+            saved = upload_to_cwd(
+                target,
+                files,
+                subdir=subdir,
+                overwrite=overwrite,
+                max_bytes=max_bytes,
+                allowed_extensions=_extensions_from_file_type(file_type),
+            )
+            written = [item for item in saved if not item.skipped]
+            if written:
+                st.success("Saved · " + ", ".join(f"`{item.relative}`" for item in written))
+        except CwdUploadError as exc:
+            st.error(str(exc))
+            saved = []
+
+    if show_inventory:
+        existing = list_cwd_uploads(target, subdir=subdir)
+        if existing:
+            st.caption(f"In `{subdir}/` · " + ", ".join(f"`{path.name}`" for path in existing))
+
+    return saved

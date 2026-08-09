@@ -1,0 +1,8 @@
+{
+  "id": "E-02",
+  "title": "Onboarding polish",
+  "status": "ready",
+  "owner": "jon",
+  "target_release": "0.2.0",
+  "summary": "Reduce time-to-first-value: empty states, sample data, guided tour."
+}

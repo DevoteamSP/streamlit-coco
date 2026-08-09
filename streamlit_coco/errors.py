@@ -73,6 +73,10 @@ class QueryError(CocoError):
     """Single-turn :func:`streamlit_coco.query` failed."""
 
 
+class CwdUploadError(CocoError):
+    """Browser → ``cwd`` upload failed (size, extension, path, or overwrite)."""
+
+
 def wrap_exception(
     exc: BaseException,
     *,

@@ -116,15 +116,23 @@
 .coco-tool-card {
   border: 1px solid var(--st-border-color, rgba(49, 51, 63, 0.2));
   border-radius: var(--st-base-radius, 0.65rem);
-  padding: 0.65rem 0.8rem;
+  padding: 0.35rem 0.65rem;
   background: var(--st-background-color, #ffffff);
 }
 
 .coco-tool summary,
-.coco-structured summary {
+.coco-structured summary,
+.coco-tool-summary {
   cursor: pointer;
   font-weight: 600;
   font-size: 0.85rem;
+  line-height: 1.35;
+  list-style-position: outside;
+}
+
+.coco-tool-card-body {
+  margin-top: 0.45rem;
+  padding-bottom: 0.25rem;
 }
 
 .coco-sql-title {

@@ -1,0 +1,11 @@
+{
+  "id": "T-049",
+  "epic_id": "E-03",
+  "title": "Spike: offline transcript cache",
+  "type": "spike",
+  "priority": "low",
+  "status": "backlog",
+  "points": 0,
+  "owner": "unassigned",
+  "description": "Time-box 1 day: can we persist transcript JSON across browser refresh?"
+}

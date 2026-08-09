@@ -109,6 +109,18 @@ with st.sidebar:
             key=PLAN_KEY,
             help="Sets permission_mode=plan so ExitPlanMode approvals can be tested",
         )
+        st.caption("Copy to clipboard")
+        show_copy = (
+            st.pills(
+                "Copy to clipboard",
+                options=["On", "Off"],
+                default="On",
+                key="coco_show_copy",
+                label_visibility="collapsed",
+                help="Show copy controls on assistant messages and tool cards",
+            )
+            or "On"
+        ) == "On"
 
         st.caption("Auto-allowed")
         auto_ui = (
@@ -150,6 +162,8 @@ with st.sidebar:
         summary.append(":orange-badge[debug]")
     if plan_on:
         summary.append(":violet-badge[plan]")
+    if show_copy:
+        summary.append(":green-badge[copy]")
     st.markdown(" ".join(summary))
     st.caption(f"Auto · {', '.join(auto_ui) or '—'}")
     st.caption(f"Approve · {', '.join(approval_ui) or '—'}")
@@ -193,6 +207,7 @@ st_coco.panel(
     output_mode=output_mode,
     show_tool_details=output_mode == "transcript",
     show_status=True,
+    show_copy=show_copy,
     warm_up=True,
     run_every=0.25,
 )

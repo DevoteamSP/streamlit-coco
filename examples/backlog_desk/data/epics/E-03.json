@@ -1,0 +1,8 @@
+{
+  "id": "E-03",
+  "title": "Reliability hardening",
+  "status": "backlog",
+  "owner": "sam",
+  "target_release": "0.3.0",
+  "summary": "Crash recovery, clearer errors, and session reset UX."
+}

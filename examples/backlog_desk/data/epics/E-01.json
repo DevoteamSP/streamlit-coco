@@ -1,0 +1,8 @@
+{
+  "id": "E-01",
+  "title": "Export & reporting",
+  "status": "in_progress",
+  "owner": "maya",
+  "target_release": "0.2.0",
+  "summary": "Let users export board data and ship a weekly status report pack."
+}

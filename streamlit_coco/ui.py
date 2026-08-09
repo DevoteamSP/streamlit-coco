@@ -506,6 +506,8 @@ def panel(
     use_fragment: bool = True,
     run_every: float | None = 0.25,
     text_renderer: TextRenderer = None,
+    show_copy: bool = True,
+    max_messages: int | None = None,
     on_structured_output: StructuredOutputCallback | None = None,
     structured_output_container: Any | None = None,
 ) -> CocoChatResult:
@@ -523,6 +525,11 @@ def panel(
     text_renderer:
         How to render assistant/user text: ``None`` / ``\"markdown\"`` (default),
         ``\"write\"``, ``\"text\"``, ``\"caption\"``, ``\"code\"``, or a callable.
+        Default markdown mode highlights fenced code blocks via ``st.code``.
+    show_copy:
+        Show clipboard controls on assistant messages and tool cards.
+    max_messages:
+        Optional transcript window size; shows **Load earlier** when truncated.
     """
 
     session.set_show_structured_inline(
@@ -551,6 +558,7 @@ def panel(
                         label=output_label,
                         show_tool_details=show_tool_details,
                         text_renderer=text_renderer,
+                        show_copy=show_copy,
                     )
                 else:
                     render_transcript(
@@ -559,6 +567,8 @@ def panel(
                         show_thinking=show_thinking,
                         hide_active_approval=include_approvals and show_approvals,
                         text_renderer=text_renderer,
+                        show_copy=show_copy,
+                        max_messages=max_messages,
                     )
 
         if include_approvals and show_approvals and not connecting:

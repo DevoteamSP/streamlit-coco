@@ -31,8 +31,30 @@ jobs:
         run: uv run ruff check .
 
       - name: Test
-        run: uv run pytest tests/ -v
+        run: uv run pytest tests/ --ignore=tests/e2e -v
 
       - name: Security audit
         run: uv run pip-audit
         continue-on-error: true  # non-blocking until baseline is clean
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install e2e dependencies
+        run: uv sync --extra e2e
+
+      - name: Install Chromium
+        run: uv run --extra e2e playwright install --with-deps chromium
+
+      - name: Playwright UX e2e
+        run: uv run --extra e2e pytest tests/e2e -m e2e -v

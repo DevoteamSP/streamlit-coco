@@ -18,6 +18,7 @@ from streamlit_coco.errors import (
     CLIProbeError,
     CocoConnectionError,
     CocoError,
+    CwdUploadError,
     QueryError,
     SDKNotInstalledError,
     SessionNotReadyError,
@@ -30,6 +31,16 @@ from streamlit_coco.permissions import approve_pending, deny_pending
 from streamlit_coco.query import query
 from streamlit_coco.session import CocoChatResult, CocoRunStatus, CocoSession, get_session
 from streamlit_coco.tool_names import is_exit_plan_mode, is_sql_tool, tool_family
+from streamlit_coco.upload import (
+    DEFAULT_ALLOWED_EXTENSIONS,
+    DEFAULT_MAX_BYTES,
+    DEFAULT_UPLOAD_SUBDIR,
+    UploadedPath,
+    format_upload_prompt,
+    list_cwd_uploads,
+    sanitize_upload_name,
+    upload_to_cwd,
+)
 
 __version__ = "0.1.0"
 
@@ -38,6 +49,7 @@ _LAZY_ATTRS: dict[str, tuple[str, str]] = {
     "chat": ("streamlit_coco.component", "chat"),
     "request_input": ("streamlit_coco.ui", "request_input"),
     "chat_input_bar": ("streamlit_coco.bootstrap", "chat_input_bar"),
+    "cwd_uploader": ("streamlit_coco.bootstrap", "cwd_uploader"),
     "get_or_create_session": ("streamlit_coco.bootstrap", "get_or_create_session"),
     "render_environment_status": ("streamlit_coco.bootstrap", "render_environment_status"),
     "render_start_gate": ("streamlit_coco.bootstrap", "render_start_gate"),
@@ -65,17 +77,24 @@ __all__ = [
     "CocoOptions",
     "CocoRunStatus",
     "CocoSession",
+    "CwdUploadError",
+    "DEFAULT_ALLOWED_EXTENSIONS",
+    "DEFAULT_MAX_BYTES",
+    "DEFAULT_UPLOAD_SUBDIR",
     "QueryError",
     "SDKNotInstalledError",
     "SessionNotReadyError",
     "SessionStartError",
     "SnowflakeConfigNotFoundError",
+    "UploadedPath",
     "approve_pending",
     "chat",
     "chat_input_bar",
     "check_environment",
+    "cwd_uploader",
     "deny_pending",
     "events_to_dataframe",
+    "format_upload_prompt",
     "get_or_create_session",
     "get_session",
     "get_latest_assistant_text",
@@ -83,6 +102,7 @@ __all__ = [
     "is_debug_mode",
     "is_exit_plan_mode",
     "is_sql_tool",
+    "list_cwd_uploads",
     "panel",
     "query",
     "render_approvals",
@@ -95,9 +115,11 @@ __all__ = [
     "render_transcript",
     "request_input",
     "reset_session",
+    "sanitize_upload_name",
     "send_prompt",
     "stop_session",
     "tool_family",
+    "upload_to_cwd",
 ]
 
 

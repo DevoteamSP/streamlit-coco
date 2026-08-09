@@ -2,16 +2,16 @@
 
 **Bring Snowflake CoCo into Streamlit** — streaming agent UI, tool cards you can actually read, and approval gates that fit governed data apps.
 
-[![CI](https://github.com/DevoteamSP/streamlit-coco/actions/workflows/ci.yml/badge.svg)](https://github.com/DevoteamSP/streamlit-coco/actions/workflows/ci.yml)
+[![CI](https://github.com/lletourmy/streamlit-coco/actions/workflows/ci.yml/badge.svg)](https://github.com/lletourmy/streamlit-coco/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 You own the page. CoCo owns the session. `panel()` streams the transcript; your app keeps `st.chat_input`, metrics, and forms. Approvals pause Write / Edit / Bash / SQL until someone clicks **Approve once**, **Always allow**, or **Deny**.
 
-![CoCo for Streamlit — streaming transcript with a Glob tool card](docs/screenshot.png)
+![CoCo for Streamlit — streaming transcript with a Glob tool card](doc/screenshot.png)
 
 > Alpha `0.1.0` — API may still move. Star / watch the repo if you plan to ship on it.
 
-**Repo:** [github.com/DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco) · **Dev:** [streamlit-coco-dev](https://github.com/DevoteamSP/streamlit-coco-dev)  
+**Repo:** [github.com/lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco) *(temporary PyPI source)* · **Dev:** [streamlit-coco-dev](https://github.com/DevoteamSP/streamlit-coco-dev)  
 **SDK docs:** [Cortex Code Agent SDK](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
 
 ---
@@ -49,8 +49,8 @@ make install
 3. Authenticated Snowflake connection (`~/.snowflake/connections.toml` or equivalent)
 4. `cortex-code-agent-sdk` (pulled in by the `sdk` / `dev` extras)
 
-**Full local setup:** [`docs/deployment/local.md`](docs/deployment/local.md) (CLI install, Snowflake `connections.toml`, running examples, troubleshooting).  
-**API:** [`docs/api.md`](docs/api.md).
+**Full local setup:** [`doc/deployment/local.md`](doc/deployment/local.md) (CLI install, Snowflake `connections.toml`, running examples, troubleshooting).  
+**API:** [`doc/api.md`](doc/api.md).
 
 ---
 
@@ -96,9 +96,11 @@ make chat          # panel + chat input + tool cards + approvals
 make approval      # legacy CCv2 chat
 make structured    # custom structured-output panel
 make headless      # asyncio query() pipeline
+make backlog       # Product Backlog Desk (multipage business demo)
 ```
 
-Exploratory prompts: [`examples/testdata/prompts.json`](examples/testdata/prompts.json).
+Exploratory prompts: [`examples/testdata/prompts.json`](examples/testdata/prompts.json).  
+Backlog desk: [`examples/backlog_desk/README.md`](examples/backlog_desk/README.md).
 
 ---
 
@@ -137,18 +139,18 @@ asyncio.run(run())
 | Capability | Entry points |
 | --- | --- |
 | Native panel + approvals | `panel()`, `chat_input_bar()`, `render_approvals()` |
-| Tool cards & AskUser / plan UI | see [`docs/features/tools-display/`](docs/features/tools-display/) |
+| Tool cards & AskUser / plan UI | see [`doc/features/tools-display/`](doc/features/tools-display/) |
 | Session & options | `CocoSession`, `CocoOptions`, `get_or_create_session` |
 | Headless events | `query()` |
 | Legacy CCv2 | `chat()` |
 
-API reference: [`docs/api.md`](docs/api.md).  
-Feature guides + release checklists: [`docs/features/README.md`](docs/features/README.md).
+API reference: [`doc/api.md`](doc/api.md).  
+Feature guides + release checklists: [`doc/features/README.md`](doc/features/README.md).
 
 ```
 streamlit_coco/   # library (ui, session, permissions, tool cards, …)
 examples/         # chat, approval, structured, headless demos
-docs/             # PRD, roadmap, feature specs & checklists
+doc/             # PRD, roadmap, feature specs & checklists
 tests/
 ```
 
@@ -162,14 +164,14 @@ make check     # ruff + pytest
 make audit     # pip-audit
 make format    # ruff format + fix
 make build     # sdist + wheel
-make sync-release  # copy tree → ../streamlit-coco (see docs/deployment/publish.md)
+make sync-release  # copy tree → ../streamlit-coco (see doc/deployment/publish.md)
 make help      # all targets
 ```
 
 CI runs lint, tests, and pip-audit on every PR to `main`.  
-**Releases:** develop here (`streamlit-coco-dev`), sync + tag on [`streamlit-coco`](https://github.com/DevoteamSP/streamlit-coco) → PyPI ([guide](docs/deployment/publish.md)).
+**Releases:** develop here (`streamlit-coco-dev`), sync + tag on [`lletourmy/streamlit-coco`](https://github.com/lletourmy/streamlit-coco) → PyPI ([guide](doc/deployment/publish.md)).
 
-**Docs:** [PRD](docs/PRD.md) · [API](docs/api.md) · [Roadmap](docs/roadmap.md) · [Deployment](docs/deployment/) · [Changelog](CHANGELOG.md) · [AGENTS.md](AGENTS.md)
+**Docs:** [PRD](doc/prd.md) · [API](doc/api.md) · [Roadmap](doc/roadmap.md) · [Deployment](doc/deployment/) · [Changelog](CHANGELOG.md) · [AGENTS.md](AGENTS.md)
 
 ---
 

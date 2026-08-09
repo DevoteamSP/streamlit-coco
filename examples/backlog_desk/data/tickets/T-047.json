@@ -1,0 +1,11 @@
+{
+  "id": "T-047",
+  "epic_id": "E-03",
+  "title": "Surface approval timeout errors",
+  "type": "bug",
+  "priority": "medium",
+  "status": "ready",
+  "points": 2,
+  "owner": "sam",
+  "description": "Map ApprovalTimeoutError to a clear toast + transcript note."
+}

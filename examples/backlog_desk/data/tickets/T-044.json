@@ -1,0 +1,11 @@
+{
+  "id": "T-044",
+  "epic_id": "E-02",
+  "title": "First-run guided tour",
+  "type": "feature",
+  "priority": "medium",
+  "status": "backlog",
+  "points": 5,
+  "owner": "unassigned",
+  "description": "Three-step coach marks: Board → Ticket → Copilot."
+}

@@ -19,7 +19,7 @@
 
 ### Documentation
 - [ ] `CHANGELOG.md` updated (under `[Unreleased]`)
-- [ ] `docs/features/` updated if new or changed feature
+- [ ] `doc/features/` updated if new or changed feature
 - [ ] `README.md` updated if install/usage changed
 
 ### Security
@@ -29,6 +29,6 @@
 - [ ] No hardcoded Snowflake account names or database names
 
 ### Governance (N1+)
-- [ ] `docs/roadmap.md` updated if this closes a roadmap item
+- [ ] `doc/roadmap.md` updated if this closes a roadmap item
 - [ ] Issue linked (closes #NNN)
-- [ ] Manual golden-path checklist run when UI/feature touched (`docs/features/*/test-checklist.md`)
+- [ ] Manual golden-path checklist run when UI/feature touched (`doc/features/*/test-checklist.md`)

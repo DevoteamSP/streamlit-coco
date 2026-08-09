@@ -1,0 +1,11 @@
+{
+  "id": "T-042",
+  "epic_id": "E-01",
+  "title": "Add export to Markdown",
+  "type": "feature",
+  "priority": "high",
+  "status": "in_progress",
+  "points": 3,
+  "owner": "maya",
+  "description": "Mirror CSV export as Markdown table. Acceptance: same filters; includes epic id column. Tests: checklist in PR. Docs: release notes pending."
+}

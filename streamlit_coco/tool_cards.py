@@ -1,4 +1,4 @@
-"""Meaningful transcript cards for CoCo tools (no default JSON expanders)."""
+"""Meaningful transcript cards for CoCo tools (compact expanders; no raw JSON by default)."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ from typing import Any
 import streamlit as st
 
 from streamlit_coco.ask_user import extract_questions
+from streamlit_coco.clipboard import render_copy_button
 from streamlit_coco.debug import is_debug_mode
 from streamlit_coco.sql_tool import extract_sql_text, parse_sql_result_table
 from streamlit_coco.tool_extract import (
@@ -43,18 +44,87 @@ def _grep_match_lines(text: str) -> list[str]:
     return lines
 
 
+def _card_label(
+    item: dict[str, Any],
+    *,
+    family: ToolFamily,
+    status: str,
+    tool_input: dict[str, Any],
+    tool_name: str,
+) -> str:
+    """One-line expander title: family · status · short meta."""
+    bits = [f"**{family_label(family, tool_name)}** · {status_label(status)}"]
+
+    if family == ToolFamily.ASK_USER:
+        questions = extract_questions(tool_input)
+        headers = [
+            str(q.get("header") or q.get("question") or f"Question {idx + 1}")
+            for idx, q in enumerate(questions)
+        ]
+        if headers:
+            bits.append(", ".join(headers[:2]) + ("…" if len(headers) > 2 else ""))
+    elif family == ToolFamily.SQL:
+        rows, _text, total_rows = parse_sql_result_table(item.get("result"))
+        if status == "completed" and total_rows is not None:
+            shown = len(rows or [])
+            if total_rows > shown:
+                bits.append(f"{shown} of {total_rows} rows")
+            else:
+                bits.append(f"{total_rows} row{'s' if total_rows != 1 else ''}")
+    elif family in {ToolFamily.READ, ToolFamily.WRITE, ToolFamily.EDIT}:
+        path = extract_path(tool_input)
+        if path:
+            bits.append(f"`{path}`")
+    elif family == ToolFamily.BASH:
+        command = extract_command(tool_input)
+        if command:
+            bits.append(f"`{truncate_text(command, 48)}`")
+    elif family == ToolFamily.GLOB:
+        pattern = extract_pattern(tool_input)
+        if pattern:
+            bits.append(f"`{pattern}`")
+        if status == "completed":
+            _paths, total = result_as_path_list(item.get("result"))
+            bits.append(f"{total} file{'s' if total != 1 else ''}")
+    elif family == ToolFamily.GREP:
+        pattern = extract_pattern(tool_input)
+        path = extract_path(tool_input)
+        if pattern:
+            bits.append(f"`{pattern}`")
+        if path:
+            bits.append(f"in `{path}`")
+        if status == "completed":
+            text = result_as_text(item.get("result")) or ""
+            count = len(_grep_match_lines(text)) if text.strip() else 0
+            bits.append(f"{count} match{'es' if count != 1 else ''}")
+    elif family == ToolFamily.GENERIC and tool_name:
+        bits[0] = f"**{tool_name}** · {status_label(status)}"
+
+    return " · ".join(bits)
+
+
 def render_tool_card(
     item: dict[str, Any],
     *,
     show_tool_details: bool = True,
+    show_copy: bool = True,
 ) -> None:
-    """Dispatch a transcript tool item to a family-specific card."""
+    """Dispatch a transcript tool item to a compact family-specific expander."""
     name = str(item.get("name") or "unknown")
     status = str(item.get("status") or "running")
     family = tool_family(name)
     tool_input = as_dict(item.get("input"))
+    label = _card_label(
+        item,
+        family=family,
+        status=status,
+        tool_input=tool_input,
+        tool_name=name,
+    )
+    # Keep the rail dense; only auto-open failures so they are not missed.
+    expanded = status == "error"
 
-    with st.container(border=True):
+    with st.expander(label, expanded=expanded):
         if family == ToolFamily.ASK_USER:
             _render_ask_user(item, status=status, show_tool_details=show_tool_details)
         elif family == ToolFamily.SQL:
@@ -82,7 +152,56 @@ def render_tool_card(
                 show_tool_details=show_tool_details,
             )
 
+        if show_copy:
+            _maybe_copy_tool_payload(item, family=family, tool_input=tool_input)
         _maybe_raw_payload(item)
+
+
+def _maybe_copy_tool_payload(
+    item: dict[str, Any],
+    *,
+    family: ToolFamily,
+    tool_input: dict[str, Any],
+) -> None:
+    """Offer clipboard copy for the most useful tool payload."""
+    status = str(item.get("status") or "")
+    if status not in {"completed", "error"}:
+        return
+    item_id = str(item.get("id") or item.get("tool_use_id") or id(item))
+    text: str | None = None
+    label = "Copy result"
+
+    if family == ToolFamily.SQL:
+        sql = extract_sql_text(tool_input)
+        if sql:
+            text, label = sql, "Copy SQL"
+        else:
+            text = result_as_text(item.get("result"))
+    elif family == ToolFamily.BASH:
+        command = extract_command(tool_input)
+        result = result_as_text(item.get("result"))
+        if result:
+            text, label = result, "Copy output"
+        elif command:
+            text, label = command, "Copy command"
+    elif family in {ToolFamily.READ, ToolFamily.GREP, ToolFamily.GENERIC}:
+        text = result_as_text(item.get("result"))
+    elif family == ToolFamily.WRITE:
+        text = extract_content(tool_input)
+        label = "Copy content"
+    elif family == ToolFamily.EDIT:
+        old, new = extract_old_new(tool_input)
+        path = extract_path(tool_input)
+        text = new or unified_diff(old, new, path=path) or old
+        label = "Copy after"
+    elif family == ToolFamily.GLOB:
+        paths, _total = result_as_path_list(item.get("result"))
+        if paths:
+            text = "\n".join(paths)
+            label = "Copy paths"
+
+    if text:
+        render_copy_button(text, key=f"coco_copy_tool_{item_id}", label=label)
 
 
 def render_approval_preview(tool_name: str, tool_input: dict[str, Any] | None) -> None:
@@ -159,12 +278,6 @@ def render_approval_preview(tool_name: str, tool_input: dict[str, Any] | None) -
         st.caption(f"**{key}:** {value}")
 
 
-def _header(family: ToolFamily, status: str, *meta: str, tool_name: str = "") -> None:
-    bits = [f"**{family_label(family, tool_name)}** · {status_label(status)}"]
-    bits.extend(m for m in meta if m)
-    st.markdown(" · ".join(bits))
-
-
 def _maybe_raw_payload(item: dict[str, Any]) -> None:
     if not is_debug_mode():
         return
@@ -186,7 +299,6 @@ def _render_ask_user(item: dict[str, Any], *, status: str, show_tool_details: bo
         for idx, q in enumerate(questions)
     ]
     summary = ", ".join(headers) if headers else "clarifying question"
-    _header(ToolFamily.ASK_USER, status, summary)
     if status == "running":
         st.info(f"Waiting for your answer — {summary}")
     elif status == "completed":
@@ -204,14 +316,6 @@ def _render_sql(
 ) -> None:
     sql = extract_sql_text(tool_input)
     rows, text_fallback, total_rows = parse_sql_result_table(item.get("result"))
-    meta = []
-    if status == "completed" and total_rows is not None:
-        shown = len(rows or [])
-        if total_rows > shown:
-            meta.append(f"{shown} of {total_rows} rows")
-        else:
-            meta.append(f"{total_rows} row{'s' if total_rows != 1 else ''}")
-    _header(ToolFamily.SQL, status, *meta)
     if sql:
         st.code(sql, language="sql")
     else:
@@ -226,7 +330,7 @@ def _render_sql(
         return
     if rows is not None:
         if rows:
-            st.dataframe(rows, use_container_width=True, hide_index=True)
+            st.dataframe(rows, width="stretch", hide_index=True)
         else:
             st.caption("Query returned no rows.")
         return
@@ -242,7 +346,6 @@ def _render_read(
     show_tool_details: bool,
 ) -> None:
     path = extract_path(tool_input)
-    _header(ToolFamily.READ, status, f"`{path}`" if path else "")
     if status == "running":
         st.caption("Reading file…")
         return
@@ -267,7 +370,6 @@ def _render_write(
 ) -> None:
     path = extract_path(tool_input)
     content = extract_content(tool_input)
-    _header(ToolFamily.WRITE, status, f"`{path}`" if path else "")
     if content and (show_tool_details or status == "running"):
         diff = unified_diff("", content, path=path)
         st.code(
@@ -290,7 +392,6 @@ def _render_edit(
 ) -> None:
     path = extract_path(tool_input)
     old, new = extract_old_new(tool_input)
-    _header(ToolFamily.EDIT, status, f"`{path}`" if path else "")
     if show_tool_details or status in {"running", "error"}:
         diff = unified_diff(old, new, path=path) if (old or new) else ""
         if diff:
@@ -318,7 +419,6 @@ def _render_bash(
     show_tool_details: bool,
 ) -> None:
     command = extract_command(tool_input)
-    _header(ToolFamily.BASH, status)
     if command:
         st.code(command, language="bash")
     if status == "running":
@@ -330,7 +430,7 @@ def _render_bash(
     if show_tool_details:
         text = result_as_text(item.get("result"))
         if text:
-            st.text(truncate_text(text))
+            st.code(truncate_text(text), language="text")
 
 
 def _render_glob(
@@ -340,8 +440,6 @@ def _render_glob(
     status: str,
     show_tool_details: bool,
 ) -> None:
-    pattern = extract_pattern(tool_input)
-    _header(ToolFamily.GLOB, status, f"`{pattern}`" if pattern else "")
     if status == "running":
         st.caption("Searching files…")
         return
@@ -369,14 +467,6 @@ def _render_grep(
     status: str,
     show_tool_details: bool,
 ) -> None:
-    pattern = extract_pattern(tool_input)
-    path = extract_path(tool_input)
-    meta = []
-    if pattern:
-        meta.append(f"`{pattern}`")
-    if path:
-        meta.append(f"in `{path}`")
-    _header(ToolFamily.GREP, status, *meta)
     if status == "running":
         st.caption("Searching content…")
         return
@@ -395,10 +485,13 @@ def _render_grep(
         st.caption("Done.")
         return
     st.caption(f"{count} match{'es' if count != 1 else ''}")
-    # Full match dump is noisy in the small card — preview only in debug mode.
+    # Full match dump is noisy — preview only in debug mode.
     if is_debug_mode():
         preview = matches[:20]
-        st.text("\n".join(truncate_text(line, 160) for line in preview))
+        st.code(
+            "\n".join(truncate_text(line, 160) for line in preview),
+            language="text",
+        )
         if count > len(preview):
             st.caption(f"+{count - len(preview)} more")
 
@@ -411,7 +504,6 @@ def _render_exit_plan(
     show_tool_details: bool,
 ) -> None:
     plan = extract_plan(tool_input)
-    _header(ToolFamily.EXIT_PLAN, status)
     if plan and show_tool_details:
         st.markdown(truncate_text(plan, 6000))
     if status == "running":
@@ -428,7 +520,6 @@ def _render_generic(
     status: str,
     show_tool_details: bool,
 ) -> None:
-    _header(ToolFamily.GENERIC, status, tool_name=name)
     fields = summarize_input_fields(tool_input)
     for key, value in fields:
         st.caption(f"**{key}:** {value}")

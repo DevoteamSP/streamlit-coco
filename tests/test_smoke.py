@@ -25,7 +25,14 @@ def test_core_import_does_not_load_streamlit() -> None:
     script = """
 import sys
 import streamlit_coco as coco
-_ = coco.CocoSession, coco.query, coco.CocoOptions, coco.approve_pending, coco.get_session
+_ = (
+    coco.CocoSession,
+    coco.query,
+    coco.CocoOptions,
+    coco.approve_pending,
+    coco.get_session,
+    coco.upload_to_cwd,
+)
 assert "streamlit" not in sys.modules, sorted(k for k in sys.modules if k.startswith("streamlit"))
 print("ok")
 """
@@ -42,12 +49,14 @@ print("ok")
 def test_import_core_modules() -> None:
     import streamlit_coco.ask_user  # noqa: F401
     import streamlit_coco.bootstrap  # noqa: F401
+    import streamlit_coco.clipboard  # noqa: F401
     import streamlit_coco.debug  # noqa: F401
     import streamlit_coco.diagnostics  # noqa: F401
     import streamlit_coco.display  # noqa: F401
     import streamlit_coco.messages  # noqa: F401
     import streamlit_coco.options  # noqa: F401
     import streamlit_coco.permissions  # noqa: F401
+    import streamlit_coco.rich_text  # noqa: F401
     import streamlit_coco.session  # noqa: F401
     import streamlit_coco.sql_tool  # noqa: F401
     import streamlit_coco.text_renderer  # noqa: F401
@@ -55,6 +64,15 @@ def test_import_core_modules() -> None:
     import streamlit_coco.tool_extract  # noqa: F401
     import streamlit_coco.tool_names  # noqa: F401
     import streamlit_coco.ui  # noqa: F401
+    import streamlit_coco.upload  # noqa: F401
+
+
+def test_cwd_upload_export() -> None:
+    import streamlit_coco as st_coco
+
+    assert callable(st_coco.upload_to_cwd)
+    assert issubclass(st_coco.CwdUploadError, st_coco.CocoError)
+    assert callable(st_coco.cwd_uploader)
 
 
 def test_ccv2_component_registers_once(monkeypatch: pytest.MonkeyPatch) -> None:

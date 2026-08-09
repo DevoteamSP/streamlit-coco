@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "description": "Manual / exploratory prompts for streamlit-coco tool display cards and HITL interactions (see docs/features/tools-display/SPEC.md).",
+  "description": "Manual / exploratory prompts for streamlit-coco tool display cards and HITL interactions (see doc/features/tools-display/SPEC.md).",
   "prompts": [
     {
       "id": "display-glob-basic",
@@ -14,7 +14,7 @@
       "id": "display-glob-nested",
       "category": "display_glob",
       "title": "Glob — nested package files",
-      "prompt": "Glob `docs/**/*.md` and report how many markdown docs you found (count + first 5 paths).",
+      "prompt": "Glob `doc/**/*.md` and report how many markdown docs you found (count + first 5 paths).",
       "expects": ["tool:Glob", "card:glob", "result"]
     },
     {

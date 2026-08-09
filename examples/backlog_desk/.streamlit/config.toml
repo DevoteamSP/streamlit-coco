@@ -1,0 +1,46 @@
+# Product Backlog Desk — Devoteam + Snowflake accents
+# Same tokens as dsp-assets/navigator (no custom CSS)
+
+[theme]
+base = "light"
+primaryColor = "#F5364B"
+backgroundColor = "#FAFAFA"
+secondaryBackgroundColor = "#F4F5F7"
+textColor = "#2D2D2D"
+linkColor = "#F5364B"
+borderColor = "#E2E4EA"
+codeBackgroundColor = "#EEF1F5"
+codeTextColor = "#2D2D2D"
+showWidgetBorder = true
+showSidebarBorder = true
+baseRadius = "8px"
+buttonRadius = "8px"
+font = "'Nunito Sans':https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap"
+codeFont = "'JetBrains Mono':https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+codeFontSize = "13px"
+baseFontSize = 14
+baseFontWeight = 400
+headingFontSizes = ["28px", "22px", "18px", "16px", "14px", "12px"]
+headingFontWeights = [700, 600, 600, 600, 500, 500]
+linkUnderline = false
+
+redColor = "#F5364B"
+blueColor = "#29B5E8"
+orangeColor = "#F59B23"
+greenColor = "#27AE60"
+violetColor = "#7B61FF"
+yellowColor = "#F59B23"
+grayColor = "#7B7F8E"
+
+chartCategoricalColors = ["#29B5E8", "#F59B23", "#27AE60", "#7B61FF", "#F5364B", "#1ABC9C"]
+
+dataframeBorderColor = "#E2E4EA"
+dataframeHeaderBackgroundColor = "#F4F5F7"
+
+[theme.sidebar]
+backgroundColor = "#1E2028"
+secondaryBackgroundColor = "#2A2D38"
+codeBackgroundColor = "#2A2D38"
+textColor = "#FFFFFF"
+borderColor = "#3A3E4A"
+primaryColor = "#F5364B"

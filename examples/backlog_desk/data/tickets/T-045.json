@@ -1,0 +1,11 @@
+{
+  "id": "T-045",
+  "epic_id": "E-02",
+  "title": "Fix broken deep-link to ticket",
+  "type": "bug",
+  "priority": "critical",
+  "status": "blocked",
+  "points": 2,
+  "owner": "jon",
+  "description": "Deep link ?ticket=T-042 lands on Board. Blocked on session_state key rename (depends T-043)."
+}

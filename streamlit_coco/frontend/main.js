@@ -233,14 +233,23 @@ function truncate(text, limit = 4000) {
   return value.length > limit ? `${value.slice(0, limit)}\n…` : value;
 }
 
-function createCardShell(titleText) {
-  const card = document.createElement("div");
+function createCardShell(titleText, { open = false } = {}) {
+  const card = document.createElement("details");
   card.className = "coco-tool-card";
-  const title = document.createElement("div");
-  title.className = "coco-sql-title";
-  title.textContent = titleText;
-  card.appendChild(title);
+  if (open) card.open = true;
+  const summary = document.createElement("summary");
+  summary.className = "coco-tool-summary";
+  summary.textContent = titleText;
+  card.appendChild(summary);
+  const body = document.createElement("div");
+  body.className = "coco-tool-card-body";
+  card.appendChild(body);
+  card._body = body;
   return card;
+}
+
+function cardBody(card) {
+  return card._body || card;
 }
 
 function appendPre(card, text, className = "coco-sql-query") {
@@ -248,14 +257,14 @@ function appendPre(card, text, className = "coco-sql-query") {
   const pre = document.createElement("pre");
   pre.className = className;
   pre.textContent = text;
-  card.appendChild(pre);
+  cardBody(card).appendChild(pre);
 }
 
 function appendMeta(card, text) {
   const meta = document.createElement("div");
   meta.className = "coco-meta";
   meta.textContent = text;
-  card.appendChild(meta);
+  cardBody(card).appendChild(meta);
 }
 
 function createAskUserCard(item) {
@@ -265,7 +274,10 @@ function createAskUserCard(item) {
   );
   const summary = headers.length ? headers.join(", ") : "clarifying question";
   const status = item.status || "running";
-  const card = createCardShell(`Question · ${statusLabel(status)}`);
+  const card = createCardShell(
+    `Question · ${statusLabel(status)}${summary ? ` · ${summary}` : ""}`,
+    { open: status === "error" },
+  );
   if (status === "running") appendMeta(card, `Waiting for your answer — ${summary}`);
   else if (status === "completed") appendMeta(card, `Answered — ${summary}`);
   else if (status === "error") appendMeta(card, `Question cancelled or failed — ${summary}`);
@@ -275,7 +287,9 @@ function createAskUserCard(item) {
 
 function createSqlCard(item) {
   const status = item.status || "running";
-  const card = createCardShell(`SQL · ${statusLabel(status)}`);
+  const card = createCardShell(`SQL · ${statusLabel(status)}`, {
+    open: status === "error",
+  });
   appendPre(card, extractSqlText(item.input || {}));
   if (status === "running") appendMeta(card, "Executing query…");
   else if (item.result != null) {
@@ -293,6 +307,7 @@ function createPathCard(item, familyLabel, runningText) {
   const path = extractPath(item.input || {});
   const card = createCardShell(
     path ? `${familyLabel} · ${statusLabel(status)} · ${path}` : `${familyLabel} · ${statusLabel(status)}`,
+    { open: status === "error" },
   );
   if (familyLabel === "Write") {
     appendPre(card, truncate(firstStr(item.input || {}, ["content", "new_str", "newString", "text"]), 2500));
@@ -316,8 +331,16 @@ function createPathCard(item, familyLabel, runningText) {
 
 function createBashCard(item) {
   const status = item.status || "running";
-  const card = createCardShell(`Bash · ${statusLabel(status)}`);
-  appendPre(card, firstStr(item.input || {}, ["command", "cmd"]));
+  const command = firstStr(item.input || {}, ["command", "cmd"]);
+  const shortCmd =
+    command && command.length > 48 ? `${command.slice(0, 48)}…` : command;
+  const card = createCardShell(
+    shortCmd
+      ? `Bash · ${statusLabel(status)} · ${shortCmd}`
+      : `Bash · ${statusLabel(status)}`,
+    { open: status === "error" },
+  );
+  appendPre(card, command);
   if (status === "running") appendMeta(card, "Running command…");
   else if (typeof item.result === "string" && item.result) appendPre(card, truncate(item.result), "coco-tool-body");
   return card;
@@ -328,22 +351,7 @@ function createPatternCard(item, familyLabel, runningText) {
   const pattern = firstStr(item.input || {}, ["pattern", "glob_pattern", "glob", "regex"]);
   const path = extractPath(item.input || {});
   const meta = [pattern && `\`${pattern}\``, path && `in \`${path}\``].filter(Boolean).join(" · ");
-  const card = createCardShell(
-    meta ? `${familyLabel} · ${statusLabel(status)} · ${meta.replace(/`/g, "")}` : `${familyLabel} · ${statusLabel(status)}`,
-  );
-  if (status === "running") {
-    appendMeta(card, runningText);
-    return card;
-  }
-  if (status === "error") {
-    appendMeta(card, typeof item.result === "string" ? truncate(item.result, 200) : "Failed");
-    return card;
-  }
   const resultText = typeof item.result === "string" ? item.result : "";
-  if (!resultText.trim()) {
-    appendMeta(card, familyLabel === "Grep" ? "No matches." : "No files found.");
-    return card;
-  }
   const lines = resultText
     .split("\n")
     .map((line) => line.trim())
@@ -357,18 +365,45 @@ function createPatternCard(item, familyLabel, runningText) {
       );
     });
   const count = lines.length;
-  if (familyLabel === "Grep") {
-    appendMeta(card, count === 1 ? "1 match" : `${count} matches`);
-  } else {
-    appendMeta(card, count === 1 ? "1 file" : `${count} files`);
+  let countLabel = "";
+  if (status === "completed" && resultText.trim()) {
+    countLabel =
+      familyLabel === "Grep"
+        ? count === 1
+          ? "1 match"
+          : `${count} matches`
+        : count === 1
+          ? "1 file"
+          : `${count} files`;
   }
+  const titleBits = [
+    `${familyLabel} · ${statusLabel(status)}`,
+    meta ? meta.replace(/`/g, "") : "",
+    countLabel,
+  ].filter(Boolean);
+  const card = createCardShell(titleBits.join(" · "), { open: status === "error" });
+  if (status === "running") {
+    appendMeta(card, runningText);
+    return card;
+  }
+  if (status === "error") {
+    appendMeta(card, typeof item.result === "string" ? truncate(item.result, 200) : "Failed");
+    return card;
+  }
+  if (!resultText.trim()) {
+    appendMeta(card, familyLabel === "Grep" ? "No matches." : "No files found.");
+    return card;
+  }
+  if (countLabel) appendMeta(card, countLabel);
   return card;
 }
 
 function createGenericCard(item) {
   const status = item.status || "running";
   const name = item.name || "Tool";
-  const card = createCardShell(`${name} · ${statusLabel(status)}`);
+  const card = createCardShell(`${name} · ${statusLabel(status)}`, {
+    open: status === "error",
+  });
   const input = item.input || {};
   Object.keys(input)
     .slice(0, 6)
@@ -396,7 +431,10 @@ function createToolCard(item) {
   if (family === "glob") return createPatternCard(item, "Glob", "Searching files…");
   if (family === "grep") return createPatternCard(item, "Grep", "Searching content…");
   if (family === "exit_plan") {
-    const card = createCardShell(`Plan · ${statusLabel(item.status || "running")}`);
+    const status = item.status || "running";
+    const card = createCardShell(`Plan · ${statusLabel(status)}`, {
+      open: status === "error",
+    });
     appendPre(card, firstStr(item.input || {}, ["plan", "message", "text"]));
     return card;
   }

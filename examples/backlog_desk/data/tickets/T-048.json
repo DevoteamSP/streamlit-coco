@@ -1,0 +1,11 @@
+{
+  "id": "T-048",
+  "epic_id": "E-01",
+  "title": "Release notes template skill",
+  "type": "chore",
+  "priority": "low",
+  "status": "done",
+  "points": 1,
+  "owner": "maya",
+  "description": "Document draft-release-notes skill for Copilot demos. Reviewed."
+}

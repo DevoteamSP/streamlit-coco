@@ -34,13 +34,6 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          body: ${{ steps.changelog.outputs.notes }}
-          draft: false
-          prerelease: ${{ contains(github.ref_name, '-rc') || contains(github.ref_name, '-beta') || contains(github.ref_name, '-alpha') }}
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -52,10 +45,36 @@ jobs:
       - name: Build sdist + wheel
         run: uv build
 
+      - name: Generate SBOM (CycloneDX)
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          uv sync --extra sdk
+          uvx --from cyclonedx-bom==6.1.2 \
+            cyclonedx-py environment \
+            --pyproject pyproject.toml \
+            --mc-type library \
+            --output-format JSON \
+            --output-file "dist/sbom-${GITHUB_REF_NAME}.cdx.json" \
+            --output-reproducible
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: ${{ steps.changelog.outputs.notes }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-rc') || contains(github.ref_name, '-beta') || contains(github.ref_name, '-alpha') }}
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/sbom-*.cdx.json
+
       # PyPI only from the public release repo (not streamlit-coco-dev).
+      # Temporary: lletourmy/streamlit-coco until DevoteamSP org is PyPI-validated;
+      # switch Trusted Publisher + this gate back to DevoteamSP/streamlit-coco after.
       - name: Publish to PyPI
         if: >-
-          github.repository == 'DevoteamSP/streamlit-coco'
+          github.repository == 'lletourmy/streamlit-coco'
           && !contains(github.ref_name, '-rc')
           && !contains(github.ref_name, '-beta')
           && !contains(github.ref_name, '-alpha')

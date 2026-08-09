@@ -1,0 +1,11 @@
+{
+  "id": "T-041",
+  "epic_id": "E-01",
+  "title": "Weekly status PDF pack",
+  "type": "feature",
+  "priority": "medium",
+  "status": "ready",
+  "points": 8,
+  "owner": "maya",
+  "description": "Generate a one-page PDF from KPIs + blocked tickets. Acceptance: downloadable from Board."
+}
