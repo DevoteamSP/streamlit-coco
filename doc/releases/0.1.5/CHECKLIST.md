@@ -2,7 +2,8 @@
 
 **Owner:** streamlit-coco maintainers  
 **Target tag date:** 2026-08-09  
-**GitHub Release:** https://github.com/lletourmy/streamlit-coco/releases/tag/v0.1.5 _(fill after)_  
+**GitHub Release (publisher):** https://github.com/lletourmy/streamlit-coco/releases/tag/v0.1.5  
+**GitHub Release (org mirror):** https://github.com/DevoteamSP/streamlit-coco/releases/tag/v0.1.5  
 **PyPI:** https://pypi.org/project/streamlit-coco/0.1.5/
 
 Do not run `make sync-release` / tag `v0.1.5` until Product docs + QA are done. Marketing can ship the same day or within 48h.
@@ -38,11 +39,11 @@ Outreach drafts: [`../../../doc-dev/releases/0.1.5/`](../../../doc-dev/releases/
 
 Follow [`doc/deployment/publish.md`](../../deployment/publish.md):
 
-- [ ] Merge `feature/cwd_upload` → `-dev` `main`
-- [ ] `COMMIT=1 PUSH=1 MESSAGE="Release 0.1.5" make sync-release` (lletourmy + DevoteamSP)
-- [ ] Tag `v0.1.5` on public `lletourmy/streamlit-coco` and push
-- [ ] Confirm GitHub Release + PyPI + SBOM asset
-- [ ] Release body: CHANGELOG excerpt + screenshots
+- [x] Merge `feature/cwd_upload` → `-dev` `main`
+- [x] `COMMIT=1 PUSH=1 MESSAGE="Release 0.1.5" make sync-release` (lletourmy + DevoteamSP)
+- [x] Tag `v0.1.5` on public `lletourmy/streamlit-coco` and push
+- [x] Confirm GitHub Release + PyPI + SBOM asset (SBOM under `sbom/` so PyPI only gets wheel/sdist)
+- [x] Release body: CHANGELOG excerpt + screenshots
 
 ## 5. Narrative & outreach (strongly recommended — `doc-dev`)
 
@@ -56,8 +57,9 @@ Follow [`doc/deployment/publish.md`](../../deployment/publish.md):
 
 | Channel | URL | Date |
 | --- | --- | --- |
-| GitHub Release | | |
-| PyPI | | |
+| GitHub Release (lletourmy) | https://github.com/lletourmy/streamlit-coco/releases/tag/v0.1.5 | 2026-08-09 |
+| GitHub Release (DevoteamSP) | https://github.com/DevoteamSP/streamlit-coco/releases/tag/v0.1.5 | 2026-08-09 |
+| PyPI | https://pypi.org/project/streamlit-coco/0.1.5/ | 2026-08-09 |
 | LinkedIn | | |
 | Medium | | |
 | Streamlit Forum | | |

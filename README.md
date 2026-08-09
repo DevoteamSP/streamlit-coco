@@ -9,7 +9,7 @@ You own the page. CoCo owns the session. `panel()` streams the transcript; your 
 
 ![CoCo for Streamlit — streaming transcript with a Glob tool card](doc/screenshot.png)
 
-> Alpha `0.1.0` — API may still move. Star / watch the repo if you plan to ship on it.
+> Alpha `0.1.5` — API may still move. Star / watch the repo if you plan to ship on it.
 
 **Repo:** [github.com/lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco) *(temporary PyPI source)* · **Dev:** [streamlit-coco-dev](https://github.com/DevoteamSP/streamlit-coco-dev)  
 **SDK docs:** [Cortex Code Agent SDK](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
@@ -93,6 +93,7 @@ st_coco.chat(session=session, key="coco_chat", height=560)
 
 ```bash
 make chat          # panel + chat input + tool cards + approvals
+make cwd-upload    # upload files into agent cwd + chat
 make approval      # legacy CCv2 chat
 make structured    # custom structured-output panel
 make headless      # asyncio query() pipeline
@@ -100,7 +101,8 @@ make backlog       # Product Backlog Desk (multipage business demo)
 ```
 
 Exploratory prompts: [`examples/testdata/prompts.json`](examples/testdata/prompts.json).  
-Backlog desk: [`examples/backlog_desk/README.md`](examples/backlog_desk/README.md).
+Backlog desk: [`examples/backlog_desk/README.md`](examples/backlog_desk/README.md).  
+File upload: [`doc/features/file-upload/file-upload.md`](doc/features/file-upload/file-upload.md).
 
 ---
 
@@ -159,16 +161,19 @@ tests/
 ## Development
 
 ```bash
-make install   # uv sync --extra dev
-make check     # ruff + pytest
-make audit     # pip-audit
-make format    # ruff format + fix
-make build     # sdist + wheel
-make sync-release  # copy tree → ../streamlit-coco (see doc/deployment/publish.md)
-make help      # all targets
+make install       # uv sync --extra dev
+make check         # ruff + unit/smoke (ignores tests/e2e)
+make e2e-install   # Playwright + Chromium (once)
+make e2e           # UX e2e vs examples/e2e_ux_harness.py
+make test-all      # check + e2e + audit
+make audit         # pip-audit
+make format        # ruff format + fix
+make build         # sdist + wheel
+make sync-release  # copy tree → public clones (see doc/deployment/publish.md)
+make help          # all targets
 ```
 
-CI runs lint, tests, and pip-audit on every PR to `main`.  
+CI runs lint, tests, and pip-audit on every PR to `main`. Full local gate: `make test-all` ([`doc/testing.md`](doc/testing.md)).  
 **Releases:** develop here (`streamlit-coco-dev`), sync + tag on [`lletourmy/streamlit-coco`](https://github.com/lletourmy/streamlit-coco) → PyPI ([guide](doc/deployment/publish.md)).
 
 **Docs:** [PRD](doc/prd.md) · [API](doc/api.md) · [Roadmap](doc/roadmap.md) · [Deployment](doc/deployment/) · [Changelog](CHANGELOG.md) · [AGENTS.md](AGENTS.md)

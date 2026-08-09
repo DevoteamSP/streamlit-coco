@@ -12,6 +12,9 @@ Living plan (what’s next): [`doc/roadmap.md`](doc/roadmap.md).
 
 ## [Unreleased]
 
+### Changed
+- README: document `make cwd-upload`, `make e2e-install` / `make e2e`, and `make test-all`
+
 ## [0.1.5] — 2026-08-09
 
 Alpha follow-up: browser uploads into the agent workspace, safer transcript UX, Playwright e2e, and SBOM on GitHub Releases.
