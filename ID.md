@@ -9,7 +9,7 @@
 | **Asset Owner** |  Laurent Letourmy |
 | **Contributors** | DevoteamSP / streamlit-coco contributors |
 | **Created** | 2026-07 |
-| **Last updated** | 2026-07 |
+| **Last updated** | 2026-08-13 |
 | **Confidentiality** | Public |
 
 ---
@@ -32,17 +32,18 @@
 
 - Clients where used: 0 (alpha)
 - Consultants trained: —
-- Demo available: yes (`make chat`, examples/)
+- Demo available: yes (`make chat`, `make backlog`, `make tableau-semantic`, `doc/training/`)
 - Snowflake Alliance pre-alignment: —
 
 **Next milestone**: N1 — conditions needed:
 
 - [x] Feature golden-path checklists under `doc/features/`
 - [x] CI + PR template
+- [x] Consultant enablement pack (`doc/training/`) + workshop W01 (`0.1.6`)
 - [ ] Fill owner / KPIs on this sheet
 - [ ] Run and sign off UI checklists on a live CoCo + Snowflake connection
 - [ ] Security threat model + audit pack (`doc/security/`)
-- [ ] Marketing one-pager (`doc-dev/marketing/`)
+- [x] Marketing one-pager (`doc/marketing/one-pager.md`) — refreshed for `0.1.6`
 
 ---
 
@@ -60,5 +61,5 @@ Publish procedure: [`doc/deployment/publish.md`](doc/deployment/publish.md)
 ## Security
 
 - IP review done: no
-- Threat model: not yet (`doc/security/` TBD)
+- Threat model: started (`doc/security/threat-model.md`)
 - Last security scan: GitHub Actions Security workflow (Gitleaks CLI, CodeQL, pip-audit)

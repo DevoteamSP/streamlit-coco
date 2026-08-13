@@ -17,6 +17,7 @@ Teams building Streamlit apps on Snowflake need AI-assisted data exploration, co
 | Capability | What it does |
 |-----------|--------------|
 | `panel()` | Streaming agent transcript with tool cards (SQL, Read, Write, Grep) |
+| `copilot_rail()` | Right-rail Copilot: connection, queued jobs, compact transcript (`0.1.6`) |
 | Approval gates | Human-in-the-loop pause before destructive tools execute |
 | `chat_input_bar()` | App-integrated chat input with session management |
 | `query()` | Headless async API for scripts and CI — no UI needed |
@@ -40,7 +41,7 @@ Teams building Streamlit apps on Snowflake need AI-assisted data exploration, co
 | Data engineers | Agentic pipelines with human oversight |
 | Analytics teams | AI-powered data exploration dashboards |
 | Platform teams | Internal tools with embedded code generation |
-| Consultants | Rapid prototyping of AI-first Snowflake apps |
+| Consultants | Rapid prototyping of AI-first Snowflake apps; Tableau → Semantic example |
 
 ---
 
@@ -78,7 +79,7 @@ streamlit run app.py
 
 | | |
 |---|---|
-| **Level** | N0 (Alpha) — targeting N1 |
+| **Level** | N0 (Alpha `0.1.6`) — targeting N1 |
 | **License** | Apache-2.0 |
 | **Owner** | Laurent Letourmy — Devoteam Snowflake Partner |
 | **Repo** | [github.com/DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco) |

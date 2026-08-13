@@ -42,7 +42,7 @@ from streamlit_coco.upload import (
     upload_to_cwd,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.1.6"
 
 # UI / Streamlit-backed exports — loaded on first attribute access.
 _LAZY_ATTRS: dict[str, tuple[str, str]] = {
@@ -60,6 +60,8 @@ _LAZY_ATTRS: dict[str, tuple[str, str]] = {
     "render_session_status": ("streamlit_coco.display", "render_session_status"),
     "render_transcript": ("streamlit_coco.display", "render_transcript"),
     "panel": ("streamlit_coco.ui", "panel"),
+    "copilot_rail": ("streamlit_coco.rail", "copilot_rail"),
+    "transcript_view_pills": ("streamlit_coco.rail", "transcript_view_pills"),
     "render_approvals": ("streamlit_coco.ui", "render_approvals"),
     "render_plan_banner": ("streamlit_coco.ui", "render_plan_banner"),
     "send_prompt": ("streamlit_coco.ui", "send_prompt"),
@@ -91,6 +93,7 @@ __all__ = [
     "chat",
     "chat_input_bar",
     "check_environment",
+    "copilot_rail",
     "cwd_uploader",
     "deny_pending",
     "events_to_dataframe",
@@ -119,6 +122,7 @@ __all__ = [
     "send_prompt",
     "stop_session",
     "tool_family",
+    "transcript_view_pills",
     "upload_to_cwd",
 ]
 
@@ -128,9 +132,9 @@ def __getattr__(name: str) -> Any:
     if target is None:
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
     module_name, attr = target
-    value = getattr(import_module(module_name), attr)
-    globals()[name] = value
-    return value
+    # Always resolve from the live module so Streamlit hot-reload of
+    # ``streamlit_coco.rail`` (etc.) is not stuck on a stale cached function.
+    return getattr(import_module(module_name), attr)
 
 
 def __dir__() -> list[str]:

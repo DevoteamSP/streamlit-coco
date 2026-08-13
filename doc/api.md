@@ -1,7 +1,7 @@
 # API reference — streamlit-coco
 
 Public surface exported from `import streamlit_coco as st_coco`.  
-Alpha `0.1.0` — signatures may still move; prefer this page over the PRD sketch.
+Alpha `0.1.6` — signatures may still move; prefer this page over the PRD sketch.
 
 **Related:** [README quickstart](../README.md) · [Local deployment](deployment/local.md) · [Feature docs](features/README.md) · [SDK docs](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
 
@@ -158,10 +158,37 @@ Native transcript / field output + approvals + Stop. App owns input.
 | `text_renderer` | `None` | `"markdown"` (default) / `"write"` / `"text"` / … or callable. Default markdown highlights fenced code blocks via `st.code` |
 | `show_copy` | `True` | Clipboard controls on assistant messages and tool cards |
 | `max_messages` | `None` | Transcript window size; **Load earlier** reveals older items |
+| `preview_chars` | `None` | Cap user/assistant text to the first N characters |
 | `on_structured_output` | `None` | `Callable[[dict, CocoChatResult], None]` |
 | `structured_output_container` | `None` | Container for structured render |
 
 Feature doc: [`features/panel/panel.md`](features/panel/panel.md).
+
+### `copilot_rail(session, *, title="Copilot", …) -> None`
+
+Right-rail Copilot: connection popover with transcript pills beside it, queued job,
+`panel()`, chat input. App-agnostic — callers own session lifecycle and job dicts.
+While CoCo is busy, **Working · thinking…** is a badge on the pills row (not a
+tall status card).
+
+| Param | Default | Notes |
+| --- | --- | --- |
+| `session` | — | `CocoSession` or `None` until connected |
+| `connected` | `True` | Whether Connect has been confirmed |
+| `connections` | `None` | Snowflake connection names for the popover |
+| `on_connect` / `on_disconnect` | `None` | Callbacks; omit to hide the popover |
+| `job` | `None` | `{prompt, label, status, expect_structured, …}` |
+| `on_job_sent` | `None` | Called after a queued prompt is `session.send`'d |
+| `on_job_finished` | `None` | Called when that turn ends (`COMPLETED` / `ERROR` / `CANCELLED`, or `READY` after a run) so the app can drop the job |
+| `show_copy` | `False` | Clipboard controls off for demo rails |
+| `show_transcript_filters` | `True` | Pills: **Last messages** · **First 200 characters** |
+
+### `transcript_view_pills(*, key=…, last_n=8, preview_chars=200) -> tuple[int \| None, int \| None]`
+
+Standalone pills for apps that call `panel()` directly. Returns `(max_messages, preview_chars)`.
+Label is collapsed by default (no **Transcript** heading).
+
+Feature doc: [`features/copilot-rail/copilot-rail.md`](features/copilot-rail/copilot-rail.md).
 
 ### `chat_input_bar(session, *, placeholder=…, connecting_placeholder=…, key=None, accept_file=False, …) -> str | None`
 
@@ -340,7 +367,7 @@ Tool card UX: [`features/tools-display/SPEC.md`](features/tools-display/SPEC.md)
 ## Package metadata
 
 ```python
-st_coco.__version__  # e.g. "0.1.0"
+st_coco.__version__  # e.g. "0.1.6"
 ```
 
 Private modules (`bridge`, `tool_cards`, `tool_extract`, …) are implementation details and are not part of the stable public surface.

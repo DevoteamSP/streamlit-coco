@@ -3,8 +3,8 @@
 **Product:** `streamlit-coco` — a Streamlit component and Python library for embedding [Snowflake CoCo](https://www.snowflake.com/en/product/snowflake-coco/) (formerly Cortex Code) in Streamlit applications.
 
 **Author:** —  
-**Status:** Alpha `0.1.0` (Phase 3 shipped; release gate = tag + PyPI)  
-**Last updated:** 2026-07-28
+**Status:** Alpha `0.1.6` (Phase 3 shipped; PyPI cuts through `0.1.6`)  
+**Last updated:** 2026-08-13
 
 ---
 
@@ -13,7 +13,7 @@
 Data teams increasingly build internal tools in Streamlit, but Snowflake CoCo today is primarily consumed through CLI, Snowsight, Desktop, and IDE extensions. **`streamlit-coco` bridges that gap**: it wraps the [Cortex Code Agent SDK](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk) (`cortex_code_agent_sdk`) and exposes:
 
 1. **A Python API** for programmatic, headless agent orchestration (`query()`, `CocoSession`).
-2. **A preferred native Streamlit UI** — `panel()` + app-owned `st.chat_input` / `send_prompt()`, with streaming transcript, tool cards, and approval gates.
+2. **A preferred native Streamlit UI** — `panel()` + app-owned `st.chat_input` / `send_prompt()`, with streaming transcript, tool cards, and approval gates. Multipage / exec demos use **`copilot_rail()`** (connection, queued jobs, compact transcript) around that same panel.
 3. **A legacy Custom Component (v2)** — `chat()` with built-in input — still supported for all-in-one embeds.
 
 Designed for Snowflake-native workflows: SQL generation, semantic view design, dbt/Airflow scaffolding, data profiling, and governed tool execution against a live Snowflake account.
@@ -57,7 +57,7 @@ Designed for Snowflake-native workflows: SQL generation, semantic view design, d
 | G4 | Preserve **multi-turn conversation context** within a Streamlit session via `CortexCodeSDKClient`. |
 | G5 | Integrate cleanly with **`st.session_state`**, Snowflake connections, and Streamlit theming (`--st-*` CSS variables). |
 | G6 | Document deployment requirements (CLI, credentials, SPCS vs local server). |
-| G7 | Isolate agent UI reruns with **`@st.fragment`** so the rest of the app does not rerun on every stream tick or chat interaction (`panel()` and `chat()`). |
+| G7 | Isolate agent UI reruns with **`@st.fragment`** so the rest of the app does not rerun on every stream tick or chat interaction (`panel()`, `chat()`, and `copilot_rail()` pills). |
 
 ### 3.2 Non-goals (v1)
 
@@ -77,7 +77,7 @@ Designed for Snowflake-native workflows: SQL generation, semantic view design, d
 
 ### 4.1 Personas
 
-1. **App builder** — integrates `st_coco.panel()` + `st.chat_input` (or legacy `st_coco.chat()`) into a Streamlit multipage app.
+1. **App builder** — integrates `st_coco.panel()` + `st.chat_input` (or `st_coco.copilot_rail()` / legacy `st_coco.chat()`) into a Streamlit multipage app.
 2. **Operator** — interacts with the agent UI to approve SQL or pipeline changes.
 3. **Automation author** — uses headless `query()` / `CocoSession.send()` in jobs triggered from Streamlit.
 
@@ -85,7 +85,7 @@ Designed for Snowflake-native workflows: SQL generation, semantic view design, d
 
 | UC | Description | API mode |
 | --- | --- | --- |
-| UC1 | **Embedded data copilot** — chat in a semantic view or dbt project explorer | `panel()` (+ optional legacy `chat()`) |
+| UC1 | **Embedded data copilot** — chat in a semantic view or dbt project explorer | `panel()` / `copilot_rail()` (+ optional legacy `chat()`) |
 | UC2 | **Guided pipeline builder** — agent proposes DDL/dbt models; user confirms each Write/Edit | UI + `can_use_tool` / `require_approval_for` |
 | UC3 | **One-shot task** — “Profile this table and return JSON” with structured output | `coco.query()` |
 | UC4 | **Multi-step wizard** — app drives turns programmatically between Streamlit steps | `CocoSession.send()` / `run()` / `stream()` |
@@ -100,12 +100,12 @@ Designed for Snowflake-native workflows: SQL generation, semantic view design, d
 ```mermaid
 flowchart TB
     subgraph Browser["User browser"]
-        Native["Native Streamlit widgets\npanel / chat_input / approvals"]
+        Native["Native Streamlit widgets\npanel / copilot_rail / chat_input / approvals"]
         CCv2["Legacy CCv2 chat UI\nfrontend/*.js"]
     end
 
     subgraph StreamlitServer["Streamlit server (Python)"]
-        Panel["st_coco.panel() + send_prompt()"]
+        Panel["st_coco.panel() / copilot_rail() + send_prompt()"]
         Chat["st_coco.chat()"]
         Session["CocoSession — worker thread + asyncio"]
         SDK["cortex_code_agent_sdk"]
@@ -136,6 +136,7 @@ streamlit-coco/
 ├── streamlit_coco/
 │   ├── __init__.py              # public exports
 │   ├── ui.py                    # panel(), send_prompt(), render_approvals()
+│   ├── rail.py                  # copilot_rail(), transcript_view_pills()
 │   ├── display.py               # native transcript / field rendering
 │   ├── component.py             # chat() CCv2 registration + mount
 │   ├── session.py               # CocoSession, CocoChatResult, CocoRunStatus
@@ -149,7 +150,9 @@ streamlit-coco/
 │   ├── chat_app.py              # preferred panel + st.chat_input
 │   ├── approval_gate.py
 │   ├── structured_output.py
-│   └── headless_pipeline.py
+│   ├── headless_pipeline.py
+│   ├── backlog_desk/            # multipage business demo + copilot rail
+│   └── tableau_to_semantic/     # Tableau → semantic view + RAP (0.1.6)
 ├── tests/
 ├── doc/prd.md
 ├── Makefile
@@ -261,6 +264,7 @@ if prompt:
 | FR-P5 | `use_fragment=True` + `run_every` polling while `needs_polling` | ✅ |
 | FR-P6 | `on_structured_output` / `structured_output_container` (same rules as §6.6) | ✅ |
 | FR-P7 | CoCo branding in labels / empty states | ✅ |
+| FR-P8 | Optional `copilot_rail()` — connection, queued jobs, compact transcript pills around `panel()` | ✅ `0.1.6` |
 
 #### 6.1.5 Legacy Streamlit component — `st_coco.chat()`
 
@@ -391,7 +395,7 @@ When `permission_mode="plan"`, native `panel()` shows `render_plan_banner()` wit
 | FR-ST1 | Session keyed in registry / `st.session_state`; transcript, pending approval, status on `CocoSession` | ✅ |
 | FR-ST2 | Changing `options` mid-session calls `session.reset()` or warns user (configurable) | ⚠️ partial (`sync_options` / reset available; no forced warn UX) |
 | FR-ST3 | `reset()` clears transcript and closes SDK client | ✅ |
-| FR-ST4 | Transcript persists across reruns; optional `max_messages` truncation with “load earlier” | ✅ persistence; ✅ truncation/`Load earlier` in `0.1.5` |
+| FR-ST4 | Transcript persists across reruns; optional `max_messages` truncation + “load earlier”; optional `preview_chars` | ✅ persistence; ✅ truncation/`Load earlier` in `0.1.5`; ✅ `preview_chars` in `0.1.6` |
 | FR-ST5 | Multiple independent sessions via distinct `key` values on same page | ✅ |
 
 ---
@@ -588,11 +592,12 @@ Legacy CCv2 `chat()` keeps an all-in-one panel (header, transcript, approval car
 ### Phase 4 — Polish & release
 
 - [x] README + Makefile + GitHub repos (`streamlit-coco-dev` + public `streamlit-coco`)
-- [ ] Theming / a11y pass (syntax highlight, copy, keyboard traps) — Later / FR-S6 / FR-S7
-- [ ] PyPI publish `0.1.0`
+- [ ] Theming / a11y pass (keyboard traps, ARIA) — Later / FR-S2
+- [x] PyPI publish `0.1.0` (2026-08-06); follow-ups `0.1.5`, `0.1.6`
+- [x] Native `copilot_rail()` + Tableau → Semantic example (`0.1.6`)
 - [ ] Deployment docs beyond local (Docker, SPCS)
 
-**Current:** Alpha `0.1.0`; Phase 3 complete; Phase 4 release items remain. Living plan: [`roadmap.md`](roadmap.md).
+**Current:** Alpha `0.1.6`; Phase 3 complete; Phase 4 polish continues. Living plan: [`roadmap.md`](roadmap.md).
 
 ---
 
@@ -629,7 +634,7 @@ Legacy CCv2 `chat()` keeps an all-in-one panel (header, transcript, approval car
 | 14.3 | File upload into `cwd`? | **`0.1.5`** — [`features/file-upload/file-upload.md`](features/file-upload/file-upload.md). |
 | 14.4 | Branding? | **“CoCo”** in all user-facing UI copy. |
 | 14.5 | Async Streamlit / fragments? | **Yes.** `@st.fragment` is the default rerun boundary for `panel()` and `chat()`. |
-| 14.6 | Primary Streamlit UX? | **`panel()` + app-owned `st.chat_input` / `send_prompt()`.** Legacy all-in-one **`chat()`** (CCv2) remains supported. |
+| 14.6 | Primary Streamlit UX? | **`panel()` + app-owned `st.chat_input` / `send_prompt()`.** Exec / multipage demos wrap that in **`copilot_rail()`**. Legacy all-in-one **`chat()`** (CCv2) remains supported. |
 | 14.7 | Frontend build? | **Static** html/css/js under `streamlit_coco/frontend/` for now; Vite/`asset_dir` packaging is **Later** on the roadmap (optional). |
 
 ---

@@ -47,8 +47,8 @@ Follow [`doc/deployment/publish.md`](../../deployment/publish.md):
 
 ## 5. Narrative & outreach (strongly recommended — `doc-dev`)
 
-- [ ] LinkedIn — [`linkedin.md`](../../../doc-dev/releases/0.1.5/linkedin.md)
-- [ ] Medium — [`medium.md`](../../../doc-dev/releases/0.1.5/medium.md)
+- [x] LinkedIn — posted 2026-08-09: [activity 7492226931485028352](https://www.linkedin.com/feed/update/urn:li:activity:7492226931485028352/) (copy + visual: [`linkedin.md`](../../../doc-dev/releases/0.1.5/linkedin.md))
+- [x] Medium — published 2026-08-09: [Upload a CSV, ask CoCo](https://medium.com/@laurent.letourmy_61132/upload-a-csv-ask-coco-in-a-streamlit-app-8523fdd671ce) (draft: [`medium-article.md`](../../../doc-dev/releases/0.1.5/medium-article.md))
 - [ ] Community pass — [`COMMUNITY.md`](../../../doc-dev/releases/0.1.5/COMMUNITY.md)
 - [ ] Refresh [`doc/marketing/one-pager.md`](../../marketing/one-pager.md) (mention upload + safer transcript UX)
 - [ ] Paste published URLs below
@@ -60,8 +60,8 @@ Follow [`doc/deployment/publish.md`](../../deployment/publish.md):
 | GitHub Release (lletourmy) | https://github.com/lletourmy/streamlit-coco/releases/tag/v0.1.5 | 2026-08-09 |
 | GitHub Release (DevoteamSP) | https://github.com/DevoteamSP/streamlit-coco/releases/tag/v0.1.5 | 2026-08-09 |
 | PyPI | https://pypi.org/project/streamlit-coco/0.1.5/ | 2026-08-09 |
-| LinkedIn | | |
-| Medium | | |
+| LinkedIn | https://www.linkedin.com/feed/update/urn:li:activity:7492226931485028352/ | 2026-08-09 |
+| Medium | https://medium.com/@laurent.letourmy_61132/upload-a-csv-ask-coco-in-a-streamlit-app-8523fdd671ce | 2026-08-09 |
 | Streamlit Forum | | |
 | Snowflake Community | | |
 | Other | | |

@@ -21,3 +21,7 @@ client_*.yaml
 
 # Local demo workspaces (uploaded files)
 examples/workspaces/
+
+# tableau_to_semantic generated artifacts
+examples/tableau_to_semantic/out/
+examples/tableau_to_semantic/uv.lock

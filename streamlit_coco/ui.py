@@ -340,7 +340,7 @@ def render_ask_user_question(
             "Submit answers",
             key=f"{key_prefix}_ask_submit_{pending.request_id}",
             type="primary",
-            use_container_width=True,
+            width="stretch",
             disabled=not complete,
         ):
             approve_pending(
@@ -353,7 +353,7 @@ def render_ask_user_question(
         if st.button(
             "Cancel",
             key=f"{key_prefix}_ask_cancel_{pending.request_id}",
-            use_container_width=True,
+            width="stretch",
         ):
             deny_pending(session, pending.request_id, reason="User cancelled")
             st.rerun()
@@ -394,7 +394,7 @@ def render_exit_plan(
             "Approve plan",
             key=f"{key_prefix}_plan_approve_{pending.request_id}",
             type="primary",
-            use_container_width=True,
+            width="stretch",
         ):
             approve_pending(
                 session,
@@ -406,7 +406,7 @@ def render_exit_plan(
         if st.button(
             "Reject plan",
             key=f"{key_prefix}_plan_deny_{pending.request_id}",
-            use_container_width=True,
+            width="stretch",
         ):
             deny_pending(
                 session,
@@ -455,7 +455,7 @@ def render_approvals(
             "Approve once",
             key=f"{key_prefix}_approve_{pending.request_id}",
             type="primary",
-            use_container_width=True,
+            width="stretch",
         ):
             approve_pending(session, pending.request_id)
             st.rerun()
@@ -464,7 +464,7 @@ def render_approvals(
             if st.button(
                 f"Always allow {label}",
                 key=f"{key_prefix}_always_{pending.request_id}",
-                use_container_width=True,
+                width="stretch",
             ):
                 approve_pending(session, pending.request_id, always=True)
                 st.rerun()
@@ -472,7 +472,7 @@ def render_approvals(
             if st.button(
                 "Deny",
                 key=f"{key_prefix}_deny_{pending.request_id}",
-                use_container_width=True,
+                width="stretch",
             ):
                 deny_pending(session, pending.request_id, reason="Denied by user")
                 st.rerun()
@@ -481,7 +481,7 @@ def render_approvals(
             if st.button(
                 "Deny",
                 key=f"{key_prefix}_deny_{pending.request_id}",
-                use_container_width=True,
+                width="stretch",
             ):
                 deny_pending(session, pending.request_id, reason="Denied by user")
                 st.rerun()
@@ -508,6 +508,7 @@ def panel(
     text_renderer: TextRenderer = None,
     show_copy: bool = True,
     max_messages: int | None = None,
+    preview_chars: int | None = None,
     on_structured_output: StructuredOutputCallback | None = None,
     structured_output_container: Any | None = None,
 ) -> CocoChatResult:
@@ -530,6 +531,8 @@ def panel(
         Show clipboard controls on assistant messages and tool cards.
     max_messages:
         Optional transcript window size; shows **Load earlier** when truncated.
+    preview_chars:
+        Optional cap on user/assistant text length in the transcript.
     """
 
     session.set_show_structured_inline(
@@ -569,6 +572,7 @@ def panel(
                         text_renderer=text_renderer,
                         show_copy=show_copy,
                         max_messages=max_messages,
+                        preview_chars=preview_chars,
                     )
 
         if include_approvals and show_approvals and not connecting:

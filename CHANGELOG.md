@@ -12,8 +12,23 @@ Living plan (what’s next): [`doc/roadmap.md`](doc/roadmap.md).
 
 ## [Unreleased]
 
+## [0.1.6] — 2026-08-13
+
+Alpha follow-up: a reusable Copilot rail, consultant training pack, and a Tableau → Semantic example that uses the rail as a product copilot (not a chat window).
+
+### Added
+- **Copilot rail** (`copilot_rail()`, `transcript_view_pills()`) — generic right-rail Copilot (connection, queued jobs, transcript pills: last messages / first 200 characters). `panel()` / `render_transcript()` gain `preview_chars=`. Feature: [`doc/features/copilot-rail/`](doc/features/copilot-rail/)
+- **Example: Tableau → Semantic** — multipage demo (`examples/tableau_to_semantic`, `make tableau-semantic`) that extracts estate/KPI/access drift from MIT Tableau Server workbooks, arbitrates with `request_input`, Writes a semantic view + row access policy, and generates a Streamlit consumer (**Build with python** or **Build with CoCo** with **Save Brief** → generate; brief reloads from `BRIEF.md`) with **disconnected** (no warehouse) and live `SEMANTIC_VIEW(...)` modes. **Preview** shares the Copilot right-rail slot (inline studio or run-on-the-fly at `:8511`); the split uses `streamlit_extras.resizable_columns`. Screens 2–5 restore `out/*.json` when the session reopens.
+- **Training pack** — consultant enablement under [`doc/training/`](doc/training/) (overview, setup, hands-on lab, demo script, quiz, enablement deck) plus workshop [`W01`](doc/methodology/workshops/w01-setup-architecture-first-app.md)
+
 ### Changed
-- README: document `make cwd-upload`, `make e2e-install` / `make e2e`, and `make test-all`
+- README: document `make cwd-upload`, `make e2e-install` / `make e2e`, `make test-all`, and `make tableau-semantic`
+- **Copilot rail** — transcript pills sit beside Connection (no **Transcript** label / “Showing …” caption); changing them fragment-reruns Copilot only. Long cwd paths in the status caption use `...` in the middle (100-character cap). **Working · thinking…** is a badge on that same row instead of a tall status card. **Cancel job** sits on the title row beside Close and hides when the CoCo turn finishes (`on_job_finished`).
+
+### Fixed
+- **Structured output** — strip `$schema` / `$id` before passing JSON Schema to the CoCo SDK (avoids `no schema with key or ref "https://json-schema.org/draft/2020-12/schema"` when contract files include a draft URI)
+- Replace deprecated `use_container_width` with `width="stretch"` (Streamlit ≥1.57)
+- **Example: Tableau → Semantic** — Generate selectors (step, how-to-build, dashboards, preview mode) keep their values when Copilot opens; a saved `BRIEF.md` is loaded into the CoCo editor from disk; multiple `.md` files are switched with pills.
 
 ## [0.1.5] — 2026-08-09
 

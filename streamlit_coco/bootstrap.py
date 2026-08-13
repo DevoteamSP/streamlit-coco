@@ -141,7 +141,7 @@ def render_start_gate(
                 "Fix the CoCo SDK / CLI issues above before starting — "
                 "the chat may fail to connect."
             )
-        if st.button(button_label, type="primary", use_container_width=True):
+        if st.button(button_label, type="primary", width="stretch"):
             st.session_state[gate_key] = True
             session = CocoSession(options=options, key=session_key)
             if warm_up:

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EstateMap",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["tables", "joins", "workbook_usage"],
+  "properties": {
+    "tables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "columns"],
+        "properties": {
+          "name": { "type": "string" },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "type"],
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "joins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["left_table", "left_column", "right_table", "right_column", "workbooks"],
+        "properties": {
+          "left_table": { "type": "string" },
+          "left_column": { "type": "string" },
+          "right_table": { "type": "string" },
+          "right_column": { "type": "string" },
+          "workbooks": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "workbook_usage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["workbook", "tables", "worksheets", "dashboards"],
+        "properties": {
+          "workbook": { "type": "string" },
+          "tables": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "worksheets": { "type": "integer" },
+          "dashboards": { "type": "integer" }
+        }
+      }
+    }
+  }
+}

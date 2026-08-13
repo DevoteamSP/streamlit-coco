@@ -7,7 +7,7 @@ Each cut gets `doc/releases/X.Y.Z/` for **ship hygiene** (docs, QA, screenshots)
 ## Create kits for the next version
 
 ```bash
-VER=0.1.5   # bump
+VER=0.1.6   # bump
 mkdir -p "doc/releases/${VER}/screenshots" "doc-dev/releases/${VER}"
 cp -R doc/releases/_template/. "doc/releases/${VER}/"
 cp -R doc-dev/releases/_template/. "doc-dev/releases/${VER}/"

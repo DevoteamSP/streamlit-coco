@@ -54,5 +54,5 @@ st_coco.cwd_uploader(session, overwrite="replace")
 ## Related
 
 - Checklist: [`test-checklist.md`](test-checklist.md)
-- Roadmap: [`../../roadmap.md`](../../roadmap.md) (**Now** — `0.1.5`)
+- Roadmap: [`../../roadmap.md`](../../roadmap.md) (shipped in `0.1.5`)
 - Demo: `make cwd-upload`

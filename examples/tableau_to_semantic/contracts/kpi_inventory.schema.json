@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KpiInventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metrics"],
+  "properties": {
+    "metrics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "workbooks", "definitions", "is_conflicting", "plain_english"],
+        "properties": {
+          "name": { "type": "string" },
+          "workbooks": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "definitions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["workbook", "formula", "aggregation"],
+              "properties": {
+                "workbook": { "type": "string" },
+                "formula": { "type": "string" },
+                "aggregation": { "type": "string" }
+              }
+            }
+          },
+          "is_conflicting": { "type": "boolean" },
+          "plain_english": { "type": "string" }
+        }
+      }
+    }
+  }
+}

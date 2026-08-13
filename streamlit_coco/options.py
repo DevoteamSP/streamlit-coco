@@ -13,6 +13,16 @@ try:
 except ImportError:  # pragma: no cover
     CortexCodeAgentOptions = None  # type: ignore[misc, assignment]
 
+# Meta keys that are fine in contract files / IDEs but break CoCo structured-output
+# validation (referencing tries to resolve `$schema` as an external URI and fails with
+# `no schema with key or ref "https://json-schema.org/draft/2020-12/schema"`).
+_SDK_SCHEMA_META_KEYS = frozenset({"$schema", "$id"})
+
+
+def _schema_for_sdk(schema: dict[str, Any]) -> dict[str, Any]:
+    """Return a copy of ``schema`` safe to pass as SDK ``output_format.schema``."""
+    return {k: v for k, v in schema.items() if k not in _SDK_SCHEMA_META_KEYS}
+
 
 @dataclass
 class CocoOptions:
@@ -86,7 +96,7 @@ class CocoOptions:
         if self.output_schema is not None:
             kwargs["output_format"] = {
                 "type": "json_schema",
-                "schema": self.output_schema,
+                "schema": _schema_for_sdk(self.output_schema),
             }
         kwargs.update(self.extra_sdk_options)
         return CortexCodeAgentOptions(**{k: v for k, v in kwargs.items() if v is not None})

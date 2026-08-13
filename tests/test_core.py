@@ -244,6 +244,27 @@ def test_to_sdk_options_omits_cli_allowed_tools_when_callback_set() -> None:
     assert opts.to_sdk_options().allowed_tools == ["Read", "Glob", "Grep"]
 
 
+def test_to_sdk_options_strips_schema_meta_for_output_format() -> None:
+    """CoCo rejects `$schema` URIs; contract files may still declare them."""
+    opts = CocoOptions(
+        output_schema={
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": "https://example.com/access_rules.schema.json",
+            "title": "AccessRules",
+            "type": "object",
+            "properties": {"access_rules": {"type": "array"}},
+            "required": ["access_rules"],
+        }
+    )
+    sdk = opts.to_sdk_options()
+    schema = sdk.output_format["schema"]
+    assert "$schema" not in schema
+    assert "$id" not in schema
+    assert schema["title"] == "AccessRules"
+    assert schema["type"] == "object"
+    assert opts.output_schema["$schema"].startswith("https://json-schema.org/")
+
+
 @pytest.mark.asyncio
 async def test_permission_manager_wakes_from_main_thread() -> None:
     manager = PermissionManager(approval_timeout_seconds=2.0)

@@ -1,0 +1,2278 @@
+{
+  "tables": {
+    "_users": {
+      "domain_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "domain_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "domain_short_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "friendly_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "licensing_role_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "licensing_role_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "login_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "system_user_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      }
+    },
+    "asset_lists": {
+      "created_timestamp": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "description": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "list_type": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "luid": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "owner_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "site_luid": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "sync_token": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "updated_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "visibility": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      }
+    },
+    "datasources": {
+      "ask_data_curator_feedback": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "ask_data_indexing": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "ask_data_indexing_new": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "ask_data_setting": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "asset_key_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "certification_note": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "certifier_details": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "certifier_user_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "connectable": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "content_version": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "created_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "data_engine_extracts": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "data_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "db_class": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "db_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "description": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "document_version": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "embedded": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "extract_creation_pending": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "extract_encryption_state": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "extract_storage_format": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "extracts_incremented_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "extracts_refreshed_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "first_published_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "hidden_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "incrementable_extracts": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "is_certified": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "is_hierarchical": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "last_published_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "lock_version": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "luid": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "modified_by_user_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "nlp_setting": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "nlp_setting_new": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "owner_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "parent_type": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "parent_workbook_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "project_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "reduced_data_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "refreshable_extracts": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "remote_query_agent_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "repository_data_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "repository_extract_data_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "repository_url": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "revision": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "separated_data_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "separated_reduced_data_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "size": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "state": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "table_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "tds_luid": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "updated_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "using_remote_query_agent": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      }
+    },
+    "domains": {
+      "active": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "family": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "short_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      }
+    },
+    "flows": {
+      "asset_key_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "content_version": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "created_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "data_engine_extracts": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "data_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "description": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "document_version": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "embedded": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "encryption_key_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "extract_encryption_state": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "file_type": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "graph_image_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "hidden": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "is_deleted": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "kind": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "last_published_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "lock_version": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "luid": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "owner_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "project_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "reduced_data_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "size": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "thumbnail_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "updated_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      }
+    },
+    "hist_collections": {
+      "collection_luid": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      }
+    },
+    "hist_datasources": {
+      "certification_note": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "datasource_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "is_certified": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "remote_query_agent_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "repository_url": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "revision": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "size": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "using_remote_query_agent": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      }
+    },
+    "hist_flows": {
+      "content_version": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "flow_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "size": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      }
+    },
+    "hist_metrics": {
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "metric_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      }
+    },
+    "hist_projects": {
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "project_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      }
+    },
+    "hist_schedules": {
+      "day_of_month_mask": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "day_of_week_mask": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "end_at_minute": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "end_schedule_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "is_serial": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "minute_interval": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "priority": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "schedule_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "schedule_type": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "scheduled_action": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "start_at_minute": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      }
+    },
+    "hist_sites": {
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "url_namespace": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      }
+    },
+    "hist_tasks": {
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "priority": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "state": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "task_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "type": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      }
+    },
+    "hist_users": {
+      "domain_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "email": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "hist_licensing_role_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "publisher_tristate": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "site_admin_level": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "site_role_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "system_admin_level": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "system_user_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "user_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      }
+    },
+    "hist_views": {
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "repository_url": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "revision": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "view_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      }
+    },
+    "hist_workbooks": {
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "repository_url": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "revision": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "size": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "workbook_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      }
+    },
+    "historical_event_types": {
+      "action_type": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "type_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      }
+    },
+    "historical_events": {
+      "created_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "details": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "duration_in_ms": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_actor_site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_actor_user_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_capability_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_collection_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_column_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_comment_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_config_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_data_connection_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_data_quality_indicator_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_data_role_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_database_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_datasource_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_flow_draft_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_flow_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_group_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_licensing_role_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_metric_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_project_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_published_connection_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_remote_agent_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_schedule_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_table_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_tag_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_target_site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_target_user_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_task_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_view_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "hist_workbook_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "historical_event_type_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "is_failure": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "worker": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      }
+    },
+    "metrics": {
+      "asset_key_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "connected_view_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "connected_view_path": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "created_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "customized_view_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "dataalert_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "datasource_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "description": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "embedded": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "incomplete_refresh_attempts": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "last_refreshed_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "last_scheduled_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "luid": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "owner_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "project_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "suspend_state": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "updated_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "view_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "workbook_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      }
+    },
+    "projects": {
+      "admin_insights_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "controlled_permissions_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "controlling_permissions_project_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "created_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "description": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "lower_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "luid": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "nested_projects_permissions_included": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "owner_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "parent_project_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "special": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "state": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "updated_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      }
+    },
+    "projects_contents": {
+      "content_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "content_type": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "project_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      }
+    },
+    "site_roles": {
+      "display_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "licensing_rank": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      }
+    },
+    "sites": {
+      "admin_insights_publish_frequency": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "afe_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "allow_live_query_sync": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "allow_subscriptions_attach_pdf": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "ask_data_mode": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "attribute_capture_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "authoring_disabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "auto_suspend_refresh_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "auto_suspend_refresh_inactivity_window": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "backgrounder_governance_default_limit_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "biometrics_mobile_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "cache_warmup_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "cache_warmup_threshold": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "cataloging_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "cmek_available": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "collections_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "commenting_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "commenting_mentions_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "content_admin_mode": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "content_migration_tool_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "content_version_limit": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "created_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "custom_subscription_email": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "custom_subscription_footer": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "data_alerts_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "data_change_discovery_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "data_orientation_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "data_orientation_guest_users_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "data_story_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "derived_permissions_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "domain_allowlist": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "dqw_subscriptions_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "eas_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "einstein_in_flow_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "explain_data_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "extract_encryption_mode": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "flow_auto_save_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "flow_output_subscriptions_data_as_email_attachment_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "flow_output_subscriptions_data_in_email_body_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "flow_output_subscriptions_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "flow_parameters_any_type_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "flow_parameters_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "flows_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "guest_access_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "iba_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "linked_tasks_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "linked_tasks_run_now_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "lock_version": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "luid": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "materialized_views_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "materialized_views_mode": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "metrics_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "metrics_level": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "metrics_snapshotting_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "metrics_snapshotting_time_zone": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "mfa_enforcement_exemption": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "mfa_enforcement_legacy": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "mfa_enforcement_status": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "mixed_content_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "named_sharing_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "notification_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "notify_site_admins_on_throttle": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "obfuscation_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "personal_space_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "personal_space_storage_quota": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "protocol_cache_lifetime": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "protocol_group_size_limit": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "public_collections_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "publish_to_salesforce_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "query_limit": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "refresh_token_setting": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "request_access": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "run_now_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "sandbox_datasources_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "sandbox_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "sandbox_flows_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "sandbox_storage_quota": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "self_service_schedule_for_flow_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "self_service_schedule_for_refresh_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "self_service_schedules_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "sheet_image_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "site_invite_notification_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "start_page_uri": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "status": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "status_reason": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "storage_quota": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "subscribe_others_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "subscriptions_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "support_access_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "tag_limit": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "tier_author_capacity": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "tier_basic_user_capacity": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "tier_interactor_capacity": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "time_zone": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "unrestricted_embedding_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "updated_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "url_namespace": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "user_quota": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "user_visibility": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "version_history_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "viz_in_tooltip_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "viz_recs_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "viz_recs_username_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "web_editing_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "web_extraction_enabled": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "web_zone_content_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "workflow_extension_enabled": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      }
+    },
+    "system_users": {
+      "activated_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "activation_code": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "admin_level": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "asset_key_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "auth_user_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "created_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "custom_display_name": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "deleted_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "domain_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "email": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "failed_login_attempts": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "force_password_update": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "friendly_name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "hashed_password": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "keychain": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "last_failed_login": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "last_password_update": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "lock_version": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "protected_password": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "protected_password_bad_format": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "salt": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "state": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "sys": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "updated_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      }
+    },
+    "tasks": {
+      "active": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "args": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "consecutive_failure_count": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "created_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "creator_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "historical_queue_time": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "historical_run_time": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "last_success_completed_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "luid": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "obj_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "obj_type": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "priority": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "run_count": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "schedule_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "state": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "subtitle": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "title": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "type": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "updated_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      }
+    },
+    "users": {
+      "created_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "extracts_required": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "lock_version": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "login_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "luid": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "nonce": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "raw_data_suppressor_tristate": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "row_limit": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "site_role_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "storage_limit": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "system_admin_auto": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "system_user_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "updated_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      }
+    },
+    "views": {
+      "caption": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "created_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "datasource_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "description": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "edit_count": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "fields": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "first_published_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "for_cache_updated_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "index": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "is_deleted": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "locked": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "luid": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "owner_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "published": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "read_count": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "repository_data_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "repository_url": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "revision": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "sheet_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "sheettype": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "state": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "thumbnail_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "title": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "updated_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "workbook_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      }
+    },
+    "workbooks": {
+      "asset_key_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "checksum": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "content_version": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "created_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "data_engine_extracts": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "data_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "default_view_index": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "description": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "display_tabs": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "document_version": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "embedded": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "extract_creation_pending": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "extract_encryption_state": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "extract_storage_format": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "extracts_incremented_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "extracts_refreshed_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "first_published_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "incrementable_extracts": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "is_deleted": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "is_private": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "last_published_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "lock_version": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "luid": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "modified_by_user_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "name": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "owner_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "parent_workbook_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "primary_content_url": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "project_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "published_all_sheets": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "reduced_data_id": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "refreshable_extracts": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "repository_data_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "repository_extract_data_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "repository_url": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "revision": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "share_description": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "show_toolbar": {
+        "type": "BOOLEAN",
+        "tableau_type": "boolean"
+      },
+      "site_id": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "size": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "state": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "thumb_user": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      },
+      "updated_at": {
+        "type": "TIMESTAMP_NTZ",
+        "tableau_type": "datetime"
+      },
+      "version": {
+        "type": "VARCHAR(16777216)",
+        "tableau_type": "string"
+      },
+      "view_count": {
+        "type": "NUMBER(38,0)",
+        "tableau_type": "integer"
+      }
+    }
+  },
+  "tables_without_column_metadata": [
+    "Extract"
+  ],
+  "custom_sql_blocks": {
+    "Content": "-- Views SELECT v.id AS item_id , v.luid AS item_luid , REPLACE(hv.repository_url, '/sheets', '') AS repository_url, COALESCE ( v.name , hv.view_name ) AS item_name , 'View' AS item_type , v.owner_id , v.site_id , w.id AS workbook_id , w_pc.project_id FROM ( SELECT repository_url , MAX(view_id) AS view_id , MAX(view_name) AS view_name FROM ( SELECT repository_url , view_id , FIRST_VALUE(name) OVER (PARTITION BY view_id ORDER BY id DESC) AS view_name FROM hist_views ) as hv GROUP BY repository_url UNION -- why is this query needed? Because for some reason, not all views records have a hist_views record. SELECT v.repository_url , v.id AS view_id , v.name AS view_name FROM views v ) AS hv LEFT JOIN views v ON hv.view_id = v.id LEFT JOIN workbooks w ON v.workbook_id = w.id LEFT JOIN projects_contents w_pc ON w.id = w_pc.content_id AND w.site_id = w_pc.site_id AND w_pc.content_type = 'workbook' UNION ALL -- Workbooks SELECT w.id AS item_id , w.luid AS item_luid , REPLACE(hw.repository_url, '/sheets', '') AS repository_url , COALESCE ( w.name , hw.workbook_name ) AS item_name , 'Workbook' AS item_type , w.owner_id , w.site_id , w.id AS workbook_id , w_pc.project_id FROM ( SELECT repository_url , MAX(workbook_id) AS workbook_id , MAX(workbook_name) AS workbook_name FROM ( SELECT repository_url , workbook_id , FIRST_VALUE(name) OVER (PARTITION BY workbook_id ORDER BY id DESC) AS workbook_name FROM hist_workbooks ) as hw GROUP BY repository_url UNION -- why is this query needed? Because for some reason, not all workbooks records have a hist_workbooks record. SELECT w.repository_url , w.id AS workbook_id , w.name AS workbook_name FROM workbooks w ) AS hw LEFT JOIN workbooks w ON hw.workbook_id = w.id LEFT JOIN projects_contents w_pc ON w.id = w_pc.content_id AND w.site_id = w_pc.site_id AND w_pc.content_type = 'workbook' UNION ALL -- Data Sources SELECT d.id AS item_id , d.luid AS item_luid , REPLACE(hd.repository_url, '/sheets', '') AS repository_url , COALESCE ( d.name , hd.datasource_name ) AS item_name , 'Data Source' AS item_type , d.owner_id , d.site_id , NULL AS workbook_id , d_pc.project_id FROM ( SELECT repository_url , MAX(datasource_id) AS datasource_id , MAX(datasource_name) AS datasource_name FROM ( SELECT repository_url , datasource_id , FIRST_VALUE(name) OVER (PARTITION BY datasource_id ORDER BY id DESC) AS datasource_name FROM hist_datasources ) as hd GROUP BY repository_url UNION -- why is this query needed? Because for some reason, not all datasources records have a hist_datasources record. SELECT d.repository_url , d.id AS datasource_id , d.name FROM datasources d WHERE d.connectable = True ) AS hd LEFT JOIN datasources d ON hd.datasource_id = d.id LEFT JOIN projects_contents d_pc ON d.id = d_pc.content_id AND d.site_id = d_pc.site_id AND d_pc.content_type = 'datasource'",
+    "Access Statistics": "/* Returns usage statistic for each applicable publishable item in Tableau Server */ WITH access_counts AS ( SELECT MAX(he.created_at) AS last_access_date , -- raw access counts COUNT(1) AS access_count_all_days , SUM ( CASE WHEN age(he.created_at) <<= INTERVAL '180 days' THEN 1 ELSE 0 END ) AS access_count_last_180_days , SUM ( CASE WHEN age(he.created_at) <<= INTERVAL '90 days' THEN 1 ELSE 0 END ) AS access_count_last_90_days , SUM ( CASE WHEN age(he.created_at) <<= INTERVAL '30 days' THEN 1 ELSE 0 END ) AS access_count_last_30_days , SUM ( CASE WHEN age(he.created_at) <<= INTERVAL '10 days' THEN 1 ELSE 0 END ) AS access_count_last_10_days , hu.user_id , he.hist_datasource_id , he.hist_view_id , he.hist_metric_id FROM historical_events AS he LEFT JOIN hist_users hu ON he.hist_actor_user_id = hu.id WHERE he.historical_event_type_id IN ( 112, --access datasource 170, --access datasource remotely 84, --access view 290, --access summary viewdata 292, --access underlying viewdata 87, --access authoring view (web edit) --NOTE: event is only recorded if an existing view is opened via web edit, or if there's a save action on a net-new workbook. --This won't catch users who open web authoring to play with published data, but who don't/can't save their work. --(Thanks to Ryan Stryker for documenting this in Slack :) ) --93, --publish workbook --110, --publish datasource 113, --download data source 165, --download data source revision 183, --download flow 302, --download flow draft 86, --download view 99, --download workbook 164, --download workbook revision 291, --export summary viewdata 293, --export underlying viewdata --120, --add comment --181, --publish flow 290, --Access Summary ViewData 291, --Export Summary ViewData 292, --Access Underlying ViewData 293, --Export Underlying ViewData 280 --access metric --279 --create metric ) GROUP BY hu.user_id , he.hist_datasource_id , he.hist_view_id , he.hist_metric_id ) -- view, data source, and metrics access counts SELECT * FROM ( SELECT COALESCE(hv.view_id, hd.datasource_id, hm.metric_id) AS item_id , CASE WHEN ac.hist_view_id IS NOT NULL THEN 'View' WHEN ac.hist_datasource_id IS NOT NULL THEN 'Datasource' WHEN ac.hist_metric_id IS NOT NULL THEN 'Metric' ELSE NULL END AS content_type , MAX(ac.last_access_date) AS last_access_date , SUM(ac.access_count_all_days) AS access_count_all_days , SUM(ac.access_count_last_180_days) AS access_count_last_180_days , SUM(ac.access_count_last_90_days) AS access_count_last_90_days , SUM(ac.access_count_last_30_days) AS access_count_last_30_days , SUM(ac.access_count_last_10_days) AS access_count_last_10_days , COUNT(DISTINCT ac.user_id) AS access_count_unique_all_days , COUNT( DISTINCT CASE WHEN ac.access_count_last_180_days >> 0 THEN ac.user_id ELSE NULL END ) AS access_count_unique_last_180_days , COUNT( DISTINCT CASE WHEN ac.access_count_last_90_days >> 0 THEN ac.user_id ELSE NULL END ) AS access_count_unique_last_90_days , COUNT( DISTINCT CASE WHEN ac.access_count_last_30_days >> 0 THEN ac.user_id ELSE NULL END ) AS access_count_unique_last_30_days , COUNT( DISTINCT CASE WHEN ac.access_count_last_10_days >> 0 THEN ac.user_id ELSE NULL END ) AS access_count_unique_last_10_days FROM access_counts ac LEFT JOIN hist_views hv ON ac.hist_view_id = hv.id LEFT JOIN hist_datasources hd ON ac.hist_datasource_id = hd.id LEFT JOIN hist_metrics hm ON ac.hist_metric_id = hm.id GROUP BY item_id , content_type ) AS content_metrics --join aggregated metric metrics (Like what I did there? I'll be here all night, folks...) to other content metrics (just views, really) LEFT JOIN ( SELECT COUNT(DISTINCT m_met.id) AS metric_count , MAX(ac_met.last_access_date) AS metric_last_access_date , SUM(ac_met.access_count_all_days) AS metric_access_count_all_days , SUM(ac_met.access_count_last_180_days) AS metric_access_count_last_180_days , SUM(ac_met.access_count_last_90_days) AS metric_access_count_last_90_days , SUM(ac_met.access_count_last_30_days) AS metric_access_count_last_30_days , SUM(ac_met.access_count_last_10_days) AS metric_access_count_last_10_days , COUNT(DISTINCT ac_met.user_id) AS metric_access_count_unique_all_days , COUNT( DISTINCT CASE WHEN ac_met.access_count_last_180_days >> 0 THEN ac_met.user_id ELSE NULL END ) AS metric_access_count_unique_last_180_days , COUNT( DISTINCT CASE WHEN ac_met.access_count_last_90_days >> 0 THEN ac_met.user_id ELSE NULL END ) AS metric_access_count_unique_last_90_days , COUNT( DISTINCT CASE WHEN ac_met.access_count_last_30_days >> 0 THEN ac_met.user_id ELSE NULL END ) AS metric_access_count_unique_last_30_days , COUNT( DISTINCT CASE WHEN ac_met.access_count_last_10_days >> 0 THEN ac_met.user_id ELSE NULL END ) AS metric_access_count_unique_last_10_days , v_met.id AS metric_view_id FROM access_counts ac_met LEFT JOIN hist_metrics hm_met ON ac_met.hist_metric_id = hm_met.id LEFT JOIN metrics m_met ON hm_met.metric_id = m_met.id LEFT JOIN customized_views cv_met ON m_met.customized_view_id = cv_met.id LEFT JOIN views v_met ON cv_met.view_id = v_met.id WHERE ac_met.hist_metric_id IS NOT NULL --we only need the metrics data GROUP BY metric_view_id ) AS metric_metrics ON content_metrics.item_id = metric_metrics.metric_view_id AND content_metrics.content_type = 'View' UNION SELECT * FROM ( -- workbook access counts SELECT v.workbook_id AS item_id , 'Workbook' AS content_type , MAX(ac.last_access_date) AS last_access_date , SUM(ac.access_count_all_days) AS access_count_all_days , SUM(ac.access_count_last_180_days) AS access_count_last_180_days , SUM(ac.access_count_last_90_days) AS access_count_last_90_days , SUM(ac.access_count_last_30_days) AS access_count_last_30_days , SUM(ac.access_count_last_10_days) AS access_count_last_10_days , COUNT(DISTINCT ac.user_id) AS access_count_unique_all_days , COUNT( DISTINCT CASE WHEN ac.access_count_last_180_days >> 0 THEN ac.user_id ELSE NULL END ) AS access_count_unique_last_180_days , COUNT( DISTINCT CASE WHEN ac.access_count_last_90_days >> 0 THEN ac.user_id ELSE NULL END ) AS access_count_unique_last_90_days , COUNT( DISTINCT CASE WHEN ac.access_count_last_30_days >> 0 THEN ac.user_id ELSE NULL END ) AS access_count_unique_last_30_days , COUNT( DISTINCT CASE WHEN ac.access_count_last_10_days >> 0 THEN ac.user_id ELSE NULL END ) AS access_count_unique_last_10_days FROM access_counts ac INNER JOIN hist_views hv ON ac.hist_view_id = hv.id INNER JOIN views v ON hv.view_id = v.id GROUP BY item_id , content_type ) AS content_metrics --join aggregated metric metrics (Like what I did there? I'll be here all night, folks...) to other content metrics (just views, really) LEFT JOIN ( SELECT COUNT(DISTINCT m_met.id) AS metric_count , MAX(ac_met.last_access_date) AS metric_last_access_date , SUM(ac_met.access_count_all_days) AS metric_access_count_all_days , SUM(ac_met.access_count_last_180_days) AS metric_access_count_last_180_days , SUM(ac_met.access_count_last_90_days) AS metric_access_count_last_90_days , SUM(ac_met.access_count_last_30_days) AS metric_access_count_last_30_days , SUM(ac_met.access_count_last_10_days) AS metric_access_count_last_10_days , COUNT(DISTINCT ac_met.user_id) AS metric_access_count_unique_all_days , COUNT( DISTINCT CASE WHEN ac_met.access_count_last_180_days >> 0 THEN ac_met.user_id ELSE NULL END ) AS metric_access_count_unique_last_180_days , COUNT( DISTINCT CASE WHEN ac_met.access_count_last_90_days >> 0 THEN ac_met.user_id ELSE NULL END ) AS metric_access_count_unique_last_90_days , COUNT( DISTINCT CASE WHEN ac_met.access_count_last_30_days >> 0 THEN ac_met.user_id ELSE NULL END ) AS metric_access_count_unique_last_30_days , COUNT( DISTINCT CASE WHEN ac_met.access_count_last_10_days >> 0 THEN ac_met.user_id ELSE NULL END ) AS metric_access_count_unique_last_10_days , v_met.workbook_id AS metric_workbook_id FROM access_counts ac_met LEFT JOIN hist_metrics hm_met ON ac_met.hist_metric_id = hm_met.id LEFT JOIN metrics m_met ON hm_met.metric_id = m_met.id LEFT JOIN customized_views cv_met ON m_met.customized_view_id = cv_met.id LEFT JOIN views v_met ON cv_met.view_id = v_met.id WHERE ac_met.hist_metric_id IS NOT NULL --we only need the metrics data GROUP BY metric_workbook_id ) AS metric_metrics ON content_metrics.item_id = metric_metrics.metric_workbook_id AND content_metrics.content_type = 'Workbook'",
+    "Data Connection Ids": "-- obtain the proper ID value for a datasource for URL purposes SELECT MIN(dc.id) AS \"id\", dc.datasource_id FROM data_connections AS dc INNER JOIN datasources AS dc_d ON dc.datasource_id = dc_d.id AND dc_d.connectable = true GROUP BY dc.datasource_id",
+    "Tags": "--generate a delimited list of tags for each bit of content SELECT ts.taggable_id , ts.taggable_type , string_agg(t.name, ',') As \"Tag List\" FROM taggings ts INNER JOIN tags t ON ts.tag_id = t.id GROUP BY ts.taggable_id , ts.taggable_type",
+    "Projects": "-- This query grabs project information, along with parent project hierarchy information WITH RECURSIVE project_hierarchy AS ( SELECT p.name AS project_name , p.id AS project_id , p.luid AS project_luid , p.site_id AS project_site_id , su.friendly_name AS project_owner_friendly_name , su.name AS project_owner_system_name , su.email AS project_owner_email , pc.project_id AS parent_project_id , CAST(NULL as varchar) AS parent_project_name , CAST(NULL as varchar) AS parent_project_owner_friendly_name , CAST(NULL as varchar) AS parent_project_owner_system_name , CAST(NULL as varchar) AS parent_project_owner_email , 0 AS project_level , p.name AS top_level_project_name , CAST(p.name AS VARCHAR(255)) AS project_path , p.controlled_permissions_enabled , p.controlling_permissions_project_id , p.nested_projects_permissions_included FROM projects p LEFT JOIN projects_contents pc ON p.id = pc.content_id AND p.site_id = pc.site_id AND pc.content_type = 'project' LEFT JOIN users u ON p.owner_id = u.id LEFT JOIN system_users su ON u.system_user_id = su.id WHERE pc.project_id IS NULL UNION ALL SELECT p.name AS project_name , p.id AS project_id , p.luid AS project_luid , p.site_id AS project_site_id , su.friendly_name AS project_owner_friendly_name , su.name AS project_owner_system_name , su.email AS project_owner_email , p.parent_project_id , ph.project_name AS parent_project_name , CAST(ph.project_owner_friendly_name as varchar) AS parent_project_owner_friendly_name , CAST(ph.project_owner_system_name as varchar) AS parent_project_owner_system_name , CAST(ph.project_owner_email as varchar) AS parent_project_owner_email , ph.project_level + 1 AS project_level , ph.top_level_project_name AS top_level_project_name , CAST((ph.project_path || '/' || p.name) AS VARCHAR(255)) AS project_path , p.controlled_permissions_enabled , p.controlling_permissions_project_id , p.nested_projects_permissions_included FROM projects p LEFT JOIN projects_contents pc ON p.id = pc.content_id AND p.site_id = pc.site_id AND pc.content_type = 'project' LEFT JOIN users u ON p.owner_id = u.id LEFT JOIN system_users su ON u.system_user_id = su.id INNER JOIN project_hierarchy ph ON ph.project_id = pc.project_id ) SELECT * FROM project_hierarchy",
+    "Alerts": "SELECT COUNT(DISTINCT da.id) AS \"alert_count\" , COUNT(dar.id) AS \"alert_recipient_count\" , da.view_id AS \"item_id\" , 'View' AS \"item_type\" FROM data_alerts AS da INNER JOIN data_alerts_recipients AS dar ON da.id = dar.data_alert_id GROUP BY da.view_id UNION SELECT COUNT(DISTINCT da.id) AS \"alert_count\" , COUNT(dar.id) AS \"alert_recipient_count\" , da.workbook_id AS \"item_id\" , 'Workbook' AS \"item_type\" FROM data_alerts AS da INNER JOIN data_alerts_recipients AS dar ON da.id = dar.data_alert_id GROUP BY da.workbook_id",
+    "Server Admin Permissions": "--This subquery obtains the users granted Server Admin privileges the entire Tableau Server instance and returns all of their usernames in the \"server_admins_string\" field --This is used for row-level security SELECT 1 AS dummy_join_field , ';' || string_agg(DISTINCT su.name || ';', '') AS server_admins_string FROM users u INNER JOIN system_users su ON u.system_user_id = su.id WHERE su.admin_level = 10",
+    "Site Admin Permissions": "--This subquery obtains the users granted Site Admin privileges the entire Tableau Server Site and returns all of their usernames in the \"site_admins_string\" field --This is used for row-level security SELECT u.site_id , ';' || string_agg(DISTINCT su.name || ';', '') AS site_admins_string FROM users u INNER JOIN system_users su ON u.system_user_id = su.id INNER JOIN site_roles sr ON u.site_role_id = sr.id WHERE sr.name LIKE '%SiteAdmin%' GROUP BY u.site_id",
+    "Project Leader Permissions": "--This subquery obtains the users granted Project Leader permissions for each project and returns all of their usernames in the \"project_leaders_string\" field -- This is used for row-level security SELECT project_permissions.project_id AS project_id , ';' || string_agg(DISTINCT su.name || ';', '') AS project_leaders_string FROM public.system_users su INNER JOIN public.users u ON su.id = u.system_user_id INNER JOIN ( -- users granted project leader rights via individual assignment SELECT ngp.grantee_id AS user_id , ngp.authorizable_id AS project_id FROM public.users u INNER JOIN public.next_gen_permissions ngp ON u.id = ngp.grantee_id AND ngp.capability_id = 19 -- Project Leader permissions AND ngp.grantee_type = 'User' AND ngp.permission = 3 -- Granted to user AND ngp.authorizable_type = 'Project' UNION -- users granted project leader rights via group membership SELECT gu.user_id AS user_id , ngp.authorizable_id AS project_id FROM public.group_users gu INNER JOIN public.groups g ON gu.group_id = g.id INNER JOIN public.next_gen_permissions ngp ON gu.group_id = ngp.grantee_id AND ngp.capability_id = 19 -- Project Leader permissions AND ngp.grantee_type = 'Group' AND ngp.permission = 1 -- Granted to group AND ngp.authorizable_type = 'Project' ) AS project_permissions ON u.id = project_permissions.user_id INNER JOIN public.projects p ON project_permissions.project_id = p.id GROUP BY project_permissions.project_id ORDER BY project_permissions.project_id",
+    "Collections": "--generate a delimited list of collections for each bit of content SELECT ali.useable_luid , ali.useable_type , string_agg(al.name, ',') As \"Collection List\" FROM asset_lists al INNER JOIN asset_list_items ali ON al.id = ali.asset_list_id WHERE al.list_type = 'collection' GROUP BY ali.useable_luid , ali.useable_type",
+    "Collection Statistics": "--summary statistics for collections SELECT al.luid , SUM ( CASE WHEN ali.useable_type = 'Workbook' THEN 1 ELSE 0 END ) AS \"Collection Workbook Count\" , SUM ( CASE WHEN ali.useable_type = 'View' THEN 1 ELSE 0 END ) AS \"Collection View Count\" , SUM ( CASE WHEN ali.useable_type = 'Datasource' THEN 1 ELSE 0 END ) AS \"Collection Datasource Count\" , SUM ( CASE WHEN ali.useable_type = 'Flow' THEN 1 ELSE 0 END ) AS \"Collection Flow Count\" , SUM ( CASE WHEN ali.useable_type = 'Metric' THEN 1 ELSE 0 END ) AS \"Collection Metric Count\" , SUM(1) AS \"Collection Total Item Count\" FROM asset_lists al INNER JOIN asset_list_items ali ON al.id = ali.asset_list_id WHERE al.list_type = 'collection' GROUP BY al.luid",
+    "Usage Stats (Custom SQL)": "/* Return usage statistics for each user--both what they are doing, and activity on their content (these two different concepts are combined in a single query for performance reasons) */ with access_counts as ( SELECT MAX(he.created_at) AS last_event_date , COUNT(he.id) AS activity_count , -- raw access counts he.historical_event_type_id AS event_type_id , hu.user_id , he.hist_datasource_id , he.hist_view_id , he.hist_workbook_id , he.hist_flow_id , he.hist_metric_id FROM historical_events he LEFT JOIN hist_users hu ON he.hist_actor_user_id = hu.id WHERE he.historical_event_type_id IN ( 112, --access datasource 170, --access datasource remotely 84, --access view 290, --access summary viewdata 292, --access underlying viewdata 87, --access authoring view (web edit) --NOTE: event is only recorded if an existing view is opened via web edit, or if there's a save action on a net-new workbook. --This won't catch users who open web authoring to play with published data, but who don't/can't save their work. --(Thanks to Ryan Stryker for documenting this in Slack :) ) 93, --publish workbook 110, --publish datasource 113, --download data source 165, --download data source revision 183, --download flow 302, --download flow draft 86, --download view 99, --download workbook 164, --download workbook revision 291, --export summary viewdata 293, --export underlying viewdata 120, --add comment 181, --publish flow 290, --Access Summary ViewData 291, --Export Summary ViewData 292, --Access Underlying ViewData 293, --Export Underlying ViewData 280, --access metric 279 --create metric ) AND age(he.created_at) <<= INTERVAL '30 days' GROUP BY hu.user_id , he.historical_event_type_id , he.hist_datasource_id , he.hist_view_id , he.hist_workbook_id , he.hist_flow_id , he.hist_metric_id ) /* Last actions X Last View Access Date X Last View Underlying Data Access Date X Last Workbook Publish Date X Last Data Source Publish Date X Last Web Edit Date X Last Comment Date X Publish Workbook Events (Last 30 days) X Publish Data Source Events (Last 30 days) X Web Edit Events (Last 30 days) */ SELECT u.id AS user_id , last_user_events.last_view_access_date , last_user_events.last_view_underlying_data_access_date , last_user_events.last_datasource_access_date , last_user_events.last_workbook_publish_date , last_user_events.last_flow_publish_date , last_user_events.last_datasource_publish_date , last_user_events.last_metric_create_date , last_user_events.last_web_edit_date , COALESCE(last_user_events.view_access_events, 0) AS view_access_events , COALESCE(last_user_events.view_underlying_data_access_events, 0) AS view_underlying_data_access_events , COALESCE(last_user_events.datasource_access_events, 0) AS datasource_access_events , COALESCE(last_user_events.datasource_publish_events, 0) AS datasource_publish_events , COALESCE(last_user_events.metric_access_events, 0) AS metric_access_events , COALESCE(last_user_events.metric_create_events, 0) AS metric_create_events , COALESCE(last_user_events.web_edit_events, 0) AS web_edit_events , COALESCE(last_user_events.workbook_publish_events, 0) AS workbook_publish_events , COALESCE(last_user_events.flow_publish_events, 0) AS flow_publish_events , COALESCE(content_served.total_users_served_views, 0) AS total_users_served_views , COALESCE(content_served.total_users_served_datasources, 0) AS total_users_served_datasources , COALESCE(content_served.total_users_served_metrics, 0) AS total_users_served_metrics , COALESCE(content_served.unique_users_served_views, 0) AS unique_users_served_views , COALESCE(content_served.unique_users_served_datasources, 0) AS unique_users_served_datasources , COALESCE(content_served.unique_users_served_metrics, 0) AS unique_users_served_metrics FROM users AS u LEFT JOIN -- last_user_events ( SELECT ac.user_id AS events_user_id , MAX( CASE WHEN ac.event_type_id IN (84, 87, 86, 291, 293) THEN ac.last_event_date ELSE NULL END ) AS last_view_access_date , SUM( CASE WHEN ac.event_type_id IN (84, 87, 86, 291, 293) THEN ac.activity_count ELSE 0 END ) AS view_access_events , MAX( CASE WHEN ac.event_type_id = 293 THEN ac.last_event_date ELSE NULL END ) AS last_view_underlying_data_access_date , SUM( CASE WHEN ac.event_type_id = 293 THEN ac.activity_count ELSE 0 END ) AS view_underlying_data_access_events , MAX( CASE WHEN ac.event_type_id IN (112, 170) THEN ac.last_event_date ELSE NULL END ) AS last_datasource_access_date , SUM( CASE WHEN ac.event_type_id IN (112, 170) THEN ac.activity_count ELSE 0 END ) AS datasource_access_events , MAX( CASE WHEN ac.event_type_id = 280 THEN ac.last_event_date ELSE NULL END ) AS last_metric_access_date , SUM( CASE WHEN ac.event_type_id = 280 THEN ac.activity_count ELSE 0 END ) AS metric_access_events , MAX( CASE WHEN ac.event_type_id = 87 THEN ac.last_event_date ELSE NULL END ) AS last_web_edit_date , SUM( CASE WHEN ac.event_type_id = 87 THEN ac.activity_count ELSE 0 END ) AS web_edit_events , MAX( CASE WHEN ac.event_type_id = 93 THEN ac.last_event_date ELSE NULL END ) AS last_workbook_publish_date , SUM( CASE WHEN ac.event_type_id = 93 THEN ac.activity_count ELSE 0 END ) AS workbook_publish_events , MAX( CASE WHEN ac.event_type_id = 181 THEN ac.last_event_date ELSE NULL END ) AS last_flow_publish_date , SUM( CASE WHEN ac.event_type_id = 181 THEN ac.activity_count ELSE 0 END ) AS flow_publish_events , MAX( CASE WHEN ac.event_type_id = 110 THEN ac.last_event_date ELSE NULL END ) AS last_datasource_publish_date , SUM( CASE WHEN ac.event_type_id = 110 THEN ac.activity_count ELSE 0 END ) AS datasource_publish_events , MAX( CASE WHEN ac.event_type_id = 279 THEN ac.last_event_date ELSE NULL END ) AS last_metric_create_date , SUM( CASE WHEN ac.event_type_id = 279 THEN ac.activity_count ELSE 0 END ) AS metric_create_events /* --this event never appears in historical_events at this time. :( MAX( CASE WHEN ac.event_type_id = 120 THEN ac.last_event_date ELSE NULL END ) AS last_comment_date */ FROM access_counts ac GROUP BY ac.user_id ) AS last_user_events ON u.id = last_user_events.events_user_id LEFT JOIN ( -- content_served /* Total Served Views (Last 30 days) Total Served Data Sources (Last 30 days) Total Served Metrics (Last 30 days) Unique Users Served Views (Last 30 days) Unique Users Served Data Sources (Last 30 days) Unique Users Served Metrics (Last 30 days) */ -- workbook access counts SELECT COALESCE(d.owner_id, v.owner_id, w.owner_id, m.owner_id) AS content_owner_id , SUM( CASE WHEN ac.event_type_id IN (84, 87, 86, 291, 293) THEN ac.activity_count ELSE 0 END ) AS total_users_served_views , SUM( CASE WHEN ac.event_type_id IN (112, 170) THEN ac.activity_count ELSE 0 END ) AS total_users_served_datasources , SUM( CASE WHEN ac.event_type_id = 280 AND ac.user_id != 0 THEN ac.activity_count ELSE 0 END ) AS total_users_served_metrics , COUNT ( DISTINCT CASE WHEN ac.event_type_id IN (84, 87, 86, 291, 293) THEN ac.user_id ELSE NULL END ) AS unique_users_served_views , COUNT ( DISTINCT CASE WHEN ac.event_type_id IN (112, 170) THEN ac.user_id ELSE NULL END ) AS unique_users_served_datasources , COUNT ( DISTINCT CASE WHEN ac.event_type_id = 280 THEN ac.user_id ELSE NULL END ) AS unique_users_served_metrics FROM access_counts ac LEFT JOIN hist_views hv ON ac.hist_view_id = hv.id LEFT JOIN views v ON hv.view_id = v.id LEFT JOIN hist_workbooks hw ON ac.hist_workbook_id = hw.id LEFT JOIN workbooks w ON hw.workbook_id = w.id LEFT JOIN hist_datasources hd ON ac.hist_datasource_id = hd.id LEFT JOIN datasources d ON hd.datasource_id = d.id LEFT JOIN hist_metrics hm ON ac.hist_metric_id = hm.id LEFT JOIN metrics m ON hm.metric_id = m.id GROUP BY COALESCE(d.owner_id, v.owner_id, w.owner_id, m.owner_id) ) AS content_served ON u.id = content_served.content_owner_id",
+    "Content Ownership (Custom SQL)": "/* Return one row per user, assembling counts of owned content for each */ SELECT u.id AS user_id , COALESCE(workbooks.workbooks_owned, 0) AS workbooks_owned , COALESCE(workbooks.workbooks_owned_size / 1024.0 / 1024.0, 0) AS workbooks_owned_size , COALESCE(flows.flows_owned, 0) AS flows_owned , COALESCE(flows.flows_owned_size / 1024.0 / 1024.0, 0) AS flows_owned_size , COALESCE(datasources.datasources_owned, 0) AS datasources_owned , COALESCE(datasources.datasources_owned_size / 1024.0 / 1024.0, 0) AS datasources_owned_size , COALESCE(datasources.certified_datasources_owned, 0) AS certified_datasources_owned , COALESCE(projects.projects_owned, 0) AS projects_owned , COALESCE(views.views_owned, 0) AS views_owned , COALESCE(metrics.metrics_owned, 0) AS metrics_owned , COALESCE(collections.collections_owned, 0) AS collections_owned FROM users AS u LEFT JOIN -- workbooks ( SELECT w.owner_id AS workbooks_owner_id , SUM(w.size) AS workbooks_owned_size , COUNT(w.id) AS workbooks_owned FROM workbooks w GROUP BY w.owner_id ) as workbooks ON u.id = workbooks.workbooks_owner_id -- data sources LEFT JOIN ( SELECT d.owner_id AS datasources_owner_id , SUM(d.size) AS datasources_owned_size , COUNT(d.id) AS datasources_owned , COUNT( CASE WHEN d.is_certified = true THEN d.id ELSE NULL END ) AS certified_datasources_owned FROM datasources d WHERE d.connectable = true GROUP BY d.owner_id ) as datasources ON u.id = datasources.datasources_owner_id LEFT JOIN -- flows ( SELECT f.owner_id AS flows_owner_id , SUM(f.size) AS flows_owned_size , COUNT(f.id) AS flows_owned FROM flows f GROUP BY f.owner_id ) as flows ON u.id = flows.flows_owner_id -- projects LEFT JOIN ( SELECT p.owner_id AS projects_owner_id , COUNT(p.id) AS projects_owned FROM projects p GROUP BY p.owner_id ) as projects ON u.id = projects.projects_owner_id -- views LEFT JOIN ( SELECT v.owner_id AS views_owner_id , COUNT(v.id) AS views_owned FROM views v GROUP BY v.owner_id ) as views ON u.id = views.views_owner_id -- metrics LEFT JOIN ( SELECT m.owner_id AS metrics_owner_id , COUNT(m.id) AS metrics_owned FROM metrics m GROUP BY m.owner_id ) as metrics ON u.id = metrics.metrics_owner_id -- collections LEFT JOIN ( SELECT a.owner_id AS collections_owner_id , COUNT(a.id) AS collections_owned FROM asset_lists a WHERE a.list_type = 'collection' GROUP BY a.owner_id ) as collections ON u.id = collections.collections_owner_id",
+    "Resource Utilization (Custom SQL)": "/* Return one row per user, assembling counts of consumed resources for each X Subscriptions X Alerts X Scheduled Extract Refreshes X Subscriptions To Content for workbooks and views that this user owns: how many unique users are subscribed to them? how many total subscriptions exist on them? X Alerts on Content x for views that this user owns: x how many unique users are set up to receive alerts based on them? x how many total alerts exist on them? */ SELECT u.id AS user_id , COALESCE(alerts_created.alerts_created, 0) AS alerts_created , COALESCE(alerts_subscribed.alerts_subscribed, 0) AS alerts_subscribed , COALESCE(alerts_created.alerts_others_subscribed, 0) AS alerts_others_subscribed , COALESCE(alerts_on_content.alerted_unique_users_on_content, 0) AS alerted_unique_users_on_content , COALESCE(alerts_on_content.alerts_total_on_content, 0) AS alerts_total_on_content , COALESCE(subscriptions_created.subscriptions_created, 0) AS subscriptions_created , COALESCE(subscriptions_subscribed_to.subscriptions_subscribed_to, 0) AS subscriptions_subscribed_to , COALESCE(scheduled_extracts_on_content.scheduled_extracts_count_on_content, 0) AS scheduled_extracts_count_on_content , COALESCE(subscriptions_on_content.subscriptions_total_on_content, 0) AS subscriptions_total_on_content , COALESCE(subscriptions_on_content.subscriptions_unique_subscribers_on_content, 0) AS subscriptions_unique_subscribers_on_content FROM users AS u -- alerts created LEFT JOIN ( SELECT da.creator_id AS alerts_creator_id , COUNT(DISTINCT da.id) AS alerts_created , COUNT(dar.id) AS alerts_others_subscribed FROM data_alerts da LEFT JOIN data_alerts_recipients dar ON da.id = dar.data_alert_id GROUP BY da.creator_id ) as alerts_created ON u.id = alerts_created.alerts_creator_id -- alerts subscribed to LEFT JOIN ( SELECT dar.recipient_id AS alerts_subscriber_id , COUNT(DISTINCT dar.data_alert_id) AS alerts_subscribed FROM data_alerts_recipients dar GROUP BY dar.recipient_id ) as alerts_subscribed ON u.id = alerts_subscribed.alerts_subscriber_id -- alerts on content they own LEFT JOIN ( SELECT v.owner_id AS alerts_on_content_owner_id , COUNT(DISTINCT dar.recipient_id) AS alerted_unique_users_on_content , COUNT(da.id) AS alerts_total_on_content FROM data_alerts da INNER JOIN views v ON da.view_id = v.id LEFT JOIN data_alerts_recipients dar ON da.id = dar.data_alert_id GROUP BY v.owner_id ) as alerts_on_content ON u.id = alerts_on_content.alerts_on_content_owner_id -- subscriptions created LEFT JOIN ( SELECT s.creator_id AS subscriptions_creator_id , COUNT(s.id) AS subscriptions_created FROM subscriptions s GROUP BY s.creator_id ) as subscriptions_created ON u.id = subscriptions_created.subscriptions_creator_id -- subscriptions subscribed to LEFT JOIN ( SELECT s.user_id AS subscriptions_subscriber_id , COUNT(s.id) AS subscriptions_subscribed_to FROM subscriptions s GROUP BY s.user_id ) as subscriptions_subscribed_to ON u.id = subscriptions_subscribed_to.subscriptions_subscriber_id -- refreshes on content they own LEFT JOIN ( SELECT content.owner_id AS scheduled_extracts_on_content_owner_id , COUNT(t.id) AS scheduled_extracts_count_on_content FROM tasks t INNER JOIN ( SELECT w.id AS obj_id , 'Workbook' AS obj_type , w.owner_id FROM workbooks w UNION SELECT d.id AS obj_id , 'Datasource' AS obj_type , d.owner_id FROM datasources d WHERE d.connectable = true -- only published data sources can have extracts refreshed. embedded data sources in workbooks are scheduled as workbook ) AS content ON t.obj_id = content.obj_id AND t.obj_type = content.obj_type WHERE t.type IN ('RefreshExtractTask', 'IncrementExtractTask') GROUP BY content.owner_id ) as scheduled_extracts_on_content ON u.id = scheduled_extracts_on_content.scheduled_extracts_on_content_owner_id -- subscriptions on content they own LEFT JOIN ( SELECT COALESCE ( s_v.owner_id , sv_w.owner_id , s_w.owner_id ) AS subscriptions_on_content_owner_id , COUNT(s.id) AS subscriptions_total_on_content , COUNT(DISTINCT s.user_id) AS subscriptions_unique_subscribers_on_content FROM _subscriptions s LEFT JOIN tasks t ON s.id = t.obj_id AND t.type = 'SingleSubscriptionTask' LEFT JOIN views s_v ON s.view_url = REPLACE(s_v.repository_url, 'sheets/','') LEFT JOIN workbooks sv_w ON s_v.workbook_id = sv_w.id LEFT JOIN workbooks s_w ON s.workbook_url = s_w.repository_url WHERE COALESCE(s_v.id, s_w.id, sv_w.id, s.customized_view_id) IS NOT NULL GROUP BY COALESCE ( s_v.owner_id , sv_w.owner_id , s_w.owner_id ) ) AS subscriptions_on_content ON u.id = subscriptions_on_content.subscriptions_on_content_owner_id",
+    "Web Edits (Custom SQL)": "SELECT u.id AS user_id, COALESCE ( COUNT(h.id) , 0 ) AS web_edit_events FROM users u LEFT JOIN http_requests h ON u.id = h.user_id AND h.controller LIKE '%author%' WHERE NOT EXISTS ( SELECT 1 FROM historical_event_types WHERE type_id = 87 ) GROUP BY u.id UNION ALL SELECT u.id AS user_id, CAST(NULL AS INT) AS web_edit_events FROM users u WHERE EXISTS ( SELECT 1 FROM historical_event_types WHERE type_id = 87 )",
+    "Server Admin Permissions (Custom SQL)": "--This subquery obtains the users granted Server Admin privileges the entire Tableau Server instance and returns all of their usernames in the \"server_admins_string\" field --This is used for row-level security SELECT 1 AS dummy_join_field , ';' || string_agg(DISTINCT su.name || ';', '') AS server_admins_string FROM users u INNER JOIN system_users su ON u.system_user_id = su.id WHERE su.admin_level = 10",
+    "Site Admin Permissions (Custom SQL)": "--This subquery obtains the users granted Site Admin privileges the entire Tableau Server Site and returns all of their usernames in the \"site_admins_string\" field --This is used for row-level security SELECT u.site_id , ';' || string_agg(DISTINCT su.name || ';', '') AS site_admins_string FROM users u INNER JOIN system_users su ON u.system_user_id = su.id INNER JOIN site_roles sr ON u.site_role_id = sr.id WHERE sr.name LIKE '%SiteAdmin%' GROUP BY u.site_id",
+    "HTTP Requests": "/* Get all requests from the http_requests table, parsing out helpful information to be used in the data source. */ SELECT h.action , h.completed_at , h.controller , h.created_at , h.currentsheet , h.http_referer , h.http_user_agent , h.http_request_uri , h.remote_ip , h.session_id , h.user_cookie , h.user_ip , h.vizql_session , h.worker , h.id , h.port , h.site_id , h.status , h.user_id AS user_id_imputed , --this is weird, but on purpose. 2019.2 fixed issues where user_id was not being accurately populated, so this prevents breakage from the legacy version. 0 AS user_id , NULL AS user_id_imputation_method , -- The point of this nasty CASE statement is to try and extract a valid repository URL for views, workbooks, or data sources that requests are executed against. CASE WHEN COALESCE(h.currentsheet, '') = '' OR h.currentsheet LIKE '% %' OR currentsheet LIKE '%/null' THEN -- wrap all this to remove periods in URLs, e.g. \"SDOR/TFSDefectsSinceRelease.pdf\" SPLIT_PART ( CASE SPLIT_PART(http_request_uri, '/', 2) WHEN 'views' THEN SPLIT_PART(http_request_uri, '/', 3) || '/' || SPLIT_PART(SPLIT_PART(http_request_uri, '/', 4), '?', 1) WHEN 't' -- string is heading with the site id THEN SPLIT_PART(http_request_uri, '/', 5) || '/' || SPLIT_PART(SPLIT_PART(http_request_uri, '/', 6), '?', 1) WHEN 'trusted' THEN SPLIT_PART(http_request_uri, '/', 5) || '/' || SPLIT_PART(SPLIT_PART(http_request_uri, '/', 6), '?', 1) WHEN 'vizql' THEN CASE SPLIT_PART(REPLACE(http_request_uri, ('/vizql/t/' || COALESCE(s.url_namespace, '')), '/vizql'), '/', 3) -- trim off any site names for consistency WHEN 'w' THEN CASE LEFT( REPLACE( http_request_uri, ('/vizql/t/' || COALESCE(s.url_namespace, '')), '/vizql' ), 12 ) WHEN '/vizql/w/ds:' THEN REPLACE( SPLIT_PART(REPLACE(http_request_uri, ('/vizql/t/' || COALESCE(s.url_namespace, '')), '/vizql'), '/', 4), 'ds:', '' ) ELSE -- strip data source indicator off the front of the string SPLIT_PART( REPLACE(http_request_uri, ('/vizql/t/' || COALESCE(s.url_namespace, '')), '/vizql'), '/', 4 ) -- workbook name || CASE SPLIT_PART( REPLACE(http_request_uri, ('/vizql/t/' || COALESCE(s.url_namespace, '')), '/vizql'), '/', 6 ) WHEN 'null' -- sometimes in ostensiby web-edit scenarios, the sheet name is \"null\", so strip it out THEN '' ELSE '/' || SPLIT_PART( REPLACE(http_request_uri, ('/vizql/t/' || COALESCE(s.url_namespace, '')), '/vizql'), '/', 6 ) END -- sheet name END WHEN 'authoring' THEN '' ELSE '' END WHEN 'askData' THEN SPLIT_PART(http_request_uri, '/', 3) WHEN 'authoringNewWorkbook' THEN SPLIT_PART(http_request_uri, '/', 4) WHEN 'authoring' THEN SPLIT_PART(http_request_uri, '/', 3) || '/' || SPLIT_PART(SPLIT_PART(http_request_uri, '/', 4), '?', 1) WHEN 'startAskData' THEN SPLIT_PART(SPLIT_PART(http_request_uri, '/', 3), '?', 1) WHEN 'offline_views' THEN SPLIT_PART(http_request_uri, '/', 3) || '/' || SPLIT_PART(SPLIT_PART(http_request_uri, '/', 4), '?', 1) -- these are useless at present --WHEN 'newWorkbook' -- THEN '' --WHEN 'admin' -- THEN '' ELSE NULL END, '.', 1 ) ELSE -- we can use the currentsheet field CASE WHEN ( LEFT(currentsheet, 3) = 'ds:' OR LEFT(http_request_uri, 22) = '/authoringNewWorkbook/' OR LEFT(http_request_uri, 12) = '/vizql/w/ds:') THEN -- this is a web edit on a data source or workbook, so strip out the \"ds\" for data sources and build the repository url SPLIT_PART(REPLACE(h.currentsheet, 'ds:', ''), '/', 1) ELSE SPLIT_PART(REPLACE(h.currentsheet, 'ds:', ''), '/', 1) || '/' || SPLIT_PART(REPLACE(h.currentsheet, 'ds:', ''), '/', 2) END END AS item_repository_url , CASE WHEN currentsheet LIKE 'ds:%' OR LEFT(http_request_uri, 12) = '/vizql/w/ds:' OR LEFT(http_request_uri, 9) = '/askData/' THEN 'Data Source' WHEN http_request_uri LIKE '/authoringNewWorkbook/%' OR ( -- this logic is to trap the right type of item for certain web-edit scenarios that seem to come up SPLIT_PART( REPLACE(http_request_uri, ('/vizql/t/' || COALESCE(s.url_namespace, '')), '/vizql'), '/', 6 ) = 'null' AND currentsheet NOT LIKE '%/%' ) THEN 'Workbook' ELSE 'View' -- this, like cake, is a lie. many of these records may not really be referring to a view. but for our LEFT join, it will make sense and be less complicated. END AS item_type , CASE WHEN COALESCE(currentsheet, '') <<>> '' THEN SPLIT_PART(currentsheet, '/', 3) ELSE NULL END AS customized_view_owner , CASE WHEN COALESCE(currentsheet, '') <<>> '' THEN SPLIT_PART(currentsheet, '/', 4) ELSE NULL END AS customized_view_name FROM http_requests AS h LEFT JOIN sites AS s ON h.site_id = s.id",
+    "Project Leader Permissions (Custom SQL)": "--This subquery obtains the users granted Project Leader permissions for each project and returns all of their usernames in the \"project_leaders_string\" field -- This is used for row-level security SELECT project_permissions.project_id AS project_id , ';' || string_agg(DISTINCT su.name || ';', '') AS project_leaders_string FROM public.system_users su INNER JOIN public.users u ON su.id = u.system_user_id INNER JOIN ( -- users granted project leader rights via individual assignment SELECT ngp.grantee_id AS user_id , ngp.authorizable_id AS project_id FROM public.users u INNER JOIN public.next_gen_permissions ngp ON u.id = ngp.grantee_id AND ngp.capability_id = 19 -- Project Leader permissions AND ngp.grantee_type = 'User' AND ngp.permission = 3 -- Granted to user AND ngp.authorizable_type = 'Project' UNION -- users granted project leader rights via group membership SELECT gu.user_id AS user_id , ngp.authorizable_id AS project_id FROM public.group_users gu INNER JOIN public.groups g ON gu.group_id = g.id INNER JOIN public.next_gen_permissions ngp ON gu.group_id = ngp.grantee_id AND ngp.capability_id = 19 -- Project Leader permissions AND ngp.grantee_type = 'Group' AND ngp.permission = 1 -- Granted to group AND ngp.authorizable_type = 'Project' ) AS project_permissions ON u.id = project_permissions.user_id INNER JOIN public.projects p ON project_permissions.project_id = p.id GROUP BY project_permissions.project_id ORDER BY project_permissions.project_id"
+  },
+  "foreign_keys": [
+    [
+      "_users",
+      "system_user_id",
+      "system_users",
+      "id"
+    ],
+    [
+      "hist_datasources",
+      "datasource_id",
+      "datasources",
+      "id"
+    ],
+    [
+      "hist_flows",
+      "flow_id",
+      "flows",
+      "id"
+    ],
+    [
+      "hist_metrics",
+      "metric_id",
+      "metrics",
+      "id"
+    ],
+    [
+      "hist_sites",
+      "site_id",
+      "sites",
+      "id"
+    ],
+    [
+      "hist_tasks",
+      "task_id",
+      "tasks",
+      "id"
+    ],
+    [
+      "hist_users",
+      "site_role_id",
+      "site_roles",
+      "id"
+    ],
+    [
+      "hist_views",
+      "view_id",
+      "views",
+      "id"
+    ],
+    [
+      "hist_workbooks",
+      "workbook_id",
+      "workbooks",
+      "id"
+    ],
+    [
+      "historical_events",
+      "hist_actor_user_id",
+      "hist_users",
+      "id"
+    ],
+    [
+      "historical_events",
+      "hist_collection_id",
+      "hist_collections",
+      "id"
+    ],
+    [
+      "historical_events",
+      "hist_datasource_id",
+      "hist_datasources",
+      "id"
+    ],
+    [
+      "historical_events",
+      "hist_flow_id",
+      "hist_flows",
+      "id"
+    ],
+    [
+      "historical_events",
+      "hist_metric_id",
+      "hist_metrics",
+      "id"
+    ],
+    [
+      "historical_events",
+      "hist_project_id",
+      "hist_projects",
+      "id"
+    ],
+    [
+      "historical_events",
+      "hist_schedule_id",
+      "hist_schedules",
+      "id"
+    ],
+    [
+      "historical_events",
+      "hist_target_site_id",
+      "hist_sites",
+      "id"
+    ],
+    [
+      "historical_events",
+      "hist_task_id",
+      "hist_tasks",
+      "id"
+    ],
+    [
+      "historical_events",
+      "hist_view_id",
+      "hist_views",
+      "id"
+    ],
+    [
+      "historical_events",
+      "hist_workbook_id",
+      "hist_workbooks",
+      "id"
+    ],
+    [
+      "historical_events",
+      "historical_event_type_id",
+      "historical_event_types",
+      "type_id"
+    ],
+    [
+      "projects_contents",
+      "project_id",
+      "projects",
+      "id"
+    ],
+    [
+      "system_users",
+      "domain_id",
+      "domains",
+      "id"
+    ],
+    [
+      "users",
+      "site_id",
+      "sites",
+      "id"
+    ],
+    [
+      "users",
+      "site_role_id",
+      "site_roles",
+      "id"
+    ],
+    [
+      "users",
+      "system_user_id",
+      "system_users",
+      "id"
+    ]
+  ]
+}

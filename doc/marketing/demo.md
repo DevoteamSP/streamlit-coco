@@ -109,7 +109,7 @@
 | Does it work with SiS? | Not yet — pure Python, waiting for the CoCo API |
 | What LLM does it use? | Whatever Cortex Code uses (Claude, ChatGPT...) — no config needed |
 | Can I customize which tools need approval? | Yes — `permission_mode` in `CocoOptions` |
-| Is it production-ready? | Alpha (0.1.0) — use in internal tools today, production after N1 |
+| Is it production-ready? | Alpha (`0.1.6`) — use in internal tools today, production after N1 |
 
 ---
 

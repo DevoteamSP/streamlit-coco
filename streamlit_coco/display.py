@@ -8,7 +8,7 @@ from typing import Any
 import streamlit as st
 
 from streamlit_coco.clipboard import render_copy_button
-from streamlit_coco.rich_text import split_markdown_fences, window_transcript
+from streamlit_coco.rich_text import preview_text, split_markdown_fences, window_transcript
 from streamlit_coco.session import CocoRunStatus, CocoSession
 from streamlit_coco.text_renderer import TextRenderer, resolve_text_renderer
 from streamlit_coco.tool_cards import render_tool_card
@@ -86,6 +86,7 @@ def render_transcript(
     text_renderer: TextRenderer = None,
     show_copy: bool = True,
     max_messages: int | None = None,
+    preview_chars: int | None = None,
 ) -> None:
     """Render the conversation into a Streamlit container or the current context.
 
@@ -96,6 +97,8 @@ def render_transcript(
     max_messages:
         When set, show only the newest N transcript items plus any extra loaded
         via the **Load earlier** control.
+    preview_chars:
+        When set, show only the first N characters of user/assistant text.
     """
     full_transcript = session.get_transcript_snapshot()
     extra_key = _transcript_extra_key(session)
@@ -136,11 +139,11 @@ def render_transcript(
             item_id = str(item.get("id") or idx)
 
             if role == "user":
+                visible, clipped = preview_text(str(item.get("content") or ""), limit=preview_chars)
                 with st.chat_message("user"):
-                    render_message_body(
-                        str(item.get("content") or ""),
-                        text_renderer=text_renderer,
-                    )
+                    render_message_body(visible, text_renderer=text_renderer)
+                    if clipped:
+                        st.caption(f"First {preview_chars} characters")
                 continue
 
             if kind == "text":
@@ -148,12 +151,15 @@ def render_transcript(
                 streaming = (
                     show_streaming_cursor and is_streaming and idx == last_assistant_idx and content
                 )
+                visible, clipped = preview_text(content, limit=None if streaming else preview_chars)
                 with st.chat_message("assistant"):
                     render_message_body(
-                        content,
+                        visible,
                         text_renderer=text_renderer,
                         streaming_suffix=" ▍" if streaming else "",
                     )
+                    if clipped:
+                        st.caption(f"First {preview_chars} characters")
                     if show_copy and content and not streaming:
                         render_copy_button(
                             content,
@@ -225,6 +231,36 @@ def _latest_tool_activity(session: CocoSession) -> dict[str, Any] | None:
     return tools[-1]
 
 
+def session_progress_text(session: CocoSession) -> str | None:
+    """Short busy label for a compact badge (or ``None`` when idle)."""
+    if session.is_connecting:
+        return "Starting CoCo"
+    pending = session.permission_manager.active_pending()
+    if pending is not None:
+        name = pending.tool_name or "input"
+        return f"Needs input · {name}"
+    if session.status == CocoRunStatus.RUNNING:
+        tool = _latest_tool_activity(session)
+        if tool and tool.get("status") == "running":
+            return f"Working · {tool.get('name')}"
+        return "Working · thinking…"
+    return None
+
+
+def render_progress_badge(session: CocoSession | None) -> None:
+    """Inline busy badge for the Copilot rail header. No-op when idle."""
+    if session is None:
+        return
+    text = session_progress_text(session)
+    if not text:
+        return
+    color = "orange" if text.startswith("Needs input") else "blue"
+    icon = ":material/touch_app:" if text.startswith("Needs input") else ":material/pending:"
+    st.badge(text, icon=icon, color=color)
+    if session.status == CocoRunStatus.RUNNING:
+        st.badge(_status_model_label(session), color="gray")
+
+
 def render_session_status(
     session: CocoSession,
     *,
@@ -250,24 +286,22 @@ def render_session_status(
         return
 
     if pending is not None:
-        label = pending.tool_name
-        with st.container(border=True):
-            st.markdown(f"**Needs your input** · `{label}`")
-            if show_details:
-                st.caption("Approve, deny, or answer to continue.")
+        st.badge(
+            f"Needs input · {pending.tool_name}",
+            icon=":material/touch_app:",
+            color="orange",
+        )
+        if show_details:
+            st.caption("Approve, deny, or answer to continue.")
         return
 
     if session.status == CocoRunStatus.RUNNING:
-        tool = _latest_tool_activity(session)
-        with st.container(border=True):
-            if tool and tool.get("status") == "running":
-                st.markdown(f"**Working** · tool `{tool.get('name')}`")
-            else:
-                st.markdown("**Working** · thinking…")
-            if show_details:
-                st.caption(
-                    f"`{_status_model_label(session)}` · `{_status_connection_label(session)}`"
-                )
+        text = session_progress_text(session) or "Working · thinking…"
+        st.badge(text, icon=":material/pending:", color="blue")
+        if show_details:
+            st.caption(
+                f"`{_status_model_label(session)}` · `{_status_connection_label(session)}`"
+            )
         return
 
     if session.status in {CocoRunStatus.READY, CocoRunStatus.COMPLETED, CocoRunStatus.IDLE}:

@@ -69,6 +69,14 @@ def split_markdown_fences(text: str) -> list[MarkdownSegment]:
     return segments
 
 
+def preview_text(text: str, *, limit: int | None) -> tuple[str, bool]:
+    """Return ``(visible, truncated)`` cutting ``text`` to ``limit`` characters."""
+    body = text or ""
+    if limit is None or limit <= 0 or len(body) <= limit:
+        return body, False
+    return body[:limit].rstrip() + "…", True
+
+
 def window_transcript(
     transcript: list,
     *,

@@ -50,9 +50,9 @@ cp -R doc-dev/releases/_template/. "doc-dev/releases/${VER}/"
 ```
 
 - Public checklist: [`doc/releases/`](../releases/README.md) → `doc/releases/X.Y.Z/CHECKLIST.md`  
-  (current: [`doc/releases/0.1.5/`](../releases/0.1.5/))
+  (current: [`doc/releases/0.1.6/`](../releases/0.1.6/))
 - Outreach (LinkedIn / Medium / community): [`doc-dev/releases/`](../../doc-dev/releases/README.md)  
-  (current: [`doc-dev/releases/0.1.5/`](../../doc-dev/releases/0.1.5/)) — **never synced** to the public repo
+  (current: [`doc-dev/releases/0.1.6/`](../../doc-dev/releases/0.1.6/)) — **never synced** to the public repo
 
 ```bash
 make test-all
@@ -88,7 +88,7 @@ Default target clone: `../streamlit-coco` (override with `RELEASE_REPO=`).
 Default remote: `https://github.com/lletourmy/streamlit-coco.git` (override with `RELEASE_REMOTE=`).
 
 Excluded from the public tree: `.cursor/`, `.agents/`, `.claude/`, `doc-dev/`,
-local caches, `dist/`, and this sync script.
+`apps/`, local caches, `dist/`, and this sync script.
 
 ### 3. Tag on **lletourmy/streamlit-coco** (PyPI publisher; not `-dev`)
 

@@ -1,15 +1,15 @@
 # streamlit-coco
 
-**Bring Snowflake CoCo into Streamlit** — streaming agent UI, tool cards you can actually read, and approval gates that fit governed data apps.
+**Built (with love) by Devoteam Snowflake Partner, brings Snowflake CoCo into Streamlit** — streaming agent UI, tool cards you can actually read, and approval gates that fit governed data apps.
 
 [![CI](https://github.com/lletourmy/streamlit-coco/actions/workflows/ci.yml/badge.svg)](https://github.com/lletourmy/streamlit-coco/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-You own the page. CoCo owns the session. `panel()` streams the transcript; your app keeps `st.chat_input`, metrics, and forms. Approvals pause Write / Edit / Bash / SQL until someone clicks **Approve once**, **Always allow**, or **Deny**.
+You own the page. CoCo owns the session. `panel()` streams the transcript; `copilot_rail()` wraps that panel as a right-rail Copilot for multipage apps. Your app keeps `st.chat_input`, metrics, and forms. Approvals pause Write / Edit / Bash / SQL until someone clicks **Approve once**, **Always allow**, or **Deny**.
 
 ![CoCo for Streamlit — streaming transcript with a Glob tool card](doc/screenshot.png)
 
-> Alpha `0.1.5` — API may still move. Star / watch the repo if you plan to ship on it.
+> Alpha `0.1.6` — API may still move. Star / watch the repo if you plan to ship on it.
 
 **Repo:** [github.com/lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco) *(temporary PyPI source)* · **Dev:** [streamlit-coco-dev](https://github.com/DevoteamSP/streamlit-coco-dev)  
 **SDK docs:** [Cortex Code Agent SDK](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
@@ -98,10 +98,12 @@ make approval      # legacy CCv2 chat
 make structured    # custom structured-output panel
 make headless      # asyncio query() pipeline
 make backlog       # Product Backlog Desk (multipage business demo)
+make tableau-semantic  # Tableau workbooks → semantic view + RAP (screens 1–6)
 ```
 
 Exploratory prompts: [`examples/testdata/prompts.json`](examples/testdata/prompts.json).  
 Backlog desk: [`examples/backlog_desk/README.md`](examples/backlog_desk/README.md).  
+Tableau → Semantic: [`examples/tableau_to_semantic/README.md`](examples/tableau_to_semantic/README.md).  
 File upload: [`doc/features/file-upload/file-upload.md`](doc/features/file-upload/file-upload.md).
 
 ---
@@ -141,6 +143,7 @@ asyncio.run(run())
 | Capability | Entry points |
 | --- | --- |
 | Native panel + approvals | `panel()`, `chat_input_bar()`, `render_approvals()` |
+| Copilot rail (right-column Copilot) | `copilot_rail()`, `transcript_view_pills()` — [`doc/features/copilot-rail/`](doc/features/copilot-rail/) |
 | Tool cards & AskUser / plan UI | see [`doc/features/tools-display/`](doc/features/tools-display/) |
 | Session & options | `CocoSession`, `CocoOptions`, `get_or_create_session` |
 | Headless events | `query()` |
@@ -176,7 +179,7 @@ make help          # all targets
 CI runs lint, tests, and pip-audit on every PR to `main`. Full local gate: `make test-all` ([`doc/testing.md`](doc/testing.md)).  
 **Releases:** develop here (`streamlit-coco-dev`), sync + tag on [`lletourmy/streamlit-coco`](https://github.com/lletourmy/streamlit-coco) → PyPI ([guide](doc/deployment/publish.md)).
 
-**Docs:** [PRD](doc/prd.md) · [API](doc/api.md) · [Roadmap](doc/roadmap.md) · [Deployment](doc/deployment/) · [Changelog](CHANGELOG.md) · [AGENTS.md](AGENTS.md)
+**Docs:** [PRD](doc/prd.md) · [API](doc/api.md) · [Roadmap](doc/roadmap.md) · [Training](doc/training/training-overview.md) · [Deployment](doc/deployment/) · [Changelog](CHANGELOG.md) · [AGENTS.md](AGENTS.md)
 
 ---
 

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>streamlit-coco — Consultant Self-Training</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200;0,6..12,300;0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900&display=swap');
+:root {
+  --red:#F5364B; --red2:#E8001D; --snow:#29B5E8; --gold:#F59B23; --green:#27AE60;
+  --purple:#7B61FF; --teal:#1ABC9C; --dark:#1E2028; --text:#2D2D2D; --muted:#7B7F8E;
+  --border:#E2E4EA; --card:#F4F5F7; --bg:#FAFAFA;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); font-family:'Nunito Sans',sans-serif; padding:32px; display:flex; flex-direction:column; gap:32px; }
+nav { position:sticky; top:0; background:white; border-bottom:1px solid var(--border); padding:10px 20px; display:flex; gap:14px; z-index:100; font-size:11px; flex-wrap:wrap; }
+nav a { color:var(--text); text-decoration:none; font-weight:600; }
+nav a:hover { color:var(--red); }
+.slide { width:1280px; min-height:720px; background:white; border-radius:12px; box-shadow:0 2px 24px rgba(0,0,0,.08); display:flex; flex-direction:column; position:relative; overflow:hidden; padding:40px 52px 56px; font-family:'Nunito Sans',sans-serif; }
+.slide-dark { background:#1E2028; color:white; }
+.slide-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:22px; }
+.slide-header-left { display:flex; flex-direction:column; }
+.section-label { font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--red); margin-bottom:6px; }
+h1 { font-size:32px; font-weight:300; color:var(--text); line-height:1.15; margin-bottom:8px; }
+h1 strong { font-weight:800; color:var(--red); }
+.subtitle { font-size:13px; color:var(--muted); font-weight:400; }
+.logo-badge { display:flex; align-items:center; gap:10px; }
+.logo-circle { width:38px; height:38px; background:var(--red); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:900; font-size:15px; }
+.logo-text { line-height:1.2; }
+.logo-name { font-weight:700; font-size:13px; color:var(--text); }
+.logo-partner { font-size:10px; color:var(--muted); }
+.slide-dark .logo-name { color:white; }
+.slide-dark .logo-partner { color:rgba(255,255,255,.5); }
+.slide-footer { position:absolute; bottom:0; left:0; right:0; height:36px; padding:0 52px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--border); }
+.slide-dark .slide-footer { border-top-color:rgba(255,255,255,.08); }
+.footer-brand { font-size:11px; font-weight:700; color:var(--red); }
+.footer-page { font-size:11px; color:var(--muted); }
+.slide-dark .footer-page { color:rgba(255,255,255,.4); }
+.card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 18px; }
+.card-top { border-top:3px solid var(--red); }
+.badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:6px; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+.badge-snow { background:rgba(41,181,232,.12); color:var(--snow); border:1px solid rgba(41,181,232,.3); }
+.badge-gold { background:rgba(245,155,35,.12); color:var(--gold); border:1px solid rgba(245,155,35,.3); }
+.badge-green { background:rgba(39,174,96,.12); color:var(--green); border:1px solid rgba(39,174,96,.3); }
+.badge-red { background:rgba(245,54,75,.12); color:var(--red); border:1px solid rgba(245,54,75,.3); }
+.badge-purple { background:rgba(123,97,255,.12); color:var(--purple); border:1px solid rgba(123,97,255,.3); }
+.bullet { width:7px; height:7px; border-radius:50%; display:inline-block; flex-shrink:0; background:var(--red); margin-top:6px; }
+.bullet-snow { background:var(--snow); } .bullet-gold { background:var(--gold); } .bullet-green { background:var(--green); } .bullet-purple { background:var(--purple); }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:18px; flex:1; }
+.item-row { display:flex; align-items:flex-start; gap:10px; padding:10px 14px; background:white; border:1px solid var(--border); border-radius:8px; margin-bottom:8px; }
+.item-label { font-size:12px; font-weight:700; }
+.item-desc { font-size:12px; color:var(--muted); }
+code.inline { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:2px 6px; font-family:monospace; font-size:12px; }
+pre.code-block { background:#1E2028; color:#e2e8f0; border-radius:8px; padding:14px 18px; font-family:monospace; font-size:12px; line-height:1.5; overflow:auto; }
+.kpi-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+.kpi { text-align:center; background:white; border-radius:8px; padding:14px; border:1px solid var(--border); }
+.kpi-num { font-size:26px; font-weight:800; color:var(--red); }
+.kpi-label { font-size:11px; color:var(--muted); margin-top:2px; }
+table.mini { width:100%; border-collapse:collapse; font-size:12px; }
+table.mini th { text-align:left; padding:6px 10px; border-bottom:2px solid var(--border); color:var(--muted); font-weight:700; }
+table.mini td { padding:8px 10px; border-bottom:1px solid var(--border); }
+</style>
+</head>
+<body>
+<nav id="nav">
+<a href="#s1">Title</a><a href="#s2">Elevator Pitch</a><a href="#s3">Problem</a><a href="#s4">Ecosystem</a>
+<a href="#s5">Adoption</a><a href="#s6">Engagement Modes</a><a href="#s7">What You'll Do</a>
+<a href="#s8">Architecture</a><a href="#s9">Components</a><a href="#s10">Setup Prereqs</a>
+<a href="#s11">Install</a><a href="#s12">Verify</a><a href="#s13">Walkthrough 1</a>
+<a href="#s14">Walkthrough 2</a><a href="#s15">Walkthrough 3</a><a href="#s16">Walkthrough 4</a>
+<a href="#s17">Walkthrough 5</a><a href="#s18">Demo Reqs</a><a href="#s19">Demo Hook</a>
+<a href="#s20">Demo Approvals</a><a href="#s21">Demo Output/Headless</a><a href="#s22">Demo Close</a>
+<a href="#s23">Pitfalls</a><a href="#s24">FAQ</a><a href="#s25">Takeaways</a><a href="#s26">Resources</a><a href="#s27">Certify</a>
+</nav>
+
+<!-- SLIDE 1 : COVER -->
+<div class="slide slide-dark" id="s1">
+  <div style="position:absolute;top:-80px;left:-80px;width:280px;height:280px;border-radius:50%;background:rgba(180,20,40,.35)"></div>
+  <div style="position:absolute;bottom:-60px;right:-40px;width:220px;height:220px;border-radius:50%;background:rgba(120,10,30,.3)"></div>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:36px;position:relative;z-index:1">
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+    <div class="badge badge-red">Consultant Self-Training</div>
+  </div>
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div class="section-label" style="margin-bottom:12px;color:#f5364b">TRAINING DECK · streamlit-coco · v0.1.6</div>
+    <h1 style="color:white;font-size:42px;margin-bottom:8px">streamlit-coco</h1>
+    <h1 style="color:white;font-size:42px;margin-bottom:28px">Consultant <strong style="color:var(--red)">Self-Training.</strong></h1>
+    <div style="font-size:15px;color:rgba(255,255,255,.65);max-width:760px;line-height:1.6">
+      Go through this deck alone, do the hands-on lab, and emerge ready to demo, build, and
+      deliver <code class="inline" style="background:rgba(255,255,255,.1);color:white;border:1px solid rgba(255,255,255,.2)">streamlit-coco</code>
+      on a client engagement. Companion files: <code class="inline" style="background:rgba(255,255,255,.1);color:white;border:1px solid rgba(255,255,255,.2)">doc/training/*.md</code>.
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page" style="color:rgba(255,255,255,.35)">Owner: Laurent Letourmy</div></div>
+</div>
+
+<!-- SLIDE 2 : ELEVATOR PITCH -->
+<div class="slide" id="s2">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">INTRODUCTION</div><h1>What is <strong>streamlit-coco?</strong></h1><div class="subtitle">One sentence: the elevator pitch</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px">
+    <div class="card card-top" style="padding:28px 32px">
+      <div style="font-size:22px;font-weight:700;color:var(--text);line-height:1.5">
+        A Python library that wraps Snowflake's <strong>Cortex Code Agent SDK ("CoCo")</strong>
+        into production-ready Streamlit components — streaming agent UI, readable tool cards,
+        and human-in-the-loop approval gates, in about 10 lines of code.
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="item-row"><div class="bullet bullet-snow"></div><div><div class="item-label">PyPI package</div><div class="item-desc"><code class="inline">pip install streamlit-coco[sdk]</code></div></div></div>
+      <div class="item-row"><div class="bullet bullet-gold"></div><div><div class="item-label">License</div><div class="item-desc">Apache-2.0, open source</div></div></div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">1.1</div></div>
+</div>
+
+<!-- SLIDE 3 : PROBLEM -->
+<div class="slide" id="s3">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">INTRODUCTION</div><h1>The problem it <strong>solves</strong></h1><div class="subtitle">Why this library exists</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">
+      Teams building Streamlit apps on Snowflake want AI-assisted data exploration, code
+      generation, and automated workflows. Wiring Cortex Code into a custom Streamlit app
+      from scratch means building session management, streaming rendering, tool-card
+      display, and safety gates yourself — weeks of plumbing with no reusable foundation.
+    </div>
+    <table class="mini">
+      <thead><tr><th>Without streamlit-coco</th><th>With streamlit-coco</th></tr></thead>
+      <tbody>
+        <tr><td>Wire CoCo yourself across Streamlit reruns</td><td>Session + fragment polling that keeps streaming</td></tr>
+        <tr><td>Raw JSON tool dumps</td><td>Meaningful cards (Glob, Grep, Read, Write, SQL, AskUser…)</td></tr>
+        <tr><td>Hope the agent behaves</td><td><code class="inline">require_approval_for</code> + HITL UI</td></tr>
+        <tr><td>Chat-only demos</td><td>Structured callbacks into your own widgets</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">1.2</div></div>
+</div>
+
+<!-- SLIDE 4 : ECOSYSTEM FIT -->
+<div class="slide" id="s4">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">INTRODUCTION</div><h1>How it fits the <strong>Snowflake ecosystem</strong></h1><div class="subtitle">Who built it, current maturity</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:10px">Position</div>
+      <div class="item-row"><div class="bullet bullet-snow"></div><div class="item-desc">Cortex Code today is consumed via CLI, Snowsight, Desktop, IDE extensions</div></div>
+      <div class="item-row"><div class="bullet bullet-gold"></div><div class="item-desc">streamlit-coco bridges the gap into custom Streamlit apps</div></div>
+      <div class="item-row"><div class="bullet bullet-green"></div><div class="item-desc">Pure Python — no JS build step, works with SiS-style local Streamlit</div></div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:10px">Maturity &amp; ownership</div>
+      <div class="item-row"><div class="bullet bullet-red"></div><div><div class="item-label">Level</div><div class="item-desc">N0 (alpha), targeting N1 — Snow Builders</div></div></div>
+      <div class="item-row"><div class="bullet bullet-red"></div><div><div class="item-label">Owner</div><div class="item-desc">Laurent Letourmy — Devoteam Snowflake Partner</div></div></div>
+      <div class="item-row"><div class="bullet bullet-red"></div><div><div class="item-label">Version</div><div class="item-desc">0.1.6 on PyPI</div></div></div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">1.3</div></div>
+</div>
+
+<!-- SLIDE 5 : ADOPTION / HOW OTHERS USE IT -->
+<div class="slide" id="s5">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">HOW OTHERS USE IT</div><h1>Current adoption &amp; <strong>outcomes</strong></h1><div class="subtitle">Snapshot as of the roadmap's last success-check</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div class="kpi-grid" style="margin-bottom:18px">
+      <div class="kpi"><div class="kpi-num">228</div><div class="kpi-label">PyPI downloads last month</div></div>
+      <div class="kpi"><div class="kpi-num">2</div><div class="kpi-label">GitHub stars</div></div>
+      <div class="kpi"><div class="kpi-num">0.1.6</div><div class="kpi-label">Current alpha version</div></div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px">Honest state (be transparent with clients)</div>
+      <div class="item-desc" style="line-height:1.6">
+        This is alpha software, 0 client engagements to date, and targets are still ahead
+        of current usage (500+ downloads/month, 50+ stars, 3+ community examples). Position
+        it accordingly: strong internal-tooling fit today, production readiness targeted at
+        N1. Do not oversell maturity in a client conversation.
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">2.1</div></div>
+</div>
+
+<!-- SLIDE 6 : ENGAGEMENT MODES -->
+<div class="slide" id="s6">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">HOW OTHERS USE IT</div><h1>Typical <strong>engagement modes</strong></h1><div class="subtitle">Three ways teams plug this in</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;flex:1">
+    <div class="card" style="border-top:3px solid var(--snow)"><div class="badge badge-snow" style="margin-bottom:10px">INTERACTIVE</div><div style="font-size:13px;font-weight:700;margin-bottom:6px">Analyst copilot</div><div class="item-desc">panel() + chat_input_bar() embedded in a dashboard; analysts ask questions, agent queries Snowflake with approval gates.</div></div>
+    <div class="card" style="border-top:3px solid var(--gold)"><div class="badge badge-gold" style="margin-bottom:10px">STRUCTURED</div><div style="font-size:13px;font-weight:700;margin-bottom:6px">Self-updating widgets</div><div class="item-desc">Agent output routed into your own dataframes/charts via on_structured_output — no chat window needed.</div></div>
+    <div class="card" style="border-top:3px solid var(--purple)"><div class="badge badge-purple" style="margin-bottom:10px">HEADLESS</div><div style="font-size:13px;font-weight:700;margin-bottom:6px">CI / pipeline step</div><div class="item-desc">query() in a script — no Streamlit import at all; embed CoCo in scheduled jobs or CI.</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">2.2</div></div>
+</div>
+
+<!-- SLIDE 7 : WHAT YOU'LL BE ABLE TO DO -->
+<div class="slide" id="s7">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">GOAL OF THIS TRAINING</div><h1>What you'll be able to <strong>do</strong></h1><div class="subtitle">Concrete outcomes after this deck + lab</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div class="item-row"><div class="bullet bullet-red"></div><div><div class="item-label">Explain it</div><div class="item-desc">What it does, when to use it vs. a bare CoCo CLI/Snowsight session</div></div></div>
+    <div class="item-row"><div class="bullet bullet-snow"></div><div><div class="item-label">Run every demo</div><div class="item-desc">make chat, make backlog, make tableau-semantic, make headless, make structured, make cwd-upload</div></div></div>
+    <div class="item-row"><div class="bullet bullet-gold"></div><div><div class="item-label">Build from scratch</div><div class="item-desc">A minimal app using panel() + chat_input_bar(), approval gates configured</div></div></div>
+    <div class="item-row"><div class="bullet bullet-green"></div><div><div class="item-label">Present a demo</div><div class="item-desc">Deliver the 12-minute scripted demo to a client or internal audience unassisted</div></div></div>
+    <div class="item-row"><div class="bullet bullet-purple"></div><div><div class="item-label">Map to a project</div><div class="item-desc">Presales demo, delivery sprint (Assess→Build→Enable), or client workshop (W01)</div></div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">3.1</div></div>
+</div>
+
+<!-- SLIDE 8 : ARCHITECTURE -->
+<div class="slide" id="s8">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">ARCHITECTURE</div><h1>How it <strong>works</strong></h1><div class="subtitle">"You own the page. CoCo owns the session."</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;margin-bottom:8px">Flow (interactive mode)</div>
+      <div style="font-size:12px;color:var(--text);line-height:1.8">
+        <code class="inline">check_environment()</code> → verify SDK / CLI / Snowflake connection are ready, without starting an agent<br>
+        <code class="inline">render_start_gate()</code> → shows status, only starts the session after you click "Start"<br>
+        <code class="inline">get_or_create_session()</code> → creates/retrieves a <code class="inline">CocoSession</code> tied to a Streamlit session key<br>
+        <code class="inline">panel()</code> + <code class="inline">chat_input_bar()</code> → renders the streaming transcript and your input, survives Streamlit reruns<br>
+        <code class="inline">copilot_rail()</code> → wraps that panel as a right-rail Copilot (connection, queued jobs, compact transcript) — <code class="inline">make tableau-semantic</code>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="item-row"><div class="bullet bullet-snow"></div><div class="item-desc">Under the hood: the SDK spawns the CoCo CLI as a subprocess and streams NDJSON events</div></div>
+      <div class="item-row"><div class="bullet bullet-gold"></div><div class="item-desc">Same event model powers panel(), structured output, and headless query()</div></div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">4.1</div></div>
+</div>
+
+<!-- SLIDE 9 : KEY COMPONENTS -->
+<div class="slide" id="s9">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">ARCHITECTURE</div><h1>Key <strong>components</strong></h1><div class="subtitle">The public API surface you'll actually use</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <table class="mini">
+      <thead><tr><th>Capability</th><th>Entry points</th></tr></thead>
+      <tbody>
+        <tr><td>Native panel + approvals</td><td><code class="inline">panel()</code>, <code class="inline">chat_input_bar()</code>, <code class="inline">render_approvals()</code></td></tr>
+        <tr><td>Tool cards &amp; AskUser / plan UI</td><td><code class="inline">doc/features/tools-display/</code></td></tr>
+        <tr><td>Session &amp; options</td><td><code class="inline">CocoSession</code>, <code class="inline">CocoOptions</code>, <code class="inline">get_or_create_session</code></td></tr>
+        <tr><td>Headless events</td><td><code class="inline">query()</code>, <code class="inline">CocoSession.stream()</code>, <code class="inline">execute_plan()</code></td></tr>
+        <tr><td>File upload into cwd (0.1.5)</td><td><code class="inline">upload_to_cwd()</code>, <code class="inline">cwd_uploader()</code></td></tr>
+        <tr><td>Copilot rail (0.1.6)</td><td><code class="inline">copilot_rail()</code>, <code class="inline">transcript_view_pills()</code></td></tr>
+        <tr><td>Legacy CCv2</td><td><code class="inline">chat()</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">4.2</div></div>
+</div>
+
+<!-- SLIDE 10 : SETUP - PREREQUISITES -->
+<div class="slide" id="s10">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">GETTING STARTED — SETUP</div><h1>Prerequisites</h1><div class="subtitle">Full detail: doc/training/setup-guide.md</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div class="item-row"><div class="bullet bullet-red"></div><div class="item-desc">Python <strong>3.10+</strong> and <code class="inline">uv</code> installed</div></div>
+    <div class="item-row"><div class="bullet bullet-snow"></div><div class="item-desc">A Snowflake account with <strong>Cortex Code</strong> access</div></div>
+    <div class="item-row"><div class="bullet bullet-gold"></div><div class="item-desc">A working <code class="inline">~/.snowflake/connections.toml</code> (or CLI default connection)</div></div>
+    <div class="item-row"><div class="bullet bullet-green"></div><div class="item-desc">The <strong>CoCo CLI</strong> (<code class="inline">cortex</code>) installed and on <code class="inline">PATH</code></div></div>
+    <div class="item-row"><div class="bullet bullet-purple"></div><div class="item-desc">Git access to <code class="inline">DevoteamSP/streamlit-coco-dev</code></div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">5.1</div></div>
+</div>
+
+<!-- SLIDE 11 : SETUP - INSTALL -->
+<div class="slide" id="s11">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">GETTING STARTED — SETUP</div><h1>Install &amp; connect</h1><div class="subtitle">Copy-paste ready</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:12px">
+    <pre class="code-block">git clone https://github.com/DevoteamSP/streamlit-coco-dev.git
+cd streamlit-coco-dev
+make install     # uv sync --extra dev
+cortex --version # verify CoCo CLI</pre>
+    <div style="font-size:12px;color:var(--muted)">Then set up <code class="inline">~/.snowflake/connections.toml</code>:</div>
+    <pre class="code-block">[connections.analytics]
+account = "xy12345"
+user = "you@company.com"
+authenticator = "externalbrowser"</pre>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">5.2</div></div>
+</div>
+
+<!-- SLIDE 12 : VERIFICATION CHECKLIST -->
+<div class="slide" id="s12">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">GETTING STARTED — SETUP</div><h1>Verification checklist</h1><div class="subtitle">You're ready for the lab when...</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div class="item-row"><div class="bullet bullet-green"></div><div class="item-desc"><code class="inline">import streamlit_coco as c; print(c.__version__)</code> prints <code class="inline">0.1.6</code></div></div>
+    <div class="item-row"><div class="bullet bullet-green"></div><div class="item-desc"><code class="inline">cortex --version</code> succeeds</div></div>
+    <div class="item-row"><div class="bullet bullet-green"></div><div class="item-desc"><code class="inline">check_environment(...).ready</code> is <code class="inline">True</code></div></div>
+    <div class="item-row"><div class="bullet bullet-green"></div><div class="item-desc"><code class="inline">make check</code> passes with no failures</div></div>
+    <div class="item-row"><div class="bullet bullet-green"></div><div class="item-desc"><code class="inline">make chat</code> opens a working app with a streamed response + tool card</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">5.3</div></div>
+</div>
+
+<!-- SLIDE 13 : WALKTHROUGH 1 -->
+<div class="slide" id="s13">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">FULL CYCLE WALKTHROUGH · 1 / 5</div><h1>First impression — <strong>panel()</strong></h1><div class="subtitle">Full exercise: hands-on-lab.md Exercise 1</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <pre class="code-block">make chat   # runs examples/chat_app.py</pre>
+    <div class="item-row" style="margin-top:12px"><div class="bullet bullet-snow"></div><div class="item-desc">Type: "What tables are available in SNOWFLAKE_SAMPLE_DATA.TPCH_SF1?"</div></div>
+    <div class="item-row"><div class="bullet bullet-gold"></div><div class="item-desc">Watch the transcript stream progressively, not all at once</div></div>
+    <div class="item-row"><div class="bullet bullet-green"></div><div class="item-desc"><strong>Check</strong>: at least one tool card appears showing what the agent did</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">6.1</div></div>
+</div>
+
+<!-- SLIDE 14 : WALKTHROUGH 2 -->
+<div class="slide" id="s14">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">FULL CYCLE WALKTHROUGH · 2 / 5</div><h1>Approval <strong>gates</strong></h1><div class="subtitle">Full exercise: hands-on-lab.md Exercise 2</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div class="item-row"><div class="bullet bullet-red"></div><div class="item-desc">Type: "Show me the top 5 customers by total order amount. Write the SQL and run it."</div></div>
+    <div class="item-row"><div class="bullet bullet-gold"></div><div class="item-desc">Approval banner fires — read the full SQL, click <strong>Approve once</strong></div></div>
+    <div class="item-row"><div class="bullet bullet-red"></div><div class="item-desc">Type: "Now create a summary table called TOP_CUSTOMERS." → click <strong>Deny</strong> with a reason</div></div>
+    <div class="card" style="margin-top:10px"><div class="item-desc">This is the core differentiator: every destructive tool (SQL, Write, Edit, Bash) pauses for an explicit human decision. No surprises.</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">6.2</div></div>
+</div>
+
+<!-- SLIDE 15 : WALKTHROUGH 3 -->
+<div class="slide" id="s15">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">FULL CYCLE WALKTHROUGH · 3 / 5</div><h1>Structured <strong>output</strong></h1><div class="subtitle">Full exercise: hands-on-lab.md Exercise 3</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <pre class="code-block">make structured   # runs examples/structured_output.py
+
+def render(data: dict, result: st_coco.CocoChatResult) -> None:
+    st.dataframe(data.get("selected_features", []))
+
+st_coco.panel(session=session, on_structured_output=render)</pre>
+    <div class="item-row" style="margin-top:10px"><div class="bullet bullet-green"></div><div class="item-desc">Type: "Give me a breakdown of orders by status" → renders as a chart, not raw JSON</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">6.3</div></div>
+</div>
+
+<!-- SLIDE 16 : WALKTHROUGH 4 -->
+<div class="slide" id="s16">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">FULL CYCLE WALKTHROUGH · 4 / 5</div><h1>Headless <strong>mode</strong></h1><div class="subtitle">Full exercise: hands-on-lab.md Exercise 4</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <pre class="code-block">import asyncio
+import streamlit_coco as coco
+
+async def run():
+    async for event in coco.query("Profile ANALYTICS.CUSTOMERS"):
+        if event.type == "result":
+            print(event.structured_output)
+
+asyncio.run(run())   # or: make headless</pre>
+    <div class="item-row" style="margin-top:10px"><div class="bullet bullet-purple"></div><div class="item-desc">No <code class="inline">streamlit</code> import anywhere — same <code class="inline">query()</code>, same event types, works in CI/scripts</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">6.4</div></div>
+</div>
+
+<!-- SLIDE 17 : WALKTHROUGH 5 -->
+<div class="slide" id="s17">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">FULL CYCLE WALKTHROUGH · 5 / 5</div><h1>Build from <strong>scratch</strong></h1><div class="subtitle">Full exercise: hands-on-lab.md Exercise 5 — the real test</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Using only the README quickstart (no copy-paste from examples/), write:</div>
+    <pre class="code-block">opts = st_coco.CocoOptions(
+    connection="analytics", cwd=".",
+    allowed_tools=["Read", "Glob", "Grep"],
+    require_approval_for=["Edit", "Write", "Bash"],
+)
+env = st_coco.check_environment(connection=opts.connection)
+if not st_coco.render_start_gate(opts, session_key="copilot", env=env):
+    st.stop()
+session = st_coco.get_or_create_session(opts, key="copilot")
+st_coco.panel(session=session, warm_up=True, show_status=True)
+st_coco.chat_input_bar(session, placeholder="Ask CoCo…")</pre>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">6.5</div></div>
+</div>
+
+<!-- SLIDE 18 : DEMO REQS -->
+<div class="slide" id="s18">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">DEMO SCRIPT</div><h1>Before you <strong>demo</strong></h1><div class="subtitle">Full script: doc/training/demo-script.md</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div class="item-row"><div class="bullet bullet-red"></div><div class="item-desc">Snowflake account with Cortex Code access, connection configured</div></div>
+    <div class="item-row"><div class="bullet bullet-red"></div><div class="item-desc"><code class="inline">cortex --version</code> succeeds; <code class="inline">make check</code> passes</div></div>
+    <div class="item-row"><div class="bullet bullet-red"></div><div class="item-desc">A database with sample tables (e.g. SNOWFLAKE_SAMPLE_DATA.TPCH_SF1)</div></div>
+    <div class="item-row"><div class="bullet bullet-red"></div><div class="item-desc">Terminal + browser side by side; <strong>dry-run once within 24h of the real demo</strong></div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">7.1</div></div>
+</div>
+
+<!-- SLIDE 19 : DEMO HOOK -->
+<div class="slide" id="s19">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">DEMO SCRIPT</div><h1>Opening hook <strong>(30s)</strong> + Act 1</h1><div class="subtitle">~2 min</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div class="card card-top" style="margin-bottom:14px"><div class="item-desc" style="font-style:italic">"What if your Streamlit app had a built-in AI coding agent that can query Snowflake, read files, and write code — with guardrails? streamlit-coco gives you that in about 10 lines of code."</div></div>
+    <div class="item-row"><div class="bullet bullet-snow"></div><div class="item-desc">Show <code class="inline">examples/chat_app.py</code> (~20 lines) → run <code class="inline">make chat</code> → ask about TPCH_SF1 tables</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">7.2</div></div>
+</div>
+
+<!-- SLIDE 20 : DEMO APPROVALS -->
+<div class="slide" id="s20">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">DEMO SCRIPT</div><h1>Act 2 — <strong>Approval gates</strong></h1><div class="subtitle">~3 min</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div class="item-row"><div class="bullet bullet-gold"></div><div class="item-desc">"Show me the top 5 customers by total order amount. Write the SQL and run it." → Approve</div></div>
+    <div class="item-row"><div class="bullet bullet-red"></div><div class="item-desc">"Now create a summary table called TOP_CUSTOMERS." → Deny with reason</div></div>
+    <div class="card" style="margin-top:10px"><div class="item-desc" style="font-style:italic">Talking point: "Every destructive action — SQL, file writes, bash commands — requires explicit human approval. No surprises."</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">7.3</div></div>
+</div>
+
+<!-- SLIDE 21 : DEMO STRUCTURED/HEADLESS -->
+<div class="slide" id="s21">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">DEMO SCRIPT</div><h1>Act 3+4 — <strong>Output &amp; headless</strong></h1><div class="subtitle">~2 min (headless optional if time is tight)</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div class="item-row"><div class="bullet bullet-purple"></div><div class="item-desc"><code class="inline">make structured</code> → "Give me a breakdown of orders by status" → renders as a chart</div></div>
+    <div class="item-row"><div class="bullet bullet-teal" style="background:var(--teal)"></div><div class="item-desc"><code class="inline">make headless</code> → terminal streams events, no browser</div></div>
+    <div class="card" style="margin-top:10px"><div class="item-desc" style="font-style:italic">Talking point: "Agent output flows into your widgets. CI pipelines, scheduled jobs — embed CoCo anywhere Python runs."</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">7.4</div></div>
+</div>
+
+<!-- SLIDE 22 : DEMO CLOSE -->
+<div class="slide" id="s22">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">DEMO SCRIPT</div><h1>Closing <strong>&amp; CTA</strong></h1><div class="subtitle">~2.5 min</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div class="item-row"><div class="bullet bullet-green"></div><div class="item-desc"><code class="inline">pip install streamlit-coco[sdk]</code> — 5 minutes to first working app</div></div>
+    <div class="item-row"><div class="bullet bullet-green"></div><div class="item-desc">Safety by default — approval gates on for all destructive tools</div></div>
+    <div class="item-row"><div class="bullet bullet-green"></div><div class="item-desc">Flexible — interactive panel, structured output, or headless, same library</div></div>
+    <div class="card card-top" style="margin-top:10px"><div class="item-desc" style="font-style:italic">CTA: "Try it against your own Snowflake account this week — the README quickstart gets you to a working app in under 10 minutes."</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">7.5</div></div>
+</div>
+
+<!-- SLIDE 23 : PITFALLS -->
+<div class="slide" id="s23">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">COMMON PITFALLS</div><h1>Top mistakes <strong>new users make</strong></h1><div class="subtitle">Save yourself the debugging time</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div class="item-row"><div class="bullet bullet-red"></div><div class="item-desc">Listing the same tool in both <code class="inline">allowed_tools</code> and <code class="inline">require_approval_for</code> — don't overlap them</div></div>
+    <div class="item-row"><div class="bullet bullet-red"></div><div class="item-desc">Assuming unlisted tools auto-run — the default is <strong>require approval</strong> unless explicitly allowed</div></div>
+    <div class="item-row"><div class="bullet bullet-red"></div><div class="item-desc">Expecting Streamlit Community Cloud or SiS support today — CoCo needs a subprocess + CLI on the same host</div></div>
+    <div class="item-row"><div class="bullet bullet-red"></div><div class="item-desc">Skipping <code class="inline">check_environment()</code> and debugging a stuck session blind — always check readiness first</div></div>
+    <div class="item-row"><div class="bullet bullet-red"></div><div class="item-desc">Positioning this as production-ready to a client — it's alpha (0.1.6), be upfront</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">8.1</div></div>
+</div>
+
+<!-- SLIDE 24 : FAQ -->
+<div class="slide" id="s24">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">IF THEY ASK…</div><h1>FAQ</h1><div class="subtitle">Answers you'll actually be asked in a demo</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <table class="mini">
+      <tbody>
+        <tr><td style="font-weight:700;width:340px">Does it work with SiS?</td><td>Not yet — pure Python, waiting on the CoCo API path; see roadmap.</td></tr>
+        <tr><td style="font-weight:700">What LLM does it use?</td><td>Whatever Cortex Code uses under the hood — no config needed.</td></tr>
+        <tr><td style="font-weight:700">Can I customize approvals?</td><td>Yes — <code class="inline">allowed_tools</code> / <code class="inline">require_approval_for</code> in <code class="inline">CocoOptions</code>.</td></tr>
+        <tr><td style="font-weight:700">Is it production-ready?</td><td>Alpha (0.1.6) — fine for internal tools; production readiness targeted at N1.</td></tr>
+        <tr><td style="font-weight:700">Vs. the CoCo CLI directly?</td><td>This library owns the Streamlit-specific plumbing (session, streaming, cards, approvals) — the CLI alone has none of that.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">8.2</div></div>
+</div>
+
+<!-- SLIDE 25 : TAKEAWAYS -->
+<div class="slide" id="s25">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">KEY TAKEAWAYS</div><h1>5 things to <strong>remember</strong></h1><div class="subtitle">Core principles</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px">
+    <div class="card card-top" style="display:flex;gap:14px"><div style="font-size:20px;font-weight:800;color:var(--red);min-width:34px">01</div><div class="item-desc">"You own the page, CoCo owns the session" — panel()/chat_input_bar() is the preferred pattern</div></div>
+    <div class="card" style="border-top:3px solid var(--snow);display:flex;gap:14px"><div style="font-size:20px;font-weight:800;color:var(--snow);min-width:34px">02</div><div class="item-desc">Safety by default: unlisted tools require approval; be deliberate about allowed_tools</div></div>
+    <div class="card" style="border-top:3px solid var(--gold);display:flex;gap:14px"><div style="font-size:20px;font-weight:800;color:var(--gold);min-width:34px">03</div><div class="item-desc">Three modes, one library: interactive panel, structured output, headless query()</div></div>
+    <div class="card" style="border-top:3px solid var(--green);display:flex;gap:14px"><div style="font-size:20px;font-weight:800;color:var(--green);min-width:34px">04</div><div class="item-desc">This is alpha (0.1.6) — be honest about maturity with clients, no client engagements yet</div></div>
+    <div class="card" style="border-top:3px solid var(--purple);display:flex;gap:14px"><div style="font-size:20px;font-weight:800;color:var(--purple);min-width:34px">05</div><div class="item-desc">Golden-path checklists live in doc/features/ — run them before signing off a release demo</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">9.1</div></div>
+</div>
+
+<!-- SLIDE 26 : RESOURCES -->
+<div class="slide" id="s26">
+  <div class="slide-header">
+    <div class="slide-header-left"><div class="section-label">RESOURCES &amp; NEXT STEPS</div><h1>Where to go <strong>next</strong></h1><div class="subtitle">Companion files for hands-on practice</div></div>
+    <div class="logo-badge"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;margin-bottom:8px">Training pack (doc/training/)</div>
+      <div class="item-desc" style="line-height:1.8">
+        <code class="inline">setup-guide.md</code><br><code class="inline">hands-on-lab.md</code><br>
+        <code class="inline">demo-script.md</code><br><code class="inline">quiz.md</code>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;margin-bottom:8px">Repo docs</div>
+      <div class="item-desc" style="line-height:1.8">
+        <code class="inline">README.md</code> (quickstart)<br><code class="inline">doc/deployment/local.md</code><br>
+        <code class="inline">doc/api.md</code> · <code class="inline">doc/roadmap.md</code><br>
+        <code class="inline">doc/marketing/demo.md</code> (source of truth for the client demo)
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">streamlit-coco training</div><div class="footer-page">9.2</div></div>
+</div>
+
+<!-- SLIDE 27 : CLOSING / CERTIFY -->
+<div class="slide slide-dark" id="s27">
+  <div style="position:absolute;top:-80px;left:-80px;width:280px;height:280px;border-radius:50%;background:rgba(180,20,40,.35)"></div>
+  <div style="position:absolute;bottom:-60px;right:-40px;width:220px;height:220px;border-radius:50%;background:rgba(120,10,30,.3)"></div>
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+    <div class="logo-badge" style="justify-content:center;margin-bottom:28px"><div class="logo-circle" style="width:52px;height:52px;font-size:20px">d+</div><div class="logo-text"><div class="logo-name" style="font-size:18px">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+    <h1 style="color:white;font-size:34px;margin-bottom:14px">Take the <strong style="color:var(--red)">quiz</strong> next.</h1>
+    <div style="font-size:14px;color:rgba(255,255,255,.6);margin-bottom:8px;max-width:600px">Open <code class="inline" style="background:rgba(255,255,255,.1);color:white;border:1px solid rgba(255,255,255,.2)">doc/training/quiz.md</code> — score 8/10 or higher and you're considered trained for this asset's N0→N1 gate item.</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:20px">Questions? Laurent Letourmy — asset owner</div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page" style="color:rgba(255,255,255,.35)">streamlit-coco training</div></div>
+</div>
+
+</body>
+</html>

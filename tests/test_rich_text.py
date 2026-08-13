@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from streamlit_coco.rich_text import (
     normalize_fence_language,
+    preview_text,
     split_markdown_fences,
     window_transcript,
 )
@@ -22,6 +23,18 @@ def test_language_aliases() -> None:
     assert normalize_fence_language("py") == "python"
     assert normalize_fence_language("yml") == "yaml"
     assert normalize_fence_language("") == "text"
+
+
+def test_preview_text_truncates() -> None:
+    visible, clipped = preview_text("abcdefghij", limit=4)
+    assert clipped is True
+    assert visible == "abcd…"
+    full, clipped2 = preview_text("abcd", limit=10)
+    assert clipped2 is False
+    assert full == "abcd"
+    empty, clipped3 = preview_text("hello", limit=None)
+    assert clipped3 is False
+    assert empty == "hello"
 
 
 def test_window_transcript_load_earlier() -> None:

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AccessRules",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["access_rules", "divergences"],
+  "properties": {
+    "access_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["workbook", "branches", "plain_english"],
+        "properties": {
+          "workbook": { "type": "string" },
+          "branches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["condition", "grants_to", "source_columns"],
+              "properties": {
+                "condition": { "type": "string" },
+                "grants_to": { "type": "string" },
+                "source_columns": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          },
+          "plain_english": { "type": "string" }
+        }
+      }
+    },
+    "divergences": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["branch", "present_in", "absent_from", "consequence"],
+        "properties": {
+          "branch": { "type": "string" },
+          "present_in": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "absent_from": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "consequence": { "type": "string" }
+        }
+      }
+    }
+  }
+}

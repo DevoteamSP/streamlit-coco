@@ -10,7 +10,7 @@ EXAMPLE  ?= examples/chat_app.py
 
 .PHONY: help install sync test lint format check audit e2e-install e2e test-all \
 	run chat approval structured headless backlog cwd-upload e2e-harness \
-	build publish sync-release clean
+	build publish sync-release clean adoption-stats
 
 # Public release clone (override: make sync-release RELEASE_REPO=/path/to/streamlit-coco)
 # Temporary: personal repo until DevoteamSP is validated on PyPI (see doc/deployment/publish.md).
@@ -71,8 +71,23 @@ backlog: ## Run Product Backlog Desk demo (examples/backlog_desk)
 cwd-upload: ## Run examples/cwd_upload_chat.py (upload into cwd)
 	$(STREAMLIT) examples/cwd_upload_chat.py
 
+tableau-semantic: ## Run Tableau → Semantic (repo streamlit-coco, not PyPI)
+	cd examples/tableau_to_semantic && $(UV) run --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py
+
 e2e-harness: ## Run CoCo-free UX harness used by Playwright
 	$(STREAMLIT) examples/e2e_ux_harness.py
+
+# Adoption metrics (PyPI + GitHub traffic). FORCE=1 overwrites today; UPDATE_ROADMAP=1 refreshes Current KPIs.
+ADOPTION_STATS_FLAGS =
+ifneq ($(FORCE),)
+ADOPTION_STATS_FLAGS += --force
+endif
+ifneq ($(UPDATE_ROADMAP),)
+ADOPTION_STATS_FLAGS += --update-roadmap
+endif
+
+adoption-stats: ## Collect PyPI + GitHub traffic into doc-dev/metrics/
+	$(PYTHON) python scripts/collect_adoption_stats.py $(ADOPTION_STATS_FLAGS)
 
 build: ## Build sdist + wheel into dist/
 	$(UV) build

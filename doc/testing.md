@@ -38,13 +38,13 @@ Suggested order:
 1. `make cwd-upload` → [`features/file-upload/test-checklist.md`](features/file-upload/test-checklist.md)
 2. `make chat` → [`features/panel/test-checklist.md`](features/panel/test-checklist.md) (includes copy / highlight / windowing UX notes)
 3. Tools + approvals → [`features/tools-display/test-checklist.md`](features/tools-display/test-checklist.md), [`features/approvals/test-checklist.md`](features/approvals/test-checklist.md)
-4. Optional: `make structured`, `make headless`, `make approval` (CCv2)
+4. Optional: `make structured`, `make headless`, `make approval` (CCv2), `make tableau-semantic` (copilot rail)
 
 Exploratory prompts: [`examples/testdata/prompts.json`](../examples/testdata/prompts.json) (chat sidebar **Test prompts**).
 
 ## Release hygiene
 
-Before tagging (`make sync-release` / `v*`), complete the version kit under [`releases/`](releases/README.md) (e.g. [`releases/0.1.5/CHECKLIST.md`](releases/0.1.5/CHECKLIST.md)):
+Before tagging (`make sync-release` / `v*`), complete the version kit under [`releases/`](releases/README.md) (e.g. [`releases/0.1.6/CHECKLIST.md`](releases/0.1.6/CHECKLIST.md)):
 
 1. `make test-all`
 2. Manual checklist pass for touched features

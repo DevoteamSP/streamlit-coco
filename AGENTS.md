@@ -4,15 +4,16 @@ Guidance for coding agents working in this repository.
 
 ## Product
 
-Streamlit library + optional CCv2 component for Snowflake CoCo (Cortex Code Agent SDK). Preferred UX: `panel()` + app-owned `chat_input_bar` / `st.chat_input`.
+Streamlit library + optional CCv2 component for Snowflake CoCo (Cortex Code Agent SDK). Preferred UX: `panel()` + app-owned `chat_input_bar` / `st.chat_input`. Multipage / exec demos wrap that in `copilot_rail()`.
 
 Canonical SDK docs: https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk  
 Pinned rule: `.cursor/rules/coco-sdk-docs.mdc`
 
 ## Layout
 
-- `streamlit_coco/` — library (`ui`, `session`, `permissions`, `tool_*`, `bootstrap`, …)
-- `examples/` — chat, approval, structured, headless demos
+- `streamlit_coco/` — library (`ui`, `rail`, `session`, `permissions`, `tool_*`, `bootstrap`, …)
+- `examples/` — chat, approval, structured, headless, backlog desk, Tableau → Semantic
+- `apps/` — **dev-only** full applications (never synced to public `streamlit-coco`)
 - `doc/prd.md`, `doc/api.md`, `doc/roadmap.md`, `doc/features/` — product + API + DSP N1 feature docs/checklists
 - `doc/releases/X.Y.Z/` — public release kit (checklist, screenshots)
 - `doc-dev/` — **dev-only** docs (never synced to public `streamlit-coco`); includes `doc-dev/releases/X.Y.Z/` outreach (LinkedIn, Medium, community)
@@ -30,7 +31,11 @@ make e2e       # Playwright UX vs examples/e2e_ux_harness.py
 make audit     # pip-audit
 make test-all  # check + e2e + audit
 make chat      # Streamlit demo
+make tableau-semantic  # Tableau → Semantic example (copilot rail)
+make adoption-stats  # daily PyPI + GitHub traffic → doc-dev/metrics/
 ```
+
+Adoption KPIs: [`doc-dev/metrics/README.md`](doc-dev/metrics/README.md). Refresh `doc/roadmap.md` Currents only when asked (`make adoption-stats UPDATE_ROADMAP=1`).
 
 Full test process: [`doc/testing.md`](doc/testing.md).
 
