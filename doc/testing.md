@@ -8,7 +8,7 @@ How to verify changes before merge / release.
 | --- | --- | --- |
 | Fast | `make check` | `ruff` + unit/smoke (`tests/`, ignores browser e2e) |
 | UX browser | `make e2e` | Playwright vs CoCo-free harness ([`examples/e2e_ux_harness.py`](../examples/e2e_ux_harness.py)) |
-| Security | `make audit` | `pip-audit` |
+| Security | `make audit` | `pip-audit --skip-editable` (deps only; this package is not on PyPI until the tag) |
 | Full automated | `make test-all` | `check` + `e2e` + `audit` |
 
 First-time Playwright setup:
@@ -38,13 +38,13 @@ Suggested order:
 1. `make cwd-upload` → [`features/file-upload/test-checklist.md`](features/file-upload/test-checklist.md)
 2. `make chat` → [`features/panel/test-checklist.md`](features/panel/test-checklist.md) (includes copy / highlight / windowing UX notes)
 3. Tools + approvals → [`features/tools-display/test-checklist.md`](features/tools-display/test-checklist.md), [`features/approvals/test-checklist.md`](features/approvals/test-checklist.md)
-4. Optional: `make structured`, `make headless`, `make approval` (CCv2), `make tableau-semantic` (copilot rail)
+4. Optional: `make structured`, `make headless`, `make approval` (CCv2), `make bi-semantic` (copilot rail)
 
 Exploratory prompts: [`examples/testdata/prompts.json`](../examples/testdata/prompts.json) (chat sidebar **Test prompts**).
 
 ## Release hygiene
 
-Before tagging (`make sync-release` / `v*`), complete the version kit under [`releases/`](releases/README.md) (e.g. [`releases/0.1.6/CHECKLIST.md`](releases/0.1.6/CHECKLIST.md)):
+Before tagging (`make sync-release` / `v*`), complete the version kit under [`releases/`](releases/README.md) (e.g. [`releases/0.1.7/CHECKLIST.md`](releases/0.1.7/CHECKLIST.md)):
 
 1. `make test-all`
 2. Manual checklist pass for touched features

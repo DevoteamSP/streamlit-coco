@@ -12,6 +12,21 @@ Living plan (what’s next): [`doc/roadmap.md`](doc/roadmap.md).
 
 ## [Unreleased]
 
+## [0.1.7] — 2026-08-15
+
+Alpha follow-up: a reusable Streamlit App Viewer, and BI → Semantic now loads Tableau **or** Power BI.
+
+### Added
+- **App viewer** (`app_viewer()`, `start_app_preview` / `stop_app_preview`, `last_preview_exception`, `default_fix_prompt`) — child Streamlit process, iframe, **Fix with CoCo** via `on_fix`. Optional `title_extra=` sits on the title row immediately left of **Close**. The host queues the job; the viewer does not import `copilot_rail`. Feature: [`doc/features/app-viewer/`](doc/features/app-viewer/)
+- Power BI parse for the BI → Semantic example: **`pbixray` is the primary** `.pbix` / `.pbit` reader (VertiPaq `DataModel`); `DataModelSchema` is a `.pbit` fallback. Default pack is Microsoft's MIT Obvience samples (`Customer Profitability Sample (auto).pbix` + `Corporate Spend.pbix`). Screen 4 compares colliding table contracts (`Fact` / `Scenario` / `Date`) — public samples have no RLS.
+
+### Changed
+- README: **When not to use** and **Ownership** sections; **Architecture** explains `panel()` → session → SDK → CLI (not a file tree)
+- **Example: BI → Semantic** — `examples/tableau_to_semantic` is now `examples/bi_to_semantic` (`make bi-semantic`; `make tableau-semantic` still aliases). Load accepts Tableau **or** Power BI. Load puts **Upload** / **Use MIT Tableau** / **Use MIT Power BI** on one row and lists sources as type-icon cards (size, format, modified) with a **Remove** action. A **Welcome** screen explains the app, the six-step flow, and how to use Copilot / Preview. The generated Power BI consumer composes a KPI row, chart cards, and one detail table from report visuals (skips slicers / textboxes / tooltip pages; no longer one dataframe per tile). The CoCo brief is a BI UX spec (page tabs, slicers, cross-filter, Altair, focus mode, distinct theme) instead of a restyle of the Python scaffold. Preview chrome is `st_coco.app_viewer()` (Python consumer on **:8511**, CoCo consumer on **:8512**). **Generate with CoCo** opens the Copilot rail and asks you to connect if the session is not up. Copilot and Preview can open together; **Fix with CoCo** queues `default_fix_prompt` as a job.
+
+### Fixed
+- `make audit` / CI `pip-audit` use `--skip-editable` so a pre-tag version bump is not reported as “Dependency not found on PyPI”
+
 ## [0.1.6] — 2026-08-13
 
 Alpha follow-up: a reusable Copilot rail, consultant training pack, and a Tableau → Semantic example that uses the rail as a product copilot (not a chat window).

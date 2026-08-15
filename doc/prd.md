@@ -3,8 +3,8 @@
 **Product:** `streamlit-coco` — a Streamlit component and Python library for embedding [Snowflake CoCo](https://www.snowflake.com/en/product/snowflake-coco/) (formerly Cortex Code) in Streamlit applications.
 
 **Author:** —  
-**Status:** Alpha `0.1.6` (Phase 3 shipped; PyPI cuts through `0.1.6`)  
-**Last updated:** 2026-08-13
+**Status:** Alpha `0.1.7` (Phase 3 shipped; PyPI cuts through `0.1.7`; next [roadmap](roadmap.md) cut **`0.1.8`** App Builder, then API-mode `0.2.0` / `0.2.5` / `0.3.0`)  
+**Last updated:** 2026-08-15
 
 ---
 
@@ -13,7 +13,7 @@
 Data teams increasingly build internal tools in Streamlit, but Snowflake CoCo today is primarily consumed through CLI, Snowsight, Desktop, and IDE extensions. **`streamlit-coco` bridges that gap**: it wraps the [Cortex Code Agent SDK](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk) (`cortex_code_agent_sdk`) and exposes:
 
 1. **A Python API** for programmatic, headless agent orchestration (`query()`, `CocoSession`).
-2. **A preferred native Streamlit UI** — `panel()` + app-owned `st.chat_input` / `send_prompt()`, with streaming transcript, tool cards, and approval gates. Multipage / exec demos use **`copilot_rail()`** (connection, queued jobs, compact transcript) around that same panel.
+2. **A preferred native Streamlit UI** — `panel()` + app-owned `st.chat_input` / `send_prompt()`, with streaming transcript, tool cards, and approval gates. Multipage / exec demos use **`copilot_rail()`** (connection, queued jobs, compact transcript) around that same panel, and **`app_viewer()`** to preview a child Streamlit app beside the rail.
 3. **A legacy Custom Component (v2)** — `chat()` with built-in input — still supported for all-in-one embeds.
 
 Designed for Snowflake-native workflows: SQL generation, semantic view design, dbt/Airflow scaffolding, data profiling, and governed tool execution against a live Snowflake account.
@@ -137,6 +137,8 @@ streamlit-coco/
 │   ├── __init__.py              # public exports
 │   ├── ui.py                    # panel(), send_prompt(), render_approvals()
 │   ├── rail.py                  # copilot_rail(), transcript_view_pills()
+│   ├── viewer.py                # app_viewer()
+│   ├── app_preview.py           # child Streamlit process helpers
 │   ├── display.py               # native transcript / field rendering
 │   ├── component.py             # chat() CCv2 registration + mount
 │   ├── session.py               # CocoSession, CocoChatResult, CocoRunStatus
@@ -152,7 +154,7 @@ streamlit-coco/
 │   ├── structured_output.py
 │   ├── headless_pipeline.py
 │   ├── backlog_desk/            # multipage business demo + copilot rail
-│   └── tableau_to_semantic/     # Tableau → semantic view + RAP (0.1.6)
+│   └── bi_to_semantic/          # Tableau / Power BI → semantic view + RAP
 ├── tests/
 ├── doc/prd.md
 ├── Makefile
@@ -265,6 +267,7 @@ if prompt:
 | FR-P6 | `on_structured_output` / `structured_output_container` (same rules as §6.6) | ✅ |
 | FR-P7 | CoCo branding in labels / empty states | ✅ |
 | FR-P8 | Optional `copilot_rail()` — connection, queued jobs, compact transcript pills around `panel()` | ✅ `0.1.6` |
+| FR-P9 | Optional `app_viewer()` — child Streamlit process, iframe, Fix with CoCo via `on_fix` | ✅ `0.1.7` |
 
 #### 6.1.5 Legacy Streamlit component — `st_coco.chat()`
 
@@ -465,9 +468,11 @@ Document prominently in README:
 
 | Topology | Support | Notes |
 | --- | --- | --- |
-| Local dev (`streamlit run`) | ✅ Primary | CLI on same machine |
-| Local dev (`streamlit run`) | ✅ 0.2.0 | Remote CoCo API - No CLI |
-| Snowpark Container Services | ✅ v1.1 | Agent operates on staged files |
+| Local CLI (`streamlit run` + `cortex`) | ✅ Primary today | CLI on same machine |
+| Local API (`streamlit run`, no CLI) | ⏳ `0.2.0` | `mode="api"` + Snowflake Sandbox |
+| Streamlit in Snowflake | ⏳ `0.2.5` | API mode; current-user session (no CLI) |
+| Native App | ⏳ `0.3.0` | API mode inside a Snowflake Native App |
+| Snowpark Container Services | ⏳ Later | Agent on staged files — [roadmap](roadmap.md) |
 | Streamlit Community Cloud | ⚠️ Limited | Only if CLI + secrets available on the host; no remote-proxy workaround planned |
 
 ---
@@ -593,11 +598,11 @@ Legacy CCv2 `chat()` keeps an all-in-one panel (header, transcript, approval car
 
 - [x] README + Makefile + GitHub repos (`streamlit-coco-dev` + public `streamlit-coco`)
 - [ ] Theming / a11y pass (keyboard traps, ARIA) — Later / FR-S2
-- [x] PyPI publish `0.1.0` (2026-08-06); follow-ups `0.1.5`, `0.1.6`
-- [x] Native `copilot_rail()` + Tableau → Semantic example (`0.1.6`)
+- [x] PyPI publish `0.1.0` (2026-08-06); follow-ups `0.1.5`, `0.1.6`, `0.1.7`
+- [x] Native `copilot_rail()` + Tableau → Semantic example (`0.1.6`); **`app_viewer()`** + **BI → Semantic** Power BI (`0.1.7`)
 - [ ] Deployment docs beyond local (Docker, SPCS)
 
-**Current:** Alpha `0.1.6`; Phase 3 complete; Phase 4 polish continues. Living plan: [`roadmap.md`](roadmap.md).
+**Current:** Alpha `0.1.7`; Phase 3 complete; Phase 4 polish continues. Living plan: [`roadmap.md`](roadmap.md).
 
 ---
 

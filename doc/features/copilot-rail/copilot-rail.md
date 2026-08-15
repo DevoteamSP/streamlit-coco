@@ -30,7 +30,7 @@ with `...` in the middle so the leaf of the cwd stays visible.
 
 Embedding CoCo in a product demo needs one rail, not a chat window: connect
 once, queue jobs from the app, keep the transcript short enough for a room.
-The Tableau → Semantic example proved the pattern; it belongs in the library.
+The BI → Semantic example proved the pattern; it belongs in the library.
 
 ## How to use
 

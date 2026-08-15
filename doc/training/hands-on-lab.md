@@ -130,7 +130,7 @@ pattern that shipped in `0.1.6`.
 
 **Steps**:
 
-1. `make tableau-semantic` (`examples/tableau_to_semantic/`).
+1. `make bi-semantic` (`examples/bi_to_semantic/`).
 2. Load the MIT Tableau Server pack on screen 1 (no warehouse required).
 3. Connect Copilot on the right. Note the connection popover, transcript pills
    (**Last messages** / **First 200 characters**), and that the left-hand wizard stays

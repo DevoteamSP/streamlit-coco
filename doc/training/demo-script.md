@@ -73,12 +73,12 @@
 
 ### Step 5 — Copilot rail (optional if time allows, ~1 min)
 
-1. Run `make tableau-semantic` (or `make backlog`).
+1. Run `make bi-semantic` (or `make backlog`).
 2. Point at the **right rail**: connection, compact transcript pills, jobs queued from the
    left-hand wizard — not a full-page chat.
 
 > Talking point: "`copilot_rail()` is how CoCo sits *in* a product, not beside it as a
-> chat toy. Tableau → Semantic is the long demo; Backlog Desk is the shorter one."
+> chat toy. BI → Semantic is the long demo; Backlog Desk is the shorter one."
 
 ---
 
@@ -104,10 +104,10 @@ setup issues."
 | Does it work with Streamlit in Snowflake (SiS)? | Not yet — pure Python, waiting on the CoCo API path; see roadmap. |
 | What LLM does it use? | Whatever Cortex Code uses under the hood — no model config needed in this library. |
 | Can I customize which tools need approval? | Yes — `allowed_tools` / `require_approval_for` in `CocoOptions`. |
-| Is it production-ready? | Alpha (`0.1.6`) — fine for internal tools today; production readiness targeted at N1. |
+| Is it production-ready? | Alpha (`0.1.7`) — fine for internal tools today; production readiness targeted at N1. |
 | How is this different from just using the CoCo CLI directly? | This library handles the Streamlit-specific plumbing: rerun-safe session state, streaming render, tool cards, and approval UI — the CLI alone has none of that. |
 | What about file uploads? | Supported since `0.1.5` — `upload_to_cwd()` / `cwd_uploader()`; see `make cwd-upload`. |
-| What's `copilot_rail()`? | Shipped in `0.1.6` — a right-rail Copilot (connection, queued jobs, compact transcript) around `panel()`. See `make tableau-semantic` / `make backlog`. |
+| What's `copilot_rail()`? | Shipped in `0.1.6` — a right-rail Copilot (connection, queued jobs, compact transcript) around `panel()`. See `make bi-semantic` / `make backlog`. |
 
 ---
 

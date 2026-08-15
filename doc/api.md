@@ -1,7 +1,7 @@
 # API reference — streamlit-coco
 
 Public surface exported from `import streamlit_coco as st_coco`.  
-Alpha `0.1.6` — signatures may still move; prefer this page over the PRD sketch.
+Alpha `0.1.7` — signatures may still move; prefer this page over the PRD sketch.
 
 **Related:** [README quickstart](../README.md) · [Local deployment](deployment/local.md) · [Feature docs](features/README.md) · [SDK docs](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
 
@@ -190,6 +190,34 @@ Label is collapsed by default (no **Transcript** heading).
 
 Feature doc: [`features/copilot-rail/copilot-rail.md`](features/copilot-rail/copilot-rail.md).
 
+### `app_viewer(app_dir, *, key="coco_app_viewer", …) -> None`
+
+Preview column: **Run** / **Stop** / **Open** / **Fix with CoCo**, then an iframe of a
+child `streamlit run`. App-agnostic — callers own layout, Copilot session, and
+job queue. The child is another origin; Fix scrapes `.preview.log` (it cannot
+read the iframe DOM). Do not point `app_dir` at the host app.
+
+| Param | Default | Notes |
+| --- | --- | --- |
+| `app_dir` | — | Folder with `streamlit_app.py` |
+| `key` | `"coco_app_viewer"` | Widget key namespace |
+| `port` | `None` | First free port in 8511–8520; pass an int to pin |
+| `address` | `"127.0.0.1"` | Child `--server.address` |
+| `env` | `None` | Extra env for the child (e.g. `TTS_DATA_MODE`) |
+| `iframe_height` | `520` | Iframe height in pixels |
+| `show_fix` | `True` | Show **Fix with CoCo** |
+| `on_fix` | `None` | `Callable[[str], None]` — traceback or log tail. Omit → toast “wire `on_fix=`” |
+| `on_close` | `None` | Hide **Close** when omitted |
+| `title_extra` | `None` | `Callable[[], None]` rendered on the title row, immediately left of **Close** |
+| `title` | `"Preview"` | Title-row heading |
+| `script_name` | `"streamlit_app.py"` | Entry script in `app_dir` |
+
+Helpers (Streamlit-free): `start_app_preview`, `stop_app_preview`,
+`preview_running`, `preview_url`, `last_preview_exception`, `preview_log_tail`,
+`default_fix_prompt(traceback, app_dir) -> str`.
+
+Feature doc: [`features/app-viewer/app-viewer.md`](features/app-viewer/app-viewer.md).
+
 ### `chat_input_bar(session, *, placeholder=…, connecting_placeholder=…, key=None, accept_file=False, …) -> str | None`
 
 `st.chat_input` wired to connect/run state; sends via `send_prompt` on submit. Disabled only after a failed boot (`ERROR` and not ready).
@@ -367,7 +395,7 @@ Tool card UX: [`features/tools-display/SPEC.md`](features/tools-display/SPEC.md)
 ## Package metadata
 
 ```python
-st_coco.__version__  # e.g. "0.1.6"
+st_coco.__version__  # e.g. "0.1.7"
 ```
 
 Private modules (`bridge`, `tool_cards`, `tool_extract`, …) are implementation details and are not part of the stable public surface.

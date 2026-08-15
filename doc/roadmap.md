@@ -2,10 +2,11 @@
 
 Living plan. Product detail: [`doc/prd.md`](prd.md). Shipped history: [`CHANGELOG.md`](../CHANGELOG.md).
 
-**Status:** Alpha **`0.1.6`** on PyPI ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)).  
+**Status:** Alpha **`0.1.7`** prepared ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/) still shows `0.1.6` until the tag).  
 **Publisher:** temporary Trusted Publisher on [`lletourmy/streamlit-coco`](https://github.com/lletourmy/streamlit-coco); public tree also synced to [`DevoteamSP/streamlit-coco`](https://github.com/DevoteamSP/streamlit-coco).  
-**Last updated:** 2026-08-13  
-**This cut:** [`releases/0.1.6/`](releases/0.1.6/)
+**Last updated:** 2026-08-15  
+**This cut:** [`releases/0.1.7/`](releases/0.1.7/)  
+**Next cuts:** **`0.1.8`** App Builder → **`0.2.0`** local API (no CLI) → **`0.2.5`** Streamlit in Snowflake → **`0.3.0`** Native App
 
 > **Before every release:** complete [`releases/X.Y.Z/CHECKLIST.md`](releases/README.md) (CHANGELOG, this roadmap, PRD, screenshots) and outreach under [`../doc-dev/releases/`](../doc-dev/releases/README.md), then [`deployment/publish.md`](deployment/publish.md).
 
@@ -13,61 +14,102 @@ Living plan. Product detail: [`doc/prd.md`](prd.md). Shipped history: [`CHANGELO
 
 ---
 
-## Now
+## Now — toward `0.1.8`
 
 | Priority | Item | Ref |
 | --- | --- | --- |
-| P0 | Remote CoCo APIs — harden / ship (`mode="api"`) | [#4](https://github.com/DevoteamSP/streamlit-coco-dev/issues/4); [remote-api](features/remote-api/remote-api.md) |
-| P1 | Refresh `ID.md` (stale security/marketing checklist, KPIs, consultants-trained, last-updated) | audit 2026-08-12 |
-| P1 | Add "when not to use" + named-ownership sections to README.md | audit 2026-08-12 |
-| P1 | Switch PyPI publisher back to `DevoteamSP/streamlit-coco` when the org is validated | [publish.md](deployment/publish.md) |
-| P2 | Auto-scroll to bottom while running; pause if user scrolls up (FR-S2) | — |
-| P2 | Expand README architecture section beyond bare file tree | audit 2026-08-12 |
+| P0 | **App Builder** for business users, including guidelines skills | — |
 
 Manual checklists: [`doc/features/README.md`](features/README.md) — re-run before the next tag.
 
 ---
 
+## v0.1.7 — Community sample apps
+
+Shipped this cut. First-party examples, not the API-mode cut. Publisher switch and FR-S2 stay on `0.2.0`.
+
+| Item | Ref |
+| --- | --- |
+| ✅ Rename Tableau → Semantic to **BI → Semantic**; Load Tableau **or** Power BI | `examples/bi_to_semantic`, `make bi-semantic` |
+| ✅ MIT Power BI pack + `pbixray` as the primary `.pbix` reader | [`examples/powerbi_legacy/`](../examples/powerbi_legacy/) |
+| ✅ Screen 4: colliding table contracts (`Fact` / `Scenario` / `Date`) — public samples have no RLS | [BRIEF](../examples/bi_to_semantic/BRIEF-powerbi-fixtures.md) |
+| ✅ Streamlit App Viewer (`app_viewer()`) | [`features/app-viewer/app-viewer.md`](features/app-viewer/app-viewer.md) |
+
+---
+
+## v0.1.8 — App Builder
+
+| Item | Ref |
+| --- | --- |
+| App Builder for business users, including guidelines skills | — |
+
+---
+
 ## Use Cases ideas
 
-- App Builder
 - Prompt library player (local or github)
 - Dashboard Builder (on Semantic View) + Agent client
-- Native App "skills marketplace"
-- Native App for skills distribution
+- Native App "skills marketplace" (needs `0.3.0`)
+- Native App for skills distribution (needs `0.3.0`)
 - Data Quality solutions builder
 - Migration wizard
 - FinOps costs explorer
 - Incident / query triage
 - Multi-persona workspaces
 
-## Next — v0.2.0
+---
+
+## v0.2.0 — API mode, local Streamlit (no CoCo CLI)
+
+`streamlit run` on a laptop or VM. The SDK talks to the Snowflake Agent API (`mode="api"`). Bash / Read / Write run in **Snowflake Sandbox**, not on the host. The `cortex` CLI is not required.
 
 | Item | Ref |
 | --- | --- |
-| Approval audit log persistence (SEC-01) | — |
-| Least-privilege role documentation (SEC-02) | — |
-| Deployment docs (Docker, SPCS) | [deployment/](deployment/README.md); PRD §8 / G6 |
-| API-mode sandbox upload (extend cwd upload) | [file-upload](features/file-upload/file-upload.md) |
+| Wire `CocoOptions.mode="api"` + `snowflake_sandbox` through session / start gate | [#4](https://github.com/DevoteamSP/streamlit-coco-dev/issues/4) |
+| Env probe: CLI optional when API mode is set | [`check_environment`](../streamlit_coco/diagnostics.py) |
+| Feature doc + checklist | [remote-api](features/remote-api/remote-api.md) |
+| Map `cwd` / uploads onto the sandbox workspace (`/workspace`, V-stage) | [file-upload](features/file-upload/file-upload.md) |
+| Least-privilege role documentation (SEC-02) | [threat-model](security/threat-model.md) |
+| Approval audit log persistence (SEC-01) | [threat-model](security/threat-model.md) |
+
+CLI mode stays supported for local installs that already have `cortex` on `PATH`.
+
+---
+
+## v0.2.5 — API mode from Streamlit in Snowflake
+
+Same Agent API + sandbox, but the Streamlit process **is** Snowflake (SiS). No CLI install, no laptop `connections.toml` — identity is the current Snowflake session.
+
+| Item | Ref |
+| --- | --- |
+| SiS auth (current-user / session; not a PAT profile) | PRD §8 |
+| Start gate / env probe that does not require a local CLI | — |
+| Deployment guide: Streamlit in Snowflake | [deployment/](deployment/README.md) |
+| Session isolation for multi-user SiS apps | [threat-model](security/threat-model.md) § scenario 3 |
+
+---
+
+## v0.3.0 — API mode from a Native App
+
+Packaged Snowflake Native App: the consumer runs the Streamlit UI in their account; CoCo executes via API mode under the app’s granted privileges.
+
+| Item | Ref |
+| --- | --- |
+| Application package + Streamlit UI that starts CoCo in `mode="api"` | — |
+| Provider / consumer privilege model for Agent API + sandbox | — |
+| Skills marketplace / skills distribution inside the Native App | Use cases above |
 
 ---
 
 ## Later
 
 ### Streaming & transcript UX
-- [ ] Auto-scroll to bottom while running; pause if user scrolls up (FR-S2)
-- [x] Richer markdown / SQL highlighting (FR-S6) — shipped in `0.1.5`
-- [x] Copy-to-clipboard on assistant messages and tool results (FR-S7) — shipped in `0.1.5`
-- [x] Optional `max_messages` truncation + “load earlier” (FR-ST4) — shipped in `0.1.5`
-- [x] **Copilot rail** + `preview_chars` transcript pills — shipped in `0.1.6` ([copilot-rail](features/copilot-rail/copilot-rail.md))
 - [ ] Theming / a11y pass (native `panel()` transcript; keyboard traps, ARIA)
 
 ### Platform & packaging
-- [ ] Packaged CCv2 via Vite / `asset_dir` (PRD §14.7; optional if still needed)
-- [ ] Community sample apps (≥ 3 contributed) — two first-party demos ship in-tree: Backlog Desk (`0.1.0`) + Tableau → Semantic (`0.1.6`)
-- [x] Consultant enablement pack (`doc/training/`) + workshop W01 — shipped in `0.1.6`
-- [x] SBOM generation in release workflow (SEC-04) — shipped in `0.1.5`
-- [x] Automated UI / e2e tests (Playwright + CoCo-free harness; `make e2e`) — shipped in `0.1.5`
+- [ ] Community sample apps (≥ 3 contributed) — Backlog Desk (`0.1.0`) + BI → Semantic (`0.1.6` Tableau, **`0.1.7`** Power BI) + App Builder (`0.1.8`)
+- [ ] Docker / Kubernetes deployment guide
+- [ ] Snowpark Container Services (SPCS) deployment guide
 
 ---
 
@@ -83,12 +125,11 @@ Manual checklists: [`doc/features/README.md`](features/README.md) — re-run bef
 ## Success checks (90 days post-launch)
 
 Public surface: [DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco) · [pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)  
-Snapshot **2026-08-12** ([pypistats](https://pypistats.org/packages/streamlit-coco)): **228** downloads last month · **2** GitHub stars.
+Snapshot **2026-08-14** ([pypistats](https://pypistats.org/packages/streamlit-coco)): **319** downloads last month · **2** GitHub stars.
 
-| Metric | Target | Current (2026-08-12) |
+| Metric | Target | Current (2026-08-14) |
 | --- | --- | --- |
-| PyPI downloads | 500+ / month | 228 last month (42 last day · 228 last week) |
+| PyPI downloads | 500+ / month | 319 last month (83 last day · 224 last week) |
 | GitHub stars | 50+ | 2 ([DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco)) |
 | Time-to-first-working-app | < 30 min via quickstart | — |
-| Open P0 "streaming broken on rerun" | 0 for 30 days | — |
-| Community examples | ≥ 3 | 2 first-party (Backlog Desk, Tableau → Semantic) |
+| Community examples | ≥ 3 | 2 first-party (Backlog Desk, BI → Semantic) |

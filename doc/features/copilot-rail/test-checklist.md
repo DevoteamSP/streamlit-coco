@@ -1,7 +1,7 @@
 # Feature: Copilot rail
 
 **Checklist:** `doc/features/copilot-rail/test-checklist.md`  
-**App:** `make tableau-semantic` (adapter) or any `panel()` app + `transcript_view_pills()`  
+**App:** `make bi-semantic` (adapter) or any `panel()` app + `transcript_view_pills()`  
 **Library:** `st_coco.copilot_rail` / `st_coco.transcript_view_pills`
 
 ## Preconditions

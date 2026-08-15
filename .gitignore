@@ -22,6 +22,10 @@ client_*.yaml
 # Local demo workspaces (uploaded files)
 examples/workspaces/
 
-# tableau_to_semantic generated artifacts
-examples/tableau_to_semantic/out/
-examples/tableau_to_semantic/uv.lock
+# bi_to_semantic generated artifacts
+examples/bi_to_semantic/out/
+examples/bi_to_semantic/uv.lock
+
+# Optional Power BI samples (~17 MB) — fetch with examples/powerbi_legacy/fetch.sh
+examples/powerbi_legacy/Human Resources Sample PBIX.pbix
+examples/powerbi_legacy/Employee Hiring and History.pbix

@@ -80,7 +80,7 @@ approval-policy decision to carry into the Build phase.
 - **Common confusion point**: expecting Streamlit Community Cloud or SiS support — CoCo
   needs a subprocess + CLI on the same host as Streamlit; clarify this limitation early if
   the client's target deployment is cloud-hosted (see `doc/deployment/local.md` §8).
-- **If the group is ahead of schedule**: show `make tableau-semantic` (`copilot_rail()` in a
+- **If the group is ahead of schedule**: show `make bi-semantic` (`copilot_rail()` in a
   product wizard) or extend the hands-on to structured output (Hands-On Lab Exercise 3).
 - **If behind**: skip the headless-mode portion of the demo walkthrough (Step 4) — it's
   optional and not required for the core Build-phase outcome.

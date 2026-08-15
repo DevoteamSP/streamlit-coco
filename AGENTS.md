@@ -11,8 +11,8 @@ Pinned rule: `.cursor/rules/coco-sdk-docs.mdc`
 
 ## Layout
 
-- `streamlit_coco/` — library (`ui`, `rail`, `session`, `permissions`, `tool_*`, `bootstrap`, …)
-- `examples/` — chat, approval, structured, headless, backlog desk, Tableau → Semantic
+- `streamlit_coco/` — library (`ui`, `rail`, `viewer`, `app_preview`, `session`, `permissions`, `tool_*`, `bootstrap`, …)
+- `examples/` — chat, approval, structured, headless, backlog desk, BI → Semantic
 - `apps/` — **dev-only** full applications (never synced to public `streamlit-coco`)
 - `doc/prd.md`, `doc/api.md`, `doc/roadmap.md`, `doc/features/` — product + API + DSP N1 feature docs/checklists
 - `doc/releases/X.Y.Z/` — public release kit (checklist, screenshots)
@@ -31,7 +31,7 @@ make e2e       # Playwright UX vs examples/e2e_ux_harness.py
 make audit     # pip-audit
 make test-all  # check + e2e + audit
 make chat      # Streamlit demo
-make tableau-semantic  # Tableau → Semantic example (copilot rail)
+make bi-semantic  # Tableau / Power BI → Semantic example (copilot rail)
 make adoption-stats  # daily PyPI + GitHub traffic → doc-dev/metrics/
 ```
 

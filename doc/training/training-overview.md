@@ -2,7 +2,7 @@
 
 ## What this asset is
 
-`streamlit-coco` is a Python library (PyPI: `streamlit-coco`, alpha `0.1.6`) that embeds
+`streamlit-coco` is a Python library (PyPI: `streamlit-coco`, alpha `0.1.7`) that embeds
 Snowflake's **Cortex Code Agent SDK ("CoCo")** into Streamlit apps: a streaming agent
 transcript with readable tool cards (SQL, Read, Write, Grep…), a reusable **`copilot_rail()`**
 for multipage apps, human-in-the-loop approval gates for destructive tools, structured
@@ -19,7 +19,7 @@ public/PyPI source: [`lletourmy/streamlit-coco`](https://github.com/lletourmy/st
 After this training you will be able to:
 
 1. Explain what `streamlit-coco` does and when to reach for it vs. a bare CoCo CLI/Snowsight session.
-2. Install it, connect it to a Snowflake account, and run every bundled demo (`make chat`, `make backlog`, `make tableau-semantic`, `make headless`, …).
+2. Install it, connect it to a Snowflake account, and run every bundled demo (`make chat`, `make backlog`, `make bi-semantic`, `make headless`, …).
 3. Build a minimal Streamlit app from scratch using `panel()` + `chat_input_bar()`, with approval gates configured — and recognize when to wrap that in `copilot_rail()`.
 4. Deliver the 12-minute scripted demo (`doc/marketing/demo.md`) to a client or internal audience unassisted.
 5. Know where to look when something breaks (`doc/deployment/local.md` §7 Troubleshooting) and where the roadmap/feature docs live.

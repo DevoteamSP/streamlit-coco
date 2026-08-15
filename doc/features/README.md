@@ -11,7 +11,8 @@ Package API (all public exports): [`../api.md`](../api.md).
 | Feature | Narrative | Checklist | Preferred prompts / app |
 | --- | --- | --- | --- |
 | Panel + chat input | [panel/panel.md](panel/panel.md) | [panel/test-checklist.md](panel/test-checklist.md) | `make chat`; `tools_auto`, `streaming` |
-| Copilot rail | [copilot-rail/copilot-rail.md](copilot-rail/copilot-rail.md) | [copilot-rail/test-checklist.md](copilot-rail/test-checklist.md) | `make tableau-semantic`; `copilot_rail()` |
+| Copilot rail | [copilot-rail/copilot-rail.md](copilot-rail/copilot-rail.md) | [copilot-rail/test-checklist.md](copilot-rail/test-checklist.md) | `make bi-semantic`; `copilot_rail()` |
+| App viewer | [app-viewer/app-viewer.md](app-viewer/app-viewer.md) | [app-viewer/test-checklist.md](app-viewer/test-checklist.md) | `make bi-semantic`; `app_viewer()` |
 | Tool approvals | [approvals/approvals.md](approvals/approvals.md) | [approvals/test-checklist.md](approvals/test-checklist.md) | category `approval` |
 | Tools display + HITL | [tools-display/tools-display.md](tools-display/tools-display.md) ([SPEC](tools-display/SPEC.md)) | [tools-display/test-checklist.md](tools-display/test-checklist.md) | categories `display_*` |
 | Structured output | [structured-output/structured-output.md](structured-output/structured-output.md) | [structured-output/test-checklist.md](structured-output/test-checklist.md) | `make structured`; `structured-json` |
@@ -22,7 +23,7 @@ Package API (all public exports): [`../api.md`](../api.md).
 
 ## Suggested run order (release)
 
-1. **panel** → 2. **copilot-rail** → 3. **approvals** → 4. **tools-display** → 5. **structured-output** → 6. **headless** → 7. **text-renderer** → 8. **chat-ccv2**
+1. **panel** → 2. **copilot-rail** → 3. **app-viewer** → 4. **approvals** → 5. **tools-display** → 6. **structured-output** → 7. **headless** → 8. **text-renderer** → 9. **chat-ccv2**
 
 Approval / plan button order (left → right): **Approve once** · **Always allow** · **Deny** (Deny rightmost). AskUser: **Submit** · **Cancel**. Plan: **Approve plan** · **Reject**.
 
@@ -40,5 +41,6 @@ Exploratory prompts: [`examples/testdata/`](../../examples/testdata/).
 | UI golden path — tools-display | **Pass (core)** (2026-07-27) | [`tools-display/test-checklist.md`](tools-display/test-checklist.md) — Glob/Grep/Read/Write/Edit live; SQL/AskUser/plan/debug deferred |
 | UI golden path — structured-output | **Pass (core)** (2026-07-27) | [`structured-output/test-checklist.md`](structured-output/test-checklist.md) — `make structured` + `output_schema` live |
 | UI golden path — chat-ccv2 | **Pass** (2026-07-27) | [`chat-ccv2/test-checklist.md`](chat-ccv2/test-checklist.md) — `make approval` live |
-| UI golden path — copilot-rail | **Pending** (`0.1.6`) | [`copilot-rail/test-checklist.md`](copilot-rail/test-checklist.md) — `make tableau-semantic` |
+| UI golden path — copilot-rail | **Pending** (`0.1.6`) | [`copilot-rail/test-checklist.md`](copilot-rail/test-checklist.md) — `make bi-semantic` |
+| UI golden path — app-viewer | **Pending** (`0.1.7`) | [`app-viewer/test-checklist.md`](app-viewer/test-checklist.md) — `make bi-semantic` |
 

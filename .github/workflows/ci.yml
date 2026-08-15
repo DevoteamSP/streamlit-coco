@@ -34,7 +34,7 @@ jobs:
         run: uv run pytest tests/ --ignore=tests/e2e -v
 
       - name: Security audit
-        run: uv run pip-audit
+        run: uv run pip-audit --skip-editable
         continue-on-error: true  # non-blocking until baseline is clean
 
   e2e:

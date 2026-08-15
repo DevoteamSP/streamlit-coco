@@ -1,0 +1,16 @@
+[project]
+name = "bi-to-semantic"
+version = "0.0.0"
+description = "BI → Semantic example (Tableau + Power BI, streamlit-coco). Not published to PyPI."
+requires-python = ">=3.10"
+dependencies = [
+    "streamlit-coco",
+    "pandas>=2.0",
+    "streamlit-extras>=1.3.0",
+    "pbixray>=0.15.4",
+]
+
+[tool.uv.sources]
+# Prefer the repo checkout so the example tracks this tree. From 0.1.7, PyPI
+# includes app_viewer + copilot_rail / preview_chars.
+streamlit-coco = { path = "../..", editable = true }

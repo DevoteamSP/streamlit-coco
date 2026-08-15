@@ -60,8 +60,8 @@ Pass threshold: **8/10**. Answer key at the bottom — no peeking until you've a
 3. **b** — Edit, Write, and Bash are exactly the tools you named as requiring approval; Read/Glob/Grep in `allowed_tools` auto-run.
 4. `query()` (the headless async API — see `examples/headless_pipeline.py`, `make headless`).
 5. **b** — all three: SDK installed, CLI reachable, valid Snowflake connection.
-6. `make backlog` — a multipage, file-backed (no SQL) business demo (Board/Epic/Ticket/Release) with a right-rail Copilot, distinct from the single-page chat demo in `make chat`. The other first-party rail demo is `make tableau-semantic` (Tableau → Semantic).
+6. `make backlog` — a multipage, file-backed (no SQL) business demo (Board/Epic/Ticket/Release) with a right-rail Copilot, distinct from the single-page chat demo in `make chat`. The other first-party rail demo is `make bi-semantic` (BI → Semantic: Tableau and Power BI).
 7. **a** — `copilot_rail()` shipped in `0.1.6`. File upload into `cwd` shipped earlier (`0.1.5`). SPCS deployment, multi-tenant billing, and Slack integration are not implemented.
 8. The agent acknowledges the denial (optionally with the user's reason) and can propose an alternative — the destructive action does not execute.
 9. **b** — `doc/features/<feature>/test-checklist.md`, indexed from `doc/features/README.md`.
-10. **N0 (alpha), targeting N1.** Any one of: stale `ID.md` (KPIs / consultants-trained), README missing "when not to use" / named-ownership sections, or community sample-app count still below 3 contributed apps. (Check the latest gap report in `dsp-assets/audits/streamlit-coco/` for the current list.)
+10. **N0 (alpha), targeting N1.** Remaining gaps include: community sample-app count still below 3 contributed apps, no additional consultant trained via W01 beyond the owner, copilot-rail live checklist still pending. (Check the latest gap report in `dsp-assets/audits/streamlit-coco/` for the current list.)

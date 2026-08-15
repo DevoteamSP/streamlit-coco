@@ -10,6 +10,7 @@ EXAMPLE  ?= examples/chat_app.py
 
 .PHONY: help install sync test lint format check audit e2e-install e2e test-all \
 	run chat approval structured headless backlog cwd-upload e2e-harness \
+	bi-semantic tableau-semantic \
 	build publish sync-release clean adoption-stats
 
 # Public release clone (override: make sync-release RELEASE_REPO=/path/to/streamlit-coco)
@@ -37,7 +38,7 @@ format: ## Format with ruff
 	$(PYTHON) ruff check --fix .
 
 audit: ## Dependency vulnerability scan (pip-audit)
-	$(PYTHON) pip-audit
+	$(PYTHON) pip-audit --skip-editable
 
 check: lint test ## Lint then unit tests
 
@@ -71,8 +72,10 @@ backlog: ## Run Product Backlog Desk demo (examples/backlog_desk)
 cwd-upload: ## Run examples/cwd_upload_chat.py (upload into cwd)
 	$(STREAMLIT) examples/cwd_upload_chat.py
 
-tableau-semantic: ## Run Tableau → Semantic (repo streamlit-coco, not PyPI)
-	cd examples/tableau_to_semantic && $(UV) run --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py
+bi-semantic: ## Run BI → Semantic (Tableau / Power BI, repo streamlit-coco)
+	cd examples/bi_to_semantic && $(UV) run --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py
+
+tableau-semantic: bi-semantic ## Deprecated alias for bi-semantic
 
 e2e-harness: ## Run CoCo-free UX harness used by Playwright
 	$(STREAMLIT) examples/e2e_ux_harness.py

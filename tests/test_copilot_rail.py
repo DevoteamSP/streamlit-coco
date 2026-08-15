@@ -31,7 +31,7 @@ def test_ellipsize_middle_inserts_ellipsis() -> None:
     from streamlit_coco.rail import PATH_DISPLAY_LIMIT, ellipsize_middle
 
     path = "/Users/laurentletourmy/dev2/streamlit-coco-dev/examples/workspaces/" + (
-        "tableau_to_semantic_and_then_some_extra_directory_name"
+        "bi_to_semantic_and_then_some_extra_directory_name"
     )
     assert len(path) > PATH_DISPLAY_LIMIT
     out = ellipsize_middle(path)

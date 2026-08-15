@@ -52,5 +52,5 @@ jobs:
           python-version-file: .python-version
       - uses: astral-sh/setup-uv@v3
       - run: uv sync --extra dev
-      - run: uv run pip-audit
+      - run: uv run pip-audit --skip-editable
         continue-on-error: true

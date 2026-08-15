@@ -6,7 +6,8 @@ Core / headless symbols import without loading Streamlit. UI helpers
 
 from __future__ import annotations
 
-from importlib import import_module
+import os
+from importlib import import_module, reload
 from typing import Any
 
 from streamlit_coco.ask_user import is_ask_user_question
@@ -42,7 +43,7 @@ from streamlit_coco.upload import (
     upload_to_cwd,
 )
 
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 
 # UI / Streamlit-backed exports — loaded on first attribute access.
 _LAZY_ATTRS: dict[str, tuple[str, str]] = {
@@ -62,6 +63,14 @@ _LAZY_ATTRS: dict[str, tuple[str, str]] = {
     "panel": ("streamlit_coco.ui", "panel"),
     "copilot_rail": ("streamlit_coco.rail", "copilot_rail"),
     "transcript_view_pills": ("streamlit_coco.rail", "transcript_view_pills"),
+    "app_viewer": ("streamlit_coco.viewer", "app_viewer"),
+    "start_app_preview": ("streamlit_coco.app_preview", "start_app_preview"),
+    "stop_app_preview": ("streamlit_coco.app_preview", "stop_app_preview"),
+    "preview_running": ("streamlit_coco.app_preview", "preview_running"),
+    "preview_url": ("streamlit_coco.app_preview", "preview_url"),
+    "last_preview_exception": ("streamlit_coco.app_preview", "last_preview_exception"),
+    "preview_log_tail": ("streamlit_coco.app_preview", "preview_log_tail"),
+    "default_fix_prompt": ("streamlit_coco.app_preview", "default_fix_prompt"),
     "render_approvals": ("streamlit_coco.ui", "render_approvals"),
     "render_plan_banner": ("streamlit_coco.ui", "render_plan_banner"),
     "send_prompt": ("streamlit_coco.ui", "send_prompt"),
@@ -89,12 +98,14 @@ __all__ = [
     "SessionStartError",
     "SnowflakeConfigNotFoundError",
     "UploadedPath",
+    "app_viewer",
     "approve_pending",
     "chat",
     "chat_input_bar",
     "check_environment",
     "copilot_rail",
     "cwd_uploader",
+    "default_fix_prompt",
     "deny_pending",
     "events_to_dataframe",
     "format_upload_prompt",
@@ -105,8 +116,12 @@ __all__ = [
     "is_debug_mode",
     "is_exit_plan_mode",
     "is_sql_tool",
+    "last_preview_exception",
     "list_cwd_uploads",
     "panel",
+    "preview_log_tail",
+    "preview_running",
+    "preview_url",
     "query",
     "render_approvals",
     "render_plan_banner",
@@ -120,6 +135,8 @@ __all__ = [
     "reset_session",
     "sanitize_upload_name",
     "send_prompt",
+    "start_app_preview",
+    "stop_app_preview",
     "stop_session",
     "tool_family",
     "transcript_view_pills",
@@ -132,9 +149,17 @@ def __getattr__(name: str) -> Any:
     if target is None:
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
     module_name, attr = target
-    # Always resolve from the live module so Streamlit hot-reload of
-    # ``streamlit_coco.rail`` (etc.) is not stuck on a stale cached function.
-    return getattr(import_module(module_name), attr)
+    # Resolve from disk when the impl file changed. ``import_module`` alone
+    # returns the cached module, so Streamlit can reload the caller (e.g.
+    # preview_panel) while ``st_coco.app_viewer`` is still the old function.
+    module = import_module(module_name)
+    path = getattr(module, "__file__", None)
+    if path and os.path.isfile(path):
+        mtime = os.path.getmtime(path)
+        if getattr(module, "_coco_src_mtime", None) not in (None, mtime):
+            module = reload(module)
+        module._coco_src_mtime = mtime
+    return getattr(module, attr)
 
 
 def __dir__() -> list[str]:
