@@ -1,7 +1,7 @@
 # API reference — streamlit-coco
 
 Public surface exported from `import streamlit_coco as st_coco`.  
-Alpha `0.1.7` — signatures may still move; prefer this page over the PRD sketch.
+Alpha `0.1.8` — signatures may still move; prefer this page over the PRD sketch.
 
 **Related:** [README quickstart](../README.md) · [Local deployment](deployment/local.md) · [Feature docs](features/README.md) · [SDK docs](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
 
@@ -166,10 +166,11 @@ Feature doc: [`features/panel/panel.md`](features/panel/panel.md).
 
 ### `copilot_rail(session, *, title="Copilot", …) -> None`
 
-Right-rail Copilot: connection popover with transcript pills beside it, queued job,
-`panel()`, chat input. App-agnostic — callers own session lifecycle and job dicts.
-While CoCo is busy, **Working · thinking…** is a badge on the pills row (not a
-tall status card).
+Right-rail Copilot: connection popover with an icon-only **Display config**
+popover beside it, queued job, `panel()`, optional example-question starters,
+chat input. App-agnostic — callers own session lifecycle and job dicts. While
+CoCo is busy, **Working · thinking…** is a badge on that same row (not a tall
+status card).
 
 | Param | Default | Notes |
 | --- | --- | --- |
@@ -181,12 +182,21 @@ tall status card).
 | `on_job_sent` | `None` | Called after a queued prompt is `session.send`'d |
 | `on_job_finished` | `None` | Called when that turn ends (`COMPLETED` / `ERROR` / `CANCELLED`, or `READY` after a run) so the app can drop the job |
 | `show_copy` | `False` | Clipboard controls off for demo rails |
-| `show_transcript_filters` | `True` | Pills: **Last messages** · **First 200 characters** |
+| `show_transcript_filters` | `True` | Icon-only **Display config** popover (pills + sliders) |
+| `example_questions` | `None` | After Connect, starter buttons on an empty transcript. Each item is `{title, question}` (or a `(title, question)` pair). Hover shows the question; click sends it. Hidden once a user/assistant turn or a job is present |
+
+### `transcript_display_config(*, key=…, last_n=8, preview_chars=200) -> tuple[int \| None, int \| None]`
+
+Icon-only popover (`:material/display_settings:`, `help="Display config"`) used by
+`copilot_rail()`. Inside: **Last messages** / **First n characters** pills plus
+sliders for the counts. Returns `(max_messages, preview_chars)` for `panel()`.
+Widget changes rerun the enclosing fragment while the popover stays open.
 
 ### `transcript_view_pills(*, key=…, last_n=8, preview_chars=200) -> tuple[int \| None, int \| None]`
 
 Standalone pills for apps that call `panel()` directly. Returns `(max_messages, preview_chars)`.
-Label is collapsed by default (no **Transcript** heading).
+Label is collapsed by default (no **Transcript** heading). Prefer
+`transcript_display_config()` when you want sliders too.
 
 Feature doc: [`features/copilot-rail/copilot-rail.md`](features/copilot-rail/copilot-rail.md).
 
@@ -395,7 +405,7 @@ Tool card UX: [`features/tools-display/SPEC.md`](features/tools-display/SPEC.md)
 ## Package metadata
 
 ```python
-st_coco.__version__  # e.g. "0.1.7"
+st_coco.__version__  # e.g. "0.1.8"
 ```
 
 Private modules (`bridge`, `tool_cards`, `tool_extract`, …) are implementation details and are not part of the stable public surface.

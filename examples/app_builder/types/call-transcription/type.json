@@ -1,0 +1,59 @@
+{
+  "id": "call-transcription",
+  "version": "1",
+  "icon": "record_voice_over",
+  "name": "Call transcription",
+  "users": ["Customer success", "Sales ops"],
+  "screenshot": null,
+  "needs": ["files"],
+  "needs_snowflake": false,
+  "topics": ["Local", "Knowledge"],
+  "demo_fixture": "sample_call",
+  "coming_soon": false,
+  "guidelines_skill": "call-transcription",
+  "grounding_kind": "documents",
+  "brief": {
+    "context": "A local workspace over call transcripts — search, summarize, follow-ups. Files live in the app folder. No Snowflake.",
+    "enables": [
+      "Read a transcript (demo pack or upload)",
+      "Summary, action items, and open questions",
+      "Search the text on the page"
+    ],
+    "does_not": [
+      "Live telephony or recording",
+      "A production speech-to-text pipeline",
+      "Any warehouse query"
+    ],
+    "questions": [
+      {
+        "id": "source",
+        "prompt": "Transcript source?",
+        "kind": "enum",
+        "required": true,
+        "options": ["demo pack", "I will attach a sketch / file in Copilot"],
+        "help": "The demo pack is a sample CS call. No Snowflake."
+      },
+      {
+        "id": "focus",
+        "prompt": "What should the app highlight?",
+        "kind": "list",
+        "required": true,
+        "help": "One per line, e.g. action items, risks, next meeting"
+      },
+      {
+        "id": "audience",
+        "prompt": "Who follows up after the call?",
+        "kind": "text",
+        "required": true,
+        "help": "e.g. the CSM who owns the account, sales ops"
+      },
+      {
+        "id": "tone",
+        "prompt": "How should the recap read?",
+        "kind": "enum",
+        "required": true,
+        "options": ["concise", "detailed", "customer-ready"]
+      }
+    ]
+  }
+}

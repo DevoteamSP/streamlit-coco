@@ -1,0 +1,9 @@
+order_id,customer,region,amount,status,shipped_at
+1,Acme,EMEA,1200,open,
+2,Acme,EMEA,1200,open,2026-03-01
+3,Globex,AMER,,shipped,2026-03-02
+4,Initech,APAC,340,shipped,2026-03-03
+5,Umbrella,EMEA,880,cancelled,
+6,Soylent,AMER,2100,open,2026-03-04
+7,Hooli,APAC,,open,
+8,Hooli,APAC,450,shipped,2026-03-05

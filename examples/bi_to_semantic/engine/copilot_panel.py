@@ -26,6 +26,30 @@ from engine.coco_jobs import (
 from engine.extract import accept_structured, load_schema
 from engine.paths import OUT_DIR, WORKSPACE_DIR
 
+EXAMPLE_QUESTIONS = (
+    {
+        "title": "List the files",
+        "question": (
+            "List the files in this workspace and briefly describe each. "
+            "Do not write or edit files."
+        ),
+    },
+    {
+        "title": "Summarize sources",
+        "question": (
+            "If there are Tableau or Power BI extracts here, summarize the tables "
+            "and which workbooks they come from. Do not write or edit files."
+        ),
+    },
+    {
+        "title": "Find collisions",
+        "question": (
+            "Look for table or column names that appear in more than one source "
+            "with different shapes. List the collisions. Do not write or edit files."
+        ),
+    },
+)
+
 
 def render_coco_cooking_indicator() -> None:
     cooking, label = is_coco_cooking()
@@ -104,7 +128,6 @@ def _connections() -> list[str]:
 
 def render_copilot_rail() -> None:
     import streamlit_coco as st_coco
-    from streamlit_coco.rail import copilot_rail
 
     job = get_job()
     if job:
@@ -177,7 +200,7 @@ def render_copilot_rail() -> None:
             icon=":material/link:",
         )
 
-    copilot_rail(
+    st_coco.copilot_rail(
         session,
         title="Copilot",
         key_prefix="tts_coco",
@@ -201,4 +224,5 @@ def render_copilot_rail() -> None:
             f"cwd · `{job_cwd}` · status · `{session.status.value}`" if session else None
         ),
         input_placeholder=placeholder,
+        example_questions=EXAMPLE_QUESTIONS,
     )

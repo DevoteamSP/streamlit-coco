@@ -16,6 +16,7 @@ Outreach drafts (LinkedIn / Medium / community) live in **`doc-dev/releases/X.Y.
 - [ ] **`pyproject.toml`** — `version = "X.Y.Z"`
 - [ ] **`CHANGELOG.md`** — `[Unreleased]` → `## [X.Y.Z] — YYYY-MM-DD`; empty subsections removed; fresh `[Unreleased]` left at top
 - [ ] **`doc/roadmap.md`** — Status / Last updated; shipped items off **Now**; Later checkboxes updated
+- [ ] **Public GitHub issues** — [DevoteamSP/streamlit-coco/issues](https://github.com/DevoteamSP/streamlit-coco/issues): close resolved (comment with version + pointers); comment on progressed / stale pointers; propose new issues for roadmap items with no tracker
 - [ ] **`doc/prd.md`** — Status / phase notes match the cut; new capabilities reflected if they change the product story
 - [ ] **`doc/api.md`** — Public exports for new APIs documented
 - [ ] Feature narratives / checklists under `doc/features/` for anything user-visible this cut

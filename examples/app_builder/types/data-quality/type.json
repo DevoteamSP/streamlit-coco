@@ -1,0 +1,57 @@
+{
+  "id": "data-quality",
+  "version": "1",
+  "icon": "verified",
+  "name": "Data quality",
+  "users": ["Data steward", "Analytics engineer"],
+  "screenshot": null,
+  "needs": ["tables"],
+  "needs_snowflake": true,
+  "topics": ["Snowflake", "Quality"],
+  "demo_fixture": "quality_orders",
+  "coming_soon": false,
+  "guidelines_skill": "data-quality",
+  "grounding_kind": "tabular",
+  "brief": {
+    "context": "A small quality console: volume, nulls, duplicates, and a sample of failing rows. Grounded in tables you name, or the demo CSV.",
+    "enables": [
+      "KPI row for row count / nulls / duplicates",
+      "Nulls-by-column chart and a detail table",
+      "Disconnected demo on the fixture pack"
+    ],
+    "does_not": [
+      "Write back to Snowflake or quarantine tables",
+      "Replace a full DQ platform or dbt tests suite"
+    ],
+    "questions": [
+      {
+        "id": "tables",
+        "prompt": "Which tables or files?",
+        "kind": "tables",
+        "required": true,
+        "help": "Use the demo pack, or list FQDNs / filenames (one per line)."
+      },
+      {
+        "id": "checks",
+        "prompt": "Which checks matter?",
+        "kind": "list",
+        "required": true,
+        "help": "One per line, e.g. nulls, duplicates, freshness"
+      },
+      {
+        "id": "audience",
+        "prompt": "Who acts when a check fails?",
+        "kind": "text",
+        "required": true,
+        "help": "e.g. the steward on-call, the analytics engineer"
+      },
+      {
+        "id": "freshness",
+        "prompt": "How stale is too stale?",
+        "kind": "text",
+        "required": false,
+        "help": "Optional. e.g. older than 24 hours, missing yesterday"
+      }
+    ]
+  }
+}

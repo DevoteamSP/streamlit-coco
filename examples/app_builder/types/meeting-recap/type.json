@@ -1,0 +1,58 @@
+{
+  "id": "meeting-recap",
+  "version": "1",
+  "icon": "edit_note",
+  "name": "Meeting recap",
+  "users": ["Team lead", "Consultant", "Project manager"],
+  "screenshot": null,
+  "needs": ["files"],
+  "needs_snowflake": false,
+  "topics": ["Local", "Productivity"],
+  "demo_fixture": "standup_notes",
+  "coming_soon": false,
+  "guidelines_skill": "meeting-recap",
+  "grounding_kind": "documents",
+  "brief": {
+    "context": "Turn raw meeting notes into a recap page: decisions, owners, and open questions. Local markdown only.",
+    "enables": [
+      "Read demo notes or user-provided markdown",
+      "Sections: summary, decisions, actions, parking lot",
+      "No account, no warehouse"
+    ],
+    "does_not": [
+      "Calendar or Zoom integration",
+      "Writing back to Confluence / SharePoint unless you ask Copilot later",
+      "Snowflake"
+    ],
+    "questions": [
+      {
+        "id": "source",
+        "prompt": "Notes source?",
+        "kind": "enum",
+        "required": true,
+        "options": ["demo pack", "I will paste / attach notes"]
+      },
+      {
+        "id": "audience",
+        "prompt": "Who is the recap for?",
+        "kind": "text",
+        "required": true,
+        "help": "e.g. steering committee, delivery squad"
+      },
+      {
+        "id": "include",
+        "prompt": "Which sections must appear?",
+        "kind": "list",
+        "required": true,
+        "help": "One per line, e.g. decisions, actions, parking lot"
+      },
+      {
+        "id": "length",
+        "prompt": "How long should the recap stay?",
+        "kind": "enum",
+        "required": true,
+        "options": ["one screen", "one page", "full notes"]
+      }
+    ]
+  }
+}

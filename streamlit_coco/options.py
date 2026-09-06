@@ -62,6 +62,10 @@ class CocoOptions:
                 if isinstance(self.require_approval_for, list)
                 else "callable"
             ),
+            "add_dirs": [
+                str(path)
+                for path in (self.extra_sdk_options or {}).get("add_dirs") or []
+            ],
         }
         return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:16]
 

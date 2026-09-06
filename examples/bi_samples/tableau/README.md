@@ -4,10 +4,12 @@ The relational model reconstructed from the **implicit** model found inside four
 Tableau workbooks, plus synthetic data. Nothing here was copied from a schema
 document: the tables, columns, types and joins were read out of the `.twb` XML.
 
+Part of [`examples/bi_samples/`](../). Used by [`examples/bi_to_semantic`](../../bi_to_semantic/).
+
 ## Layout
 
 ```
-tableau_legacy/
+bi_samples/tableau/
 ├── workbooks/          the four .twb source workbooks (attribution below)
 ├── sql/                generated DDL, seed, and the integrity check
 ├── extract_schema.py   .twb → schema.json

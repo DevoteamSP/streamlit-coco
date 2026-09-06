@@ -96,7 +96,7 @@ curl -sLO "$MS/Sample%20Reports/Human%20Resources%20Sample%20PBIX.pbix"
 curl -sLO "$MS/new-power-bi-service-samples/Employee%20Hiring%20and%20History.pbix"
 ```
 
-Both repos are **MIT © Microsoft**. Mirror `examples/tableau_legacy/README.md`: keep the
+Both repos are **MIT © Microsoft**. Mirror `examples/bi_samples/tableau/README.md`: keep the
 attribution and the refresh block with the files.
 
 ---
@@ -184,10 +184,10 @@ Do not silently present option 2 or 3 as if the roles came from the Obvience est
       `DateTableTemplate_*`.
 - [ ] Surface `.power_query` M source per table so the estate map can show the shared
       `Sql.Database(".", "IP")` origin.
-- [ ] `examples/powerbi_legacy/`: replace `ops_content/` + `ops_users/` with the real pack —
+- [ ] `examples/bi_samples/powerbi/`: replace `ops_content/` + `ops_users/` with the real pack —
       commit the two default `.pbix`, add `fetch.sh` for the optional two, `.gitignore` the large ones.
-- [ ] `examples/powerbi_legacy/README.md`: MIT © Microsoft attribution + refresh block, mirroring
-      `examples/tableau_legacy/README.md`. State plainly which files are committed vs fetched.
+- [ ] `examples/bi_samples/powerbi/README.md`: MIT © Microsoft attribution + refresh block, mirroring
+      `examples/bi_samples/tableau/README.md`. State plainly which files are committed vs fetched.
 - [ ] `engine/paths.py`: `POWERBI_PACK = ("Customer Profitability Sample (auto).pbix", "Corporate Spend.pbix")`.
 - [ ] Load screen: "Use MIT Power BI pack" alongside the existing Tableau pack button; `peek_text()`
       should show a DAX measure or an M query for `.pbix` (it cannot show raw text).

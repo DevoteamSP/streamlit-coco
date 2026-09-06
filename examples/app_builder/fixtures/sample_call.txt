@@ -1,0 +1,15 @@
+CS: Thanks for taking the time today. How has onboarding been?
+
+Customer: The first week was fine. Week two we got stuck on SSO.
+
+CS: Got it. Who owns identity on your side?
+
+Customer: Priya in IT. She is out until Thursday.
+
+CS: Action: we will send the SAML checklist today and book a 30-minute with Priya next week.
+
+Customer: Also the trial dashboard is empty — we expected sample data.
+
+CS: Risk: empty trial kills momentum. We will load the demo project before Friday.
+
+Customer: Perfect. Let's talk expansion after that.

@@ -12,6 +12,41 @@ Living plan (what’s next): [`doc/roadmap.md`](doc/roadmap.md).
 
 ## [Unreleased]
 
+## [0.1.8] — 2026-09-06
+
+App Builder for business users, plus rail starter questions and Display config.
+
+### Added
+
+- Copilot rail **example questions** — `copilot_rail(example_questions=…)` shows starter buttons after Connect on an empty transcript. Each item is `{title, question}`: the title is the button label, hover shows the question, click sends that text to CoCo. They hide once a user/assistant turn or a queued job is present (and come back after **Clear chat**). App Builder and BI → Semantic pass a short set.
+- **App Builder** example (`examples/app_builder`, `make app-builder`) — type library with **topic pills**, local types that need **no Snowflake** (CSV explorer, call transcription, meeting recap, prompt library), filled brief, demo scaffold or CoCo Write, Preview via `app_viewer()`.
+- App Builder **profile step** — dropping the KPI presentation demo fixture runs a deterministic pandas profile (`engine/profile.py`, no CoCo) and pre-fills metrics / grain / filters as findings to confirm. Audience and must-not stay blank (only a person can answer them). Library cards and the Brief chrome show a **grounding** pill (Files / Semantic view / Documents / URLs).
+- App Builder chrome — pages **Welcome · Library · Brief · Studio · Admin**, **Open Copilot** / **Open Preview** labels, a rewritten Welcome, a three-step Brief (your data · what we found · only you can answer), and an **Admin** screen (type cards on the left, editor on the right) to view / add / edit / delete app types.
+- App Builder **KPI guidelines** — `types/semantic-kpis/` ships `SKILL.md` + `reference/streamlit_app.py` + `CHECKLIST.md`. After an approved Write, Preview auto-runs; the generate prompt self-checks once against the checklist / `.preview.log`, then stops (manual **Fix with CoCo** if still red).
+- App Builder Copilot — **App brief** expander on the rail to edit the owner brief **and every type question**, with **Save** and **Save & regenerate** (queues CoCo to rewrite the app from `BRIEF.md`).
+- App Builder **shared generation skill** (`types/shared/SKILL.md`) — every Build / regenerate prompt tells CoCo to Read this file plus the type `SKILL.md` (absolute paths; both folders mounted via `add_dirs`). Admin can edit both files. Type skills extend shared; they do not replace it.
+
+### Changed
+
+- App Builder Welcome — only **Get started — browse types** remains; **Try a demo type** and the Welcome **Open Copilot** button are gone (Copilot stays in the header).
+- App Builder skills live under `types/` — each type’s `SKILL.md` sits next to `type.json`; the shared pack is `types/shared/SKILL.md` (no `type.json`, so it is not a catalog card).
+- Copilot rail **Display config** — the **Last messages** / **First 200 characters** pills move into an icon-only Material popover (`:material/display_settings:`, no label). Inside: the same on/off pills plus sliders for last-message count (1–50) and first-*n* characters (40–1000). Slider and pill changes fragment-rerun the rail (popover stays open) so the transcript updates live. New helper: `transcript_display_config()`. `transcript_view_pills()` stays for apps that call `panel()` directly. While CoCo runs, **Working · …** and the model name sit on one row.
+- App Builder generate prompt — self-check against `CHECKLIST.md` only when the type ships one (KPI does; other types skip without commenting).
+- App Builder **Brief** — **Build this app**, **Try a local demo**, **Open Copilot**, **Open Studio**, and **Delete app** sit at the top of the page. **App name** is its own card above **Your brief** (display name; folder slug stays). No expanders; type story / allows / will-not in columns; sketches under the brief; one **Questions** card on the right. Profile metrics appear only when a file was read.
+- App Builder apps are **named** — Library **Create a new project** (type card popover + App name) writes `out/<slug>/`; header **New app** is gone; Resume and the header badge show the app name. Resume and Brief can **delete** an app (confirm popover).
+- App Builder **Library** — **Resume** and **Create a new project** both use a 6-column grid. Topic pills sit at the top and filter saved apps and types. Resume cards show name, type, grounding, last updated, Open / Delete.
+- App Builder catalog — each type brief gained two extra questions (audience, tone, layout, comparison, …). **`0.1.8` live set locked** to the six folders under `types/` (KPI presentation, Data quality, Call transcription, Meeting recap, Prompt library, CSV explorer). Document comparison and every `urls` type are later.
+- App Builder **Admin** — type cards and the type editor sit in bordered panes with a vertical resize slider; short fields use three-column rows; icon is a Material Symbol popover; Brief questions sit in tabs (add / edit / delete), not a JSON textarea.
+- BI demo fixtures live under [`examples/bi_samples/`](examples/bi_samples/) (`tableau/` + `powerbi/`). Chat exploratory prompts stay in [`examples/testdata/`](examples/testdata/).
+
+### Fixed
+
+- App Builder **Save & regenerate** now writes `BRIEF.md` from the expander widgets before queuing CoCo, and does not let the Brief page overwrite that file on the same turn.
+
+### Security
+
+- Lockfile: `gitpython` 3.1.58 → 3.1.61 and `pip` 26.1.2 → 26.2.1 (`make audit`).
+
 ## [0.1.7] — 2026-08-15
 
 Alpha follow-up: a reusable Streamlit App Viewer, and BI → Semantic now loads Tableau **or** Power BI.

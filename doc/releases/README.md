@@ -2,12 +2,14 @@
 
 Each cut gets `doc/releases/X.Y.Z/` for **ship hygiene** (docs, QA, screenshots).
 
+Current cut: [`0.1.8/`](0.1.8/). Previous: [`0.1.7/`](0.1.7/).
+
 **Community posts and articles** live under **`doc-dev/releases/X.Y.Z/`** (never synced to public `streamlit-coco`).
 
 ## Create kits for the next version
 
 ```bash
-VER=0.1.8   # bump
+VER=0.1.9   # bump
 mkdir -p "doc/releases/${VER}/screenshots" "doc-dev/releases/${VER}"
 cp -R doc/releases/_template/. "doc/releases/${VER}/"
 cp -R doc-dev/releases/_template/. "doc-dev/releases/${VER}/"
@@ -17,7 +19,7 @@ cp -R doc-dev/releases/_template/. "doc-dev/releases/${VER}/"
 
 | Public (`doc/releases/X.Y.Z/`) | Dev-only (`doc-dev/releases/X.Y.Z/`) | Canonical sources |
 | --- | --- | --- |
-| Pre-tag checklist + sign-off | LinkedIn + Medium drafts | `CHANGELOG.md`, `doc/roadmap.md`, `doc/prd.md` |
+| Pre-tag checklist + sign-off | LinkedIn + Medium drafts | `CHANGELOG.md`, `doc/roadmap.md`, `doc/prd.md`, [public issues](https://github.com/DevoteamSP/streamlit-coco/issues) |
 | Screenshot brief + assets | Community / visibility checklist | Published URLs pasted into checklist |
 | `NOTES.md` (themes / learnings) | | Ongoing series: `doc-dev/marketing/` |
 

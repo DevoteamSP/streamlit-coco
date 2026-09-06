@@ -1,7 +1,7 @@
 """Deterministic estate-map extract from Tableau ``.twb`` and Power BI sources.
 
 Produces the ``estate_map.schema.json`` payload without CoCo — Tableau XML as in
-``examples/tableau_legacy/extract_schema.py``, plus TMDL / ``.pbix`` for Power BI.
+``examples/bi_samples/tableau/extract_schema.py``, plus TMDL / ``.pbix`` for Power BI.
 """
 
 from __future__ import annotations

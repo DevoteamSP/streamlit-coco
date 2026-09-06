@@ -256,9 +256,10 @@ def render_progress_badge(session: CocoSession | None) -> None:
         return
     color = "orange" if text.startswith("Needs input") else "blue"
     icon = ":material/touch_app:" if text.startswith("Needs input") else ":material/pending:"
-    st.badge(text, icon=icon, color=color)
-    if session.status == CocoRunStatus.RUNNING:
-        st.badge(_status_model_label(session), color="gray")
+    with st.container(horizontal=True, vertical_alignment="center"):
+        st.badge(text, icon=icon, color=color)
+        if session.status == CocoRunStatus.RUNNING:
+            st.badge(_status_model_label(session), color="gray")
 
 
 def render_session_status(

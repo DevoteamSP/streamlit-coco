@@ -13,6 +13,7 @@ Package API (all public exports): [`../api.md`](../api.md).
 | Panel + chat input | [panel/panel.md](panel/panel.md) | [panel/test-checklist.md](panel/test-checklist.md) | `make chat`; `tools_auto`, `streaming` |
 | Copilot rail | [copilot-rail/copilot-rail.md](copilot-rail/copilot-rail.md) | [copilot-rail/test-checklist.md](copilot-rail/test-checklist.md) | `make bi-semantic`; `copilot_rail()` |
 | App viewer | [app-viewer/app-viewer.md](app-viewer/app-viewer.md) | [app-viewer/test-checklist.md](app-viewer/test-checklist.md) | `make bi-semantic`; `app_viewer()` |
+| App Builder | [app-builder/app-builder.md](app-builder/app-builder.md) ([UX](app-builder/UX.md)) | [app-builder/test-checklist.md](app-builder/test-checklist.md) | `make app-builder` — Library → brief → Studio |
 | Tool approvals | [approvals/approvals.md](approvals/approvals.md) | [approvals/test-checklist.md](approvals/test-checklist.md) | category `approval` |
 | Tools display + HITL | [tools-display/tools-display.md](tools-display/tools-display.md) ([SPEC](tools-display/SPEC.md)) | [tools-display/test-checklist.md](tools-display/test-checklist.md) | categories `display_*` |
 | Structured output | [structured-output/structured-output.md](structured-output/structured-output.md) | [structured-output/test-checklist.md](structured-output/test-checklist.md) | `make structured`; `structured-json` |
@@ -43,4 +44,5 @@ Exploratory prompts: [`examples/testdata/`](../../examples/testdata/).
 | UI golden path — chat-ccv2 | **Pass** (2026-07-27) | [`chat-ccv2/test-checklist.md`](chat-ccv2/test-checklist.md) — `make approval` live |
 | UI golden path — copilot-rail | **Pending** (`0.1.6`) | [`copilot-rail/test-checklist.md`](copilot-rail/test-checklist.md) — `make bi-semantic` |
 | UI golden path — app-viewer | **Pending** (`0.1.7`) | [`app-viewer/test-checklist.md`](app-viewer/test-checklist.md) — `make bi-semantic` |
+| UI golden path — app-builder | **Automated** (`0.1.8`) | [`app-builder/test-checklist.md`](app-builder/test-checklist.md) — `make test-all` 2026-09-06; live CoCo sign-off still open |
 

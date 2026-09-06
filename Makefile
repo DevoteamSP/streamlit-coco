@@ -10,7 +10,7 @@ EXAMPLE  ?= examples/chat_app.py
 
 .PHONY: help install sync test lint format check audit e2e-install e2e test-all \
 	run chat approval structured headless backlog cwd-upload e2e-harness \
-	bi-semantic tableau-semantic \
+	bi-semantic tableau-semantic app-builder \
 	build publish sync-release clean adoption-stats
 
 # Public release clone (override: make sync-release RELEASE_REPO=/path/to/streamlit-coco)
@@ -76,6 +76,9 @@ bi-semantic: ## Run BI → Semantic (Tableau / Power BI, repo streamlit-coco)
 	cd examples/bi_to_semantic && $(UV) run --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py
 
 tableau-semantic: bi-semantic ## Deprecated alias for bi-semantic
+
+app-builder: ## Run App Builder (type library → brief → Copilot / Preview)
+	cd examples/app_builder && $(UV) run --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py
 
 e2e-harness: ## Run CoCo-free UX harness used by Playwright
 	$(STREAMLIT) examples/e2e_ux_harness.py

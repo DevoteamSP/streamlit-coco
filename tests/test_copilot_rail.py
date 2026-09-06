@@ -3,13 +3,24 @@
 from __future__ import annotations
 
 import streamlit_coco as st_coco
-from streamlit_coco.rail import FILTER_LAST, FILTER_SHORT, LAST_MESSAGES_N, PREVIEW_CHARS_N
+from streamlit_coco.rail import (
+    DISPLAY_CONFIG_ICON,
+    FILTER_LAST,
+    FILTER_SHORT,
+    LAST_MESSAGES_N,
+    PREVIEW_CHARS_N,
+    example_questions_visible,
+    normalize_example_questions,
+    resolve_transcript_view,
+)
 
 
 def test_copilot_rail_exports() -> None:
     assert "copilot_rail" in st_coco.__all__
+    assert "transcript_display_config" in st_coco.__all__
     assert "transcript_view_pills" in st_coco.__all__
     assert callable(st_coco.copilot_rail)
+    assert callable(st_coco.transcript_display_config)
     assert callable(st_coco.transcript_view_pills)
 
 
@@ -17,7 +28,28 @@ def test_transcript_filter_constants() -> None:
     assert LAST_MESSAGES_N == 8
     assert PREVIEW_CHARS_N == 200
     assert FILTER_LAST == "Last messages"
-    assert FILTER_SHORT == "First 200 characters"
+    assert FILTER_SHORT == "First n characters"
+    assert DISPLAY_CONFIG_ICON == ":material/display_settings:"
+
+
+def test_resolve_transcript_view_both_on() -> None:
+    max_messages, chars = resolve_transcript_view(
+        [FILTER_LAST, FILTER_SHORT],
+        last_n=12,
+        preview_chars=80,
+    )
+    assert max_messages == 12
+    assert chars == 80
+
+
+def test_resolve_transcript_view_pills_off() -> None:
+    max_messages, chars = resolve_transcript_view(
+        [],
+        last_n=12,
+        preview_chars=80,
+    )
+    assert max_messages is None
+    assert chars is None
 
 
 def test_ellipsize_middle_keeps_short_text() -> None:
@@ -92,3 +124,63 @@ def test_shorten_backtick_paths() -> None:
     assert "`ready`" in out
     assert "..." in out
     assert long_path not in out
+
+
+def test_normalize_example_questions() -> None:
+    assert normalize_example_questions(None) == []
+    assert normalize_example_questions([]) == []
+    assert normalize_example_questions(
+        [
+            {"title": "List files", "question": "What is in cwd?"},
+            {"title": "  ", "question": "skip me"},
+            {"title": "No question"},
+            ("Hover me", "Send this"),
+            "bare-string",
+        ]
+    ) == [
+        ("List files", "What is in cwd?"),
+        ("Hover me", "Send this"),
+    ]
+
+
+def test_example_questions_visible_after_connect() -> None:
+    from streamlit_coco.options import CocoOptions
+    from streamlit_coco.session import CocoSession
+
+    session = CocoSession(options=CocoOptions(), key="examples-empty")
+    items = [{"title": "List files", "question": "What is in cwd?"}]
+    assert (
+        example_questions_visible(session, items, connected=True, job=None) is True
+    )
+    assert (
+        example_questions_visible(session, items, connected=False, job=None) is False
+    )
+    assert example_questions_visible(None, items, connected=True, job=None) is False
+    assert (
+        example_questions_visible(session, items, connected=True, job={"status": "queued"})
+        is False
+    )
+
+
+def test_example_questions_hidden_while_turn_in_progress() -> None:
+    from streamlit_coco.options import CocoOptions
+    from streamlit_coco.session import CocoSession
+
+    session = CocoSession(options=CocoOptions(), key="examples-pending")
+    items = [{"title": "List files", "question": "What is in cwd?"}]
+    session._turn_in_progress = True
+    assert (
+        example_questions_visible(session, items, connected=True, job=None) is False
+    )
+
+
+def test_example_questions_hidden_after_user_turn() -> None:
+    from streamlit_coco.options import CocoOptions
+    from streamlit_coco.session import CocoSession
+
+    session = CocoSession(options=CocoOptions(), key="examples-used")
+    session.transcript.append({"role": "user", "content": "hello"})
+    items = [{"title": "List files", "question": "What is in cwd?"}]
+    assert (
+        example_questions_visible(session, items, connected=True, job=None) is False
+    )

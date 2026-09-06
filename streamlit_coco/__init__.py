@@ -43,7 +43,7 @@ from streamlit_coco.upload import (
     upload_to_cwd,
 )
 
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 
 # UI / Streamlit-backed exports — loaded on first attribute access.
 _LAZY_ATTRS: dict[str, tuple[str, str]] = {
@@ -62,6 +62,7 @@ _LAZY_ATTRS: dict[str, tuple[str, str]] = {
     "render_transcript": ("streamlit_coco.display", "render_transcript"),
     "panel": ("streamlit_coco.ui", "panel"),
     "copilot_rail": ("streamlit_coco.rail", "copilot_rail"),
+    "transcript_display_config": ("streamlit_coco.rail", "transcript_display_config"),
     "transcript_view_pills": ("streamlit_coco.rail", "transcript_view_pills"),
     "app_viewer": ("streamlit_coco.viewer", "app_viewer"),
     "start_app_preview": ("streamlit_coco.app_preview", "start_app_preview"),
@@ -139,6 +140,7 @@ __all__ = [
     "stop_app_preview",
     "stop_session",
     "tool_family",
+    "transcript_display_config",
     "transcript_view_pills",
     "upload_to_cwd",
 ]

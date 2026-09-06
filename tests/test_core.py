@@ -138,6 +138,12 @@ def test_options_hash_stable() -> None:
     assert a.options_hash() == b.options_hash()
 
 
+def test_options_hash_includes_add_dirs() -> None:
+    a = CocoOptions(extra_sdk_options={"add_dirs": ["/skills/shared"]})
+    b = CocoOptions(extra_sdk_options={"add_dirs": ["/skills/shared", "/skills/csv"]})
+    assert a.options_hash() != b.options_hash()
+
+
 @pytest.mark.asyncio
 async def test_permission_manager_allow() -> None:
     manager = PermissionManager(approval_timeout_seconds=1.0)

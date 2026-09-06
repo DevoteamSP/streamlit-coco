@@ -3,15 +3,15 @@
 Several departmental reports built independently **on one company's warehouse**.
 They still carry the literal connection string `Sql.Database(".", "IP")` (or the
 Excel path under `Obvience\IP\`). Used by
-[`examples/bi_to_semantic`](../bi_to_semantic/).
+[`examples/bi_to_semantic`](../../bi_to_semantic/).
 
 This is the Power BI analogue of the Tableau `workgroup` pack in
-[`examples/tableau_legacy/`](../tableau_legacy/).
+[`examples/bi_samples/tableau/`](../tableau/).
 
 ## Layout
 
 ```
-powerbi_legacy/
+bi_samples/powerbi/
 ├── README.md
 ├── fetch.sh            optional 17 MB pair (not committed)
 ├── Customer Profitability Sample (auto).pbix   committed (~1.9 MB)

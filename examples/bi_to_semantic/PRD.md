@@ -3,7 +3,7 @@
 **Status:** Ships in streamlit-coco **`0.1.7`** as **BI → Semantic** (Tableau + Power BI; Tableau path first shipped in `0.1.6`)
 **Owner:** Laurent Letourmy
 **Kind:** streamlit-coco example app (public, ships in `examples/`)
-**Last updated:** 2026-08-14
+**Last updated:** 2026-08-18
 
 > An example app that reads Tableau workbooks and/or Power BI reports, shows what
 > is actually inside them, and moves the KPI logic and the access rules down into
@@ -14,7 +14,7 @@
 > **Demo packs:** Tableau `ts_content` + `ts_users` (MIT — project-leader branch
 > present vs dropped). Power BI `Customer Profitability Sample (auto)` +
 > `Corporate Spend` (MIT © Microsoft — colliding `Fact` / `Scenario` / `Date`).
-> The full MIT Tableau set of four remains under `examples/tableau_legacy/`.
+> The full MIT Tableau set of four remains under `examples/bi_samples/tableau/`.
 
 ---
 
@@ -84,8 +84,8 @@ published by Tableau — not a scenario built to make the point.**
 
 | Estate | Carries | Licence | Ships publicly |
 |---|---|---|---|
-| `examples/tableau_legacy/workbooks/` — 4 × `.twb`, Tableau Server ops | the access-rule argument; 98 calculated fields, 20 duplicated across workbooks, 14 with divergent formulas | **MIT © Tableau** — attribution in the folder | **Yes** |
-| `examples/powerbi_legacy/` — Customer Profitability + Corporate Spend `.pbix` | colliding `Fact` / `Scenario` / `Date` on the Obvience `IP` warehouse; no RLS in public MIT samples | **MIT © Microsoft** — attribution in the folder | **Yes** |
+| `examples/bi_samples/tableau/workbooks/` — 4 × `.twb`, Tableau Server ops | the access-rule argument; 98 calculated fields, 20 duplicated across workbooks, 14 with divergent formulas | **MIT © Tableau** — attribution in the folder | **Yes** |
+| `examples/bi_samples/powerbi/` — Customer Profitability + Corporate Spend `.pbix` | colliding `Fact` / `Scenario` / `Date` on the Obvience `IP` warehouse; no RLS in public MIT samples | **MIT © Microsoft** — attribution in the folder | **Yes** |
 | AdventureWorks Tableau workbooks | the KPI argument — `Margin %`, `Avg Order Value`, `Discount Rate` | **Unverified** — community-sourced | **No, until cleared** |
 
 **Open decision (blocks the public release, not the demo):** either clear the
@@ -96,7 +96,7 @@ drift. Readers forgive fabricated material that is announced; they do not forgiv
 finding out.
 
 The reconstructed Snowflake schema for the Tableau Server estate already exists in
-`examples/tableau_legacy/sql/` — 28 tables, 509 columns, 26 foreign keys, ~221 000
+`examples/bi_samples/tableau/sql/` — 28 tables, 509 columns, 26 foreign keys, ~221 000
 synthetic rows, loaded and integrity-checked.
 
 ---
@@ -299,7 +299,7 @@ exist (estate map, KPI inventory, access rules, decisions). A saved
 Workbooks already in the workspace are listed on Load without copying again.
 
 Fixtures are **not** copied here — Tableau pack points at
-`examples/tableau_legacy/workbooks/`; Power BI pack at `examples/powerbi_legacy/`.
+`examples/bi_samples/tableau/workbooks/`; Power BI pack at `examples/bi_samples/powerbi/`.
 
 ---
 
@@ -364,8 +364,9 @@ scoreboard proves it is engineering.
 
 ## 10. Related
 
-- Fixtures and reconstructed schema: [`../tableau_legacy/README.md`](../tableau_legacy/README.md)
-- Power BI MIT pack: [`../powerbi_legacy/README.md`](../powerbi_legacy/README.md)
+- Fixtures: [`../bi_samples/README.md`](../bi_samples/README.md)
+- Tableau reconstructed schema: [`../bi_samples/tableau/README.md`](../bi_samples/tableau/README.md)
+- Power BI MIT pack: [`../bi_samples/powerbi/README.md`](../bi_samples/powerbi/README.md)
 - Question specification: *Testing Snowflake Intelligence at Scale — A Question-Driven
   Validation Framework*, [DevoteamSP/public](https://github.com/DevoteamSP/public)
 - Semantic view generation: `atomic-studio` (existing generator — reuse, do not rewrite)

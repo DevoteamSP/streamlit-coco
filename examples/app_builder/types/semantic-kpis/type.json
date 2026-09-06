@@ -1,0 +1,88 @@
+{
+  "id": "semantic-kpis",
+  "version": "1",
+  "icon": "speed",
+  "name": "KPI presentation",
+  "users": ["Exec pack", "Finance business partner", "Sales ops"],
+  "screenshot": null,
+  "needs": ["semantic_view"],
+  "needs_snowflake": true,
+  "topics": ["Snowflake", "Analytics"],
+  "demo_fixture": "sales_sv",
+  "coming_soon": false,
+  "guidelines_skill": "semantic-kpis",
+  "grounding_kind": "semantic_view",
+  "ships_copilot": false,
+  "brief": {
+    "context": "An exec-facing Streamlit pack on an existing Snowflake semantic view (or the demo fixture). One grain, a handful of metrics, one detail table.",
+    "enables": [
+      "KPI row + trend chart + detail table",
+      "Disconnected demo on the fixture pack (no warehouse)",
+      "Live queries later if a real semantic view FQDN is provided"
+    ],
+    "does_not": [
+      "Create or migrate a semantic view (use BI → Semantic)",
+      "Pixel-perfect Tableau / Power BI clone",
+      "Write warehouse objects"
+    ],
+    "questions": [
+      {
+        "id": "semantic_view",
+        "prompt": "Which semantic view?",
+        "kind": "semantic_view",
+        "required": true,
+        "help": "Use the demo pack, or a fully qualified view name you already have."
+      },
+      {
+        "id": "metrics",
+        "prompt": "Which metrics (1–5)?",
+        "kind": "list",
+        "required": true,
+        "infer": "metrics",
+        "help": "Pre-filled from the file. Uncheck to correct."
+      },
+      {
+        "id": "grain",
+        "prompt": "Default time grain?",
+        "kind": "enum",
+        "required": true,
+        "options": ["day", "week", "month", "quarter"],
+        "infer": "grain"
+      },
+      {
+        "id": "filters",
+        "prompt": "Default filters?",
+        "kind": "text",
+        "required": false,
+        "infer": "filters",
+        "help": "Pre-filled from low-cardinality columns. Uncheck to correct."
+      },
+      {
+        "id": "audience_note",
+        "prompt": "Who opens this every morning, and what do they do differently because of it?",
+        "kind": "text",
+        "required": true
+      },
+      {
+        "id": "must_not",
+        "prompt": "What must never happen? (e.g. cost data visible to the wrong role)",
+        "kind": "text",
+        "required": false
+      },
+      {
+        "id": "comparison",
+        "prompt": "Default comparison?",
+        "kind": "enum",
+        "required": true,
+        "options": ["none", "vs previous period", "vs last year"]
+      },
+      {
+        "id": "hero_metric",
+        "prompt": "Which metric should lead the page?",
+        "kind": "text",
+        "required": false,
+        "help": "Optional. Leave blank to use the first metric."
+      }
+    ]
+  }
+}

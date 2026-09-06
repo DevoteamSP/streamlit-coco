@@ -1,0 +1,65 @@
+{
+  "id": "csv-explorer",
+  "version": "1",
+  "icon": "table_chart",
+  "name": "CSV explorer",
+  "users": ["Analyst", "Ops lead", "Anyone with a spreadsheet"],
+  "screenshot": null,
+  "needs": ["files"],
+  "needs_snowflake": false,
+  "topics": ["Local", "Analytics"],
+  "demo_fixture": "local_sales",
+  "coming_soon": false,
+  "guidelines_skill": "csv-explorer",
+  "grounding_kind": "tabular",
+  "brief": {
+    "context": "Explore a local CSV: filters, a chart, and a detail table. Nothing is queried in Snowflake.",
+    "enables": [
+      "Load the demo CSV or a file CoCo Reads from sketches/cwd",
+      "Filter widgets + one chart + one table",
+      "Works fully disconnected"
+    ],
+    "does_not": [
+      "Upload to a warehouse or stage",
+      "Join to Snowflake tables",
+      "A full BI tool"
+    ],
+    "questions": [
+      {
+        "id": "source",
+        "prompt": "Which file?",
+        "kind": "enum",
+        "required": true,
+        "options": ["demo pack", "I will provide a CSV"],
+        "help": "Demo pack is a small regional sales file on disk."
+      },
+      {
+        "id": "chart",
+        "prompt": "Default chart?",
+        "kind": "enum",
+        "required": true,
+        "options": ["bar", "line", "none"]
+      },
+      {
+        "id": "filters",
+        "prompt": "Filter columns?",
+        "kind": "list",
+        "required": false,
+        "help": "One column name per line, e.g. region"
+      },
+      {
+        "id": "audience",
+        "prompt": "Who opens this file, and what are they looking for?",
+        "kind": "text",
+        "required": true
+      },
+      {
+        "id": "highlight",
+        "prompt": "Columns to emphasize?",
+        "kind": "list",
+        "required": false,
+        "help": "Optional. One column name per line."
+      }
+    ]
+  }
+}

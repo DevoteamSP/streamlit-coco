@@ -12,7 +12,7 @@ Pinned rule: `.cursor/rules/coco-sdk-docs.mdc`
 ## Layout
 
 - `streamlit_coco/` — library (`ui`, `rail`, `viewer`, `app_preview`, `session`, `permissions`, `tool_*`, `bootstrap`, …)
-- `examples/` — chat, approval, structured, headless, backlog desk, BI → Semantic
+- `examples/` — chat, approval, structured, headless, backlog desk, BI → Semantic, App Builder
 - `apps/` — **dev-only** full applications (never synced to public `streamlit-coco`)
 - `doc/prd.md`, `doc/api.md`, `doc/roadmap.md`, `doc/features/` — product + API + DSP N1 feature docs/checklists
 - `doc/releases/X.Y.Z/` — public release kit (checklist, screenshots)
@@ -32,6 +32,7 @@ make audit     # pip-audit
 make test-all  # check + e2e + audit
 make chat      # Streamlit demo
 make bi-semantic  # Tableau / Power BI → Semantic example (copilot rail)
+make app-builder  # App Builder (type library → brief → Preview)
 make adoption-stats  # daily PyPI + GitHub traffic → doc-dev/metrics/
 ```
 
@@ -45,7 +46,7 @@ Full test process: [`doc/testing.md`](doc/testing.md).
 - Approval buttons left→right: Approve once · Always allow · Deny.
 - AskUserQuestion / ExitPlanMode always go through pending HITL; never “Always allow”.
 - Update `CHANGELOG.md` `[Unreleased]` for user-visible changes; update feature checklists when UX changes.
-- **Before cutting a release:** complete `doc/releases/X.Y.Z/CHECKLIST.md` + outreach in `doc-dev/releases/X.Y.Z/`, then `doc/deployment/publish.md`. Do not tag until the public kit docs/QA sections are done.
+- **Before cutting a release:** complete `doc/releases/X.Y.Z/CHECKLIST.md` + outreach in `doc-dev/releases/X.Y.Z/`, then `doc/deployment/publish.md`. Do not tag until the public kit docs/QA sections are done. Sync [public GitHub issues](https://github.com/DevoteamSP/streamlit-coco/issues): close resolved, comment on progressed, propose new ones from `doc/roadmap.md`.
 - Prefer small, focused diffs; no drive-by refactors.
 
 ## Testing

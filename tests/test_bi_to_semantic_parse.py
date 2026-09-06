@@ -7,11 +7,11 @@ from pathlib import Path
 import pytest
 
 REPO = Path(__file__).resolve().parents[1]
-PBI = REPO / "examples" / "powerbi_legacy"
+PBI = REPO / "examples" / "bi_samples" / "powerbi"
 CUST = PBI / "Customer Profitability Sample (auto).pbix"
 SPEND = PBI / "Corporate Spend.pbix"
-TWB_CONTENT = REPO / "examples" / "tableau_legacy" / "workbooks" / "ts_content.twb"
-TWB_USERS = REPO / "examples" / "tableau_legacy" / "workbooks" / "ts_users.twb"
+TWB_CONTENT = REPO / "examples" / "bi_samples" / "tableau" / "workbooks" / "ts_content.twb"
+TWB_USERS = REPO / "examples" / "bi_samples" / "tableau" / "workbooks" / "ts_users.twb"
 ENGINE = REPO / "examples" / "bi_to_semantic"
 
 

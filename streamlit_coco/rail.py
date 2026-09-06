@@ -1,4 +1,4 @@
-"""Generic Copilot right-rail — connection, queued jobs, transcript filters.
+"""Generic Copilot right-rail — connection, queued jobs, display config.
 
 App-agnostic: callers own session lifecycle, job dicts, and structured-output
 handlers. This module only renders the rail chrome + ``panel()`` + chat input.
@@ -16,13 +16,19 @@ import streamlit as st
 
 from streamlit_coco.display import render_progress_badge
 from streamlit_coco.session import CocoChatResult, CocoRunStatus, CocoSession
-from streamlit_coco.ui import panel
+from streamlit_coco.ui import panel, send_prompt
 
 LAST_MESSAGES_N = 8
+LAST_MESSAGES_MIN = 1
+LAST_MESSAGES_MAX = 50
 PREVIEW_CHARS_N = 200
+PREVIEW_CHARS_MIN = 40
+PREVIEW_CHARS_MAX = 1000
+PREVIEW_CHARS_STEP = 20
 FILTER_LAST = "Last messages"
-FILTER_SHORT = "First 200 characters"
+FILTER_SHORT = "First n characters"
 PATH_DISPLAY_LIMIT = 100
+DISPLAY_CONFIG_ICON = ":material/display_settings:"
 
 
 def ellipsize_middle(text: str, limit: int = PATH_DISPLAY_LIMIT) -> str:
@@ -74,6 +80,64 @@ def sent_job_is_complete(
     }
 
 
+def resolve_transcript_view(
+    selected: Sequence[str] | None,
+    *,
+    last_n: int,
+    preview_chars: int,
+) -> tuple[int | None, int | None]:
+    """Map pill selection + slider values to ``panel()`` compactness args."""
+    chosen = set(selected or [])
+    max_messages = last_n if FILTER_LAST in chosen else None
+    chars = preview_chars if FILTER_SHORT in chosen else None
+    return max_messages, chars
+
+
+def normalize_example_questions(
+    items: Sequence[Mapping[str, Any] | Sequence[Any]] | None,
+) -> list[tuple[str, str]]:
+    """Return ``(title, question)`` pairs, skipping empty or incomplete items."""
+    if not items:
+        return []
+    out: list[tuple[str, str]] = []
+    for raw in items:
+        title = ""
+        question = ""
+        if isinstance(raw, Mapping):
+            title = str(raw.get("title") or "").strip()
+            question = str(raw.get("question") or "").strip()
+        elif isinstance(raw, (str, bytes)):
+            continue
+        elif isinstance(raw, Sequence) and len(raw) >= 2:
+            title = str(raw[0] or "").strip()
+            question = str(raw[1] or "").strip()
+        if title and question:
+            out.append((title, question))
+    return out
+
+
+def example_questions_visible(
+    session: CocoSession | None,
+    items: Sequence[Mapping[str, Any] | Sequence[Any]] | None,
+    *,
+    connected: bool,
+    job: Mapping[str, Any] | None = None,
+) -> bool:
+    """True when starter buttons should render (connected, empty chat, no job)."""
+    if not connected or session is None:
+        return False
+    if job:
+        return False
+    if session.is_running or getattr(session, "_turn_in_progress", False):
+        return False
+    if not normalize_example_questions(items):
+        return False
+    return not any(
+        item.get("role") in {"user", "assistant"}
+        for item in session.get_transcript_snapshot()
+    )
+
+
 def transcript_view_pills(
     *,
     key: str = "coco_transcript_view",
@@ -86,6 +150,8 @@ def transcript_view_pills(
     """Pills that compact a long CoCo transcript for a live demo.
 
     Returns ``(max_messages, preview_chars)`` suitable for ``panel()``.
+    Prefer ``transcript_display_config()`` on the rail — this stays for apps
+    that call ``panel()`` directly.
     """
     options = [FILTER_LAST, FILTER_SHORT]
     picked = st.pills(
@@ -97,10 +163,79 @@ def transcript_view_pills(
         label_visibility=label_visibility,  # type: ignore[arg-type]
         width="content",
     )
-    selected = set(picked or [])
-    max_messages = last_n if FILTER_LAST in selected else None
-    chars = preview_chars if FILTER_SHORT in selected else None
-    return max_messages, chars
+    return resolve_transcript_view(picked, last_n=last_n, preview_chars=preview_chars)
+
+
+def transcript_display_config(
+    *,
+    key: str = "coco_transcript_display",
+    last_n: int = LAST_MESSAGES_N,
+    preview_chars: int = PREVIEW_CHARS_N,
+    default: Sequence[str] | None = None,
+) -> tuple[int | None, int | None]:
+    """Icon-only Display config popover: pills plus last-N / first-n sliders.
+
+    Widget changes rerun the enclosing fragment (the rail) while the popover
+    stays open, so the transcript updates live.
+    """
+    last_key = f"{key}_last_n"
+    chars_key = f"{key}_preview_chars"
+    pills_key = f"{key}_pills"
+    last_n = max(LAST_MESSAGES_MIN, min(LAST_MESSAGES_MAX, int(last_n)))
+    preview_chars = max(PREVIEW_CHARS_MIN, min(PREVIEW_CHARS_MAX, int(preview_chars)))
+    if last_key not in st.session_state:
+        st.session_state[last_key] = last_n
+    else:
+        stored_last = int(st.session_state[last_key])
+        if stored_last < LAST_MESSAGES_MIN or stored_last > LAST_MESSAGES_MAX:
+            st.session_state[last_key] = max(
+                LAST_MESSAGES_MIN, min(LAST_MESSAGES_MAX, stored_last)
+            )
+    if chars_key not in st.session_state:
+        st.session_state[chars_key] = preview_chars
+    else:
+        stored_chars = int(st.session_state[chars_key])
+        if stored_chars < PREVIEW_CHARS_MIN or stored_chars > PREVIEW_CHARS_MAX:
+            st.session_state[chars_key] = max(
+                PREVIEW_CHARS_MIN, min(PREVIEW_CHARS_MAX, stored_chars)
+            )
+
+    options = [FILTER_LAST, FILTER_SHORT]
+    with st.popover(
+        DISPLAY_CONFIG_ICON,
+        help="Display config",
+        type="tertiary",
+        width="content",
+        key=f"{key}_popover",
+    ):
+        picked = st.pills(
+            "Transcript filters",
+            options,
+            selection_mode="multi",
+            default=list(default) if default is not None else list(options),
+            key=pills_key,
+            label_visibility="collapsed",
+            width="stretch",
+        )
+        selected = set(picked or [])
+        last_n_val = st.slider(
+            "Last messages",
+            min_value=LAST_MESSAGES_MIN,
+            max_value=LAST_MESSAGES_MAX,
+            key=last_key,
+            disabled=FILTER_LAST not in selected,
+            width="stretch",
+        )
+        chars_val = st.slider(
+            "First n characters",
+            min_value=PREVIEW_CHARS_MIN,
+            max_value=PREVIEW_CHARS_MAX,
+            step=PREVIEW_CHARS_STEP,
+            key=chars_key,
+            disabled=FILTER_SHORT not in selected,
+            width="stretch",
+        )
+    return resolve_transcript_view(selected, last_n=last_n_val, preview_chars=chars_val)
 
 
 def copilot_rail(
@@ -131,6 +266,7 @@ def copilot_rail(
     run_every: float = 0.25,
     input_placeholder: str = "Ask CoCo…",
     status_caption: str | None = None,
+    example_questions: Sequence[Mapping[str, Any] | Sequence[Any]] | None = None,
     render_environment: Callable[..., Any] | None = None,
 ) -> None:
     """Render a Copilot column: connection, job, transcript, chat input.
@@ -139,6 +275,10 @@ def copilot_rail(
     (``job["status"] == "queued"`` plus ``job["prompt"]``) are sent once the
     session is ready. When the turn ends, ``on_job_finished`` is called so the
     caller can drop the job (Cancel job / caption).
+
+    After Connect, ``example_questions`` (``title`` + ``question``) render as
+    starter buttons on an empty transcript. Hover shows the question; click
+    sends it. They hide once a user/assistant turn or a job is present.
     """
     import streamlit_coco as st_coco
 
@@ -197,8 +337,8 @@ def copilot_rail(
                         render_environment=render_environment or st_coco.render_environment_status,
                     )
                 if show_transcript_filters:
-                    max_messages, chars = transcript_view_pills(
-                        key=f"{key_prefix}_transcript_view",
+                    max_messages, chars = transcript_display_config(
+                        key=f"{key_prefix}_display",
                         last_n=last_messages,
                         preview_chars=preview_chars,
                     )
@@ -247,6 +387,14 @@ def copilot_rail(
             run_every=run_every,
             on_structured_output=on_structured_output if job and expect_structured else None,
         )
+        if example_questions_visible(
+            session, example_questions, connected=True, job=job
+        ):
+            _render_example_questions(
+                session,
+                example_questions,
+                key_prefix=key_prefix,
+            )
 
     _copilot_live()
 
@@ -265,6 +413,31 @@ def copilot_rail(
             placeholder=input_placeholder,
             key=f"{key_prefix}_input",
         )
+
+
+def _render_example_questions(
+    session: CocoSession,
+    items: Sequence[Mapping[str, Any] | Sequence[Any]] | None,
+    *,
+    key_prefix: str,
+) -> None:
+    pairs = normalize_example_questions(items)
+    if not pairs:
+        return
+    failed_boot = session.status == CocoRunStatus.ERROR and not session.is_ready
+    disabled = session.is_running or failed_boot
+    with st.container(horizontal=True, gap="small"):
+        for index, (title, question) in enumerate(pairs):
+            if st.button(
+                title,
+                key=f"{key_prefix}_example_{index}",
+                help=question,
+                type="tertiary",
+                width="content",
+                disabled=disabled,
+            ):
+                send_prompt(session, question)
+                st.rerun()
 
 
 def _render_connection(

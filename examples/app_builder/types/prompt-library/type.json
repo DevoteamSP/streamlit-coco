@@ -1,0 +1,58 @@
+{
+  "id": "prompt-library",
+  "version": "1",
+  "icon": "menu_book",
+  "name": "Prompt library",
+  "users": ["Consultant", "Analyst", "Enablement"],
+  "screenshot": null,
+  "needs": ["files"],
+  "needs_snowflake": false,
+  "topics": ["Local", "Knowledge"],
+  "demo_fixture": "prompt_pack",
+  "coming_soon": false,
+  "guidelines_skill": "prompt-library",
+  "grounding_kind": "tabular",
+  "brief": {
+    "context": "Browse and copy prompt packs stored as local markdown. Useful in a workshop without a warehouse.",
+    "enables": [
+      "List prompts from the demo pack (or files in cwd)",
+      "Search / filter by tag",
+      "Copy the prompt body"
+    ],
+    "does_not": [
+      "Call an LLM by itself (CoCo is optional, for editing the pack)",
+      "A skills marketplace or Native App",
+      "Snowflake"
+    ],
+    "questions": [
+      {
+        "id": "source",
+        "prompt": "Pack source?",
+        "kind": "enum",
+        "required": true,
+        "options": ["demo pack", "I will add markdown files"]
+      },
+      {
+        "id": "tags",
+        "prompt": "Default tags to show?",
+        "kind": "list",
+        "required": false,
+        "help": "Optional. One tag per line."
+      },
+      {
+        "id": "audience",
+        "prompt": "Who browses this pack?",
+        "kind": "text",
+        "required": true,
+        "help": "e.g. workshop attendees, new consultants"
+      },
+      {
+        "id": "layout",
+        "prompt": "Default layout?",
+        "kind": "enum",
+        "required": true,
+        "options": ["cards", "list"]
+      }
+    ]
+  }
+}

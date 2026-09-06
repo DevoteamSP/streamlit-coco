@@ -18,4 +18,4 @@ Store finals in this folder. Prefer PNG. Keep originals if you crop.
 
 - [x] Drop files here
 - [ ] Reference paths from `doc-dev/releases/0.1.7/linkedin.md` / `medium.md` and the GitHub Release
-- [ ] Optionally refresh `doc/screenshot.png` if the README hero should change to Preview + Copilot
+- [x] README hero is `doc/screenshot.png` (from `fix_with_coco_feature.png`)

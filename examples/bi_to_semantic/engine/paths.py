@@ -8,8 +8,8 @@ from engine.bi_sources import has_powerbi, has_tableau, list_bi_files, source_ki
 
 APP_ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = APP_ROOT.parents[1]
-TABLEAU_FIXTURES_DIR = REPO_ROOT / "examples" / "tableau_legacy" / "workbooks"
-POWERBI_FIXTURES_DIR = REPO_ROOT / "examples" / "powerbi_legacy"
+TABLEAU_FIXTURES_DIR = REPO_ROOT / "examples" / "bi_samples" / "tableau" / "workbooks"
+POWERBI_FIXTURES_DIR = REPO_ROOT / "examples" / "bi_samples" / "powerbi"
 WORKSPACE_DIR = REPO_ROOT / "examples" / "workspaces" / "bi_to_semantic"
 OUT_DIR = APP_ROOT / "out"
 CONTRACTS_DIR = APP_ROOT / "contracts"
@@ -19,7 +19,7 @@ FIXTURES_DIR = TABLEAU_FIXTURES_DIR
 
 # Demo pack: two workbooks that carry the access-rule punchline
 # (project leader present in content, absent in users). Full MIT set of four
-# remains under examples/tableau_legacy/workbooks/.
+# remains under examples/bi_samples/tableau/workbooks/.
 MIT_WORKBOOKS = (
     "ts_content.twb",
     "ts_users.twb",

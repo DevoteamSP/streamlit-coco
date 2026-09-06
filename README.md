@@ -1,15 +1,15 @@
 # streamlit-coco
 
-**Built (with love) by Devoteam Snowflake Partner, brings Snowflake CoCo into Streamlit** — streaming agent UI, tool cards you can actually read, and approval gates that fit governed data apps.
+**Built (with love) by Devoteam Snowflake Partner** — Snowflake CoCo in *your* Streamlit app: a right-rail Copilot, a live preview of the app it writes, tool cards you can read, and approval gates that fit governed data apps.
 
 [![CI](https://github.com/lletourmy/streamlit-coco/actions/workflows/ci.yml/badge.svg)](https://github.com/lletourmy/streamlit-coco/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-You own the page. CoCo owns the session. `panel()` streams the transcript; `copilot_rail()` wraps that panel as a right-rail Copilot for multipage apps. Your app keeps `st.chat_input`, metrics, and forms. Approvals pause Write / Edit / Bash / SQL until someone clicks **Approve once**, **Always allow**, or **Deny**.
+You own the page. CoCo owns the session. `copilot_rail()` sits in the product and takes jobs from your screens; `app_viewer()` runs the Streamlit app the agent just wrote, next to the rail. `panel()` streams the transcript. Approvals pause Write / Edit / Bash / SQL until someone clicks **Approve once**, **Always allow**, or **Deny**.
 
-![CoCo for Streamlit — streaming transcript with a Glob tool card](doc/screenshot.png)
+![BI → Semantic — Preview of the generated Streamlit app beside the Copilot rail](doc/screenshot.png)
 
-> Alpha `0.1.7` — API may still move. Star / watch the repo if you plan to ship on it.
+> Alpha `0.1.8` — API may still move. Star / watch the repo if you plan to ship on it.
 
 **Repo:** [github.com/lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco) *(temporary PyPI source)* · **Dev:** [streamlit-coco-dev](https://github.com/DevoteamSP/streamlit-coco-dev)  
 **SDK docs:** [Cortex Code Agent SDK](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
@@ -23,7 +23,7 @@ You own the page. CoCo owns the session. `panel()` streams the transcript; `copi
 | Wire CoCo yourself across Streamlit reruns | Session + fragment polling that keeps streaming |
 | Raw JSON tool dumps | Meaningful cards (Glob, Grep, Read, Write, SQL, AskUser…) |
 | Hope the agent behaves | `require_approval_for` + HITL UI |
-| Chat-only demos | Structured callbacks into your own widgets |
+| Chat-only demos | Structured callbacks, a Copilot rail, and a live app preview |
 
 Also: headless `query()` for scripts and CI, plus a legacy all-in-one `chat()` if you want built-in input.
 
@@ -37,7 +37,7 @@ Also: headless `query()` for scripts and CI, plus a legacy all-in-one `chat()` i
 - **You need Slack, a hosted CoCo SaaS, or a product MCP server.** Out of scope. MCP *passthrough* via `mcp_servers` already works.
 - **You would not type the SQL yourself on this role.** The agent uses the Snowflake role in the connection — do not wire `ACCOUNTADMIN` into a web UI.
 
-Alpha `0.1.7` — APIs may still move. Prefer `panel()` + your own input; `chat()` is the legacy all-in-one.
+Alpha `0.1.8` — APIs may still move. Prefer `panel()` + your own input; `chat()` is the legacy all-in-one.
 
 ---
 
@@ -111,12 +111,14 @@ make structured    # custom structured-output panel
 make headless      # asyncio query() pipeline
 make backlog       # Product Backlog Desk (multipage business demo)
 make bi-semantic      # Tableau / Power BI → semantic view + RAP (screens 1–6)
+make app-builder      # App Builder (type library → brief → Copilot / Preview)
 # make tableau-semantic is an alias for bi-semantic
 ```
 
 Exploratory prompts: [`examples/testdata/prompts.json`](examples/testdata/prompts.json).  
-Backlog desk: [`examples/backlog_desk/README.md`](examples/backlog_desk/README.md).  
-BI → Semantic: [`examples/bi_to_semantic/README.md`](examples/bi_to_semantic/README.md).  
+Backlog desk: [`examples/backlog_desk/README.md`](examples/backlog_desk/README.md).
+BI → Semantic: [`examples/bi_to_semantic/README.md`](examples/bi_to_semantic/README.md).
+App Builder: [`examples/app_builder/README.md`](examples/app_builder/README.md).
 File upload: [`doc/features/file-upload/file-upload.md`](doc/features/file-upload/file-upload.md).
 
 ---
@@ -153,10 +155,10 @@ asyncio.run(run())
 
 ## Architecture
 
-The agent is **server-side**. The browser only sees Streamlit widgets. `panel()` (or `copilot_rail()` around it) polls a `CocoSession` worker via `@st.fragment`; the session talks to the Cortex Code Agent SDK, which runs the `cortex` CLI against your Snowflake account. Destructive tools pause in Python (`can_use_tool`) until someone clicks Approve / Deny. Headless `query()` skips the UI and uses the same session/SDK path.
+The agent is **server-side**. The browser only sees Streamlit widgets. `panel()` (or `copilot_rail()` around it) polls a `CocoSession` worker via `@st.fragment`; `app_viewer()` is a separate child `streamlit run` in an iframe. The session talks to the Cortex Code Agent SDK, which runs the `cortex` CLI against your Snowflake account. Destructive tools pause in Python (`can_use_tool`) until someone clicks Approve / Deny. Headless `query()` skips the UI and uses the same session/SDK path.
 
 ```
-Browser  ──►  panel() / copilot_rail() / chat_input_bar()
+Browser  ──►  panel() / copilot_rail() / app_viewer() / chat_input_bar()
                   │  @st.fragment poll (app page does not rerun)
                   ▼
              CocoSession  (thread + asyncio, transcript + pending approval)
@@ -170,7 +172,7 @@ Legacy `chat()` is the same session, with a CCv2 frontend instead of native widg
 | Capability | Entry points |
 | --- | --- |
 | Native panel + approvals | `panel()`, `chat_input_bar()`, `render_approvals()` |
-| Copilot rail (right-column Copilot) | `copilot_rail()`, `transcript_view_pills()` — [`doc/features/copilot-rail/`](doc/features/copilot-rail/) |
+| Copilot rail (right-column Copilot) | `copilot_rail()`, `transcript_display_config()`, `example_questions=` — [`doc/features/copilot-rail/`](doc/features/copilot-rail/) |
 | App viewer (child Streamlit iframe) | `app_viewer()`, `default_fix_prompt()` — [`doc/features/app-viewer/`](doc/features/app-viewer/) |
 | Tool cards & AskUser / plan UI | see [`doc/features/tools-display/`](doc/features/tools-display/) |
 | Session & options | `CocoSession`, `CocoOptions`, `get_or_create_session` |
@@ -180,7 +182,7 @@ Legacy `chat()` is the same session, with a CCv2 frontend instead of native widg
 ```
 streamlit_coco/
 ├── ui.py            # panel(), send_prompt(), render_approvals()
-├── rail.py          # copilot_rail(), transcript_view_pills()
+├── rail.py          # copilot_rail(), transcript_display_config()
 ├── viewer.py        # app_viewer()
 ├── app_preview.py   # child Streamlit process helpers
 ├── session.py       # CocoSession worker + transcript
@@ -188,7 +190,7 @@ streamlit_coco/
 ├── query.py         # headless query()
 ├── component.py     # legacy chat() CCv2 mount
 └── frontend/        # static CCv2 assets
-examples/            # chat, backlog desk, BI → Semantic, …
+examples/            # chat, backlog desk, BI → Semantic, App Builder, …
 doc/                 # PRD, roadmap, feature specs
 ```
 

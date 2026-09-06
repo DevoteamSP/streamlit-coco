@@ -65,8 +65,8 @@ Sources are **not** copied into this folder until you load a pack.
 
 | Pack | Button | Punchline | Licence |
 |---|---|---|---|
-| Tableau Server | **Use MIT Tableau Server pack** | `ts_content.twb` + `ts_users.twb` — project-leader User Filter present vs dropped | **MIT © Tableau** — [`examples/tableau_legacy/`](../tableau_legacy/) |
-| Power BI Obvience | **Use MIT Power BI pack** | `Customer Profitability Sample (auto).pbix` + `Corporate Spend.pbix` — same `Fact` / `Scenario` / `Date` names, none agree | **MIT © Microsoft** — [`examples/powerbi_legacy/`](../powerbi_legacy/) |
+| Tableau Server | **Use MIT Tableau Server pack** | `ts_content.twb` + `ts_users.twb` — project-leader User Filter present vs dropped | **MIT © Tableau** — [`examples/bi_samples/tableau/`](../bi_samples/tableau/) |
+| Power BI Obvience | **Use MIT Power BI pack** | `Customer Profitability Sample (auto).pbix` + `Corporate Spend.pbix` — same `Fact` / `Scenario` / `Date` names, none agree | **MIT © Microsoft** — [`examples/bi_samples/powerbi/`](../bi_samples/powerbi/) |
 
 Uploads accept `.twb` / `.twbx` and `.pbix` / `.pbit` (plus TMDL / `report.json` fragments).
 

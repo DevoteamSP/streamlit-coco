@@ -17,6 +17,7 @@ Outreach drafts: [`../../../doc-dev/releases/0.1.7/`](../../../doc-dev/releases/
 - [x] **`pyproject.toml`** — `version = "0.1.7"`
 - [x] **`CHANGELOG.md`** — `[Unreleased]` → `## [0.1.7] — 2026-08-15`; empty subsections removed; fresh `[Unreleased]` left at top
 - [x] **`doc/roadmap.md`** — Status → `0.1.7`; App Builder moved to **`0.1.8`**; BI + App Viewer off **Now**
+- [x] **Public GitHub issues** — reviewed 2026-08-16: none fully closed; progress comments on [#10](https://github.com/DevoteamSP/streamlit-coco/issues/10), [#8](https://github.com/DevoteamSP/streamlit-coco/issues/8), [#11](https://github.com/DevoteamSP/streamlit-coco/issues/11), [#9](https://github.com/DevoteamSP/streamlit-coco/issues/9); App Builder (`0.1.8`) still needs a tracker
 - [x] **`doc/prd.md`** — Status / last-updated; `app_viewer()` in exec summary; FR-P9
 - [x] **`doc/api.md`** — `app_viewer`, preview helpers, `default_fix_prompt`, `title_extra`
 - [x] Feature docs: `app-viewer/`; BI example README/PRD
@@ -57,10 +58,10 @@ Follow [`doc/deployment/publish.md`](../../deployment/publish.md):
 
 | Channel | URL | Date |
 | --- | --- | --- |
-| GitHub Release (lletourmy) | | |
-| GitHub Release (DevoteamSP) | | |
-| PyPI | | |
-| LinkedIn | | |
+| GitHub Release (lletourmy) | | 2026-08-15 |
+| GitHub Release (DevoteamSP) | | 2026-08-15 |
+| PyPI | | 2026-08-15 |
+| LinkedIn | https://www.linkedin.com/feed/update/urn:li:activity:7500896297399287808/ | 09-02-2026|
 | Medium | | |
 | Streamlit Forum | | |
 | Snowflake Community | | |

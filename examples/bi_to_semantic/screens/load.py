@@ -297,7 +297,7 @@ def run() -> None:
             "MIT © Tableau · "
             "[community-tableau-server-insights]"
             "(https://github.com/tableau/community-tableau-server-insights). "
-            "Full set of four stays in `examples/tableau_legacy/`."
+            "Full set of four stays in `examples/bi_samples/tableau/`."
         )
         st.space("stretch")
         _mit_pack_popover(
@@ -317,7 +317,7 @@ def run() -> None:
         )
         st.caption(
             "MIT © Microsoft · no public RLS in these samples. "
-            "See `examples/powerbi_legacy/`."
+            "See `examples/bi_samples/powerbi/`."
         )
         st.space("stretch")
         _mit_pack_popover(
