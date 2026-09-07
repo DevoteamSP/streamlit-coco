@@ -2,10 +2,10 @@
 
 Living plan. Product detail: `[doc/prd.md](prd.md)`. Shipped history: `[CHANGELOG.md](../CHANGELOG.md)`.
 
-**Status:** Alpha `0.1.8` ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)). App Builder + rail UX shipped. Next: API mode.  
+**Status:** Alpha `0.1.8.1` ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)). Deferred rail starters shipped. Next: API mode.  
 **Publisher:** temporary Trusted Publisher on `[lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco)`; public tree also synced to `[DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco)`.  
-**Last updated:** 2026-09-06  
-**This cut:** `[releases/0.1.8/](releases/0.1.8/)`  
+**Last updated:** 2026-09-07  
+**This cut:** `[releases/0.1.8.1/](releases/0.1.8.1/)`  
 **Next cuts:** `0.2.0` local API (no CLI) → `0.2.5` Streamlit in Snowflake → `0.3.0` Native App
 
 > **Before every release:** complete `[releases/X.Y.Z/CHECKLIST.md](releases/README.md)` (CHANGELOG, this roadmap, PRD, screenshots, [public issues](https://github.com/DevoteamSP/streamlit-coco/issues)) and outreach under `[../doc-dev/releases/](../doc-dev/releases/README.md)`, then `[deployment/publish.md](deployment/publish.md)`.
@@ -58,8 +58,23 @@ Shipped `2026-09-06`. First-party example + rail knobs. Publisher switch and FR-
 | Profile step + `infer:` — deterministic pandas for tabular / semantic-view (KPI demo fixture). Agent-run profile for documents/URLs (UC9) is later. | ✅ tabular / semantic-view | [UX §4](features/app-builder/UX.md) · `engine/profile.py` |
 | Guidelines skills — shared pack + per-type `SKILL.md`; KPI has reference app + `CHECKLIST.md` + one automatic self-check pass after Write | ✅ | `types/shared/` · `types/semantic-kpis/` · [UX §6.1a](features/app-builder/UX.md) |
 | Live types — KPI presentation, Data quality, Call transcription, Meeting recap, Prompt library, CSV explorer. `doc-compare` and every `urls` type are later. | ✅ | [UX §5.3](features/app-builder/UX.md#53-catalog-content) |
-| Example questions on the Copilot rail — after Connect, starter buttons (`title` + `question`); hover shows the full question; click sends that text to CoCo. Hidden after the first turn or while a job is present. | ✅ | `[features/copilot-rail/](features/copilot-rail/copilot-rail.md)` · [`example_questions`](api.md#copilot_railsession--titlecopilot--) |
+| Example questions on the Copilot rail — after Connect, starter buttons (`title` + `question`); hover shows the full question; click sends that text to CoCo (or fills the chat input when `deferred=`). Hidden after the first turn or while a job is present. | ✅ | `[features/copilot-rail/](features/copilot-rail/copilot-rail.md)` · [`example_questions`](api.md#copilot_railsession--titlecopilot--) |
 | Display config popover — icon-only Material button (`:material/display_settings:`); Last messages / First *n* characters pills + sliders; fragment-rerun keeps the popover open. Helper: `transcript_display_config()` | ✅ | `[features/copilot-rail/](features/copilot-rail/copilot-rail.md)` · [`transcript_display_config`](api.md) |
+
+
+---
+
+
+
+## v0.1.8.1 — Deferred example questions
+
+Shipped `2026-09-07`. Patch on the `0.1.8` rail starters. Publisher switch and FR-S2 stay on `0.2.0`.
+
+
+| Item | Status | Ref |
+| ---- | ------ | --- |
+| `copilot_rail(..., deferred=True)` — click copies the question into the chat input and does not run it. Per-item `deferred` on `{title, question}` (or a 3-tuple). Default remains send-on-click. | ✅ | `[features/copilot-rail/](features/copilot-rail/copilot-rail.md)` · [`deferred`](api.md#copilot_railsession--titlecopilot--) |
+| BI → Semantic opts in (`deferred=True`). App Builder still sends on click. | ✅ | `make bi-semantic` |
 
 
 ---

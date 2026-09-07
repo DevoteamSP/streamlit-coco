@@ -1,7 +1,7 @@
 # API reference — streamlit-coco
 
 Public surface exported from `import streamlit_coco as st_coco`.  
-Alpha `0.1.8` — signatures may still move; prefer this page over the PRD sketch.
+Alpha `0.1.8.1` — signatures may still move; prefer this page over the PRD sketch.
 
 **Related:** [README quickstart](../README.md) · [Local deployment](deployment/local.md) · [Feature docs](features/README.md) · [SDK docs](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
 
@@ -183,7 +183,8 @@ status card).
 | `on_job_finished` | `None` | Called when that turn ends (`COMPLETED` / `ERROR` / `CANCELLED`, or `READY` after a run) so the app can drop the job |
 | `show_copy` | `False` | Clipboard controls off for demo rails |
 | `show_transcript_filters` | `True` | Icon-only **Display config** popover (pills + sliders) |
-| `example_questions` | `None` | After Connect, starter buttons on an empty transcript. Each item is `{title, question}` (or a `(title, question)` pair). Hover shows the question; click sends it. Hidden once a user/assistant turn or a job is present |
+| `example_questions` | `None` | After Connect, starter buttons on an empty transcript. Each item is `{title, question}` (or a `(title, question)` pair). Hover shows the question; click sends it unless `deferred`. Hidden once a user/assistant turn or a job is present |
+| `deferred` | `False` | When `True`, clicking an example question copies the prompt into the chat input and does not run it. Per-item override: `{"title", "question", "deferred": True}` (or a `(title, question, deferred)` triple) |
 
 ### `transcript_display_config(*, key=…, last_n=8, preview_chars=200) -> tuple[int \| None, int \| None]`
 
@@ -405,7 +406,7 @@ Tool card UX: [`features/tools-display/SPEC.md`](features/tools-display/SPEC.md)
 ## Package metadata
 
 ```python
-st_coco.__version__  # e.g. "0.1.8"
+st_coco.__version__  # e.g. "0.1.8.1"
 ```
 
 Private modules (`bridge`, `tool_cards`, `tool_extract`, …) are implementation details and are not part of the stable public surface.

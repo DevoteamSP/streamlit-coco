@@ -12,6 +12,18 @@ Living plan (what’s next): [`doc/roadmap.md`](doc/roadmap.md).
 
 ## [Unreleased]
 
+## [0.1.8.1] — 2026-09-07
+
+Copilot rail starters can fill the chat input without sending.
+
+### Added
+
+- Copilot rail **deferred example questions** — `copilot_rail(..., deferred=True)` copies the question into the chat input on click instead of sending it. Per-item override: `{"title", "question", "deferred": True}` (or a `(title, question, deferred)` triple). Starters stay visible until a turn is actually sent.
+
+### Changed
+
+- BI → Semantic (`make bi-semantic`) passes `deferred=True` so starter clicks fill the input for edit-then-send. App Builder still sends on click.
+
 ## [0.1.8] — 2026-09-06
 
 App Builder for business users, plus rail starter questions and Display config.

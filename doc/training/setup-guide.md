@@ -79,7 +79,7 @@ response with tool cards.
 
 ## Verification checklist — you're ready when...
 
-- [ ] `uv run python -c "import streamlit_coco as c; print(c.__version__)"` prints `0.1.8`
+- [ ] `uv run python -c "import streamlit_coco as c; print(c.__version__)"` prints `0.1.8.1`
 - [ ] `cortex --version` succeeds
 - [ ] `check_environment(...).ready` is `True`
 - [ ] `make check` passes with no failures

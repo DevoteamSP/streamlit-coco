@@ -225,4 +225,5 @@ def render_copilot_rail() -> None:
         ),
         input_placeholder=placeholder,
         example_questions=EXAMPLE_QUESTIONS,
+        deferred=True,
     )

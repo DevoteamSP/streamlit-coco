@@ -42,7 +42,7 @@ Exploratory prompts: [`examples/testdata/`](../../examples/testdata/).
 | UI golden path — tools-display | **Pass (core)** (2026-07-27) | [`tools-display/test-checklist.md`](tools-display/test-checklist.md) — Glob/Grep/Read/Write/Edit live; SQL/AskUser/plan/debug deferred |
 | UI golden path — structured-output | **Pass (core)** (2026-07-27) | [`structured-output/test-checklist.md`](structured-output/test-checklist.md) — `make structured` + `output_schema` live |
 | UI golden path — chat-ccv2 | **Pass** (2026-07-27) | [`chat-ccv2/test-checklist.md`](chat-ccv2/test-checklist.md) — `make approval` live |
-| UI golden path — copilot-rail | **Pending** (`0.1.6`) | [`copilot-rail/test-checklist.md`](copilot-rail/test-checklist.md) — `make bi-semantic` |
+| UI golden path — copilot-rail | **Pending** (`0.1.8.1` deferred step) | [`copilot-rail/test-checklist.md`](copilot-rail/test-checklist.md) — `make bi-semantic` (step 2b-deferred) |
 | UI golden path — app-viewer | **Pending** (`0.1.7`) | [`app-viewer/test-checklist.md`](app-viewer/test-checklist.md) — `make bi-semantic` |
 | UI golden path — app-builder | **Automated** (`0.1.8`) | [`app-builder/test-checklist.md`](app-builder/test-checklist.md) — `make test-all` 2026-09-06; live CoCo sign-off still open |
 

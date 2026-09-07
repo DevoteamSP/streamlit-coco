@@ -18,6 +18,7 @@
 | 2 | Connect | Environment status; Copilot ready caption. If the app passed `example_questions`, starter buttons appear under the empty transcript (title on the button) |
 | 2a | Hover a starter button | Tooltip shows the **question** text (not just the title) |
 | 2b | Click a starter | The question is sent as a user turn; starters hide; CoCo runs |
+| 2b-deferred | Click a starter with `deferred=True` (rail or item) | The question text appears in the chat input and is **not** sent. Starters stay visible. Submit from the input to run |
 | 2c | Clear chat | Transcript empty; starter buttons return |
 | 3 | Open the icon-only **Display config** popover (Material `display_settings`, no label) | Pills **Last messages** / **First n characters** plus two sliders. Hover on the icon shows **Display config**. No **Transcript** heading on the rail |
 | 4 | Leave both pills on (default) | Only recent turns (default 8); user/assistant text capped at 200 chars |

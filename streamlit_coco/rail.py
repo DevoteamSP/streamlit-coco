@@ -9,7 +9,7 @@ Named ``rail.py`` so ``st_coco.copilot_rail`` is the function, not this module.
 from __future__ import annotations
 
 import re
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Mapping, MutableMapping, Sequence
 from typing import Any
 
 import streamlit as st
@@ -29,6 +29,7 @@ FILTER_LAST = "Last messages"
 FILTER_SHORT = "First n characters"
 PATH_DISPLAY_LIMIT = 100
 DISPLAY_CONFIG_ICON = ":material/display_settings:"
+EXAMPLE_DRAFT_KEY_SUFFIX = "_example_draft"
 
 
 def ellipsize_middle(text: str, limit: int = PATH_DISPLAY_LIMIT) -> str:
@@ -93,26 +94,59 @@ def resolve_transcript_view(
     return max_messages, chars
 
 
+def example_draft_key(key_prefix: str) -> str:
+    """Session-state key that holds a deferred example prompt until chat input renders."""
+    return f"{key_prefix}{EXAMPLE_DRAFT_KEY_SUFFIX}"
+
+
+def apply_example_question_draft(
+    state: MutableMapping[str, Any],
+    key_prefix: str,
+    *,
+    input_key: str,
+) -> str | None:
+    """Move a deferred example prompt into the chat-input widget key.
+
+    ``st.chat_input`` treats a session-state write as a field prefill, not a
+    submit — the user still has to send.
+    """
+    draft = state.pop(example_draft_key(key_prefix), None)
+    if not isinstance(draft, str):
+        return None
+    text = draft.strip()
+    if not text:
+        return None
+    state[input_key] = text
+    return text
+
+
 def normalize_example_questions(
     items: Sequence[Mapping[str, Any] | Sequence[Any]] | None,
-) -> list[tuple[str, str]]:
-    """Return ``(title, question)`` pairs, skipping empty or incomplete items."""
+    *,
+    deferred: bool = False,
+) -> list[tuple[str, str, bool]]:
+    """Return ``(title, question, deferred)`` triples, skipping empty items."""
     if not items:
         return []
-    out: list[tuple[str, str]] = []
+    out: list[tuple[str, str, bool]] = []
     for raw in items:
         title = ""
         question = ""
+        item_deferred = deferred
         if isinstance(raw, Mapping):
             title = str(raw.get("title") or "").strip()
             question = str(raw.get("question") or "").strip()
+            if "deferred" in raw:
+                item_deferred = bool(raw.get("deferred"))
         elif isinstance(raw, (str, bytes)):
             continue
         elif isinstance(raw, Sequence) and len(raw) >= 2:
             title = str(raw[0] or "").strip()
             question = str(raw[1] or "").strip()
+            if len(raw) >= 3:
+                item_deferred = bool(raw[2])
         if title and question:
-            out.append((title, question))
+            out.append((title, question, item_deferred))
     return out
 
 
@@ -267,6 +301,7 @@ def copilot_rail(
     input_placeholder: str = "Ask CoCo…",
     status_caption: str | None = None,
     example_questions: Sequence[Mapping[str, Any] | Sequence[Any]] | None = None,
+    deferred: bool = False,
     render_environment: Callable[..., Any] | None = None,
 ) -> None:
     """Render a Copilot column: connection, job, transcript, chat input.
@@ -278,7 +313,9 @@ def copilot_rail(
 
     After Connect, ``example_questions`` (``title`` + ``question``) render as
     starter buttons on an empty transcript. Hover shows the question; click
-    sends it. They hide once a user/assistant turn or a job is present.
+    sends it unless ``deferred`` is true (or the item sets ``deferred``), in
+    which case the question is copied into the chat input and not run. They
+    hide once a user/assistant turn or a job is present.
     """
     import streamlit_coco as st_coco
 
@@ -394,6 +431,7 @@ def copilot_rail(
                 session,
                 example_questions,
                 key_prefix=key_prefix,
+                deferred=deferred,
             )
 
     _copilot_live()
@@ -408,10 +446,12 @@ def copilot_rail(
                 ):
                     on_clear()
                     st.rerun()
+        input_key = f"{key_prefix}_input"
+        apply_example_question_draft(st.session_state, key_prefix, input_key=input_key)
         st_coco.chat_input_bar(
             session,
             placeholder=input_placeholder,
-            key=f"{key_prefix}_input",
+            key=input_key,
         )
 
 
@@ -420,14 +460,15 @@ def _render_example_questions(
     items: Sequence[Mapping[str, Any] | Sequence[Any]] | None,
     *,
     key_prefix: str,
+    deferred: bool = False,
 ) -> None:
-    pairs = normalize_example_questions(items)
+    pairs = normalize_example_questions(items, deferred=deferred)
     if not pairs:
         return
     failed_boot = session.status == CocoRunStatus.ERROR and not session.is_ready
     disabled = session.is_running or failed_boot
     with st.container(horizontal=True, gap="small"):
-        for index, (title, question) in enumerate(pairs):
+        for index, (title, question, item_deferred) in enumerate(pairs):
             if st.button(
                 title,
                 key=f"{key_prefix}_example_{index}",
@@ -436,7 +477,10 @@ def _render_example_questions(
                 width="content",
                 disabled=disabled,
             ):
-                send_prompt(session, question)
+                if item_deferred:
+                    st.session_state[example_draft_key(key_prefix)] = question
+                else:
+                    send_prompt(session, question)
                 st.rerun()
 
 

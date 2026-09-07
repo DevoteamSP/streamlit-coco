@@ -9,6 +9,8 @@ from streamlit_coco.rail import (
     FILTER_SHORT,
     LAST_MESSAGES_N,
     PREVIEW_CHARS_N,
+    apply_example_question_draft,
+    example_draft_key,
     example_questions_visible,
     normalize_example_questions,
     resolve_transcript_view,
@@ -138,9 +140,44 @@ def test_normalize_example_questions() -> None:
             "bare-string",
         ]
     ) == [
-        ("List files", "What is in cwd?"),
-        ("Hover me", "Send this"),
+        ("List files", "What is in cwd?", False),
+        ("Hover me", "Send this", False),
     ]
+
+
+def test_normalize_example_questions_deferred_default() -> None:
+    assert normalize_example_questions(
+        [{"title": "List files", "question": "What is in cwd?"}],
+        deferred=True,
+    ) == [("List files", "What is in cwd?", True)]
+
+
+def test_normalize_example_questions_per_item_deferred() -> None:
+    assert normalize_example_questions(
+        [
+            {"title": "Fill me", "question": "Edit then send", "deferred": True},
+            {"title": "Run me", "question": "Send now", "deferred": False},
+            ("Tuple fill", "From a pair", True),
+        ],
+        deferred=False,
+    ) == [
+        ("Fill me", "Edit then send", True),
+        ("Run me", "Send now", False),
+        ("Tuple fill", "From a pair", True),
+    ]
+
+
+def test_apply_example_question_draft() -> None:
+    state: dict[str, object] = {
+        example_draft_key("coco_rail"): "  List the files  ",
+    }
+    assert (
+        apply_example_question_draft(state, "coco_rail", input_key="coco_rail_input")
+        == "List the files"
+    )
+    assert state["coco_rail_input"] == "List the files"
+    assert example_draft_key("coco_rail") not in state
+    assert apply_example_question_draft(state, "coco_rail", input_key="coco_rail_input") is None
 
 
 def test_example_questions_visible_after_connect() -> None:

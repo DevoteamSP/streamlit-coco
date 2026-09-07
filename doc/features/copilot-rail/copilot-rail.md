@@ -3,7 +3,7 @@
 Reusable right-rail Copilot for Streamlit apps: connection, queued jobs,
 transcript compactness, `panel()`, and `chat_input_bar()`.
 
-**Status:** Shipped in **`0.1.6`**. Example questions + Display config popover in **`0.1.8`**.
+**Status:** Shipped in **`0.1.6`**. Example questions + Display config popover in **`0.1.8`**. `deferred=` example questions in **`0.1.8.1`**.
 
 ## What
 
@@ -13,7 +13,7 @@ transcript compactness, `panel()`, and `chat_input_bar()`.
 2. Connection popover with an icon-only **Display config** popover beside it (`:material/display_settings:`, no label; hover = **Display config**). While CoCo is busy, a compact **Working · thinking…** (or tool / needs-input) badge sits on that same row — not a tall status card.
 3. Active job caption
 4. `panel()` (approvals, stream, stop)
-5. After Connect, on an empty transcript: **example question** buttons (`title` on the button, `question` on hover). Click sends the question to CoCo. They hide after the first user/assistant turn or while a job is queued.
+5. After Connect, on an empty transcript: **example question** buttons (`title` on the button, `question` on hover). Click sends the question to CoCo, or — with `deferred=True` — copies it into the chat input without running it. They hide after the first user/assistant turn or while a job is queued.
 6. Chat input
 
 `transcript_display_config()` is the rail control: pills plus sliders for
@@ -55,7 +55,13 @@ st_coco.copilot_rail(
     show_transcript_filters=True,
     example_questions=[
         {"title": "List the files", "question": "What files are in cwd?"},
+        {
+            "title": "Draft a SQL check",
+            "question": "Write a query that counts rows in MY_TABLE.",
+            "deferred": True,
+        },
     ],
+    deferred=False,  # True: every starter fills the chat input instead of sending
 )
 ```
 
@@ -76,8 +82,11 @@ so the transcript updates live.
 
 Example questions (opt-in via `example_questions=`): after Connect, starter
 buttons sit under the empty transcript. Hover shows the full question; click
-calls `send_prompt`. They disappear once a turn starts, the chat has a user
-or assistant message, or a job is present, and return after **Clear chat**.
+calls `send_prompt` unless `deferred=True` (rail-wide) or the item sets
+`deferred`. Deferred clicks copy the question into `chat_input_bar` and do
+not run it — the user can edit, then submit. Starters disappear once a turn
+starts, the chat has a user or assistant message, or a job is present, and
+return after **Clear chat**. A deferred click does not hide them.
 
 ## Limitations
 
@@ -87,7 +96,7 @@ or assistant message, or a job is present, and return after **Clear chat**.
   `panel()` still has its own streaming fragment so the icon stays clickable
   while CoCo runs.
 - Tool cards are not character-truncated (they are already compact expanders).
-- Version tag for this API is **`0.1.6`** (`pip install "streamlit-coco[sdk]==0.1.6"`).
+- Version tag for this API is **`0.1.8.1`** (`pip install "streamlit-coco[sdk]==0.1.8.1"`). Rail chrome shipped in `0.1.6`; example questions in `0.1.8`; `deferred=` in `0.1.8.1`.
 
 ## Related
 

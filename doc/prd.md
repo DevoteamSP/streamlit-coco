@@ -3,8 +3,8 @@
 **Product:** `streamlit-coco` — a Streamlit component and Python library for embedding [Snowflake CoCo](https://www.snowflake.com/en/product/snowflake-coco/) (formerly Cortex Code) in Streamlit applications.
 
 **Author:** —  
-**Status:** Alpha `0.1.8` (Phase 3 shipped; PyPI cuts through `0.1.8` App Builder; next [roadmap](roadmap.md) cut **`0.2.0`** API mode, then `0.2.5` / `0.3.0`)  
-**Last updated:** 2026-09-06
+**Status:** Alpha `0.1.8.1` (Phase 3 shipped; PyPI cuts through `0.1.8.1` deferred rail starters; next [roadmap](roadmap.md) cut **`0.2.0`** API mode, then `0.2.5` / `0.3.0`)  
+**Last updated:** 2026-09-07
 
 ---
 
@@ -266,7 +266,7 @@ if prompt:
 | FR-P5 | `use_fragment=True` + `run_every` polling while `needs_polling` | ✅ |
 | FR-P6 | `on_structured_output` / `structured_output_container` (same rules as §6.6) | ✅ |
 | FR-P7 | CoCo branding in labels / empty states | ✅ |
-| FR-P8 | Optional `copilot_rail()` — connection, queued jobs, compact transcript, example-question starters around `panel()` | ✅ `0.1.6`; example questions `0.1.8` |
+| FR-P8 | Optional `copilot_rail()` — connection, queued jobs, compact transcript, example-question starters around `panel()` | ✅ `0.1.6`; example questions `0.1.8`; `deferred=` `0.1.8.1` |
 | FR-P9 | Optional `app_viewer()` — child Streamlit process, iframe, Fix with CoCo via `on_fix` | ✅ `0.1.7` |
 
 #### 6.1.5 Legacy Streamlit component — `st_coco.chat()`
@@ -598,11 +598,11 @@ Legacy CCv2 `chat()` keeps an all-in-one panel (header, transcript, approval car
 
 - [x] README + Makefile + GitHub repos (`streamlit-coco-dev` + public `streamlit-coco`)
 - [ ] Theming / a11y pass (keyboard traps, ARIA) — Later / FR-S2
-- [x] PyPI publish `0.1.0` (2026-08-06); follow-ups `0.1.5`, `0.1.6`, `0.1.7`, `0.1.8`
-- [x] Native `copilot_rail()` + Tableau → Semantic example (`0.1.6`); **`app_viewer()`** + **BI → Semantic** Power BI (`0.1.7`); **App Builder** (`0.1.8`)
+- [x] PyPI publish `0.1.0` (2026-08-06); follow-ups `0.1.5`, `0.1.6`, `0.1.7`, `0.1.8`, `0.1.8.1`
+- [x] Native `copilot_rail()` + Tableau → Semantic example (`0.1.6`); **`app_viewer()`** + **BI → Semantic** Power BI (`0.1.7`); **App Builder** (`0.1.8`); **`deferred=`** rail starters (`0.1.8.1`)
 - [ ] Deployment docs beyond local (Docker, SPCS)
 
-**Current:** Alpha `0.1.8`; Phase 3 complete; Phase 4 polish continues. Living plan: [`roadmap.md`](roadmap.md).
+**Current:** Alpha `0.1.8.1`; Phase 3 complete; Phase 4 polish continues. Living plan: [`roadmap.md`](roadmap.md).
 
 ---
 
