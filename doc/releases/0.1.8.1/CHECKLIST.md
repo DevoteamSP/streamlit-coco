@@ -2,8 +2,8 @@
 
 **Owner:** streamlit-coco maintainers  
 **Target tag date:** 2026-09-07  
-**GitHub Release (publisher):** _(fill after)_  
-**GitHub Release (org mirror):** _(fill after)_  
+**GitHub Release (publisher):** https://github.com/lletourmy/streamlit-coco/releases/tag/v0.1.8.1  
+**GitHub Release (org mirror):** https://github.com/DevoteamSP/streamlit-coco/releases/tag/v0.1.8.1  
 **PyPI:** https://pypi.org/project/streamlit-coco/0.1.8.1/
 
 Do not run `make sync-release` / tag `v0.1.8.1` until Product docs + QA are done. Marketing can ship the same day or within 48h.
@@ -40,11 +40,11 @@ Outreach drafts: [`../../../doc-dev/releases/0.1.8.1/`](../../../doc-dev/release
 
 Follow [`doc/deployment/publish.md`](../../deployment/publish.md):
 
-- [ ] Merge to `-dev` `main`
-- [ ] `COMMIT=1 PUSH=1 MESSAGE="Release 0.1.8.1" make sync-release`
-- [ ] Tag `v0.1.8.1` on public `streamlit-coco` and push
-- [ ] Confirm GitHub Release + PyPI wheel; SBOM asset if workflow attaches it
-- [ ] GitHub Release body: CHANGELOG excerpt + screenshot if captured
+- [x] Merge to `-dev` `main`
+- [x] `COMMIT=1 PUSH=1 MESSAGE="Release 0.1.8.1" make sync-release`
+- [x] Tag `v0.1.8.1` on public `streamlit-coco` and push
+- [x] Confirm GitHub Release + PyPI wheel; SBOM asset if workflow attaches it
+- [ ] GitHub Release body: CHANGELOG excerpt + screenshot if captured (notes from CHANGELOG; screenshots still outstanding)
 
 ## 5. Narrative & outreach (strongly recommended — `doc-dev`)
 
@@ -58,9 +58,9 @@ Follow [`doc/deployment/publish.md`](../../deployment/publish.md):
 
 | Channel | URL | Date |
 | --- | --- | --- |
-| GitHub Release (lletourmy) | | |
-| GitHub Release (DevoteamSP) | | |
-| PyPI | | |
+| GitHub Release (lletourmy) | https://github.com/lletourmy/streamlit-coco/releases/tag/v0.1.8.1 | 2026-09-07 |
+| GitHub Release (DevoteamSP) | https://github.com/DevoteamSP/streamlit-coco/releases/tag/v0.1.8.1 | 2026-09-07 |
+| PyPI | https://pypi.org/project/streamlit-coco/0.1.8.1/ | 2026-09-07 |
 | LinkedIn | | |
 | Medium | | |
 | Streamlit Forum | | |
