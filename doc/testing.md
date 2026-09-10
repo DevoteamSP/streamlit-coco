@@ -44,7 +44,7 @@ Exploratory prompts: [`examples/testdata/prompts.json`](../examples/testdata/pro
 
 ## Release hygiene
 
-Before tagging (`make sync-release` / `v*`), complete the version kit under [`releases/`](releases/README.md) (e.g. [`releases/0.1.8.1/CHECKLIST.md`](releases/0.1.8.1/CHECKLIST.md)):
+Before tagging (`make sync-release` / `v*`), complete the version kit under [`releases/`](releases/README.md) (e.g. [`releases/0.1.9/CHECKLIST.md`](releases/0.1.9/CHECKLIST.md)):
 
 1. `make test-all`
 2. Manual checklist pass for touched features

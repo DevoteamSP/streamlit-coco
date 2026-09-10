@@ -15,6 +15,7 @@
 | # | Step | Expected |
 | --- | --- | --- |
 | 1 | Open an app that mounts `copilot_rail` disconnected | Connection popover; no session |
+| 1a | Open Connection | **Config file** and **Connection** selectboxes sit on one row. One `~/.snowflake/*.toml` → one config option; several → pick among them. Profiles and the environment probe follow the selected file |
 | 2 | Connect | Environment status; Copilot ready caption. If the app passed `example_questions`, starter buttons appear under the empty transcript (title on the button) |
 | 2a | Hover a starter button | Tooltip shows the **question** text (not just the title) |
 | 2b | Click a starter | The question is sent as a user turn; starters hide; CoCo runs |

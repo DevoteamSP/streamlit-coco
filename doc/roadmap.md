@@ -2,10 +2,10 @@
 
 Living plan. Product detail: `[doc/prd.md](prd.md)`. Shipped history: `[CHANGELOG.md](../CHANGELOG.md)`.
 
-**Status:** Alpha `0.1.8.1` ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)). Deferred rail starters shipped. Next: API mode.  
+**Status:** Alpha `0.1.9` ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)). Rail TOML picker shipped. Next: API mode.  
 **Publisher:** temporary Trusted Publisher on `[lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco)`; public tree also synced to `[DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco)`.  
-**Last updated:** 2026-09-07  
-**This cut:** `[releases/0.1.8.1/](releases/0.1.8.1/)`  
+**Last updated:** 2026-09-10  
+**This cut:** `[releases/0.1.9/](releases/0.1.9/)`  
 **Next cuts:** `0.2.0` local API (no CLI) → `0.2.5` Streamlit in Snowflake → `0.3.0` Native App
 
 > **Before every release:** complete `[releases/X.Y.Z/CHECKLIST.md](releases/README.md)` (CHANGELOG, this roadmap, PRD, screenshots, [public issues](https://github.com/DevoteamSP/streamlit-coco/issues)) and outreach under `[../doc-dev/releases/](../doc-dev/releases/README.md)`, then `[deployment/publish.md](deployment/publish.md)`.
@@ -75,6 +75,21 @@ Shipped `2026-09-07`. Patch on the `0.1.8` rail starters. Publisher switch and F
 | ---- | ------ | --- |
 | `copilot_rail(..., deferred=True)` — click copies the question into the chat input and does not run it. Per-item `deferred` on `{title, question}` (or a 3-tuple). Default remains send-on-click. | ✅ | `[features/copilot-rail/](features/copilot-rail/copilot-rail.md)` · [`deferred`](api.md#copilot_railsession--titlecopilot--) |
 | BI → Semantic opts in (`deferred=True`). App Builder still sends on click. | ✅ | `make bi-semantic` |
+
+
+---
+
+
+
+## v0.1.9 — Connections TOML picker
+
+Shipped `2026-09-10`. Rail connection popover can choose which Snowflake TOML to list. Publisher switch and FR-S2 stay on `0.2.0`.
+
+
+| Item | Status | Ref |
+| ---- | ------ | --- |
+| `copilot_rail(..., toml_file=)` — Config file + Connection selectboxes on one row. Lists `~/.snowflake/*.toml`. A single file is used whatever its name. | ✅ | `[features/copilot-rail/](features/copilot-rail/copilot-rail.md)` · [`toml_file`](api.md#copilot_railsession--titlecopilot--) |
+| Helpers `list_snowflake_connections()`, `list_snowflake_toml_files()`, `resolve_snowflake_config_path()`. App Builder / BI → Semantic use the picker. | ✅ | `make app-builder` · `make bi-semantic` |
 
 
 ---

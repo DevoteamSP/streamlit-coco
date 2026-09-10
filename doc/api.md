@@ -1,7 +1,7 @@
 # API reference — streamlit-coco
 
 Public surface exported from `import streamlit_coco as st_coco`.  
-Alpha `0.1.8.1` — signatures may still move; prefer this page over the PRD sketch.
+Alpha `0.1.9` — signatures may still move; prefer this page over the PRD sketch.
 
 **Related:** [README quickstart](../README.md) · [Local deployment](deployment/local.md) · [Feature docs](features/README.md) · [SDK docs](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
 
@@ -176,7 +176,8 @@ status card).
 | --- | --- | --- |
 | `session` | — | `CocoSession` or `None` until connected |
 | `connected` | `True` | Whether Connect has been confirmed |
-| `connections` | `None` | Snowflake connection names for the popover |
+| `connections` | `None` | Extra connection names prepended on the popover (e.g. from `st.secrets`). Profiles from the selected TOML always appear |
+| `toml_file` | `None` | Default for the **Config file** selectbox (beside **Connection** on one row). A bare name is looked up under `~/.snowflake/`; a path is used as given |
 | `on_connect` / `on_disconnect` | `None` | Callbacks; omit to hide the popover |
 | `job` | `None` | `{prompt, label, status, expect_structured, …}` |
 | `on_job_sent` | `None` | Called after a queued prompt is `session.send`'d |
@@ -288,7 +289,7 @@ Low-level resolve for custom approval UIs.
 
 | Function | Role |
 | --- | --- |
-| `render_environment_status(env=None, *, connection=None, stacked=False, show_title=True)` | SDK / CLI / Snowflake probe UI |
+| `render_environment_status(env=None, *, connection=None, toml_file=None, stacked=False, show_title=True)` | SDK / CLI / Snowflake probe UI |
 | `render_start_gate(options, *, session_key=…, gate_key=…, warm_up=True, env=None) -> bool` | Landing screen; `False` → call `st.stop()` |
 
 ---
@@ -358,14 +359,26 @@ Flatten events for audit views (requires pandas).
 
 ## Environment & errors
 
-### `check_environment(*, connection=None, cli_path=None) -> CocoEnvironment`
+### `check_environment(*, connection=None, cli_path=None, toml_file=None) -> CocoEnvironment`
 
 Probe without starting an agent. Does not raise.
 
-`CocoEnvironment` fields: `sdk_installed`, `sdk_version`, `cli_path`, `cli_version`, `snowflake_config_file`, `connection_hint`.  
-Properties: `ready`, `cli_ok`, `snowflake_config_found`, `snowflake_config_display`.
+`CocoEnvironment` fields: `sdk_installed`, `sdk_version`, `cli_path`, `cli_version`, `snowflake_config_file`, `connection_hint`, `toml_file`.  
+Properties: `ready`, `cli_ok`, `snowflake_config_found`, `snowflake_config_display`, `snowflake_config_missing_label`.
 
-### `require_environment(*, connection=None, cli_path=None, require_snowflake_config=False) -> CocoEnvironment`
+`toml_file` is a Snowflake connections TOML filename under `~/.snowflake/` or a path. When omitted, the only `*.toml` in that directory is used whatever its name; if several exist, `connections.toml` is preferred, then `config.toml`.
+
+### `list_snowflake_toml_files() -> list[Path]`
+
+`*.toml` files under `~/.snowflake/`, with `connections.toml` then `config.toml` first, then the rest alphabetically.
+
+### `list_snowflake_connections(toml_file=None) -> list[str]`
+
+Connection profile names from that TOML. Bare names resolve under `~/.snowflake/`. Legacy `config.toml` is read from the `[connections]` table; other files use top-level tables.
+
+Helpers: `resolve_snowflake_config_path(toml_file=None, *, must_exist=True)`, `default_snowflake_connection_name(toml_file=None)`.
+
+### `require_environment(*, connection=None, cli_path=None, toml_file=None, require_snowflake_config=False) -> CocoEnvironment`
 
 Like `check_environment`, but raises typed errors when SDK/CLI (and optionally Snowflake config) are missing.
 
@@ -406,7 +419,7 @@ Tool card UX: [`features/tools-display/SPEC.md`](features/tools-display/SPEC.md)
 ## Package metadata
 
 ```python
-st_coco.__version__  # e.g. "0.1.8.1"
+st_coco.__version__  # e.g. "0.1.9"
 ```
 
 Private modules (`bridge`, `tool_cards`, `tool_extract`, …) are implementation details and are not part of the stable public surface.

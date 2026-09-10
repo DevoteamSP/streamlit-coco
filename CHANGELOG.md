@@ -12,6 +12,14 @@ Living plan (what’s next): [`doc/roadmap.md`](doc/roadmap.md).
 
 ## [Unreleased]
 
+## [0.1.9] — 2026-09-10
+
+Copilot rail can pick which Snowflake connections TOML to use.
+
+### Added
+
+- Copilot rail **Config file** + **Connection** selectboxes on one row — the connection popover lists `~/.snowflake/*.toml`. A single file is still listed (one option). `toml_file=` sets the default. Profile names come from the selected file. Helpers: `list_snowflake_connections()`, `list_snowflake_toml_files()`, `resolve_snowflake_config_path()`.
+
 ## [0.1.8.1] — 2026-09-07
 
 Copilot rail starters can fill the chat input without sending.

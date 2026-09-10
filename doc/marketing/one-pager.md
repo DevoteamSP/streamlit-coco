@@ -17,7 +17,7 @@ Teams building Streamlit apps on Snowflake need AI-assisted data exploration, co
 | Capability | What it does |
 |-----------|--------------|
 | `panel()` | Streaming agent transcript with tool cards (SQL, Read, Write, Grep) |
-| `copilot_rail()` | Right-rail Copilot: connection, queued jobs, compact transcript; `example_questions=` / `deferred=` (`0.1.8` / `0.1.8.1`) |
+| `copilot_rail()` | Right-rail Copilot: connection, queued jobs, compact transcript; `example_questions=` / `deferred=` / `toml_file=` (`0.1.8` / `0.1.8.1` / `0.1.9`) |
 | `app_viewer()` | Child Streamlit process + iframe + **Fix with CoCo** (`0.1.7`) |
 | App Builder | Type library → brief → CoCo Write → Preview (`0.1.8`, `make app-builder`) |
 | Approval gates | Human-in-the-loop pause before destructive tools execute |
@@ -81,7 +81,7 @@ streamlit run app.py
 
 | | |
 |---|---|
-| **Level** | N0 (Alpha `0.1.8.1`) — targeting N1 |
+| **Level** | N0 (Alpha `0.1.9`) — targeting N1 |
 | **License** | Apache-2.0 |
 | **Owner** | Laurent Letourmy — Devoteam Snowflake Partner |
 | **Repo** | [github.com/DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco) |

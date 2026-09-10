@@ -50,9 +50,9 @@ cp -R doc-dev/releases/_template/. "doc-dev/releases/${VER}/"
 ```
 
 - Public checklist: [`doc/releases/`](../releases/README.md) → `doc/releases/X.Y.Z/CHECKLIST.md`  
-  (current: [`doc/releases/0.1.8.1/`](../releases/0.1.8.1/))
+  (current: [`doc/releases/0.1.9/`](../releases/0.1.9/))
 - Outreach (LinkedIn / Medium / community): [`doc-dev/releases/`](../../doc-dev/releases/README.md)  
-  (current: [`doc-dev/releases/0.1.8.1/`](../../doc-dev/releases/0.1.8.1/)) — **never synced** to the public repo
+  (current: [`doc-dev/releases/0.1.9/`](../../doc-dev/releases/0.1.9/)) — **never synced** to the public repo
 
 ```bash
 make test-all

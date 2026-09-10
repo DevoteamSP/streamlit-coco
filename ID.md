@@ -9,7 +9,7 @@
 | **Asset Owner** | Laurent Letourmy — laurent.letourmy@devoteam.com |
 | **Contributors** | DevoteamSP / streamlit-coco contributors |
 | **Created** | 2026-07 |
-| **Last updated** | 2026-09-07 |
+| **Last updated** | 2026-09-10 |
 | **Confidentiality** | Public |
 
 ---
@@ -28,7 +28,7 @@
 
 ## Maturity Justification
 
-**Current level**: N0 → closing alpha toward N1 (PyPI `0.1.8.1`)
+**Current level**: N0 → closing alpha toward N1 (PyPI `0.1.9`)
 
 - Clients where used: 0 (alpha). Internal: Data Product Studio + Data Product Forge
 - Consultants trained: 0 additional. Enablement pack + workshop W01 shipped in `0.1.6`; registry `consultants_enabled: 1` is the asset owner.
@@ -42,7 +42,7 @@
 - [x] Consultant enablement pack (`doc/training/`) + workshop W01 (`0.1.6`)
 - [x] Owner + KPIs on this sheet
 - [x] Security threat model + audit pack (`doc/security/`) — SEC-01 / SEC-02 still open for v0.2
-- [x] Marketing one-pager (`doc/marketing/one-pager.md`) — refreshed for `0.1.8.1`
+- [x] Marketing one-pager (`doc/marketing/one-pager.md`) — refreshed for `0.1.9`
 - [ ] 1 additional consultant trained via W01 (pack exists; count still 0 beyond owner)
 - [ ] Remaining live UI checklists — core panel / approvals / tools / structured / CCv2 signed off; copilot-rail still pending
 - [ ] 2+ client usages

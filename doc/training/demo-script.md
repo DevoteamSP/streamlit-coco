@@ -104,7 +104,7 @@ setup issues."
 | Does it work with Streamlit in Snowflake (SiS)? | Not yet — pure Python, waiting on the CoCo API path; see roadmap. |
 | What LLM does it use? | Whatever Cortex Code uses under the hood — no model config needed in this library. |
 | Can I customize which tools need approval? | Yes — `allowed_tools` / `require_approval_for` in `CocoOptions`. |
-| Is it production-ready? | Alpha (`0.1.8.1`) — fine for internal tools today; production readiness targeted at N1. |
+| Is it production-ready? | Alpha (`0.1.9`) — fine for internal tools today; production readiness targeted at N1. |
 | How is this different from just using the CoCo CLI directly? | This library handles the Streamlit-specific plumbing: rerun-safe session state, streaming render, tool cards, and approval UI — the CLI alone has none of that. |
 | What about file uploads? | Supported since `0.1.5` — `upload_to_cwd()` / `cwd_uploader()`; see `make cwd-upload`. |
 | What's `copilot_rail()`? | Shipped in `0.1.6` — a right-rail Copilot (connection, queued jobs, compact transcript) around `panel()`. See `make bi-semantic` / `make backlog`. |

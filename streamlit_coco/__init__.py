@@ -12,7 +12,15 @@ from typing import Any
 
 from streamlit_coco.ask_user import is_ask_user_question
 from streamlit_coco.debug import is_debug_mode
-from streamlit_coco.diagnostics import CocoEnvironment, check_environment, require_environment
+from streamlit_coco.diagnostics import (
+    CocoEnvironment,
+    check_environment,
+    default_snowflake_connection_name,
+    list_snowflake_connections,
+    list_snowflake_toml_files,
+    require_environment,
+    resolve_snowflake_config_path,
+)
 from streamlit_coco.errors import (
     ApprovalTimeoutError,
     CLINotFoundError,
@@ -43,7 +51,7 @@ from streamlit_coco.upload import (
     upload_to_cwd,
 )
 
-__version__ = "0.1.8.1"
+__version__ = "0.1.9"
 
 # UI / Streamlit-backed exports — loaded on first attribute access.
 _LAZY_ATTRS: dict[str, tuple[str, str]] = {
@@ -107,6 +115,7 @@ __all__ = [
     "copilot_rail",
     "cwd_uploader",
     "default_fix_prompt",
+    "default_snowflake_connection_name",
     "deny_pending",
     "events_to_dataframe",
     "format_upload_prompt",
@@ -119,6 +128,8 @@ __all__ = [
     "is_sql_tool",
     "last_preview_exception",
     "list_cwd_uploads",
+    "list_snowflake_connections",
+    "list_snowflake_toml_files",
     "panel",
     "preview_log_tail",
     "preview_running",
@@ -127,6 +138,7 @@ __all__ = [
     "render_approvals",
     "render_plan_banner",
     "require_environment",
+    "resolve_snowflake_config_path",
     "render_environment_status",
     "render_output_field",
     "render_session_status",

@@ -14,6 +14,12 @@ from typing import Any
 
 import streamlit as st
 
+from streamlit_coco.diagnostics import (
+    default_snowflake_connection_name,
+    list_snowflake_connections,
+    list_snowflake_toml_files,
+    resolve_snowflake_config_path,
+)
 from streamlit_coco.display import render_progress_badge
 from streamlit_coco.session import CocoChatResult, CocoRunStatus, CocoSession
 from streamlit_coco.ui import panel, send_prompt
@@ -279,6 +285,7 @@ def copilot_rail(
     key_prefix: str = "coco_rail",
     connected: bool = True,
     connections: Sequence[str] | None = None,
+    toml_file: str | None = None,
     connection_name: str | None = None,
     on_connect: Callable[[str], None] | None = None,
     on_disconnect: Callable[[], None] | None = None,
@@ -316,6 +323,13 @@ def copilot_rail(
     sends it unless ``deferred`` is true (or the item sets ``deferred``), in
     which case the question is copied into the chat input and not run. They
     hide once a user/assistant turn or a job is present.
+
+    ``toml_file`` is a Snowflake connections TOML filename (looked up under
+    ``~/.snowflake/``) or a path. It sets the default Config file selectbox.
+    A single ``*.toml`` is still listed (one option). Config file and
+    Connection sit on one row. Profile names come from the selected file;
+    ``connections`` values are extra names prepended (for example from
+    ``st.secrets``).
     """
     import streamlit_coco as st_coco
 
@@ -366,7 +380,8 @@ def copilot_rail(
                     _render_connection(
                         connected=connected,
                         connection_name=connection_name,
-                        connections=connections or [],
+                        connections=connections,
+                        toml_file=toml_file,
                         on_connect=on_connect,
                         on_disconnect=on_disconnect,
                         connect_caption=connect_caption,
@@ -484,11 +499,30 @@ def _render_example_questions(
                 st.rerun()
 
 
+def _toml_file_choices(toml_file: str | None) -> tuple[list[str], str | None]:
+    """Return ``(filenames, default_name)`` from ``~/.snowflake/*.toml``."""
+    files = list_snowflake_toml_files()
+    if toml_file:
+        pinned = resolve_snowflake_config_path(toml_file)
+        if pinned is not None and pinned not in files:
+            files = [pinned, *files]
+    if not files:
+        return [], None
+    labels = [path.name for path in files]
+    default_name = files[0].name
+    if toml_file:
+        pinned = resolve_snowflake_config_path(toml_file)
+        if pinned is not None and pinned.name in labels:
+            default_name = pinned.name
+    return labels, default_name
+
+
 def _render_connection(
     *,
     connected: bool,
     connection_name: str | None,
-    connections: Sequence[str],
+    connections: Sequence[str] | None,
+    toml_file: str | None,
     on_connect: Callable[[str], None] | None,
     on_disconnect: Callable[[], None] | None,
     connect_caption: str,
@@ -504,18 +538,37 @@ def _render_connection(
     ):
         if connect_caption:
             st.caption(connect_caption)
-        names = list(connections)
-        if not names:
-            st.warning("No Snowflake connections available.")
+        labels, default_toml = _toml_file_choices(toml_file)
+        if not labels or default_toml is None:
+            st.warning("No `~/.snowflake/*.toml` found.")
             return
-        preferred = connection_name if connection_name in names else names[0]
-        chosen = st.selectbox(
-            "Connection",
-            names,
-            index=names.index(preferred),
-            key=f"{key_prefix}_conn_select",
-        )
-        env = st_coco.check_environment(connection=chosen)
+        file_col, conn_col = st.columns(2)
+        with file_col:
+            chosen_toml = st.selectbox(
+                "Config file",
+                labels,
+                index=labels.index(default_toml),
+                key=f"{key_prefix}_toml_select",
+            )
+        chosen_toml = str(chosen_toml)
+        file_names = list_snowflake_connections(chosen_toml)
+        extras = [name for name in (connections or []) if name not in file_names]
+        names = extras + file_names
+        with conn_col:
+            if not names:
+                st.warning(f"No connections in `{chosen_toml}`.")
+                return
+            preferred = connection_name if connection_name in names else None
+            if preferred is None:
+                fallback = default_snowflake_connection_name(chosen_toml)
+                preferred = fallback if fallback in names else names[0]
+            chosen = st.selectbox(
+                "Connection",
+                names,
+                index=names.index(preferred),
+                key=f"{key_prefix}_conn_select_{chosen_toml}",
+            )
+        env = st_coco.check_environment(connection=chosen, toml_file=chosen_toml)
         render_environment(env, stacked=True, show_title=False)
         if on_connect is not None and st.button(
             "Connect",

@@ -3,7 +3,7 @@
 Reusable right-rail Copilot for Streamlit apps: connection, queued jobs,
 transcript compactness, `panel()`, and `chat_input_bar()`.
 
-**Status:** Shipped in **`0.1.6`**. Example questions + Display config popover in **`0.1.8`**. `deferred=` example questions in **`0.1.8.1`**.
+**Status:** Shipped in **`0.1.6`**. Example questions + Display config popover in **`0.1.8`**. `deferred=` example questions in **`0.1.8.1`**. Config file picker / `toml_file=` in **`0.1.9`**.
 
 ## What
 
@@ -43,7 +43,7 @@ session = st_coco.get_or_create_session(opts, key="copilot")
 st_coco.copilot_rail(
     session,
     connected=True,
-    connections=["analytics"],
+    toml_file="connections.toml",
     connection_name="analytics",
     on_connect=lambda name: ...,
     on_disconnect=lambda: ...,
@@ -88,6 +88,13 @@ not run it — the user can edit, then submit. Starters disappear once a turn
 starts, the chat has a user or assistant message, or a job is present, and
 return after **Clear chat**. A deferred click does not hide them.
 
+Pass **`toml_file=`** to set the default Snowflake connections file. The
+connection popover puts **Config file** and **Connection** selectboxes on
+one row. A single ``~/.snowflake/*.toml`` is still listed (one option);
+several files are all listed. Profile names always come from the selected
+file. ``connections=`` extra names are prepended (for example from
+``st.secrets``). The environment probe shows the selected file.
+
 ## Limitations
 
 - Callers still own session lifecycle (reset on cwd / schema change).
@@ -96,7 +103,7 @@ return after **Clear chat**. A deferred click does not hide them.
   `panel()` still has its own streaming fragment so the icon stays clickable
   while CoCo runs.
 - Tool cards are not character-truncated (they are already compact expanders).
-- Version tag for this API is **`0.1.8.1`** (`pip install "streamlit-coco[sdk]==0.1.8.1"`). Rail chrome shipped in `0.1.6`; example questions in `0.1.8`; `deferred=` in `0.1.8.1`.
+- Version tag for this API is **`0.1.9`** (`pip install "streamlit-coco[sdk]==0.1.9"`). Rail chrome shipped in `0.1.6`; example questions in `0.1.8`; `deferred=` in `0.1.8.1`; Config file picker in `0.1.9`.
 
 ## Related
 

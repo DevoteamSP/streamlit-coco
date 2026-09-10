@@ -18,7 +18,6 @@ from engine.coco_jobs import (
     get_job,
     is_coco_cooking,
     is_connected,
-    list_connections,
     session_options,
     set_copilot_open,
     set_job,
@@ -116,14 +115,11 @@ def _fail_stale_job(session: Any) -> None:
 
 
 def _connections() -> list[str]:
-    names = list_connections()
     try:
         secret = st.secrets.get("snowflake_connection")
     except Exception:  # noqa: BLE001
         secret = None
-    if secret and secret not in names:
-        names = [str(secret), *names]
-    return names
+    return [str(secret)] if secret else []
 
 
 def render_copilot_rail() -> None:

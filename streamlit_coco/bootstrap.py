@@ -36,11 +36,12 @@ def render_environment_status(
     env: CocoEnvironment | None = None,
     *,
     connection: str | None = None,
+    toml_file: str | None = None,
     stacked: bool = False,
     show_title: bool = True,
 ) -> CocoEnvironment:
     """Render SDK / CLI / Snowflake readiness. Probes the environment when ``env`` is omitted."""
-    status = env or check_environment(connection=connection)
+    status = env or check_environment(connection=connection, toml_file=toml_file)
     if show_title:
         st.subheader("CoCo environment")
 
@@ -68,7 +69,7 @@ def render_environment_status(
             st.success(f"Snowflake config · `{display}`")
             st.caption(f"Connection: `{status.connection_hint}`")
         else:
-            st.warning("No `~/.snowflake/connections.toml` (or config.toml)")
+            st.warning(status.snowflake_config_missing_label)
 
     if stacked:
         _sdk_block()

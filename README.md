@@ -9,7 +9,7 @@ You own the page. CoCo owns the session. `copilot_rail()` sits in the product an
 
 ![BI → Semantic — Preview of the generated Streamlit app beside the Copilot rail](doc/screenshot.png)
 
-> Alpha `0.1.8.1` — API may still move. Star / watch the repo if you plan to ship on it.
+> Alpha `0.1.9` — API may still move. Star / watch the repo if you plan to ship on it.
 
 **Repo:** [github.com/lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco) *(temporary PyPI source)* · **Dev:** [streamlit-coco-dev](https://github.com/DevoteamSP/streamlit-coco-dev)  
 **SDK docs:** [Cortex Code Agent SDK](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
@@ -37,7 +37,7 @@ Also: headless `query()` for scripts and CI, plus a legacy all-in-one `chat()` i
 - **You need Slack, a hosted CoCo SaaS, or a product MCP server.** Out of scope. MCP *passthrough* via `mcp_servers` already works.
 - **You would not type the SQL yourself on this role.** The agent uses the Snowflake role in the connection — do not wire `ACCOUNTADMIN` into a web UI.
 
-Alpha `0.1.8.1` — APIs may still move. Prefer `panel()` + your own input; `chat()` is the legacy all-in-one.
+Alpha `0.1.9` — APIs may still move. Prefer `panel()` + your own input; `chat()` is the legacy all-in-one.
 
 ---
 
@@ -172,7 +172,7 @@ Legacy `chat()` is the same session, with a CCv2 frontend instead of native widg
 | Capability | Entry points |
 | --- | --- |
 | Native panel + approvals | `panel()`, `chat_input_bar()`, `render_approvals()` |
-| Copilot rail (right-column Copilot) | `copilot_rail()`, `transcript_display_config()`, `example_questions=` / `deferred=` — [`doc/features/copilot-rail/`](doc/features/copilot-rail/) |
+| Copilot rail (right-column Copilot) | `copilot_rail()`, `transcript_display_config()`, `example_questions=` / `deferred=` / `toml_file=` — [`doc/features/copilot-rail/`](doc/features/copilot-rail/) |
 | App viewer (child Streamlit iframe) | `app_viewer()`, `default_fix_prompt()` — [`doc/features/app-viewer/`](doc/features/app-viewer/) |
 | Tool cards & AskUser / plan UI | see [`doc/features/tools-display/`](doc/features/tools-display/) |
 | Session & options | `CocoSession`, `CocoOptions`, `get_or_create_session` |

@@ -19,7 +19,6 @@ from engine.jobs import (
     get_job,
     is_coco_cooking,
     is_connected,
-    list_connections,
     session_options,
     set_copilot_open,
     set_job,
@@ -68,14 +67,11 @@ def render_coco_cooking_indicator() -> None:
 
 
 def _connections() -> list[str]:
-    names = list_connections()
     try:
         secret = st.secrets.get("snowflake_connection")
     except Exception:  # noqa: BLE001
         secret = None
-    if secret and secret not in names:
-        names = [str(secret), *names]
-    return names
+    return [str(secret)] if secret else []
 
 
 def _rail_answers():

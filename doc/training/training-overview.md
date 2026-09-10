@@ -2,7 +2,7 @@
 
 ## What this asset is
 
-`streamlit-coco` is a Python library (PyPI: `streamlit-coco`, alpha `0.1.8.1`) that embeds
+`streamlit-coco` is a Python library (PyPI: `streamlit-coco`, alpha `0.1.9`) that embeds
 Snowflake's **Cortex Code Agent SDK ("CoCo")** into Streamlit apps: a streaming agent
 transcript with readable tool cards (SQL, Read, Write, Grep…), a reusable **`copilot_rail()`**
 for multipage apps, human-in-the-loop approval gates for destructive tools, structured

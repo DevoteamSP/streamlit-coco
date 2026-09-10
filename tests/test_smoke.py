@@ -12,6 +12,7 @@ def test_import_package() -> None:
     assert callable(st_coco.query)
     assert callable(st_coco.check_environment)
     assert callable(st_coco.require_environment)
+    assert callable(st_coco.list_snowflake_connections)
     assert issubclass(st_coco.SDKNotInstalledError, st_coco.CocoError)
     # Lazy UI export resolves without breaking public surface.
     assert callable(st_coco.panel)

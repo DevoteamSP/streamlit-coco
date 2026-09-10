@@ -31,19 +31,6 @@ PREVIEW_FULL_KEY = "tts_preview_full"
 JobKind = Literal["estate", "kpi", "access", "generate", "streamlit", "chat"]
 
 
-def list_connections() -> list[str]:
-    try:
-        import tomllib
-    except ImportError:
-        import tomli as tomllib  # type: ignore
-
-    cfg = Path.home() / ".snowflake" / "connections.toml"
-    if not cfg.is_file():
-        return []
-    data = tomllib.loads(cfg.read_text(encoding="utf-8"))
-    return sorted(data.keys())
-
-
 def is_connected() -> bool:
     return bool(st.session_state.get(GATE_KEY) and st.session_state.get(CONN_KEY))
 

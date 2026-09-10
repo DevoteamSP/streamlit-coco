@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
+import pytest
+
 import streamlit_coco as st_coco
 from streamlit_coco.rail import (
     DISPLAY_CONFIG_ICON,
@@ -21,9 +25,35 @@ def test_copilot_rail_exports() -> None:
     assert "copilot_rail" in st_coco.__all__
     assert "transcript_display_config" in st_coco.__all__
     assert "transcript_view_pills" in st_coco.__all__
+    assert "list_snowflake_connections" in st_coco.__all__
+    assert "list_snowflake_toml_files" in st_coco.__all__
     assert callable(st_coco.copilot_rail)
     assert callable(st_coco.transcript_display_config)
     assert callable(st_coco.transcript_view_pills)
+    assert callable(st_coco.list_snowflake_connections)
+    assert callable(st_coco.list_snowflake_toml_files)
+
+
+def test_copilot_rail_accepts_toml_file() -> None:
+    import inspect
+
+    params = inspect.signature(st_coco.copilot_rail).parameters
+    assert "toml_file" in params
+    assert params["toml_file"].default is None
+
+
+def test_toml_file_choices_single_custom_name(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from streamlit_coco.rail import _toml_file_choices
+
+    snowflake = tmp_path / ".snowflake"
+    snowflake.mkdir()
+    (snowflake / "team.toml").write_text("[prod]\naccount = 'x'\n", encoding="utf-8")
+    monkeypatch.setattr("streamlit_coco.diagnostics._snowflake_dir", lambda: snowflake)
+    labels, default_name = _toml_file_choices(None)
+    assert labels == ["team.toml"]
+    assert default_name == "team.toml"
 
 
 def test_transcript_filter_constants() -> None:
