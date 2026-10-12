@@ -965,9 +965,7 @@ class ResultTest(ConversationCase):
                 "t": "tool_result",
                 "id": "q1",
                 "error": False,
-                "content": "Tool denied: not matched by any --allowed-tools pattern
-
-"
+                "content": "Tool denied: not matched by any --allowed-tools pattern\n\n"
                 "This tool is PERMANENTLY blocked",
             },
         )
