@@ -1,0 +1,6 @@
+/* Ask CoCo, part "plans" (frames 47-54). Ported from ui-rebuild/design/coco22.css: the plan, the planning strip. */
+.ag-plan { display: flex; flex-direction: column; gap: calc(var(--r) * .3); margin: 0; padding: calc(var(--r) * .6) calc(var(--r) * .75) calc(var(--r) * .6) calc(var(--r) * 2.1); border-radius: calc(var(--r) * .5); background: var(--canvas); list-style: decimal; font-size: var(--fz-body); line-height: 1.45; color: var(--ink); overflow-wrap: anywhere; }
+.ag-plan.ev { border: 1px solid var(--line); background: var(--surface); }   /* a plan inside a folded step */
+.ag-plan li { display: list-item; padding-left: calc(var(--r) * .15); }
+
+.ag-mode { flex: none; display: flex; align-items: center; justify-content: space-between; gap: calc(var(--r) * .75); padding: calc(var(--r) * .5) var(--r); border-bottom: 1px solid var(--line); background: var(--surface); font-size: var(--fz-body); line-height: 1.35; color: var(--ink); }

@@ -1,0 +1,10 @@
+/* Ask CoCo, part "session" (frames 79-86), from ui-rebuild/design/coco22.css */
+.ag-more { align-self: center; }
+.ag-clp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
+.emp .ag-run { width: calc(var(--r) * 1.5); height: calc(var(--r) * 1.5); }
+.selw button.in { display: flex; align-items: center; width: 100%; height: calc(var(--r) * 2.5); padding: 0 calc(var(--r) * 2.2) 0 calc(var(--r) * .85); text-align: left; background: var(--surface); cursor: pointer; }
+.pop.ag-ls { left: 0; right: 0; bottom: calc(100% + var(--r) * 1.95); z-index: 3; }   /* above the footer, as on the sheet */
+.pop.ag-ls .mh { margin: 0; padding: calc(var(--r) * .4) calc(var(--r) * .6) calc(var(--r) * .1); font-size: var(--fz-cap); color: var(--ink-2); }
+.pop.ag-ls .it { width: 100%; text-align: left; }
+.pop.ag-ls .it:hover, .pop.ag-ls .it:focus-visible, .pop.ag-ls .it.on { background: var(--canvas); }
+.pop.ag-ls .it.on { font-weight: 600; }

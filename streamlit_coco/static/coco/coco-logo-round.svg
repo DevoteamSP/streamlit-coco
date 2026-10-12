@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-16 -16 64 64" width="4096" height="4096" fill="none">
+  <defs>
+    <filter id="container-shadow" x="-16" y="-16" width="64" height="64" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0.5" result="small-blur"/>
+      <feFlood flood-color="#000000" flood-opacity="0.4" result="small-color"/>
+      <feComposite in="small-color" in2="small-blur" operator="in" result="small-shadow"/>
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="large-blur"/>
+      <feOffset in="large-blur" dy="2" result="large-offset"/>
+      <feFlood flood-color="#000000" flood-opacity="0.4" result="large-color"/>
+      <feComposite in="large-color" in2="large-offset" operator="in" result="large-shadow"/>
+      <feMerge><feMergeNode in="large-shadow"/><feMergeNode in="small-shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <circle cx="16" cy="16" r="15" fill="#16181D" filter="url(#container-shadow)"/>
+  <path transform="translate(8 8)" fill="#5498FF" d="M7.116 2.619c.3-.825 1.467-.825 1.767 0a7.52 7.52 0 0 0 4.499 4.497c.824.3.824 1.467 0 1.768a7.52 7.52 0 0 0-4.499 4.497c-.3.825-1.467.825-1.767 0A7.52 7.52 0 0 0 2.62 8.884c-.825-.3-.825-1.468 0-1.768A7.52 7.52 0 0 0 7.116 2.62"/>
+</svg>
