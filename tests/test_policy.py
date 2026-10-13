@@ -14,7 +14,9 @@ from __future__ import annotations
 import ast
 import json
 import os
+import re
 import shutil
+import string
 import subprocess
 import sys
 import tempfile
@@ -26,6 +28,7 @@ import streamlit_coco.gate
 import streamlit_coco.policy
 from streamlit_coco.cortex_tools import TOOLS
 from streamlit_coco.policy import (
+    WORDS,
     Command,
     FolderPolicy,
     git_readonly,
@@ -35,6 +38,18 @@ from streamlit_coco.policy import (
 )
 
 NL = chr(10)
+
+LOOKUPS = (
+    "snowflake_object_search",
+    "snowflake_table_lookup",
+    "semantic_view_search",
+    "cortex_agent_search",
+    "snowflake_product_docs",
+    "snowflake_connections_list",
+    "web_search",
+    "web_fetch",
+)
+FAMILIES = ("commands", "files", "elsewhere", "queries", "statements", "tool")
 
 # ---------------------------------------------------------------------- the host's policy, rebuilt
 
@@ -2178,6 +2193,213 @@ class HelpersTest(FolderCase):
                 else:
                     continue
                 self.assertLessEqual(names, allowed, module.__name__)
+
+
+class WordsTableTest(FolderCase):
+    """Every sentence the ready-made policy can put on screen comes from one table, WORDS."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        (self.folder / "docs" / "server.key").write_text("x", encoding="utf-8")
+        (self.tmp / "more").mkdir()
+        (self.tmp / "more" / "rules.md").write_text("x", encoding="utf-8")
+        # every word replaced by a marker that keeps its slots: «key»[slot][slot]
+        self.marked = {}
+        for key, text in WORDS.items():
+            slots = [name for _, name, _, _ in string.Formatter().parse(text) if name]
+            self.marked[key] = f"«{key}»" + "".join("[{" + slot + "}]" for slot in slots)
+
+    def unmarked(self, text) -> str:
+        """What is left of a sentence once the markers and what fills their slots are taken out:
+        punctuation only, when the policy wrote nothing of its own."""
+        self.assertIsInstance(text, str)
+        rest, before = text, None
+        while rest != before:
+            before, rest = rest, re.sub(r"\[[^\[\]]*\]", "", rest)
+        return re.sub("«[a-z_]+»", "", rest)
+
+    def no_english(self, text, about) -> None:
+        self.assertNotRegex(self.unmarked(text), "[A-Za-z]", f"{about}: {text!r}")
+
+    def said(self, policy, tool, payload) -> list:
+        """Everything the policy says of one call; each sentence it wrote is checked."""
+        about = f"{tool} {payload}"
+        reason, facts = policy.judge(tool, payload)
+        step = policy.describe(tool, payload)
+        self.no_english(step, about)
+        if reason is not None:
+            self.no_english(reason, about)
+        if facts:
+            for part in ("question", "pill", "evidence_label"):
+                self.no_english(facts[part], about)
+            self.assertTrue(facts["where"] == policy.where or facts["where"].startswith("«"))
+            if facts["reads"] is not None:
+                self.no_english(facts["reads"], about)
+            if facts["changes"]:
+                self.no_english(facts["changes"]["note"], about)
+                if str(tool).lower() not in ("edit", "write"):  # else it is the file's path
+                    self.no_english(facts["changes"]["file"], about)
+            for evidence in facts["evidence"]:
+                self.no_english(evidence["label"], about)
+            for part in (facts["standing"] or {}).values():
+                if str(part).split(":")[0] not in FAMILIES:  # not its id
+                    self.no_english(part, about)
+        return [reason, facts, step]
+
+    def test_a_policy_given_every_word_says_no_sentence_of_its_own(self) -> None:
+        words, docs = self.marked, self.folder / "docs"
+        full = self.policy(
+            words=words,
+            sql=True,
+            lookups=True,
+            standing=True,
+            commands=git_readonly(self.folder, words),
+            also_read=[self.tmp / "more"],
+        )
+
+        def rule(path):
+            if path.suffix != ".md":
+                raise RuntimeError("a rule that fails")
+
+        narrow = FolderPolicy(self.folder, scope=docs, changes=["*.md"], standing=True, words=words)
+        ruled = self.policy(words=words, changes=rule, standing=True)
+        bare = self.policy(words=words)  # every switch off
+        edit = {"old_string": "a" + NL + "b", "new_string": "c"}
+        read = {"name": "Read", "input": {"file_path": self.path("notes.md")}}
+        calls = [
+            # reads and searches: free, and each reason to ask, for a file and for a folder
+            ("Read", {"file_path": self.path("notes.md")}),
+            ("Read", {"file_path": self.outside}),
+            ("Read", {"file_path": self.path(".env")}),
+            ("Read", {"file_path": self.path(".git/config")}),
+            ("Read", {"file_path": self.path("notes.md:stream")}),
+            ("Read", {"file_path": 3}),
+            ("Read", {"file_path": self.outside, "mode": "raw"}),
+            ("Glob", {"pattern": "*.md", "path": str(self.tmp)}),
+            ("Glob", {"pattern": "*", "path": self.path(".git")}),
+            ("Glob", {}),
+            ("Grep", {"pattern": "x", "path": self.path("docs")}),
+            ("Grep", {"pattern": "x", "path": str(self.tmp), "include": "*.md"}),
+            ("direct_tool_calling", {"tool_calls": [read, read]}),
+            ("direct_tool_calling", {"tool_calls": []}),
+            # commands: listed, unlisted, of several lines, with another input
+            ("Bash", {"command": full.commands()[0].line}),
+            ("Bash", {"command": full.commands()[1].line}),
+            ("Bash", {"command": full.commands()[2].line}),
+            ("Bash", {"command": "rm -rf build"}),
+            ("Bash", {"command": "a" + NL + "b", "cwd": "/srv"}),
+            # file changes: ordinary, of one line and of several, outside, guarded
+            ("Write", {"file_path": "new.md", "content": "x"}),
+            ("Write", {"file_path": "notes.md", "content": "x"}),
+            ("Edit", {"file_path": "notes.md", "old_string": "a", "new_string": "b"}),
+            ("Edit", {"file_path": "docs/guide.md", **edit}),
+            ("Write", {"file_path": self.outside, "content": "x"}),
+            ("Write", {"file_path": ".git/hooks/pre-commit", "content": "x"}),
+            ("Write", {"file_path": "src/app.py", "content": "x"}),
+            ("Write", {"file_path": "docs/data.csv", "content": "x"}),
+            # SQL: a query, a statement, several, one without a first word, none, not text
+            ("sql_execute", {"sql": "select 1"}),
+            ("sql_execute", {"sql": "drop table T", "connection": "prod"}),
+            ("sql_execute", {"sql": "create table T (a int); 123; drop table T"}),
+            ("sql_execute", {"sql": ""}),
+            ("sql_execute", {"sql": 7}),
+            # each look-up, a tool nobody knows, a tool without a name, an input that is no object
+            *((name, {"query": "x"}) for name in LOOKUPS),
+            ("Task", {"prompt": "go"}),
+            ("", {"a": 1}),
+            ("Task", "go"),
+        ]
+        said = []
+        for policy in (full, narrow, ruled, bare):
+            for tool, payload in calls:
+                with self.subTest(scope=policy.where, tool=tool, payload=payload):
+                    said.append(self.said(policy, tool, payload))
+            rights = policy.rights([])
+            for part in ("scope", "without_asking", "asked", "refused"):
+                self.no_english(rights[part], part)
+            for command in rights.get("commands", ()):
+                self.no_english(command["name"], "a command")
+            said.append(rights)
+        self.no_english(full.rights()["also_read_without_asking"]["how"], "also read")
+        offers = [f[1]["standing"] for f in said if isinstance(f, list) and f[1]]
+        families = {offer["id"] for offer in offers if offer}
+        self.assertLessEqual(set(FAMILIES), {family.split(":")[0] for family in families})
+        # a folder too large to check
+        saved, streamlit_coco.policy._WALK_LIMIT = streamlit_coco.policy._WALK_LIMIT, 0
+        try:
+            said.append(self.said(full, "Grep", {"pattern": "x", "path": self.path("src")}))
+        finally:
+            streamlit_coco.policy._WALK_LIMIT = saved
+        # and no word of the table is left unused: each one showed in what was said
+        shown = set(re.findall("«([a-z_]+)»", json.dumps(said, ensure_ascii=False, default=str)))
+        self.assertEqual(set(WORDS) - shown, {"pill_change"})  # only `request()` without a pill
+        self.assertEqual(
+            request("change", "?", where="x", changes="y")["pill"], WORDS["pill_change"]
+        )
+
+    def test_the_words_are_given_once_and_merged_over_the_defaults(self) -> None:
+        french = {"undo": " Sans retour possible.", "ask_create": "Créer un fichier{far} ?{undo}"}
+        policy = self.policy(words=french)
+        created = self.write(policy, "new.md")
+        self.assertEqual(created["question"], "Créer un fichier ? Sans retour possible.")
+        self.assertEqual(created["pill"], "Allow a file change?")  # a word not given: the default
+        self.assertTrue(
+            self.write(policy, "notes.md")["question"].endswith("? Sans retour possible.")
+        )
+        self.assertIs(FolderPolicy.words, WORDS)
+        self.assertEqual(WORDS["undo"], " It cannot be undone.")
+
+        class Hosted(FolderPolicy):
+            words = {**FolderPolicy.words, "scope": "the case", "undo": " No way back."}
+
+        both = Hosted(self.folder, words={"undo": " Sans retour possible."})  # over the class too
+        self.assertTrue(self.write(both, "new.md")["question"].endswith(" Sans retour possible."))
+        far = self.ask(both, "Read", {"file_path": self.outside})
+        self.assertEqual(far["question"], "Allow CoCo to read a file outside the case?")
+        named = {"scope_given": "le dossier {name}", "outside_file": "un fichier hors de {scope}"}
+        scoped = FolderPolicy(self.folder, scope=self.folder / "docs", words=named)
+        far = self.ask(scoped, "Read", {"file_path": "notes.md"})
+        self.assertEqual(far["question"], "Allow CoCo to read un fichier hors de le dossier docs?")
+        self.assertEqual(far["reads"], "Un fichier hors de le dossier docs")
+
+    def test_git_readonly_takes_the_words_too(self) -> None:
+        listed = git_readonly(self.folder, {"git_status": "Voir ce qui a changé", "git_log": 3})
+        self.assertEqual(listed[0].name, "Voir ce qui a changé")
+        self.assertEqual(listed[0].reads, WORDS["git_status_reads"])
+        self.assertEqual(listed[2].name, WORDS["git_log"])  # not text: the default
+        self.assertEqual([c.line for c in listed], [c.line for c in git_readonly(self.folder)])
+
+    def test_a_word_that_cannot_be_filled_never_stops_a_call(self) -> None:
+        broken = {
+            "ask_read": "Lire {quoi} ?",  # a slot that does not exist
+            "ask_command": "Commande {",  # a stray brace
+            "ask_tool": "Outil {tool.nom}",  # a slot that has no such part
+            "outside_file": "{0}",  # a slot without a name
+            "pill_command": 3,  # not text
+            "tick": None,
+            "undo": ["x"],
+            "step_read": "{chemin}",
+            "rights_scope": "{scope} ({dossier})",
+            "refused_type": "{cle}",
+        }
+        calls = (*self.CALLS, ("Read", {"file_path": self.outside}), ("Read", {"file_path": 3}))
+
+        class Empty(FolderPolicy):
+            words = {}  # a table that forgot every key
+
+        class NotATable(FolderPolicy):
+            words = None
+
+        default = self.policy(sql=True, lookups=True, standing=True)
+        for words, kind in ((broken, FolderPolicy), (None, Empty), (None, NotATable)):
+            policy = kind(self.folder, sql=True, lookups=True, standing=True, words=words)
+            for tool, payload in calls:
+                with self.subTest(kind=kind.__name__, tool=tool, payload=payload):
+                    self.assertEqual(policy.judge(tool, payload), default.judge(tool, payload))
+                    self.assertEqual(
+                        policy.describe(tool, payload), default.describe(tool, payload)
+                    )
+            self.assertEqual(policy.rights(["x"]), default.rights(["x"]))
 
 
 if __name__ == "__main__":
