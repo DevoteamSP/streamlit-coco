@@ -196,17 +196,24 @@ def _on_act(key: str) -> None:
     s["conv"].act(action, ctx)
 
 
+def _page_must_run(s: dict) -> bool:
+    """The only reasons the window reruns the page, each told once: the agent changed files
+    (`on_files_changed` was called), an application form was answered, a request the page sent is
+    finished. Whatever one run of the window finds, the page reruns once."""
+    conv = s["conv"]
+    files = conv.drain()
+    forms = [k for k in conv.w_forms if k not in s["told"] and conv.form_result(k, take=False)]
+    asked = [k for k in s["asked"] if conv.result_for(k, take=False) is not None]
+    s["told"].update(forms)  # the page reads the values on its next run
+    s["asked"].difference_update(asked)  # the page shows the request's line
+    return bool(files or forms or asked)
+
+
 @st.fragment
 def _window(key: str) -> None:
     s = _state(key)
     conv = s["conv"]
-    if conv.drain():  # the agent changed files (on_files_changed was called): read again, once
-        st.rerun()
-    for form in [k for k in conv.w_forms if k not in s["told"] and conv.form_result(k, take=False)]:
-        s["told"].add(form)  # the page reads the values on its next run: run it once
-        st.rerun()
-    for asked in [k for k in s["asked"] if conv.result_for(k, take=False) is not None]:
-        s["asked"].discard(asked)  # a request of the page finished: the page shows its line
+    if _page_must_run(s):
         st.rerun()
     f = conv.features
     _component()(
@@ -240,7 +247,13 @@ def ask_coco(
     on_files_changed: Callable[[list], Any] | None = None,
     agent: Callable | None = None,
 ) -> Window:
-    """Mount the launcher and the window; see the module docstring and feature file 1.1."""
+    """Mount the launcher and the window; see the module docstring and feature file 1.1.
+
+    `cwd` must be an existing folder (one `CocoError` otherwise). `labels` given under the same
+    key may change from one run to the next (an application that switches language): the window's
+    own texts and every sentence the conversation writes afterwards follow, the conversation is
+    kept; what is already written in the thread stays as it was written
+    (Conversation.set_labels)."""
     _check_streamlit()
     if options is not None:
         bad = [name for name in _REFUSED if getattr(options, name, None)]
@@ -253,6 +266,12 @@ def ask_coco(
 
     slot = _slot(key)
     cwd = Path(cwd).expanduser().resolve()
+    if not cwd.is_dir():  # else it connects and every read fails; an agent must not get the path
+        raise CocoError(
+            f'ask_coco(cwd): "{cwd}" '
+            + ("is not a folder." if cwd.exists() else "does not exist.")
+            + " Give the working folder CoCo reads and writes in, and create it first."
+        )
     s = st.session_state.get(slot)
     if s is None:
         conv = Conversation(
@@ -280,6 +299,7 @@ def ask_coco(
         list(prompts or []),
         on_files_changed,
     )
+    conv.set_labels(labels)
     if features is not None:
         conv.features = features
     s["context"] = context

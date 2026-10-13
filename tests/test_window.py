@@ -521,6 +521,88 @@ class WindowTest(unittest.TestCase):
             window.ask_coco(".", options=SimpleNamespace(allowed_tools=["Read"]))
         self.assertIn("policy", str(caught.exception))
 
+    def test_a_working_folder_that_is_missing_or_a_file_is_one_clear_error(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            file = Path(tmp) / "notes.md"
+            file.write_text("x", encoding="utf-8")
+            for cwd, why in ((Path(tmp) / "nowhere", "does not exist"), (file, "is not a folder")):
+                with self.assertRaises(CocoError) as caught:
+                    window.ask_coco(cwd)
+                self.assertIn(why, str(caught.exception))
+                self.assertIn(str(cwd.resolve()), str(caught.exception))
+
+    def test_labels_that_change_between_two_runs_reach_the_window_and_the_conversation(
+        self,
+    ) -> None:
+        from streamlit.testing.v1 import AppTest
+
+        def page() -> None:
+            import streamlit as st
+
+            import streamlit_coco as st_coco
+
+            french = {"window.header.title": "Assistant", "agent.pill_answer": "Reponse prete"}
+            st_coco.ask_coco(".", labels=french if st.session_state.get("fr") else None)
+
+        # each AppTest has its own registry of components: the cached mount belongs to one
+        window._component.cache_clear()
+        self.addCleanup(window._component.cache_clear)
+        with mock.patch.dict("os.environ", {"STREAMLIT_COCO_AGENT": "mock"}):
+            app = AppTest.from_function(page, default_timeout=30).run()
+            self.assertFalse(app.exception)
+            s = app.session_state[window._slot("coco")]
+            conv = s["conv"]
+            conv.items.append({"kind": "system", "text": conv.t("lost_text"), "detail": ""})
+            self.assertEqual(
+                (s["labels"]["window.header.title"], conv.t("pill_answer")),
+                ("CoCo", labels.DEFAULT["agent.pill_answer"]),
+            )
+            app.session_state["fr"] = True
+            app.run()
+            self.assertFalse(app.exception)
+            s = app.session_state[window._slot("coco")]
+            self.assertIs(s["conv"], conv)  # the same conversation: nothing was started again
+            self.assertEqual(
+                (s["labels"]["window.header.title"], conv.t("pill_answer")),
+                ("Assistant", "Reponse prete"),
+            )
+            # what was written stays as written
+            self.assertEqual(conv.items[-1]["text"], labels.DEFAULT["agent.lost_text"])
+            app.session_state["fr"] = False
+            app.run()
+            self.assertEqual(conv.t("pill_answer"), labels.DEFAULT["agent.pill_answer"])
+
+    def test_whatever_one_run_of_the_window_finds_the_page_reruns_once_and_then_no_more(
+        self,
+    ) -> None:
+        class Rerun(Exception):
+            pass
+
+        conv = SimpleNamespace(
+            drain=mock.Mock(side_effect=[True, False, False, False]),  # the agent changed a file
+            w_forms={"form": {}},
+            form_result=lambda key, take=True: {"skipped": False, "values": {}},  # answered
+            result_for=lambda key, take=True: {"text": "done", "data": None},  # finished
+            features=Features(),
+            view=dict,
+        )
+        s = {"conv": conv, "asked": {"job"}, "told": set(), "ack": 0, "token": 0, "sess": "x"}
+        s |= {"labels": {}, "theme": {}}
+        mounted, reruns = [], 0
+        with (
+            mock.patch.object(window.st, "session_state", {window._slot("k"): s}),
+            mock.patch.object(window.st, "rerun", side_effect=Rerun),
+            mock.patch.object(window, "_component", lambda: lambda **kw: mounted.append(kw)),
+        ):
+            for _ in range(4):
+                try:
+                    window._window.__wrapped__("k")
+                except Rerun:
+                    reruns += 1
+        self.assertEqual(reruns, 1)  # three reasons found in one run: one page run
+        self.assertEqual(len(mounted), 3)  # afterwards the window is drawn, the page is left alone
+        self.assertEqual((s["told"], s["asked"]), ({"form"}, set()))
+
     def test_result_keeps_the_key_asked_while_pending_and_hands_over_once(self) -> None:
         pending = [None]
         conv = SimpleNamespace(result_for=lambda key: pending[0])

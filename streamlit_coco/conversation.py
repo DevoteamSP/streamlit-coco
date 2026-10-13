@@ -5,6 +5,7 @@ or testing/scripted.py) reports plain events, the window reads one `view` and se
 
     conv = Conversation(cwd, policy=None, features=None, prompts=None, labels=None,
                         agent=None, on_files_changed=None)
+    conv.set_labels(labels)   # another table of texts (the host changed language): see there
     conv.set_cwd(cwd)      # the working folder is the agent's folder: when it changes, the
                            # conversation ends as "new" does, with a line saying why
     conv.drain()           # True: files of the working folder changed (on_files_changed was called
@@ -221,7 +222,7 @@ class Conversation:
         self.cwd = Path(cwd)
         self.policy, self.features = policy, features or Features()
         self.prompts = list(prompts or [])
-        self.labels = {**LABELS, **{k.removeprefix("agent."): v for k, v in (labels or {}).items()}}
+        self.set_labels(labels)
         self._factory = agent or agent_factory()
         self._on_files_changed = on_files_changed
         self._default_policy = None
@@ -232,6 +233,14 @@ class Conversation:
         self.folder: Path | None = None  # the folder the session works in; None while there is none
         self._reset()
         self._fresh_agent()
+
+    def set_labels(self, labels: dict | None) -> None:
+        """The host's texts, which it may change from one run to the next (another language): every
+        sentence written from now on, and what the view works out each time (the menu's options,
+        a queued message's note, the connection problem, a pill the policy did not word), is in
+        the new ones. What is already written (a line of the thread, a step's note, the pill of
+        an answer) stays as it was written; a policy's sentences are the policy's."""
+        self.labels = {**LABELS, **{k.removeprefix("agent."): v for k, v in (labels or {}).items()}}
 
     def t(self, key: str, **values) -> str:
         """A label's text, with its values filled in."""

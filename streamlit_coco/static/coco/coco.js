@@ -570,7 +570,13 @@ function build(root, shadow, spark) {
   };
 
   // ------ a view arrives
+  // The texts build() wrote once follow the host's labels: an application may change them between two runs (another language).
+  const shell = () => {
+    [[el.cc, 'dialog.label'], [q('[data-a=min]'), 'header.minimise'], [el.mb, 'header.menu'], [el.menu, 'header.menu'], [el.thr, 'thread.label'], [el.ta, 'field.label']].forEach(([n, k]) => attr(n, 'aria-label', L(k)));
+    [[q('.hd h2'), 'header.title'], [el.off, 'offline']].forEach(([n, k]) => { if (n.textContent !== L(k)) n.textContent = L(k); });
+  };
   I.update = (data) => {
+    shell();
     const v = data.view || {};
     const first = !I.view;
     I.view = v;
