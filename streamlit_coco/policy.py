@@ -322,6 +322,9 @@ class FolderPolicy:
     """The default policy: reading inside `scope` (default: `folder`, the agent's working folder)
     is free, every other call asks, each time.
 
+    also_read   folders read freely besides the scope, with the same care (.git, secret names,
+                odd spellings, `flag`, searches, links followed). Reading only: a change there
+                is a change outside the scope
     commands    `Command`s: a call that is exactly one of these lines is shown as a read
     changes     which files a change is ordinary for: a function (resolved path) -> None, or the
                 words that end the question ("outside the working folder"); or glob patterns,
@@ -357,6 +360,7 @@ class FolderPolicy:
         folder,
         *,
         scope=None,
+        also_read=(),
         commands=(),
         changes=None,
         sql: bool = False,
@@ -365,6 +369,9 @@ class FolderPolicy:
     ) -> None:
         self.base = Path(folder)  # the agent's working folder
         self.scope = Path(scope or folder).resolve()
+        if isinstance(also_read, (str, os.PathLike)):
+            also_read = (also_read,)
+        self.also = [(self.base / place).resolve() for place in also_read]
         self.where = Path(scope or folder).name or self.scope.name
         if scope is not None:
             self.words = {**self.words, "scope": f"the folder {self.where}"}
@@ -380,9 +387,10 @@ class FolderPolicy:
 
     def flag(self, parts: tuple[str, ...]):
         """One more reason a place inside the scope is not read freely. `parts`: the names of the
-        path, from the scope. None, or (a key of your own, the words): the words are what a read
-        asks for ("a draft"), or a pair when a search needs its own ("a draft", "a folder with
-        drafts"). A search of a folder that holds such a file asks too."""
+        path, from the scope (or from the `also_read` folder that holds it). None, or (a key of
+        your own, the words): the words are what a read asks for ("a draft"), or a pair when a
+        search needs its own ("a draft", "a folder with drafts"). A search of a folder that holds
+        such a file asks too."""
         return None
 
     def commands(self) -> list[Command]:
@@ -464,6 +472,12 @@ class FolderPolicy:
         listed = [{"name": c.name, "line": c.line} for c in self.commands() if c.line]
         if listed:
             rights["commands"] = listed
+        if self.also:
+            rights["also_read_without_asking"] = {
+                "folders": [place.as_posix() for place in self.also],
+                "how": "Read, Glob and Grep there are free as inside the scope. Edit and Write "
+                "there are asked, as outside the scope",
+            }
         return rights
 
     # ------------------------------------------------------------------ what is free, what asks
@@ -487,19 +501,25 @@ class FolderPolicy:
         words = found[1]
         return "host", (words, words) if isinstance(words, str) else tuple(words)
 
+    def _root(self, path: Path) -> Path | None:
+        """The folder read freely that holds this resolved path: the scope or an `also_read`."""
+        return next((root for root in (self.scope, *self.also) if path.is_relative_to(root)), None)
+
     def _place(self, raw: str):
-        """None when the place is inside the scope and ordinary; else (key, words). Raises when
-        the system cannot resolve it."""
+        """None when the place is read freely (inside the scope or an `also_read` folder, and
+        ordinary); else (key, words). Raises when the system cannot resolve it."""
         if _spelling(raw):
             return self._why("odd")
-        within, parts = _locate(self.base, self.scope, raw)
-        return self._flag(parts, host=within) or (None if within else self._why("outside"))
+        path = (self.base / raw).resolve()
+        root = self._root(path)
+        parts = path.relative_to(root or path.anchor).parts
+        return self._flag(parts, host=bool(root)) or (None if root else self._why("outside"))
 
     def _holds(self, folder: Path, *, grep: bool):
         """A search returns lines or names of the files it covers and Cortex Code gives no way to
         filter them: the kind of the first file it would cover that a direct read asks for
         (secrets by name for a Grep; what the host flags for both)."""
-        base, seen = folder.relative_to(self.scope).parts, 0
+        base, seen = folder.relative_to(self._root(folder)).parts, 0
         for top, dirs, files in os.walk(folder):
             if grep:
                 dirs[:] = [d for d in dirs if not d.startswith(".") and d not in _NOT_SEARCHED]

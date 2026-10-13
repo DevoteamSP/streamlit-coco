@@ -1855,6 +1855,146 @@ class SwitchTest(FolderCase):
         self.assertEqual(policy.describe("Read", {"file_path": "notes.md"}), "Read notes.md")
 
 
+class AlsoReadTest(FolderCase):
+    """`also_read`: folders read freely besides the scope. It widens reading, and only reading."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.types = self.tmp / "types"
+        for name in ("guide.md", "rules/naming.md", "keys/server.pem", ".env", ".git/config"):
+            path = self.types / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("# Guide\n", encoding="utf-8")
+        self.also = self.policy(also_read=[self.types], standing=True)
+
+    def at(self, relative: str) -> str:
+        return str(self.types / relative)
+
+    def test_reading_there_is_free_as_inside_the_scope(self) -> None:
+        read = {"name": "Read", "input": {"file_path": self.at("guide.md")}}
+        for tool, payload in (
+            ("Read", {"file_path": self.at("guide.md")}),
+            ("Read", {"file_path": "../types/rules/naming.md"}),  # relative to the working folder
+            ("Glob", {"pattern": "**/*.md", "path": self.at("rules")}),
+            ("Glob", {"pattern": "*.md", "path": str(self.types)}),
+            ("Grep", {"pattern": "Guide", "path": self.at("rules")}),
+            ("direct_tool_calling", {"tool_calls": [read, read]}),
+        ):
+            with self.subTest(tool=tool, payload=payload):
+                self.assertEqual(self.also.judge(tool, payload), (None, None))
+                asked = self.ask(self.policy(standing=True), tool, payload)  # off: it asks
+                if tool != "direct_tool_calling":
+                    self.assertEqual(asked["standing"]["id"], "elsewhere")
+        self.assertEqual(self.also.judge("Read", {"file_path": "notes.md"}), (None, None))
+
+    def test_the_folders_may_be_given_in_any_form(self) -> None:
+        call = {"file_path": self.at("guide.md")}
+        for given in (self.types, str(self.types), "../types", [Path("../types")], (self.types,)):
+            with self.subTest(given=given):
+                self.assertEqual(self.policy(also_read=given).judge("Read", call), (None, None))
+        self.assertEqual(self.policy().also, [])
+
+    def test_what_a_read_asks_for_in_the_scope_asks_there_too(self) -> None:
+        for relative, what in (
+            (".env", "a file that may hold secrets"),
+            ("keys/server.pem", "a file that may hold secrets"),
+            (".git/config", "a file of the .git folder"),
+            ("guide.md:stream", "a path the app cannot tell is inside the working folder"),
+            ("guide.md.", "a path the app cannot tell is inside the working folder"),
+        ):
+            with self.subTest(relative=relative):
+                facts = self.ask(self.also, "Read", {"file_path": self.at(relative)})
+                self.assertEqual(facts["question"], f"Allow CoCo to read {what}?")
+                self.assertIsNone(facts["standing"])
+        # a search that would cover a secret-named file, or that names one
+        searched = self.ask(self.also, "Grep", {"pattern": "x", "path": str(self.types)})
+        self.assertIn("a folder with files that may hold secrets", searched["question"])
+        named = self.ask(self.also, "Glob", {"pattern": "*.pem", "path": self.at("rules")})
+        self.assertIn("secrets", named["question"])
+        left = self.ask(self.also, "Glob", {"pattern": "../*", "path": self.at("rules")})
+        self.assertIn("cannot tell", left["question"])
+
+    def test_flag_applies_there_with_the_names_from_that_folder(self) -> None:
+        seen = []
+
+        class Named(FolderPolicy):
+            def flag(self, parts):
+                seen.append(parts)
+                return ("named", "a naming rule") if parts[-1] == "naming.md" else None
+
+        policy = Named(self.folder, also_read=[self.types])
+        facts = self.ask(policy, "Read", {"file_path": self.at("rules/naming.md")})
+        self.assertEqual(facts["question"], "Allow CoCo to read a naming rule?")
+        self.assertEqual(seen, [("rules", "naming.md")])
+        searched = self.ask(policy, "Glob", {"pattern": "*", "path": self.at("rules")})
+        self.assertIn("a naming rule", searched["question"])
+        self.assertEqual(policy.judge("Read", {"file_path": self.at("guide.md")}), (None, None))
+
+    def test_a_path_that_leaves_the_folder_is_not_free(self) -> None:
+        for raw in (
+            self.at("../outside.md"),
+            self.at("rules/../../outside.md"),
+            "../types/../x.md",
+        ):
+            with self.subTest(raw=raw):
+                facts = self.ask(self.also, "Read", {"file_path": raw})
+                self.assertEqual(
+                    facts["question"], "Allow CoCo to read a file outside the working folder?"
+                )
+                self.assertEqual(facts["standing"]["id"], "elsewhere")
+        beside = self.ask(self.also, "Read", {"file_path": str(self.tmp / "types2" / "a.md")})
+        self.assertIn("outside", beside["question"])  # a name that starts the same is not inside
+        above = self.ask(self.also, "Grep", {"pattern": "x", "path": str(self.tmp)})
+        self.assertIn("outside", above["question"])  # nor the folder that holds it
+
+    def test_a_link_out_of_the_folder_is_followed(self) -> None:
+        away = self.tmp / "away"
+        away.mkdir()
+        (away / "private.md").write_text("x", encoding="utf-8")
+        link = self.types / "elsewhere"
+        if os.name == "nt":  # a junction needs no special right
+            done = subprocess.run(
+                ["cmd", "/c", "mklink", "/J", str(link), str(away)], capture_output=True
+            )
+            made = done.returncode == 0
+        else:
+            link.symlink_to(away)
+            made = True
+        if not made:
+            self.skipTest("no link right on this machine")
+        facts = self.ask(self.also, "Read", {"file_path": str(link / "private.md")})
+        self.assertIn("outside the working folder", facts["question"])
+        searched = self.ask(self.also, "Grep", {"pattern": "x", "path": str(link)})
+        self.assertIn("outside the working folder", searched["question"])
+
+    def test_a_change_there_is_a_change_outside_the_scope(self) -> None:
+        edit = {"file_path": self.at("guide.md"), "old_string": "a", "new_string": "b"}
+        for tool, payload in (
+            ("Write", {"file_path": self.at("new.md"), "content": "x"}),
+            ("Write", {"file_path": self.at("guide.md"), "content": "x"}),
+            ("Edit", edit),
+        ):
+            with self.subTest(tool=tool, payload=payload):
+                facts = self.ask(self.also, tool, payload)
+                self.assertEqual(facts["kind"], "change")
+                self.assertIn("a file outside the working folder?", facts["question"])
+                self.assertEqual(facts["changes"]["file"], Path(payload["file_path"]).as_posix())
+                self.assertIn("outside the working folder", facts["changes"]["note"])
+                self.assertIsNone(facts["standing"])  # never left to "File changes"
+                self.assertEqual(facts, self.ask(self.policy(standing=True), tool, payload))
+        inside_it = self.ask(self.also, "Write", {"file_path": "new.md", "content": "x"})
+        self.assertEqual(inside_it["standing"]["id"], "files")
+        self.assertNotIn("types", inside_it["standing"]["covers"])
+
+    def test_the_rights_name_them(self) -> None:
+        named = self.also.rights()["also_read_without_asking"]
+        self.assertEqual(named["folders"], [self.types.as_posix()])
+        self.assertIn("Edit and Write there are asked", named["how"])
+        self.assertNotIn("also_read_without_asking", self.policy().rights())
+        rest = {k: v for k, v in self.also.rights().items() if k != "also_read_without_asking"}
+        self.assertEqual(rest, self.policy().rights())
+
+
 class ExtensionTest(FolderCase):
     """The two documented extension points, and the words."""
 
