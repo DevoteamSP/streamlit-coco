@@ -26,11 +26,12 @@ def render_output_field(
     text_renderer: TextRenderer = None,
 ) -> None:
     """Show the latest answer of the window `coco` (``ask_coco`` / ``get_window``) in the page,
-    drawn by `text_renderer` (default ``st.markdown``). It refreshes by itself while CoCo works."""
+    drawn by `text_renderer` (default ``st.markdown``). It looks again every second."""
     render = resolve_text_renderer(text_renderer)
-    busy = coco.conversation.busy
 
-    @st.fragment(run_every=0.5 if busy else None)
+    # The window is its own fragment, so the page does not rerun while CoCo answers: this one
+    # looks again every second (ponytail: a fixed poll; a quiet window costs one cheap rerun).
+    @st.fragment(run_every=1.0)
     def _field() -> None:
         text = _latest(coco)
         with container if container is not None else st.container():
@@ -38,8 +39,6 @@ def render_output_field(
             if text:
                 render(text)
             else:
-                st.caption("The latest answer shows here." if not busy else "CoCo is working…")
-        if busy and not coco.conversation.busy:
-            st.rerun()  # leave the polling fragment once CoCo is done
+                st.caption("The latest answer shows here.")
 
     _field()

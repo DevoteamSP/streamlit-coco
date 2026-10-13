@@ -12,6 +12,28 @@ Living plan (what’s next): [`doc/roadmap.md`](doc/roadmap.md).
 
 ## [Unreleased]
 
+Ask CoCo, the floating assistant window, replaces the chat family. Version `0.2.0.dev0`; not released.
+Migration sheet: [`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask-coco.md).
+
+### Added
+
+- `ask_coco(cwd, ...)` mounts the launcher and the window; `get_window(key)` returns its handle (`ask`, `result`, `form`, `open`, `notice`, `latest_answer`, `new`, `disconnect`, `conversation`).
+- `Features` and `Attachments` (comfort, planning, display switches, session details, files attached in the field), `Gate`, and the `policy` module (`FolderPolicy`, `Command`, `git_readonly`, `request`, ...) as `st_coco.policy.X`. The default policy is the safest: reading inside the working folder is free, everything else asks.
+- `streamlit_coco.testing` and `STREAMLIT_COCO_AGENT=mock`: run any application on the scripted agent, with no Snowflake login.
+- `examples/headless_pipeline.py` answers approvals in code through a `Conversation` with a policy.
+
+### Changed
+
+- `render_output_field(coco, ...)` takes the window's handle (it was a `CocoSession`), refreshes itself, and no longer draws tool cards, a copy button or the status line; `text_renderer=` stays here.
+- The examples run on the window: `chat_app.py` (test-prompt picker through `coco.ask`; the two pill groups build a `FolderPolicy`), `approval_gate.py` (a policy with a listed command, `git_readonly`, a file-change rule, `sql=True`, `standing=True`), `structured_output.py` (`CocoOptions(output_schema=...)`, `coco.result`), `cwd_upload_chat.py` (attachments plus `cwd_uploader`; its folder is now `./cwd_upload_workspace`).
+- `make e2e` drives the window on the scripted agent and uses the installed Edge when Playwright's Chromium is not installed.
+
+### Removed
+
+- `chat`, `panel`, `copilot_rail`, `chat_input_bar`, `send_prompt`, `render_start_gate`, `render_environment_status`, `render_session_status`, `render_transcript`, `render_approvals`, `approve_pending`, `deny_pending`, `render_plan_banner`, `request_input`, `transcript_display_config`, `transcript_view_pills`, `get_latest_assistant_text`, `get_or_create_session`, `reset_session`, `stop_session`, `is_debug_mode`; and the modules behind them (`component`, `frontend/`, `ui`, `rail`, `bootstrap`, `display` helpers, `clipboard`, `tool_cards`, `tool_extract`, `rich_text`, `ask_user`, `debug`, `sql_tool`, `bridge`). What each becomes: `ask_coco(cwd)`, `coco.ask(label, text)`, `coco.form(...)`, `coco.conversation.act({"type": "allow" | "decline", "id": ...})`, `Features(...)`.
+- `CocoSession` and `query` are unchanged; answer a `CocoSession`'s own approvals with `session.permission_manager.resolve(request_id, approved=...)` (what `approve_pending` did also marked the transcript).
+- Unchanged: `cwd_uploader`, `upload_to_cwd`, `app_viewer` and the preview helpers, `CocoOptions`, events, errors, diagnostics.
+
 ## [0.1.9] — 2026-09-10
 
 Copilot rail can pick which Snowflake connections TOML to use.

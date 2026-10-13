@@ -1,4 +1,4 @@
-"""Playwright fixtures: run the UX harness Streamlit app."""
+"""Playwright fixtures: serve the UX harness on the scripted agent and open the window."""
 
 from __future__ import annotations
 
@@ -14,6 +14,14 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 HARNESS = REPO_ROOT / "examples" / "e2e_ux_harness.py"
+
+
+@pytest.fixture(scope="session")
+def browser_type_launch_args(browser_type_launch_args: dict, playwright) -> dict:
+    """Use the installed Edge when Playwright's Chromium is not installed."""
+    if not Path(playwright.chromium.executable_path).exists():
+        return {**browser_type_launch_args, "channel": "msedge"}
+    return browser_type_launch_args
 
 
 def _free_port() -> int:
@@ -40,11 +48,24 @@ def _wait_http(url: str, *, timeout: float = 60.0) -> None:
 
 
 @pytest.fixture(scope="session")
-def base_url() -> Iterator[str]:
+def workspace(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """The agent's working folder, outside the repository."""
+    folder = tmp_path_factory.mktemp("coco_e2e") / "work"
+    folder.mkdir()
+    (folder / "README.md").write_text("# Alpha\n\nTODO: scope\n", encoding="utf-8")
+    return folder
+
+
+@pytest.fixture(scope="session")
+def base_url(workspace: Path) -> Iterator[str]:
     port = _free_port()
     env = os.environ.copy()
-    env.setdefault("STREAMLIT_BROWSER_GATHER_USAGE_STATS", "false")
-    env.setdefault("STREAMLIT_SERVER_HEADLESS", "true")
+    env.update(
+        STREAMLIT_COCO_AGENT="mock",
+        COCO_E2E_WORKSPACE=str(workspace),
+        STREAMLIT_BROWSER_GATHER_USAGE_STATS="false",
+        STREAMLIT_SERVER_HEADLESS="true",
+    )
     proc = subprocess.Popen(  # noqa: S603
         [
             sys.executable,
@@ -61,10 +82,10 @@ def base_url() -> Iterator[str]:
             "--browser.gatherUsageStats",
             "false",
         ],
-        cwd=str(REPO_ROOT),
+        cwd=str(workspace.parent),  # not the repository
         env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
     )
     url = f"http://127.0.0.1:{port}"
     try:
@@ -79,14 +100,50 @@ def base_url() -> Iterator[str]:
             proc.wait(timeout=5)
 
 
-@pytest.fixture
-def harness_page(page, base_url: str):
-    """Open harness and click Start."""
-    page.context.grant_permissions(["clipboard-read", "clipboard-write"])
-    page.goto(base_url, wait_until="domcontentloaded")
-    page.get_by_role("button", name="Start harness").click()
-    page.get_by_text("Harness ready", exact=True).wait_for(timeout=30_000)
-    page.locator('[data-testid="e2e-harness-ready"]').wait_for(
-        state="attached", timeout=5_000
-    )
+def _open(page, url: str):
+    page.goto(url, wait_until="domcontentloaded")
+    page.get_by_role("button", name="Ask CoCo").first.click(timeout=30_000)
     return page
+
+
+@pytest.fixture
+def window(page, base_url: str):
+    """The window with attachments and display switches, open."""
+    return _open(page, base_url)
+
+
+@pytest.fixture
+def default_window(page, base_url: str):
+    """The default window (no features switched on), open."""
+    return _open(page, f"{base_url}/?mode=default")
+
+
+class Ask:
+    """What a test does in the window."""
+
+    def __init__(self, page) -> None:
+        self.page = page
+
+    def connect(self) -> None:
+        self.page.get_by_role("button", name="Connect mock").click()
+        self.page.get_by_role("textbox", name="Ask CoCo").wait_for()
+        self.page.wait_for_timeout(1_500)  # the scripted connection settles
+
+    def say(self, text: str) -> None:
+        field = self.page.get_by_role("textbox", name="Ask CoCo")
+        field.fill(text)
+        field.press("Enter")  # Send is the Stop button while CoCo works
+
+    def thread(self) -> str:
+        return self.page.get_by_role("log").first.inner_text()
+
+    def menu(self, item: str) -> None:
+        self.page.get_by_role("button", name="CoCo menu").click()
+        self.page.get_by_role("menuitem", name=item).or_(
+            self.page.get_by_role("menuitemcheckbox", name=item)
+        ).first.click()
+
+
+@pytest.fixture
+def ask(page) -> Ask:
+    return Ask(page)

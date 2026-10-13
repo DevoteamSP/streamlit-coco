@@ -46,7 +46,7 @@ e2e-install: ## Install [e2e] extra + Chromium for Playwright
 	$(UV) sync --extra e2e
 	$(E2E_PYTHON) playwright install chromium
 
-e2e: ## Run Playwright UX e2e against examples/e2e_ux_harness.py
+e2e: ## Run the Playwright tests of the window (scripted agent, no login; Edge when Chromium is missing)
 	$(E2E_PYTHON) pytest tests/e2e -m e2e -v
 
 test-all: check e2e audit ## Full automated gate: lint + unit + e2e + audit
@@ -54,7 +54,7 @@ test-all: check e2e audit ## Full automated gate: lint + unit + e2e + audit
 run: ## Run EXAMPLE (default: examples/chat_app.py)
 	$(STREAMLIT) $(EXAMPLE)
 
-chat: ## Run examples/chat_app.py
+chat: ## Run examples/chat_app.py (STREAMLIT_COCO_AGENT=mock: no login)
 	$(STREAMLIT) examples/chat_app.py
 
 approval: ## Run examples/approval_gate.py
@@ -69,7 +69,7 @@ headless: ## Run examples/headless_pipeline.py
 backlog: ## Run Product Backlog Desk demo (examples/backlog_desk)
 	cd examples/backlog_desk && $(UV) run --project ../.. python -m streamlit run streamlit_app.py
 
-cwd-upload: ## Run examples/cwd_upload_chat.py (upload into cwd)
+cwd-upload: ## Run examples/cwd_upload_chat.py (attachments + uploader into cwd)
 	$(STREAMLIT) examples/cwd_upload_chat.py
 
 bi-semantic: ## Run BI → Semantic (Tableau / Power BI, repo streamlit-coco)
@@ -80,8 +80,8 @@ tableau-semantic: bi-semantic ## Deprecated alias for bi-semantic
 app-builder: ## Run App Builder (type library → brief → Copilot / Preview)
 	cd examples/app_builder && $(UV) run --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py
 
-e2e-harness: ## Run CoCo-free UX harness used by Playwright
-	$(STREAMLIT) examples/e2e_ux_harness.py
+e2e-harness: ## Run the CoCo-free harness the Playwright tests use (scripted agent)
+	STREAMLIT_COCO_AGENT=mock $(STREAMLIT) examples/e2e_ux_harness.py
 
 # Adoption metrics (PyPI + GitHub traffic). FORCE=1 overwrites today; UPDATE_ROADMAP=1 refreshes Current KPIs.
 ADOPTION_STATS_FLAGS =
