@@ -27,7 +27,7 @@ Stand up the integration against the client's actual Snowflake account and app s
 | Activity | Owner | Duration | Deliverable |
 | --- | --- | --- | --- |
 | Install + configure `streamlit-coco` in client repo/environment | Devoteam | 0.5d | Working local install |
-| Build minimal app skeleton (`panel()` + `chat_input_bar()` or headless `query()`) | Devoteam | 1d | Skeleton app running against client data |
+| Build minimal app skeleton (`ask_coco()` or headless `query()`) | Devoteam | 1d | Skeleton app running against client data |
 | Configure `allowed_tools` / `require_approval_for` per approval policy | Devoteam | 0.5d | Approval gates verified |
 | Wire structured output into client's existing widgets (if applicable) | Devoteam | 1d | Widget(s) driven by agent output |
 | Client review checkpoint | Devoteam + Client | 1h | Sign-off to proceed or adjust |

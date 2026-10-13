@@ -48,7 +48,7 @@ What must be ready **before** this session:
 |------|-------|-------------|
 | 0:00 | Context & goals (10 min) — why streamlit-coco, what "done" looks like today | Devoteam |
 | 0:10 | Setup verification (20 min) — run through [`setup-guide.md`](../../training/setup-guide.md) checklist live; troubleshoot any environment issues on the spot | Devoteam + Client |
-| 0:30 | Architecture walkthrough (30 min) — session ownership model, `panel()`/`chat_input_bar()`/`copilot_rail()`/`query()`, approval gates, tool cards; live in `examples/chat_app.py` | Devoteam |
+| 0:30 | Architecture walkthrough (30 min) — how the window owns its session, `ask_coco()`/`query()`, the policy and Allow / Decline requests, steps; live in `examples/chat_app.py` | Devoteam |
 | 1:00 | Demo / live walkthrough (25 min) — run the [demo script](../../training/demo-script.md) Steps 1–3 (first impression, approval gates, structured output) | Devoteam |
 | 1:25 | Break (10 min) | — |
 | 1:35 | Hands-on exercise (60 min) — client developer completes Hands-On Lab [Exercise 5](../../training/hands-on-lab.md#exercise-5--build-a-minimal-app-from-scratch): build a minimal app from the README alone, targeting the client's actual use case instead of the generic sample | Client (guided by Devoteam) |
@@ -80,7 +80,7 @@ approval-policy decision to carry into the Build phase.
 - **Common confusion point**: expecting Streamlit Community Cloud or SiS support — CoCo
   needs a subprocess + CLI on the same host as Streamlit; clarify this limitation early if
   the client's target deployment is cloud-hosted (see `doc/deployment/local.md` §8).
-- **If the group is ahead of schedule**: show `make bi-semantic` (`copilot_rail()` in a
+- **If the group is ahead of schedule**: show `make bi-semantic` (the Ask CoCo window in a
   product wizard) or extend the hands-on to structured output (Hands-On Lab Exercise 3).
 - **If behind**: skip the headless-mode portion of the demo walkthrough (Step 4) — it's
   optional and not required for the core Build-phase outcome.

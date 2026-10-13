@@ -1,5 +1,8 @@
 # Setup Guide — streamlit-coco
 
+> **Out of date for 0.2.0.** This training pack was written for `0.1.9`, with `panel()`, `chat_input_bar()`, `copilot_rail()`, `render_start_gate()` and "Approve once / Always allow / Deny". Those are removed: the interface is the Ask CoCo window (`ask_coco(cwd)`), with Allow / Decline. What each name became: [`doc/features/ask-coco/ask-coco.md`](../features/ask-coco/ask-coco.md) section 2. The exercises have not been rewritten yet.
+
+
 Get the dev repo running locally and verify you're ready for the hands-on lab.
 Full reference: [`doc/deployment/local.md`](../deployment/local.md) — this guide is the
 condensed, training-specific path through it.
