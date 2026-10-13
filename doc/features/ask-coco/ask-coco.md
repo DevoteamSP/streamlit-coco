@@ -56,9 +56,9 @@ page:
 
 | Member | What it does | Replaces |
 |---|---|---|
-| `coco.ask(label, text=None, *, key=None, schema=None) -> bool` | A button of the page asks CoCo in the user's name. The thread shows `label`, CoCo receives `text`. Sent when connected, shown as waiting until then. `schema` asks for a structured result | `copilot_rail(job=…)`, `send_prompt` |
-| `coco.result(key) -> dict \| None` | The structured result of that request, handed over once | `on_structured_output`, `on_job_finished` |
-| `coco.form(title, fields, *, key) -> dict \| None` | A form asked by the application, answered in the window; `None` until answered | `request_input` |
+| `coco.ask(label, text=None, *, key=None) -> bool` | A button of the page asks CoCo in the user's name. The thread shows `label`, CoCo receives `text`. Sent when connected, shown as waiting until then. It reruns the page once, so it belongs behind a button. A structured answer is the session's (`options=CocoOptions(output_schema=...)`) | `copilot_rail(job=…)`, `send_prompt` |
+| `coco.result(key) -> dict \| None` | `{"text", "data"}` of the request sent with `coco.ask(..., key=key)`, handed over once; `data` is the session's structured output (the payload itself), else `None` | `on_structured_output`, `on_job_finished` |
+| `coco.form(title, fields, *, key) -> dict \| None` | A form asked by the application, answered in the window; needs no agent and no connection. Call it on every run: it asks once per `key`. `None` until answered or skipped, then once `{"skipped": False, "values": {field id: text}}`, or `{"skipped": True, "values": {}}` when skipped; afterwards `None` again, never re-asked (a new question needs a new key) | `request_input` |
 | `coco.open(drafts=None)` | Opens the window, optionally with prepared texts (one bubble each, with Copy, no agent call) | none |
 | `coco.notice(text, *, action=None)` | One line in the thread in the application's words | toast of the rail |
 | `coco.latest_answer -> str` | The latest answer's text, for a page that shows it elsewhere | `get_latest_assistant_text` |
@@ -237,7 +237,7 @@ Rows are those of the inventory (`COCO_PACKAGE_FEATURES.md` section 1). Example 
 | 15 | A form asked by the application | `coco.form` | BI |
 | 16 | Plan mode | `Features(planning=True)` | CA |
 | 17 | Switch plan mode on | menu line | CA |
-| 18 | Structured output | `coco.ask(schema=)`, `coco.result`, data block | SO, BI |
+| 18 | Structured output | `options=CocoOptions(output_schema=...)`, `coco.ask(label, text, key=...)` then `coco.result(key)`, data block | SO, BI |
 | 19 | Attach files in the field | `Features(attachments=...)` | UP |
 | 20 | Uploader on the page | `cwd_uploader`, unchanged | UP, BI |
 | 21 | Example questions, sending or filling | `prompts=` | AB, BI |

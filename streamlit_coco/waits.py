@@ -52,6 +52,7 @@ _QUESTION_KEYS = ("source", "questions", "text")
 
 
 def reset(conv) -> None:
+    conv.w_forms = getattr(conv, "w_forms", {})  # the application's forms outlive a conversation
     conv.w_items, conv.w_seq, conv.w_count = (
         [],
         {},
@@ -69,6 +70,65 @@ def reset(conv) -> None:
         None,
         None,
     )  # mode; first item of the planning; last context; tool just allowed for good
+
+
+def ask_form(conv, key: str, title: str, fields: list[dict]) -> None:
+    """The application asks a form (feature file 1.1, `coco.form`): it waits in the same list as
+    CoCo's questions, with source "app", and needs no agent and no connection. Idempotent per
+    `key`: asked once; asked again only while it is still waiting and was lost with a conversation
+    that ended. Answered or skipped, it stays done: a new question needs a new key."""
+    state = conv.w_forms.setdefault(key, {"state": "waiting", "values": {}, "handed": False})
+    if state["state"] != "waiting" or any(w.get("app_key") == key for w in conv.w_items):
+        return
+    form = [
+        {
+            "id": str(f["id"]),
+            "label": str(f.get("label") or f["id"]),
+            "type": f.get("type")
+            if f.get("type") in ("text", "longtext", "number", "choice")
+            else "text",
+            "choices": [str(c) for c in f.get("choices") or []],
+            "required": bool(f.get("required", True)),
+            "value": str(f.get("value", "")),
+        }
+        for f in fields
+    ]
+    conv.w_items.append(
+        {
+            "kind": "question",
+            "id": conv._id("n"),
+            "tool_id": None,
+            "source": "app",
+            "app_key": key,
+            "questions": [{"id": "q1", "kind": "form", "text": title, "fields": form}],
+            "n": next(conv.w_count),
+        }
+    )
+    conv.rev += 1
+
+
+def form_result(conv, key: str, take: bool = True) -> dict | None:
+    """None while the form waits (or was never asked, or was already handed over); once answered,
+    {"skipped": False, "values": {field id: text}}; once skipped, {"skipped": True, "values": {}}.
+    Handed over once."""
+    state = conv.w_forms.get(key)
+    if not state or state["state"] == "waiting" or state["handed"]:
+        return None
+    state["handed"] = take or state["handed"]
+    return {"skipped": state["state"] == "skipped", "values": dict(state["values"])}
+
+
+def _app_done(conv, wait: dict, answers) -> None:
+    """The application's form is answered (answers: the window's list) or skipped (None)."""
+    conv.w_items.remove(wait)
+    state = conv.w_forms[wait["app_key"]]
+    first = (answers[0] if isinstance(answers, list) and answers else None) or {}
+    fields = first.get("fields") if isinstance(first, dict) else None
+    if fields is None:
+        state["state"] = "skipped"
+    else:
+        state.update(state="answered", values={str(k): str(v) for k, v in fields.items()})
+    conv.rev += 1
 
 
 def _agent(conv, name: str, *args, **kw) -> None:
@@ -250,7 +310,8 @@ def decline_all(conv) -> None:
     """Stop: what waits besides the requests (which the core declines) is skipped or declined, in
     order."""
     for wait in list(conv.w_items):
-        _settle(conv, wait, stopped=True, tell=True, new=True)
+        if not wait.get("app_key"):  # the application's form is not the run's: Stop leaves it
+            _settle(conv, wait, stopped=True, tell=True, new=True)
 
 
 def _settle(conv, wait: dict, *, stopped: bool, tell: bool, new: bool) -> None:
@@ -270,7 +331,8 @@ def end(conv, kind: str, run: dict | None) -> None:
             _revoke(conv, grant["id"], tell=False)
         conv.w_planning = False
     for wait in list(conv.w_items) if run else []:
-        _settle(conv, wait, stopped=kind == "stopped", tell=kind != "lost", new=False)
+        if not wait.get("app_key"):
+            _settle(conv, wait, stopped=kind == "stopped", tell=kind != "lost", new=False)
 
 
 def act(conv, action: dict, context: dict | None) -> bool:
@@ -278,12 +340,17 @@ def act(conv, action: dict, context: dict | None) -> bool:
     if kind == "answer":
         wait = _find(conv, "question", id)
         text = wait and _said(wait, action.get("answers"))
-        if text:
+        if wait and wait.get("app_key"):
+            if isinstance(action.get("answers"), list) and action["answers"]:
+                _app_done(conv, wait, action["answers"])
+        elif text:
             _close(conv, wait, None, user=text)
             _agent(conv, "answer", id, action["answers"])
     elif kind == "skip":
         wait = _find(conv, "question", id)
-        if wait:
+        if wait and wait.get("app_key"):
+            _app_done(conv, wait, None)
+        elif wait:
             _close(conv, wait, "skipped")
             _agent(conv, "skip", id)
     elif kind == "approve_plan":

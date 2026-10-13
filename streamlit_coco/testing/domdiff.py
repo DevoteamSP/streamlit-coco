@@ -17,6 +17,9 @@ is rendered by the Cockpit's own harness (its coco.js, its tokens, its Montserra
 package's (defaults only), in two tabs of the same size. Compared: the DOM, the computed styles of
 the launcher, the window, the request block and the composer (font family and size, colours,
 radius, weight) and the size of those boxes. Left out: inline sizes, whitespace between tags.
+The package's defaults name no host, so three sentences differ from the Cockpit's (COCKPIT_LABELS);
+the package side passes the Cockpit's words through `labels=`, and those are the only allowed
+differences: with them restored the result must be 0 differences.
 """
 
 from __future__ import annotations
@@ -32,6 +35,17 @@ from streamlit_coco import assets
 from streamlit_coco.testing import fixtures as fx
 from streamlit_coco.testing import harness
 
+# The only sentences that differ between the package's defaults and the Cockpit's window: the
+# defaults name no host. In --cockpit mode the package side passes the Cockpit's own words through
+# `labels=`,
+# which is what the Cockpit will do; every other difference is a failure.
+COCKPIT_LABELS = {
+    "window.offline": "No answer from the Cockpit yet. Trying again.",
+    "window.first.not_installed_sub": "Ask whoever installs Cockpit for you to enable it.",
+    "window.footer.package_missing": (
+        "The assistant's package is not installed. Starting Cockpit with this command installs it:"
+    ),
+}
 ROOT = Path(__file__).resolve().parents[2]
 # states the playground added without a frame number: no "before" exists for them
 ADDED = {"files_sending", "question_expired", "question_cancelled", "plan_expired"}
@@ -170,7 +184,7 @@ def compare_with_cockpit(args, browser) -> int:
     for start in range(0, len(names), 6):
         batch = names[start : start + 6]
         before = dump(theirs.page(batch, 460, 780, 14.4), browser)
-        after = dump(harness.page(batch, 460, 780, 14.4), browser)
+        after = dump(harness.page(batch, 460, 780, 14.4, labels_=COCKPIT_LABELS), browser)
         for name, one, other in zip(batch, before, after):
             diff = first_difference(one, other)
             if not diff:

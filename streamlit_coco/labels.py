@@ -18,9 +18,8 @@ Rules of the table:
 - ``ask_coco(labels={key: text})`` overrides any key; a key the table does not know is passed
   through untouched, so a host can keep its own sentences next to the package's. Texts written by
   a policy (a request's question, a command's plain name) are not here: they are the policy's own.
-- Three sentences of the Cockpit's first screen still name it (``offline``,
-  ``footer.package_missing``, ``first.not_installed_sub``): they are today's words, kept until the
-  interface decides how the package names its host.
+- The defaults name no host: a host that wants its own words (the Cockpit's "Cockpit" and
+  "make cockpit") passes them through ``labels=``.
 """
 
 from __future__ import annotations
@@ -35,7 +34,7 @@ DEFAULT: dict[str, str] = {
     "window.header.minimise": "Minimise CoCo",
     "window.header.menu": "CoCo menu",
     "window.thread.label": "Conversation",
-    "window.offline": "No answer from the Cockpit yet. Trying again.",
+    "window.offline": "No answer from the application yet. Trying again.",
     "window.field.label": "Ask CoCo",
     "window.field.placeholder": "Ask CoCo",
     "window.field.ahead_working": "Type ahead. It is sent when CoCo is done",
@@ -94,7 +93,7 @@ DEFAULT: dict[str, str] = {
         "It reads your project files. It asks before it runs a command or changes a file."
     ),
     "window.first.not_installed": "CoCo is not set up on this computer",
-    "window.first.not_installed_sub": "Ask whoever installs Cockpit for you to enable it.",
+    "window.first.not_installed_sub": "Ask whoever installs this application for you to enable it.",
     "window.first.connecting": "Connecting to {profile}",
     "window.first.your_account": "your Snowflake account",
     "window.first.lost": "The connection was lost",
@@ -112,7 +111,7 @@ DEFAULT: dict[str, str] = {
     "window.first.works_with": "CoCo works with your Snowflake account.",
     "window.footer.missing": "What is missing and how to fix it",
     "window.footer.package_missing": (
-        "The assistant's package is not installed. Starting Cockpit with this command installs it:"
+        "The assistant's package is not installed. This command installs it:"
     ),
     "window.footer.profile": "Snowflake profile",
     "window.footer.connect": "Connect",

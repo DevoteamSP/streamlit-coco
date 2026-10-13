@@ -391,7 +391,7 @@ class Translator:
             structured = getattr(event, "structured_output", None)
             block = None if structured is None else _safely(data_block, "result-data", structured)
             if block:
-                out.append({"t": "structured", "tool_id": None, "data": block})
+                out.append({"t": "structured", "tool_id": None, "data": block, "raw": structured})
             out.append({"t": "result", "text": meta.get("result"), "error": False})
         elif event.type in ("result", "error"):
             out.append(self.failure(event.message or meta.get("result") or event.subtype or ""))

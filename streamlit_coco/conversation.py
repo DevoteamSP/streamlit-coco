@@ -421,8 +421,15 @@ class Conversation:
         """A button of the page asks in the user's name; see extras."""
         return extras.request_from_page(self, label, text, context, key, hint)
 
-    def result_for(self, key):
-        return extras.result_for(self, key)
+    def result_for(self, key, take: bool = True):
+        return extras.result_for(self, key, take)
+
+    def ask_form(self, key: str, title: str, fields: list[dict]) -> None:
+        """The application asks a form; see waits.ask_form."""
+        waits.ask_form(self, key, title, fields)
+
+    def form_result(self, key: str, take: bool = True) -> dict | None:
+        return waits.form_result(self, key, take)
 
     def notice(self, text: str, label: str | None = None, then=None) -> str:
         return extras.notice(self, text, label, then)

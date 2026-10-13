@@ -173,8 +173,7 @@ def example_questions_visible(
     if not normalize_example_questions(items):
         return False
     return not any(
-        item.get("role") in {"user", "assistant"}
-        for item in session.get_transcript_snapshot()
+        item.get("role") in {"user", "assistant"} for item in session.get_transcript_snapshot()
     )
 
 
@@ -228,9 +227,7 @@ def transcript_display_config(
     else:
         stored_last = int(st.session_state[last_key])
         if stored_last < LAST_MESSAGES_MIN or stored_last > LAST_MESSAGES_MAX:
-            st.session_state[last_key] = max(
-                LAST_MESSAGES_MIN, min(LAST_MESSAGES_MAX, stored_last)
-            )
+            st.session_state[last_key] = max(LAST_MESSAGES_MIN, min(LAST_MESSAGES_MAX, stored_last))
     if chars_key not in st.session_state:
         st.session_state[chars_key] = preview_chars
     else:
@@ -439,9 +436,7 @@ def copilot_rail(
             run_every=run_every,
             on_structured_output=on_structured_output if job and expect_structured else None,
         )
-        if example_questions_visible(
-            session, example_questions, connected=True, job=job
-        ):
+        if example_questions_visible(session, example_questions, connected=True, job=job):
             _render_example_questions(
                 session,
                 example_questions,

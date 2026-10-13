@@ -71,7 +71,7 @@ import time
 import uuid
 from pathlib import Path
 
-from streamlit_coco.cortex import _INSTALL, data_block
+from streamlit_coco.cortex import _INSTALL, _PACKAGE, data_block
 from streamlit_coco.gate import EXPIRY, Gate
 
 _PLAN4 = (
@@ -133,7 +133,7 @@ class ScriptedAgent:
     def setup(self) -> dict | None:
         missing = os.environ.get("STREAMLIT_COCO_MOCK_SETUP")
         return (
-            {"missing": missing, "command": "make cockpit" if missing == "package" else _INSTALL}
+            {"missing": missing, "command": _PACKAGE if missing == "package" else _INSTALL}
             if missing
             else None
         )
@@ -517,31 +517,30 @@ class ScriptedAgent:
                 )
             elif "structured" in low:
                 self._say("I read the status of the folder.")
+                payload = {
+                    "Week": "2026-W41",
+                    "Phase": "6 of 7",
+                    "Budget": "Green",
+                    "Days remaining": 58,
+                    "Risks": [
+                        {
+                            "ID": "R-001",
+                            "RISK": "Source access not granted",
+                            "OWNER": "Camille Aubert",
+                        },
+                        {
+                            "ID": "R-004",
+                            "RISK": "Milestone M3 is 6 days late",
+                            "OWNER": "Hugo Lefevre",
+                        },
+                    ],
+                }
                 self.emit(
                     {
                         "t": "structured",
                         "tool_id": None,
-                        "data": data_block(
-                            "result-data",
-                            {
-                                "Week": "2026-W41",
-                                "Phase": "6 of 7",
-                                "Budget": "Green",
-                                "Days remaining": 58,
-                                "Risks": [
-                                    {
-                                        "ID": "R-001",
-                                        "RISK": "Source access not granted",
-                                        "OWNER": "Camille Aubert",
-                                    },
-                                    {
-                                        "ID": "R-004",
-                                        "RISK": "Milestone M3 is 6 days late",
-                                        "OWNER": "Hugo Lefevre",
-                                    },
-                                ],
-                            },
-                        ),
+                        "data": data_block("result-data", payload),
+                        "raw": payload,
                     }
                 )
                 self._finish("This is the status of week 41, with its two open risks.")

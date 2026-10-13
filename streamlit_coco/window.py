@@ -19,7 +19,6 @@ and features ({motion, copy, steps}).
 from __future__ import annotations
 
 import copy
-import json
 import uuid
 from collections.abc import Callable
 from functools import lru_cache, partial
@@ -97,41 +96,48 @@ class Window:
         return self._s["conv"]
 
     # ---- the application asks CoCo
-    def ask(
-        self, label: str, text: str | None = None, *, key: str | None = None, schema=None
-    ) -> bool:
+    def ask(self, label: str, text: str | None = None, *, key: str | None = None) -> bool:
         """A button of the page asks in the user's name: the thread shows `label`, CoCo receives
-        `text`. Sent when connected, shown as waiting until then. `schema` (a JSON schema as a
-        dict) asks for a structured result, which `result(key)` hands back in `data`."""
+        `text`. Sent when connected, shown as waiting until then. A structured answer is the
+        session's (`options=CocoOptions(output_schema=...)`) and comes back through `result(key)`.
+
+        It reruns the page once (the window was drawn before the click and must be drawn again,
+        open and working), so it belongs behind a button: called on every run it would loop."""
         s = self._s
-        prompt = text if text is not None else label
-        if schema is not None:
-            prompt += (
-                "\n\nAnswer with one JSON object matching this JSON schema, and nothing else:\n"
-                + json.dumps(schema)
-            )
         key = key or label
         ctx = s["context"]() if s["context"] else {}
-        if not s["conv"].request_from_page(label, prompt, ctx, key=key):
+        if not s["conv"].request_from_page(
+            label, text if text is not None else label, ctx, key=key
+        ):
             return False
-        s["schemas"][key] = schema is not None
+        s["asked"].add(key)
         self.open()
-        st.rerun()  # the window was drawn before this click: draw it again, working
+        st.rerun()
         return True
 
     def result(self, key: str) -> dict | None:
-        """The structured result of that request, handed over once; None until it is finished."""
-        got = self._s["conv"].result_for(key)
-        if got is not None and self._s["schemas"].get(key) and got.get("data") is None:
-            try:
-                got = {**got, "data": json.loads(got["text"])}
-            except (TypeError, ValueError):
-                pass  # not JSON: the text stays, the host sees data is None
-        return got
+        """{"text", "data"} of the request sent with `ask(..., key=key)`, handed over once; None
+        until it is finished. `data` is the structured result when the session has an
+        output_schema, else None."""
+        s = self._s
+        s["asked"].discard(key)
+        return s["conv"].result_for(key)
 
     def form(self, title: str, fields: list[dict], *, key: str) -> dict | None:
-        """A form asked by the application, answered in the window; None until answered."""
-        raise NotImplementedError("coco.form needs the conversation's application questions")
+        """A form asked by the application, answered in the window (no agent, no connection).
+
+        `fields` are dicts {id, label?, type?: text | longtext | number | choice, choices?,
+        required?, value?}. Call it on every run: it asks once per `key`, and returns None until
+        the user has answered or skipped; then, once, {"skipped": False, "values": {id: text}} or
+        {"skipped": True, "values": {}}. Afterwards it returns None again and never re-asks: a new
+        question needs a new key."""
+        conv = self._s["conv"]
+        asked = key in conv.w_forms
+        conv.ask_form(key, title, fields)
+        if not asked:
+            self.open()
+            st.rerun()  # the window was drawn before this call: draw it again, open
+        return conv.form_result(key)
 
     # ---- what the page does to the window
     def open(self, drafts: list | None = None) -> None:
@@ -194,6 +200,12 @@ def _window(key: str) -> None:
     conv = s["conv"]
     if conv.drain():  # the agent changed files (on_files_changed was called): read again, once
         st.rerun()
+    for form in [k for k in conv.w_forms if k not in s["told"] and conv.form_result(k, take=False)]:
+        s["told"].add(form)  # the page reads the values on its next run: run it once
+        st.rerun()
+    for asked in [k for k in s["asked"] if conv.result_for(k, take=False) is not None]:
+        s["asked"].discard(asked)  # a request of the page finished: the page shows its line
+        st.rerun()
     f = conv.features
     _component()(
         key=f"{_slot(key)}:component",
@@ -255,7 +267,8 @@ def ask_coco(
             "ack": 0,
             "token": 0,
             "sess": uuid.uuid4().hex[:8],
-            "schemas": {},
+            "asked": set(),
+            "told": set(),
         }
     conv = s["conv"]
     # what a host may change from one run to the next: the folder, the rights, the texts

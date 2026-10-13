@@ -239,7 +239,7 @@ def on(conv, event: dict) -> bool:
         step["note"] = _count(conv, blocks)
     elif run is not None:
         run["turn"].setdefault("ex_blocks", []).extend(blocks)
-        run["turn"]["ex_data"] = event.get("data")
+        run["turn"]["ex_data"] = event["raw"] if "raw" in event else event.get("data")
     return True
 
 
@@ -380,7 +380,7 @@ def request_from_page(
     return True
 
 
-def result_for(conv, key: str):
+def result_for(conv, key: str, take: bool = True):
     """{text, data} of the finished job, once; None until then (or when it was never started)."""
     message = conv.ex["jobs"].get(key)
     if message is None or key in conv.ex["handed"]:
@@ -394,7 +394,8 @@ def result_for(conv, key: str):
     texts = [e["text"] for e in turn["seq"] if e["k"] == "text" and e["text"].strip()]
     if not texts and turn.get("ex_data") is None:
         return None
-    conv.ex["handed"].add(key)
+    if take:
+        conv.ex["handed"].add(key)
     return {"text": texts[-1] if texts else "", "data": turn.get("ex_data")}
 
 

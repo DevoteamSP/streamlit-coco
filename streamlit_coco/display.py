@@ -300,9 +300,7 @@ def render_session_status(
         text = session_progress_text(session) or "Working · thinking…"
         st.badge(text, icon=":material/pending:", color="blue")
         if show_details:
-            st.caption(
-                f"`{_status_model_label(session)}` · `{_status_connection_label(session)}`"
-            )
+            st.caption(f"`{_status_model_label(session)}` · `{_status_connection_label(session)}`")
         return
 
     if session.status in {CocoRunStatus.READY, CocoRunStatus.COMPLETED, CocoRunStatus.IDLE}:

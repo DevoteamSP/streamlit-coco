@@ -873,3 +873,135 @@ class MarkdownTest(unittest.TestCase):
     def test_a_streamed_partial_text_does_not_break(self) -> None:
         for html in self.render("```\nunclosed fence", "**not closed", "| a | b |", "- ", ""):
             self.assertNotIn("<script", html)
+
+
+FIELDS = [
+    {"id": "who", "label": "Name", "type": "text"},
+    {"id": "n", "label": "Days", "type": "number", "required": False},
+    {
+        "id": "mood",
+        "label": "Mood",
+        "type": "choice",
+        "choices": ["Calm", "Worried"],
+        "value": "Calm",
+    },
+]
+
+
+class FormTest(ConversationCase):
+    """coco.form: the application's form waits with CoCo's questions, with no agent and no connection."""
+
+    def ask(self) -> dict:
+        self.conv.ask_form("k", "Who is away?", FIELDS)
+        return self.view()
+
+    def answer(self, **values) -> None:
+        wait = self.view()["wait"]
+        self.conv.act(
+            {
+                "type": "answer",
+                "id": wait["id"],
+                "answers": [{"id": "q1", "picked": [], "other": None, "fields": values}],
+            }
+        )
+
+    def test_it_waits_as_an_application_question_without_a_connection(self) -> None:
+        view = self.ask()
+        check_view(self, view)
+        wait = view["wait"]
+        self.assertEqual(
+            (view["status"], wait["kind"], wait["source"], wait["questions"][0]["kind"]),
+            ("not_connected", "question", "app", "form"),
+        )
+        self.assertEqual(
+            [f["type"] for f in wait["questions"][0]["fields"]], ["text", "number", "choice"]
+        )
+        self.assertEqual(view["pill"]["kind"], "question")
+        self.assertIsNone(self.conv.form_result("k"))
+
+    def test_an_answer_comes_back_once_and_is_not_asked_again(self) -> None:
+        self.ask()
+        self.answer(who="Lea", n="3", mood="Calm")
+        self.assertNotIn("wait", self.view())
+        self.assertEqual(
+            self.conv.form_result("k"),
+            {"skipped": False, "values": {"who": "Lea", "n": "3", "mood": "Calm"}},
+        )
+        self.assertIsNone(self.conv.form_result("k"))
+        self.ask()
+        self.assertNotIn("wait", self.view())
+
+    def test_a_skipped_form_reads_skipped_true_with_no_values(self) -> None:
+        wait = self.ask()["wait"]
+        self.conv.act({"type": "skip", "id": wait["id"]})
+        self.assertEqual(self.conv.form_result("k"), {"skipped": True, "values": {}})
+
+    def test_it_is_asked_once_per_key_and_stop_leaves_it(self) -> None:
+        self.connect()
+        self.send("work")
+        self.conv.ask_form("k", "Who is away?", FIELDS)
+        self.conv.ask_form("k", "Who is away?", FIELDS)
+        self.assertEqual(self.view()["wait"]["more"], None)
+        self.conv.act({"type": "stop"})
+        self.assertEqual(self.view()["wait"]["source"], "app")
+
+    def test_an_answer_with_only_optional_fields_empty_still_counts(self) -> None:
+        self.ask()
+        self.answer(who="", n="", mood="")
+        self.assertEqual(self.conv.form_result("k")["skipped"], False)
+
+
+class StructuredTest(unittest.TestCase):
+    """Structured output is the session's: the adapter's `structured` event is what `result(key)` hands over."""
+
+    def test_a_request_of_the_page_gets_the_structured_data_once(self) -> None:
+        import tempfile
+        import time
+
+        from coco_fixture import make_folder
+
+        from streamlit_coco.conversation import Conversation
+        from streamlit_coco.policy import FolderPolicy
+        from streamlit_coco.testing.scripted import ScriptedAgent
+
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = make_folder(Path(tmp))
+            conv = Conversation(
+                folder,
+                policy=FolderPolicy(folder),
+                agent=lambda emit: ScriptedAgent(emit, delay=0, connect_delay=0),
+            )
+            try:
+                conv.act({"type": "connect", "profile": "mock"})
+                end = time.monotonic() + 10
+                while conv.view()["status"] != "ready" and time.monotonic() < end:
+                    conv.drain()
+                    time.sleep(0.01)
+                self.assertTrue(
+                    conv.request_from_page(
+                        "Get the status", "give me the structured status", {}, key="status"
+                    )
+                )
+                got = None
+                while got is None and time.monotonic() < end:
+                    conv.drain()
+                    got = conv.result_for("status", take=False)
+                    time.sleep(0.01)
+                self.assertEqual(
+                    got["data"]["Week"], "2026-W41"
+                )  # the payload itself, not a drawing of it
+                self.assertEqual(conv.result_for("status")["data"]["Phase"], "6 of 7")
+                self.assertIsNone(conv.result_for("status"))  # handed over once
+            finally:
+                conv.close()
+
+    def test_ask_has_no_schema_argument(self) -> None:
+        import inspect
+
+        self.assertNotIn("schema", inspect.signature(window.Window.ask).parameters)
+
+
+class DefaultsNameNoHostTest(unittest.TestCase):
+    def test_no_default_sentence_names_the_cockpit(self) -> None:
+        for key, text in labels.DEFAULT.items():
+            self.assertNotIn("ockpit", text, key)
