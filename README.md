@@ -14,6 +14,8 @@
 
 ## What you get
 
+Design reference: [Ask CoCo canvas](doc/features/ask-coco/design/README.md) (86 states and two host-page views).
+
 - A launcher at the bottom right of the page, and a window that opens from it. The window is the whole interface: connect, ask, watch the steps, answer requests.
 - Rights written as code, in one object (a `Policy`). The default is the safest: reading inside the working folder is free, everything else asks, each time.
 - Every request names what it is about and shows the exact text of what would run.

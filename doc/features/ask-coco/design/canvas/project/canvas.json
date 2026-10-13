@@ -1,0 +1,60 @@
+{
+ "v": 3,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-10-10T17:17:16Z"
+ },
+ "title": "Spec-First Cockpit: CoCo interface",
+ "launch": {
+  "view": "canvas"
+ },
+ "pages": [],
+ "boards": {
+  "CoCo22.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1440,
+   "h": 7184,
+   "title": "CoCo: launcher and window states (frames 1-37)"
+  },
+  "CoCo22Waiting.dc.html": {
+   "x": 1520,
+   "y": 0,
+   "w": 1440,
+   "h": 4843,
+   "title": "CoCo: questions, plans, standing permission (frames 38-61)"
+  },
+  "CoCo22Data.dc.html": {
+   "x": 3040,
+   "y": 0,
+   "w": 1440,
+   "h": 6630,
+   "title": "CoCo: data, files, page requests, display and session (frames 62-86)"
+  },
+  "CoCo22OnPage.dc.html": {
+   "x": 4560,
+   "y": 0,
+   "w": 1440,
+   "h": 900,
+   "title": "CoCo, window open on a page (1440 x 900)",
+   "expand": "fill"
+  },
+  "CoCo22OnPage1366.dc.html": {
+   "x": 6080,
+   "y": 0,
+   "w": 1366,
+   "h": 768,
+   "title": "CoCo, window open at 1366 x 768",
+   "expand": "fill"
+  }
+ },
+ "order": [
+  "CoCo22.dc.html",
+  "CoCo22Waiting.dc.html",
+  "CoCo22Data.dc.html",
+  "CoCo22OnPage.dc.html",
+  "CoCo22OnPage1366.dc.html"
+ ],
+ "notes": {},
+ "designSystems": []
+}

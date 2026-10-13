@@ -9,6 +9,8 @@ first draft got wrong is in section 7. Where the two disagree, the code is the t
 
 ## What
 
+Design deliverable: [canvas and consultation guide](design/README.md), with all 86 frames and the two host-page views.
+
 Ask CoCo is a floating chat window opened from a launcher at the bottom right of the page, in front of a Cortex Code
 agent. It was designed (86 frames, approved), built and verified in the Spec-First Cockpit. This migration moves it
 into `streamlit-coco`, where it replaces the chat family (`chat`, `panel`, `copilot_rail` and their helpers).

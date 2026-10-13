@@ -17,6 +17,8 @@ Migration sheet: [`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask
 
 ### Added
 
+- [Ask CoCo design canvas](doc/features/ask-coco/design/README.md): 86 frames, two host-page views, the original manifest and styles, and a browser consultation index.
+
 - `ask_coco(cwd, ...)` mounts the launcher and the window; `get_window(key)` returns its handle (`ask`, `result`, `form`, `open`, `notice`, `latest_answer`, `new`, `disconnect`, `conversation`).
 - `Features` and `Attachments` (comfort, planning, display switches, session details, files attached in the field), `Gate`, and the `policy` module (`FolderPolicy`, `Command`, `git_readonly`, `request`, ...) as `st_coco.policy.X`. The default policy is the safest: reading inside the working folder is free, everything else asks.
 - `streamlit_coco.testing` and `STREAMLIT_COCO_AGENT=mock`: run any application on the scripted agent, with no Snowflake login.
