@@ -19,7 +19,7 @@ make bi-semantic
 
 `make tableau-semantic` is a deprecated alias for the same target.
 
-Or, from this folder (editable **repo** `streamlit-coco`; PyPI `0.1.7` includes `app_viewer` + `copilot_rail`):
+Or, from this folder (editable **repo** `streamlit-coco`):
 
 ```bash
 cd examples/bi_to_semantic

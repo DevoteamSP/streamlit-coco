@@ -54,26 +54,17 @@ SCHEMAS = {
 
 
 class BiPolicy(policy.FolderPolicy):
-    """Reading is free in the working folder, and in `out/` (the earlier steps' JSON). A job that
-    answers with data writes nothing: Write and Edit are refused. A writing job asks each time."""
+    """A job that answers with data writes nothing: Write and Edit are refused."""
 
     def __init__(self, folder, *, writes: bool) -> None:
-        super().__init__(folder)
+        super().__init__(folder, also_read=[OUT_DIR])  # out/: the earlier steps' JSON
         self.writes = writes
-        self._out = policy.FolderPolicy(folder, scope=OUT_DIR)
 
     def judge(self, tool, payload):
         name = str(tool).lower()
         if name in ("write", "edit") and not self.writes:
             return "This step only reads the sources and answers with data.", None
-        if name in ("read", "glob", "grep") and self._out.judge(tool, payload) == (None, None):
-            return None, None
         return super().judge(tool, payload)
-
-    def rights(self, granted=()):
-        rights = super().rights(granted)
-        rights["without_asking"] += f". Also {OUT_DIR.as_posix()}"
-        return rights
 
 
 def mount_window():
@@ -129,10 +120,9 @@ def _apply_structured_output(coco, kind: str, data: dict[str, Any]) -> None:
 def collect_results(coco) -> None:
     """Hand a finished data job to the page: store it, or say in the thread that it failed."""
     for kind in STRUCTURED:
-        # Peek first: `result()` also stops the window from re-running the page on completion.
-        if coco.conversation.result_for(kind, take=False) is None:
+        found = coco.result(kind)
+        if found is None:
             continue
-        found = coco.result(kind) or {}
         data = found.get("data")
         if isinstance(data, dict):
             _apply_structured_output(coco, kind, data)

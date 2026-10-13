@@ -53,12 +53,7 @@ def queue_fix(traceback: str, app_dir: Path) -> None:
 def job_finished() -> bool:
     """True once, when a build or a fix this session sent has finished (`coco.result`)."""
     coco = get_window()
-    done = False
-    for key in (BUILD_KEY, FIX_KEY):
-        # Peek first: `result()` also stops the window from re-running the page on completion.
-        if coco.conversation.result_for(key, take=False) is not None:
-            done = bool(coco.result(key)) or done
-    return done
+    return any([coco.result(BUILD_KEY), coco.result(FIX_KEY)])
 
 
 def skill_dirs(guidelines_skill: str | None) -> list[str]:

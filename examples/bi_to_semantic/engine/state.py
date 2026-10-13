@@ -8,7 +8,7 @@ from typing import Any
 import streamlit as st
 
 # Must not collide with CoCo session keys (``tts_estate``, ``tts_access``, …)
-# which ``get_or_create_session`` stores directly in ``st.session_state``.
+# which the window's session keeps in ``st.session_state``.
 PREFIX = "tts_data_"
 
 

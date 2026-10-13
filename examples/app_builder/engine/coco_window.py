@@ -54,28 +54,6 @@ def _rail_answers():
     return collect_form_answers(app_type, answers(), key_ns=RAIL_NS)
 
 
-class BuilderPolicy(policy.FolderPolicy):
-    """The app folder is the scope: reading is free there, Write and Edit ask each time. The
-    guidelines skills under `types/` (outside it, named in the build prompt) are read freely too."""
-
-    def __init__(self, folder) -> None:
-        super().__init__(folder)
-        self._guides = policy.FolderPolicy(folder, scope=TYPES_DIR)
-
-    def judge(self, tool, payload):
-        if str(tool).lower() in ("read", "glob", "grep") and self._guides.judge(tool, payload) == (
-            None,
-            None,
-        ):
-            return None, None
-        return super().judge(tool, payload)
-
-    def rights(self, granted=()):
-        rights = super().rights(granted)
-        rights["without_asking"] += f". The guidelines skills under {TYPES_DIR.as_posix()} too"
-        return rights
-
-
 def mount_window():
     """The floating window, on the current app folder (the workspace before one is picked)."""
     cwd = st.session_state.get("ab_slug_path") or WORKSPACE_DIR
@@ -89,7 +67,7 @@ def mount_window():
     }
     return ask_coco(
         cwd,
-        policy=BuilderPolicy(cwd),
+        policy=policy.FolderPolicy(cwd, also_read=[TYPES_DIR]),
         features=Features(copy=False, display=("latest", "shorten")),
         prompts=EXAMPLE_QUESTIONS,
         labels={"window.field.placeholder": "Ask CoCo about this app…"},
