@@ -728,11 +728,14 @@ class Conversation:
             status = {"none": "not_connected"}.get(self.conn, self.conn)
         first = status == "ready" and not any(i["kind"] == "user" for i in self.items)
         restore, self.restore = self.restore, None
+        setup = self.setup
+        if setup and setup.get("missing") == "package" and self.labels.get("setup_package"):
+            setup = {**setup, "command": self.labels["setup_package"]}
         request = waits.request(self)
         pill = waits.pill(self) or self.pill
         base = {
             "status": status,
-            "setup": self.setup,
+            "setup": setup,
             "profiles": self._profile_names() if status == "not_connected" else [],
             "profile": self.profile,
             "error": self.error,

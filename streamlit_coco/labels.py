@@ -280,6 +280,9 @@ DEFAULT: dict[str, str] = {
     "agent.problem_network": "CoCo could not reach Snowflake. Check your network, then try again.",
     "agent.problem_other": "CoCo could not connect. Try again, or choose another account.",
     "agent.queue_note": "Sent when you connect",
+    # the command shown when the SDK is missing: empty, the agent's own; a host that installs it
+    # another way (the Cockpit: `make cockpit`) says so here
+    "agent.setup_package": "",
 }
 
 

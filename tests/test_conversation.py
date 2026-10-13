@@ -36,6 +36,16 @@ class StatesTest(ConversationCase):
         self.assertEqual(self.view()["status"], "ready")
         self.assertFalse(self.conv.busy)
 
+    def test_a_host_can_say_how_its_package_is_installed(self) -> None:
+        def missing(emit):
+            agent = FakeAgent(emit)
+            agent.missing = {"missing": "package", "command": "pip install x"}
+            return agent
+
+        self.assertEqual(self.make(agent=missing).view()["setup"]["command"], "pip install x")
+        conv = self.make(agent=missing, labels={"agent.setup_package": "make cockpit"})
+        self.assertEqual(conv.view()["setup"]["command"], "make cockpit")
+
     def test_the_connections_file_is_not_read_on_every_page_run(self) -> None:
         reads = []
         self.conv.agent.profiles = lambda: reads.append(1) or ["dev"]
