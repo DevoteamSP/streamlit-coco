@@ -102,6 +102,9 @@ Optional keys, each present only when the host's Features (or its data) call for
     attach    {multi, accept: [".csv", ...] (empty: any), max_mb, existing: [file name]}
                                                                             Features.attachments
     type_ahead  bool   the field is shown while status is "connecting"     Features.queue
+    send_held   True when Features.queue is off and CoCo works, waits or connects: the field keeps
+                what is typed, Send is unavailable (a refused message comes back in `restore`)
+    page_text   True with Features.page_text: only then does the window read the page for `screen`
     problem   text | None   not_connected with an error: what happened and what to do in plain words
     profile_files   None | [{file, profiles: [name]}]   the connection files with their profiles
 
@@ -162,6 +165,7 @@ from pathlib import Path
 
 from streamlit_coco import extras, waits
 from streamlit_coco.features import Features
+from streamlit_coco.labels import DEFAULT
 
 _LOG = logging.getLogger(__name__)
 _RESULT_LIMIT = 20_000  # kept per step
@@ -182,66 +186,7 @@ _PROMPTS_SHOWN = 3
 # Every sentence the conversation writes, by key. A host overrides any of them with `labels=`.
 # `{name}` marks a value the conversation fills in. Texts written by a policy, an agent or the
 # host's own context (a request's question, a step's name, a session fact) are theirs, not here.
-LABELS = {
-    # notes of a step, a question, a plan
-    "note_allowed": "Allowed by you",
-    "note_declined": "Declined",
-    "note_not_allowed": "Not allowed",
-    "note_expired": "Expired",
-    "note_cancelled": "Cancelled",
-    "note_skipped": "Skipped",
-    "note_stopped": "Stopped",
-    "note_interrupted": "Interrupted",
-    "reason_expired": "Not answered within ten minutes. Nothing was done.",
-    "reason_cli_refused": "Cortex Code refused this tool for the session.",
-    # the thread's own lines
-    "scope_about": "About {name}",
-    "scope_none": "About the whole working folder",
-    "folder_changed": "The working folder changed, so this conversation ended.",
-    "lost_text": "The connection to CoCo was lost. Reconnect to go on.",
-    "failed_text": "CoCo could not finish this request.",
-    "plan_approved": "The plan you approved",
-    "plan_proposed": "The plan CoCo proposed",
-    "carry_out_prompt": "Carry out the plan you described.",
-    "granted_line": "CoCo no longer asks before it {what}.",
-    "granted_ask_again": "Ask again",
-    "revoked_line": "CoCo asks again before it {what}.",
-    # pills
-    "pill_answer": "Answer ready",
-    "pill_lost": "Connection lost",
-    "pill_failed": "Could not finish",
-    "pill_read": "Allow a command?",
-    "pill_change": "Allow a file change?",
-    "pill_question": "A question for you",
-    "pill_plan": "A plan to approve",
-    # menu switches
-    "opt_plan": "Plan first",
-    "opt_plan_sub": "CoCo proposes before it acts",
-    "opt_latest": "Latest exchange only",
-    "opt_latest_sub": "Earlier messages one click away",
-    "opt_shorten": "Shorten long messages",
-    "opt_shorten_sub": "",
-    "opt_raw": "Raw technical details",
-    "opt_raw_sub": "",
-    # data
-    "rows_none": "No rows",
-    "rows_one": "{n} row",
-    "rows": "{n} rows",
-    # attached files
-    "attach_prompt": "I attached files.",
-    "attach_intro": "Files saved for you (read them with your tools):",
-    "attach_refused": "Not attached: {files}.",
-    "attach_type": "this type is not accepted",
-    "attach_wait": "wait until CoCo is connected",
-    "attach_size": "{mb} MB, the limit is {max} MB",
-    "attach_unreadable": "the file could not be read",
-    "attach_duplicate": "already attached",
-    # connection
-    "problem_signin": "Snowflake refused the sign-in. Try again, or choose another account.",
-    "problem_network": "CoCo could not reach Snowflake. Check your network, then try again.",
-    "problem_other": "CoCo could not connect. Try again, or choose another account.",
-    "queue_note": "Sent when you connect",
-}
+LABELS = {key[len("agent.") :]: text for key, text in DEFAULT.items() if key.startswith("agent.")}
 
 
 def agent_factory(options=None) -> Callable:
@@ -276,7 +221,7 @@ class Conversation:
         self.cwd = Path(cwd)
         self.policy, self.features = policy, features or Features()
         self.prompts = list(prompts or [])
-        self.labels = {**LABELS, **(labels or {})}
+        self.labels = {**LABELS, **{k.removeprefix("agent."): v for k, v in (labels or {}).items()}}
         self._factory = agent or agent_factory()
         self._on_files_changed = on_files_changed
         self._default_policy = None
@@ -454,9 +399,10 @@ class Conversation:
         if self.setup or not (text or action.get("files")):
             return
         free = self.conn == "ready" and self.run is None and not self.queue
-        if not (self.conn == "ready" or (self.conn == "connecting" and self.features.queue)):
+        if self.conn not in ("ready", "connecting"):
             return
-        if not free and not self.features.queue:
+        if not free and not self.features.queue:  # the window does not let this happen (send_held)
+            self.restore = f"{self.restore}\n\n{text}" if self.restore else text  # never lost
             return
         ctx, policy = self.freeze(context, action.get("screen"))
         message = {"id": self._id("q"), "text": text, "ctx": ctx, "policy": policy}
@@ -793,6 +739,10 @@ class Conversation:
         }
         for part in _PARTS:
             base.update(part.view(self))
+        if self.features.page_text:
+            base["page_text"] = True
+        if not self.features.queue and status in ("working", "waiting", "connecting"):
+            base["send_held"] = True
         return base
 
     def _profile_names(self) -> list[str]:

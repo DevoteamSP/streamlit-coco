@@ -22,6 +22,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
+    # the window (components v2 in a fragment, isolated styles) was driven on 1.53.0 and 1.65.0
     "streamlit>=1.53",
 ]
 

@@ -67,7 +67,7 @@ const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '
 
 // ---------------------------------------------------------------- the sentences: one table, sent with the view (streamlit_coco/labels.py)
 // L(key, vars) is the text of 'window.<key>' with {name} filled in; E() is the same escaped for markup. Never write a sentence here.
-let LABELS = {}, AVOID = '', EXCLUDE = [], PAGE_TEXT = false;
+let LABELS = {}, AVOID = '', EXCLUDE = [];
 const L = (key, vars) => String(LABELS[`window.${key}`] ?? `window.${key}`).replace(/\{(\w+)\}/g, (m, n) => (vars && n in vars ? vars[n] : m));
 const E = (key, vars) => esc(L(key, vars));
 
@@ -355,7 +355,7 @@ function build(root, shadow, spark) {
              selection: (S.sel || '').slice(0, 2000) };
   };
   const send = (a) => {
-    if (PAGE_TEXT && (a.a === 'send' || a.a === 'prompt')) a.screen = screen();
+    if (I.view && I.view.page_text && (a.a === 'send' || a.a === 'prompt')) a.screen = screen();
     const last = S.out.at(-1);
     const same = (p, o) => Object.keys({ ...p, ...o }).every((k) => k === 'seq' || k === 'screen' || JSON.stringify(p[k]) === JSON.stringify(o[k]));
     if (last && a.a !== 'send' && same(last, a)) return;   // a double click is one action
@@ -432,11 +432,11 @@ function build(root, shadow, spark) {
     [[el.ftop, top], [el.fleft, left]].forEach(([node, html]) => { hide(node, !html); if (node._h !== html) { node.innerHTML = html; node._h = html; } });
     const fcls = COCO.composer.map((c) => (c.cls ? safe(() => c.cls(v, x), '') : '')).filter(Boolean).join(' ');
     attr(el.fld, 'class', fcls ? `fld ${fcls}` : 'fld');
-    const ready = !!el.ta.value.trim() || canSend();
+    const held = !!v.send_held, ready = !held && (!!el.ta.value.trim() || canSend());
     const btn = st === 'working' ? `<button type="button" class="sd st" data-a="stop" aria-label="${E('field.stop')}"><span class="arc" aria-hidden="true"></span>${ic('stop', 'i s')}</button>`
       : `<button type="button" class="sd${ready ? ' on' : ''}" data-a="send" aria-label="${E('field.send')}"${ready ? '' : ' aria-disabled="true"'}>${ic('send', 'i s')}</button>`;   // always there: quiet while empty
     if (el.sdw._h !== btn) { el.sdw.innerHTML = btn; el.sdw._h = btn; }
-    attr(el.ta, 'placeholder', L(st === 'working' ? 'field.ahead_working' : st === 'waiting' ? 'field.ahead_waiting' : 'field.placeholder'));
+    attr(el.ta, 'placeholder', L(v.send_held ? 'field.held' : st === 'working' ? 'field.ahead_working' : st === 'waiting' ? 'field.ahead_waiting' : 'field.placeholder'));
   };
   const paintBody = (v, opening, tk) => {
     const st = v.status, hasThread = (v.thread || []).length || (v.queue || []).length;
@@ -649,7 +649,7 @@ function build(root, shadow, spark) {
   };
   const doSend = () => {
     const text = el.ta.value.trim();
-    if (!text && !canSend()) return;
+    if ((!text && !canSend()) || (I.view && I.view.send_held)) return;
     send({ a: 'send', text, ...collect('send', null) });
     el.ta.value = ''; S.draft = ''; sizeField(); paintFooter(I.view);
   };
@@ -745,7 +745,7 @@ const theme = (root, I, wanted) => {
 };
 
 export default function ({ data, parentElement, setTriggerValue }) {
-  LABELS = data.labels || {}; AVOID = (data.theme || {}).avoid || ''; EXCLUDE = data.exclude || []; PAGE_TEXT = !!data.page_text;
+  LABELS = data.labels || {}; AVOID = (data.theme || {}).avoid || ''; EXCLUDE = data.exclude || [];
   const root = parentElement.querySelector('.coco-root');
   fonts(root.ownerDocument, (data.theme || {}).font);
   const I = root._coco || (root._coco = build(root, parentElement, data.spark));

@@ -40,6 +40,7 @@ DEFAULT: dict[str, str] = {
     "window.field.placeholder": "Ask CoCo",
     "window.field.ahead_working": "Type ahead. It is sent when CoCo is done",
     "window.field.ahead_waiting": "Type ahead. It is sent after your answer",
+    "window.field.held": "Wait for CoCo to finish, then send",
     "window.field.send": "Send",
     "window.field.stop": "Stop",
     # ---- words used in several places
@@ -221,6 +222,65 @@ DEFAULT: dict[str, str] = {
     "window.session.considered": "What CoCo considered",
     "window.session.show_message": "Show the message",
     "window.session.hide_message": "Hide the message",
+    # ---- the conversation's sentences (Python side), read there as t('<name>')
+    # notes of a step, a question, a plan
+    "agent.note_allowed": "Allowed by you",
+    "agent.note_declined": "Declined",
+    "agent.note_not_allowed": "Not allowed",
+    "agent.note_expired": "Expired",
+    "agent.note_cancelled": "Cancelled",
+    "agent.note_skipped": "Skipped",
+    "agent.note_stopped": "Stopped",
+    "agent.note_interrupted": "Interrupted",
+    "agent.reason_expired": "Not answered within ten minutes. Nothing was done.",
+    "agent.reason_cli_refused": "Cortex Code refused this tool for the session.",
+    # the thread's own lines
+    "agent.scope_about": "About {name}",
+    "agent.scope_none": "About the whole working folder",
+    "agent.folder_changed": "The working folder changed, so this conversation ended.",
+    "agent.lost_text": "The connection to CoCo was lost. Reconnect to go on.",
+    "agent.failed_text": "CoCo could not finish this request.",
+    "agent.plan_approved": "The plan you approved",
+    "agent.plan_proposed": "The plan CoCo proposed",
+    "agent.carry_out_prompt": "Carry out the plan you described.",
+    "agent.granted_line": "CoCo no longer asks before it {what}.",
+    "agent.granted_ask_again": "Ask again",
+    "agent.revoked_line": "CoCo asks again before it {what}.",
+    # pills
+    "agent.pill_answer": "Answer ready",
+    "agent.pill_lost": "Connection lost",
+    "agent.pill_failed": "Could not finish",
+    "agent.pill_read": "Allow a command?",
+    "agent.pill_change": "Allow a file change?",
+    "agent.pill_question": "A question for you",
+    "agent.pill_plan": "A plan to approve",
+    # menu switches
+    "agent.opt_plan": "Plan first",
+    "agent.opt_plan_sub": "CoCo proposes before it acts",
+    "agent.opt_latest": "Latest exchange only",
+    "agent.opt_latest_sub": "Earlier messages one click away",
+    "agent.opt_shorten": "Shorten long messages",
+    "agent.opt_shorten_sub": "",
+    "agent.opt_raw": "Raw technical details",
+    "agent.opt_raw_sub": "",
+    # data
+    "agent.rows_none": "No rows",
+    "agent.rows_one": "{n} row",
+    "agent.rows": "{n} rows",
+    # attached files
+    "agent.attach_prompt": "I attached files.",
+    "agent.attach_intro": "Files saved for you (read them with your tools):",
+    "agent.attach_refused": "Not attached: {files}.",
+    "agent.attach_type": "this type is not accepted",
+    "agent.attach_wait": "wait until CoCo is connected",
+    "agent.attach_size": "{mb} MB, the limit is {max} MB",
+    "agent.attach_unreadable": "the file could not be read",
+    "agent.attach_duplicate": "already attached",
+    # connection
+    "agent.problem_signin": "Snowflake refused the sign-in. Try again, or choose another account.",
+    "agent.problem_network": "CoCo could not reach Snowflake. Check your network, then try again.",
+    "agent.problem_other": "CoCo could not connect. Try again, or choose another account.",
+    "agent.queue_note": "Sent when you connect",
 }
 
 

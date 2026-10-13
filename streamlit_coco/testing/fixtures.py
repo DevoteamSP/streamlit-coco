@@ -1411,6 +1411,14 @@ VIEWS["plan_expired"] = view(
 )
 
 
+# The frames of the playground are drawn by a host that switched everything on (Features.all()):
+# its views say the page may be read for the context of a message (view key `page_text`).
+_ALL_ON = {"files_sending", "question_expired", "question_cancelled", "plan_expired"}
+for _name, _view in VIEWS.items():
+    if (_name[:1] == "f" and _name[1:2].isdigit()) or _name in _ALL_ON:
+        _view["page_text"] = True
+
+
 def assert_same_shape(test, actual, expected, path: str = "view") -> None:
     """For the runtime packages: a view the conversation produced has the shape of the fixture of its frame. Same keys at every
     level, same type for every value that is not None (ids, texts and numbers differ), lists compared item by item as far as both go."""

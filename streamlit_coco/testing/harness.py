@@ -82,7 +82,7 @@ window.__actions = []; window.__log = [];
 (async () => {
   const host = document.getElementById('host'), shadow = host.attachShadow({ mode: 'open' });
   shadow.innerHTML = '<style>' + SHEET + '</style><div class="coco-root"></div>';
-  const data = { view: VIEW, ack: 0, open_token: CLOSED ? 0 : 1, sess: 'harness', spark: SPARK, labels: HOST_LABELS, theme: HOST_THEME, features: {}, exclude: [], page_text: false };
+  const data = { view: VIEW, ack: 0, open_token: CLOSED ? 0 : 1, sess: 'harness', spark: SPARK, labels: HOST_LABELS, theme: HOST_THEME, features: {}, exclude: [] };
   const trigger = (key, action) => {   // the Cockpit's answer: the action is recorded and acknowledged, the view stays the fixture
     if (action && action.a !== 'poll') window.__actions.push(action);
     setTimeout(() => window.__cocoMount({ data: { ...data, ack: action ? action.seq : 0 }, parentElement: shadow, setTriggerValue: trigger }), 0);
