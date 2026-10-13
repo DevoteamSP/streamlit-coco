@@ -96,7 +96,8 @@ Ready-made, in `streamlit_coco.policy`:
 
 | Piece | What it gives |
 |---|---|
-| `FolderPolicy(folder, *, scope=None, commands=(), changes=None, sql=False, lookups=False, standing=False)` | The default. Reading tools inside `scope` (default: `folder`) are free; every other call asks, each time, as a change. A shell command and a file change always show their exact command or file and text; any other tool shows its whole input unless a piece below recognises it. The few sentences it writes are in `FolderPolicy.words`, for a host to replace |
+| `FolderPolicy(folder, *, scope=None, also_read=(), commands=(), changes=None, sql=False, lookups=False, standing=False)` | The default. Reading tools inside `scope` (default: `folder`) are free; every other call asks, each time, as a change. A shell command and a file change always show their exact command or file and text; any other tool shows its whole input unless a piece below recognises it. The few sentences it writes are in `FolderPolicy.words`, for a host to replace |
+| `also_read=` folders | Read freely besides the scope, with the same hardening (a guidelines folder, an output folder). Reading only: a change there asks as outside the scope |
 | `inside(base, scope, raw) -> None \| "outside" \| "odd"` | A path placed as Cortex Code resolves it, with the Windows hardening (streams, drive-relative paths, trailing dots, device names, links followed): a spelling the app cannot place never counts as inside |
 | `is_secret_name(name)` | `.env*`, `*.pem`, `*.p8`, `*.key`, `*.pfx`, `id_rsa*`, `connections.toml`, names holding `credential` or `secret`; reads and searches that would cover one ask |
 | `Command(name, argv, reads, platform=sys.platform)` | One exact command line with its plain name: compared character for character, shown as a read under that name. `.line` is the line for that platform's shell, and `None` when the shell would expand an argument: such a command is never listed |
