@@ -51,7 +51,7 @@ from streamlit_coco.upload import (
     upload_to_cwd,
 )
 
-__version__ = "0.1.9"
+__version__ = "0.2.0.dev0"
 
 # UI / Streamlit-backed exports — loaded on first attribute access.
 _LAZY_ATTRS: dict[str, tuple[str, str]] = {
