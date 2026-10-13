@@ -88,22 +88,23 @@ class Policy(Protocol):
 ```
 
 The request is a plain dict written by the application from the checked call, never from the agent's description:
-`{kind: "read" | "change", question, where, reads, changes, evidence_label, evidence, standing}`.
+`{kind: "read" | "change", question, where, reads, changes, evidence_label, evidence, pill, standing}`
+(`pill` is what the closed launcher says: "Allow a read?").
 `streamlit_coco.policy.request(...)` builds one, so a custom policy cannot misspell it.
 
 Ready-made, in `streamlit_coco.policy`:
 
 | Piece | What it gives |
 |---|---|
-| `FolderPolicy(folder, *, scope=None, commands=(), changes=None, sql=False, lookups=False, standing=False)` | The default. Reading tools inside `scope` (default: `folder`) are free; every other call asks, each time, shown as a change with its whole input unless a piece below recognises it |
-| `inside(base, scope, raw) -> None \| reason` | A path placed as Cortex Code resolves it, with the Windows hardening (streams, drive-relative paths, trailing dots, device names, links followed): a spelling the app cannot place never counts as inside |
+| `FolderPolicy(folder, *, scope=None, commands=(), changes=None, sql=False, lookups=False, standing=False)` | The default. Reading tools inside `scope` (default: `folder`) are free; every other call asks, each time, as a change. A shell command and a file change always show their exact command or file and text; any other tool shows its whole input unless a piece below recognises it. The few sentences it writes are in `FolderPolicy.words`, for a host to replace |
+| `inside(base, scope, raw) -> None \| "outside" \| "odd"` | A path placed as Cortex Code resolves it, with the Windows hardening (streams, drive-relative paths, trailing dots, device names, links followed): a spelling the app cannot place never counts as inside |
 | `is_secret_name(name)` | `.env*`, `*.pem`, `*.p8`, `*.key`, `*.pfx`, `id_rsa*`, `connections.toml`, names holding `credential` or `secret`; reads and searches that would cover one ask |
-| `Command(name, argv, reads)` | One exact command line with its plain name: compared character for character, shown as a read under that name. A path the shell would expand gets no command |
+| `Command(name, argv, reads, platform=sys.platform)` | One exact command line with its plain name: compared character for character, shown as a read under that name. `.line` is the line for that platform's shell, and `None` when the shell would expand an argument: such a command is never listed |
 | `git_readonly(repo) -> [Command]` | status, diff and log with the options that stop a repository's own settings from running a program; none when `repo` is not a repository of its own |
-| `changes=` a function `(path) -> None \| reason`, or glob patterns | Which files a change request is ordinary for; others ask and say what is unusual |
-| `sql=True` | A SQL call shows its exact statement, is told apart as a query (surely one reading statement) or a statement (anything else), and refuses an input that picks another connection |
+| `changes=` a function `(path) -> None \| reason`, or glob patterns | Which files a change is ordinary for (default: any file inside the scope); others ask, say what is unusual and are never offered a standing permission |
+| `sql=True` | A SQL call shows its exact statement, is told apart as a query (surely one reading statement) or a statement (anything else), and shows any other input (a connection, a timeout) under "Other inputs" |
 | `lookups=True` | The known read-only tools of Cortex Code (object search, table lookup, semantic views, documentation, web) are shown as reads, with where the question goes |
-| `standing=True` | Each request offers its family ("Commands", "File changes", "Queries", "Statements", a tool, "Reading elsewhere") as a standing permission until the conversation ends |
+| `standing=True` | Each request offers its family ("Commands", "File changes", "Queries", "Statements", a tool, "Reading elsewhere") as a standing permission until the conversation ends. "File changes" never covers the `.git` folder, a secret-named file or a place `flag` marks: those ask each time |
 
 `FolderPolicy` has two documented extension points for a host with rules of its own, used by the Cockpit:
 `flag(parts) -> None | (key, words)` (one more reason a place is not read freely: the Cockpit's budget files for a
