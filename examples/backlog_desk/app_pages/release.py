@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import streamlit as st
-from utils.ui import get_backlog, open_copilot, open_ticket, priority_badge, status_badge
+from utils.skill_desk import ask_skill
+from utils.ui import get_backlog, open_ticket, priority_badge, status_badge
 
 backlog = get_backlog()
 versions = [r.version for r in backlog.releases]
@@ -37,7 +38,7 @@ if st.button(
     icon=":material/edit_note:",
     type="primary",
 ):
-    open_copilot(skill="draft-release-notes", auto_run=True)
+    ask_skill("draft-release-notes", release=version)
 
 tickets = backlog.tickets_for_release(version)
 st.markdown(f"**{len(tickets)} ticket(s) in scope**")

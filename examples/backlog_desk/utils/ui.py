@@ -45,21 +45,3 @@ def open_epic(epic_id: str) -> None:
 def open_release(version: str) -> None:
     st.session_state["selected_release"] = version
     st.switch_page("app_pages/release.py")
-
-
-def open_copilot(
-    *,
-    ticket_id: str | None = None,
-    skill: str | None = None,
-    auto_run: bool = False,
-) -> None:
-    """Open the right-rail Copilot (stay on the current page)."""
-    from utils.copilot_panel import set_copilot_open
-
-    if ticket_id:
-        st.session_state["selected_ticket"] = ticket_id
-    if skill:
-        st.session_state["pending_skill"] = skill
-        if auto_run:
-            st.session_state["auto_run_skill"] = True
-    set_copilot_open(True)

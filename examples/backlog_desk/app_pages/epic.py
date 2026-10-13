@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import streamlit as st
-from utils.ui import get_backlog, open_copilot, open_ticket, priority_badge, status_badge
+from utils.skill_desk import ask_skill
+from utils.ui import get_backlog, open_ticket, priority_badge, status_badge
 
 backlog = get_backlog()
 epic_ids = [e.id for e in backlog.epics]
@@ -40,10 +41,10 @@ with st.container(horizontal=True):
 
 with st.container(horizontal=True):
     if st.button("Ask Copilot about this epic", icon=":material/psychology:", type="primary"):
-        open_copilot(skill="summarize-sprint", auto_run=True)
+        ask_skill("summarize-sprint")
     if st.button("Draft release notes", icon=":material/edit_note:"):
         st.session_state["selected_release"] = epic.target_release
-        open_copilot(skill="draft-release-notes", auto_run=True)
+        ask_skill("draft-release-notes", release=epic.target_release)
 
 st.subheader("Tickets")
 for t in tickets:

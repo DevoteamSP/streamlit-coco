@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import streamlit as st
 from utils.paths import APP_ROOT
-from utils.ui import get_backlog, open_copilot, open_epic, priority_badge, status_badge
+from utils.skill_desk import ask_skill
+from utils.ui import get_backlog, open_epic, priority_badge, status_badge
+
+from streamlit_coco.window import get_window
 
 backlog = get_backlog()
 ticket_ids = [t.id for t in backlog.tickets]
@@ -50,11 +53,12 @@ with st.container(horizontal=True):
     if epic and st.button("Open epic", icon=":material/account_tree:"):
         open_epic(epic.id)
     if st.button("Check DoD", icon=":material/checklist:", type="primary"):
-        open_copilot(ticket_id=ticket.id, skill="check-dod", auto_run=True)
+        ask_skill("check-dod", ticket_id=ticket.id)
     if st.button("Propose update", icon=":material/edit:"):
-        open_copilot(ticket_id=ticket.id, skill="propose-ticket-update", auto_run=True)
+        ask_skill("propose-ticket-update", ticket_id=ticket.id)
     if st.button("Ask Copilot", icon=":material/psychology:"):
-        open_copilot(ticket_id=ticket.id)
+        st.session_state["selected_ticket"] = ticket.id
+        get_window().open()
 
 with st.expander("Raw JSON", expanded=False):
     st.code(ticket.path.read_text(encoding="utf-8"), language="json")
