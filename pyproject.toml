@@ -72,7 +72,7 @@ exclude = [
 asyncio_mode = "auto"
 testpaths = ["tests"]
 markers = [
-    "e2e: browser Playwright tests against the UX harness (slow; needs Chromium)",
+    "e2e: browser tests of the Ask CoCo window on the scripted agent (slow; Playwright, Chromium or the installed Edge)",
 ]
 [tool.ruff]
 line-length = 100
