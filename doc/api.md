@@ -51,19 +51,19 @@ Mounts the launcher (bottom right) and the window, and returns the handle. Call 
 
 | Argument | What it is |
 | --- | --- |
-| `cwd` | The agent's working folder, and the base of relative paths. A relative `cwd` is resolved from the folder the Streamlit server was started in (`~` is expanded). The package neither creates the folder nor checks that it exists: with the scripted agent a missing folder connects and every read fails as a failed step; with a real agent it is passed to the program unchecked. Changing it between runs ends the conversation and says why in the thread. |
+| `cwd` | The agent's working folder, and the base of relative paths. A relative `cwd` is resolved from the folder the Streamlit server was started in (`~` is expanded). The folder must exist and be a directory; otherwise `ask_coco` raises `CocoError` before connecting, with either the real or scripted agent. The package does not create it. Changing it between runs ends the conversation and says why in the thread. |
 | `key` | One window per key and per browser session. Two keys draw two launchers at the same place. |
 | `policy` | A [`Policy`](#rights-streamlit_cocopolicy), or a function `(context) -> Policy` called once per message. `None` means `FolderPolicy(cwd)`. A function that raises falls back to that default, and the error is logged. |
 | `context` | A function `() -> dict`, called when a message is sent. See [Context](#context). |
 | `features` | A [`Features`](#features). `None` means `Features()`. |
 | `prompts` | First-screen prompts. Each is a text, or `{"title", "text", "fill": bool}`. At most three are shown, only on the first screen. `fill: True` puts the text in the field instead of sending it. |
-| `labels` | `{label key: text}` over [`labels.DEFAULT`](#labels-and-theme). |
+| `labels` | `{label key: text}` over [`labels.DEFAULT`](#labels-and-theme). May change between runs under the same key without resetting the conversation; existing thread text keeps its original language. |
 | `theme` | `{variable: value}` over the defaults. See [Labels and theme](#labels-and-theme). |
 | `options` | A [`CocoOptions`](#cocooptions): `model`, `connection`, `max_turns`, `mcp_servers`, `output_schema`, `cli_path`. The object you pass on the first run of a browser session is the one used, and it is read when a session connects. It refuses `allowed_tools`, `disallowed_tools` and `require_approval_for` with a `ValueError` that names `policy`. |
 | `on_files_changed` | A function `([path]) -> Any`. See [Callbacks](#callbacks). |
 | `agent` | A function `(emit) -> agent`, for tests and for another adapter. `None` gives the Cortex adapter, or the scripted agent when `STREAMLIT_COCO_AGENT=mock`. |
 
-Raises `CocoError` (naming the version needed) before drawing anything when Streamlit is older than 1.53.
+Raises `CocoError` before drawing anything when Streamlit is older than 1.53 or `cwd` does not name an existing directory.
 
 What the call reads on each run: `cwd`, `policy`, `prompts`, `on_files_changed`, `features`, `context`, `labels` and `theme`. What it reads once per browser session: `options`, and the `agent.*` entries of `labels`.
 

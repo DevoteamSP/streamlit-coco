@@ -1,16 +1,16 @@
 # Roadmap — streamlit-coco
 
-Living plan. Product detail: `[doc/prd.md](prd.md)`. Shipped history: `[CHANGELOG.md](../CHANGELOG.md)`.
+Living plan. Product detail: [doc/prd.md](prd.md). Shipped history: [CHANGELOG.md](../CHANGELOG.md).
 
-**Status:** Alpha `0.2.0.dev0` on branch `feat/ask-coco-window`, not released. The last release is `0.1.9` ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)). `0.2.0` replaces the chat family with the Ask CoCo window ([feature file](features/ask-coco/ask-coco.md)). Next: API mode.  
-**Publisher:** temporary Trusted Publisher on `[lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco)`; public tree also synced to `[DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco)`.  
-**Last updated:** 2026-10-13  
-**Last cut:** `[releases/0.1.9/](releases/0.1.9/)` (the 0.2.0 kit is not started)  
+**Status:** Alpha `0.2.0.dev0` on branch `feat/ask-coco-window`, not released. The last release is `0.1.9` ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)). `0.2.0` replaces the chat family with the Ask CoCo window ([feature file](features/ask-coco/ask-coco.md)). Next: API mode.
+**Publisher:** temporary Trusted Publisher on [lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco); public tree also synced to [DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco).
+**Last updated:** 2026-10-13
+**Last cut:** [releases/0.1.9/](releases/0.1.9/) (the 0.2.0 kit is not started)
 **Next cuts:** `0.2.0` local API (no CLI) → `0.2.5` Streamlit in Snowflake → `0.3.0` Native App
 
-> **Before every release:** complete `[releases/X.Y.Z/CHECKLIST.md](releases/README.md)` (CHANGELOG, this roadmap, PRD, screenshots, [public issues](https://github.com/DevoteamSP/streamlit-coco/issues)) and outreach under `[../doc-dev/releases/](../doc-dev/releases/README.md)`, then `[deployment/publish.md](deployment/publish.md)`.
+> **Before every release:** complete [releases/X.Y.Z/CHECKLIST.md](releases/README.md) (CHANGELOG, this roadmap, PRD, screenshots, [public issues](https://github.com/DevoteamSP/streamlit-coco/issues)) and outreach under `doc-dev/releases/` in the development repository, then [deployment/publish.md](deployment/publish.md).
 
-**Regularly check version of sdk:** at `[CoCo Python SDK](https://pypi.org/project/cortex-code-agent-sdk/)`
+**Regularly check version of sdk:** at [CoCo Python SDK](https://pypi.org/project/cortex-code-agent-sdk/)
 
 ---
 
@@ -21,10 +21,10 @@ Living plan. Product detail: `[doc/prd.md](prd.md)`. Shipped history: `[CHANGELO
 
 | Priority | Item | Ref |
 | -------- | ---- | --- |
-| P0 | **API mode** — `CocoOptions.mode="api"` + Snowflake Sandbox; CLI optional | [#4](https://github.com/DevoteamSP/streamlit-coco-dev/issues/4) · [remote-api](features/remote-api/remote-api.md) |
+| P0 | **API mode** — `CocoOptions.mode="api"` + Snowflake Sandbox; CLI optional | [#4](https://github.com/DevoteamSP/streamlit-coco-dev/issues/4) · API mode specification to be written |
 
 
-Manual checklists: `[doc/features/README.md](features/README.md)` — re-run before the next tag.
+Manual checklists: [doc/features/README.md](features/README.md) — re-run before the next tag.
 
 ---
 
@@ -38,9 +38,9 @@ Shipped in `0.1.7`. First-party examples, not the API-mode cut. Publisher switch
 | Item                                                                                              | Ref                                                                      |
 | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | ✅ Rename Tableau → Semantic to **BI → Semantic**; Load Tableau **or** Power BI                    | `examples/bi_to_semantic`, `make bi-semantic`                            |
-| ✅ MIT Power BI pack + `pbixray` as the primary `.pbix` reader                                     | `[examples/bi_samples/powerbi/](../examples/bi_samples/powerbi/)`        |
+| ✅ MIT Power BI pack + `pbixray` as the primary `.pbix` reader                                     | [examples/bi_samples/powerbi/](../examples/bi_samples/powerbi/)        |
 | ✅ Screen 4: colliding table contracts (`Fact` / `Scenario` / `Date`) — public samples have no RLS | [BRIEF](../examples/bi_to_semantic/BRIEF-powerbi-fixtures.md)            |
-| ✅ Streamlit App Viewer (`app_viewer()`)                                                           | `[features/app-viewer/app-viewer.md](features/app-viewer/app-viewer.md)` |
+| ✅ Streamlit App Viewer (`app_viewer()`)                                                           | [features/app-viewer/app-viewer.md](features/app-viewer/app-viewer.md) |
 
 
 ---
@@ -54,12 +54,12 @@ Shipped `2026-09-06`. First-party example + rail knobs. Publisher switch and FR-
 
 | Item | Status | Ref |
 | ---- | ------ | --- |
-| App Builder host — Welcome · Library · Brief · Studio · Admin; named apps; topic pills; Admin CRUD (questions as tabs) | ✅ | `[features/app-builder/](features/app-builder/app-builder.md)` · `make app-builder` |
+| App Builder host — Welcome · Library · Brief · Studio · Admin; named apps; topic pills; Admin CRUD (questions as tabs) | ✅ | [features/app-builder/](features/app-builder/app-builder.md) · `make app-builder` |
 | Profile step + `infer:` — deterministic pandas for tabular / semantic-view (KPI demo fixture). Agent-run profile for documents/URLs (UC9) is later. | ✅ tabular / semantic-view | [UX §4](features/app-builder/UX.md) · `engine/profile.py` |
 | Guidelines skills — shared pack + per-type `SKILL.md`; KPI has reference app + `CHECKLIST.md` + one automatic self-check pass after Write | ✅ | `types/shared/` · `types/semantic-kpis/` · [UX §6.1a](features/app-builder/UX.md) |
 | Live types — KPI presentation, Data quality, Call transcription, Meeting recap, Prompt library, CSV explorer. `doc-compare` and every `urls` type are later. | ✅ | [UX §5.3](features/app-builder/UX.md#53-catalog-content) |
-| Example questions on the Copilot rail — after Connect, starter buttons (`title` + `question`); hover shows the full question; click sends that text to CoCo (or fills the chat input when `deferred=`). Hidden after the first turn or while a job is present. | ✅ | `[features/ask-coco/ask-coco.md](features/ask-coco/ask-coco.md)` · [`example_questions`](api.md#copilot_railsession--titlecopilot--) |
-| Display config popover — icon-only Material button (`:material/display_settings:`); Last messages / First *n* characters pills + sliders; fragment-rerun keeps the popover open. Helper: `transcript_display_config()` | ✅ | `[features/ask-coco/ask-coco.md](features/ask-coco/ask-coco.md)` · [`transcript_display_config`](api.md) |
+| Example questions on the Copilot rail — after Connect, starter buttons (`title` + `question`); hover shows the full question; click sends that text to CoCo (or fills the chat input when `deferred=`). Hidden after the first turn or while a job is present. | ✅ | [features/ask-coco/ask-coco.md](features/ask-coco/ask-coco.md) · [`example_questions`](features/ask-coco/ask-coco.md) |
+| Display config popover — icon-only Material button (`:material/display_settings:`); Last messages / First *n* characters pills + sliders; fragment-rerun keeps the popover open. Helper: `transcript_display_config()` | ✅ | [features/ask-coco/ask-coco.md](features/ask-coco/ask-coco.md) · [migration sheet](features/ask-coco/ask-coco.md) |
 
 
 ---
@@ -73,7 +73,7 @@ Shipped `2026-09-07`. Patch on the `0.1.8` rail starters. Publisher switch and F
 
 | Item | Status | Ref |
 | ---- | ------ | --- |
-| `copilot_rail(..., deferred=True)` — click copies the question into the chat input and does not run it. Per-item `deferred` on `{title, question}` (or a 3-tuple). Default remains send-on-click. | ✅ | `[features/ask-coco/ask-coco.md](features/ask-coco/ask-coco.md)` · [`deferred`](api.md#copilot_railsession--titlecopilot--) |
+| `copilot_rail(..., deferred=True)` — click copies the question into the chat input and does not run it. Per-item `deferred` on `{title, question}` (or a 3-tuple). Default remains send-on-click. | ✅ | [features/ask-coco/ask-coco.md](features/ask-coco/ask-coco.md) · [`deferred`](features/ask-coco/ask-coco.md) |
 | BI → Semantic opts in (`deferred=True`). App Builder still sends on click. | ✅ | `make bi-semantic` |
 
 
@@ -88,7 +88,7 @@ Shipped `2026-09-10`. Rail connection popover can choose which Snowflake TOML to
 
 | Item | Status | Ref |
 | ---- | ------ | --- |
-| `copilot_rail(..., toml_file=)` — Config file + Connection selectboxes on one row. Lists `~/.snowflake/*.toml`. A single file is used whatever its name. | ✅ | `[features/ask-coco/ask-coco.md](features/ask-coco/ask-coco.md)` · [`toml_file`](api.md#copilot_railsession--titlecopilot--) |
+| `copilot_rail(..., toml_file=)` — Config file + Connection selectboxes on one row. Lists `~/.snowflake/*.toml`. A single file is used whatever its name. | ✅ | [features/ask-coco/ask-coco.md](features/ask-coco/ask-coco.md) · [`toml_file`](features/ask-coco/ask-coco.md) |
 | Helpers `list_snowflake_connections()`, `list_snowflake_toml_files()`, `resolve_snowflake_config_path()`. App Builder / BI → Semantic use the picker. | ✅ | `make app-builder` · `make bi-semantic` |
 
 
@@ -131,8 +131,8 @@ Product-shaped ideas (examples, RFCs, later catalogue types) live in this table.
 | Item                                                                             | Ref                                                                                                      |
 | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | Wire `CocoOptions.mode="api"` + `snowflake_sandbox` through session / start gate | [#4](https://github.com/DevoteamSP/streamlit-coco-dev/issues/4)                                          |
-| Env probe: CLI optional when API mode is set                                     | `[check_environment](../streamlit_coco/diagnostics.py)`                                                  |
-| Feature doc + checklist                                                          | [remote-api](features/remote-api/remote-api.md)                                                          |
+| Env probe: CLI optional when API mode is set                                     | [check_environment](../streamlit_coco/diagnostics.py)                                                  |
+| Feature doc + checklist                                                          | API mode specification to be written                                                          |
 | Map `cwd` / uploads onto the sandbox workspace (`/workspace`, V-stage)           | [file-upload](features/ask-coco/ask-coco.md)                                                       |
 | Least-privilege role documentation (SEC-02)                                      | [threat-model](security/threat-model.md)                                                                 |
 | Approval audit log persistence (SEC-01)                                          | [threat-model](security/threat-model.md) · [#15](https://github.com/DevoteamSP/streamlit-coco/issues/15) |
@@ -183,7 +183,7 @@ Packaged Snowflake Native App: the consumer runs the Streamlit UI in their accou
 
 ### App Builder — beyond `0.1.8`
 
-- [ ] **Agent-run interview** replacing (or supplementing) the confirm-the-profile step — deliberately deferred out of `0.1.8`, not rejected. Wrong shape for `tabular`/`semantic_view` types today (a parser is faster and does not hallucinate a column name; see `[app-builder-v2.md](../doc-dev/briefs/app-builder-v2.md)` and [UX §9](features/app-builder/UX.md)); becomes the right shape once `documents`/`urls` types are live and users want to correct a proposed comparison schema by talking instead of through a form. Needs first: a no-CoCo fallback so room demos without an agent still work, `request_input(schema=…)` so interview answers land in `brief.json` as structured data, and the transcript persisted into the filled brief so **Regenerate** stays reproducible. See [UX §11](features/app-builder/UX.md) for the full design.
+- [ ] **Agent-run interview** replacing (or supplementing) the confirm-the-profile step — deliberately deferred out of `0.1.8`, not rejected. Wrong shape for `tabular`/`semantic_view` types today (a parser is faster and does not hallucinate a column name; see the development brief `doc-dev/briefs/app-builder-v2.md` and [UX §9](features/app-builder/UX.md)); becomes the right shape once `documents`/`urls` types are live and users want to correct a proposed comparison schema by talking instead of through a form. Needs first: a no-CoCo fallback so room demos without an agent still work, `coco.form(title, fields, key=...)` so interview answers land in `brief.json` as structured data, and the transcript persisted into the filled brief so **Regenerate** stays reproducible. See [UX §11](features/app-builder/UX.md) for the full design.
 - [ ] `ships_copilot` — a generated app that embeds its own Ask CoCo window, so the owner keeps shaping it after it leaves the builder. Scope to one type once the base catalogue is solid ([UX §5.5](features/app-builder/UX.md)).
 - [ ] **Document comparison** (`doc-compare`) and the first `urls` type (`page-watch`) — UC9 host-fetch + comparison schema ([UX §6.1b](features/app-builder/UX.md)).
 - [ ] Round out the later catalogue — spend explorer (`ACCOUNT_USAGE`), exception queue (write-back), feedback themes, invoice exceptions, docs tour, research digest ([UX §5.3](features/app-builder/UX.md)).
@@ -221,7 +221,7 @@ Packaged Snowflake Native App: the consumer runs the Streamlit UI in their accou
 
 ## Success checks (90 days post-launch)
 
-Public surface: [DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco) · [pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)  
+Public surface: [DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco) · [pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)
 Snapshot **2026-09-06** ([pypistats](https://pypistats.org/packages/streamlit-coco)): **506** downloads last month · **2** GitHub stars.
 
 

@@ -10,23 +10,29 @@ this repository to view the rendered boards. No Streamlit server or Snowflake co
 
 | Board | Content |
 | --- | --- |
-| [CoCo22](canvas/project/CoCo22.dc.html) | Frames 1?37: launcher and window states |
-| [CoCo22Waiting](canvas/project/CoCo22Waiting.dc.html) | Frames 38?61: questions, plans and standing permission |
-| [CoCo22Data](canvas/project/CoCo22Data.dc.html) | Frames 62?86: data, files, page requests, display and session |
-| [CoCo22OnPage](canvas/project/CoCo22OnPage.dc.html) | Window on a 1440 ? 900 host page |
-| [CoCo22OnPage1366](canvas/project/CoCo22OnPage1366.dc.html) | Window on a 1366 ? 768 host page |
+| [CoCo22](preview/CoCo22.dc.html) | Frames 1-37: launcher and window states |
+| [CoCo22Waiting](preview/CoCo22Waiting.dc.html) | Frames 38-61: questions, plans and standing permission |
+| [CoCo22Data](preview/CoCo22Data.dc.html) | Frames 62-86: data, files, page requests, display and session |
+| [CoCo22OnPage](preview/CoCo22OnPage.dc.html) | Window on a 1440 x 900 host page |
+| [CoCo22OnPage1366](preview/CoCo22OnPage1366.dc.html) | Window on a 1366 x 768 host page |
 
 ## Provenance
 
 Copied on 2026-10-13 from `ui-rebuild/coco-board/canvas/project/`, the canvas supplied for this delivery.
 All nine source files are preserved byte for byte in [`canvas/project/`](canvas/project/), including
 [`canvas.json`](canvas/project/canvas.json), its board positions, titles and order, and the three CSS files.
-The manifest's `v: 3` is retained as supplied. The consultation index and this README are additions.
+The manifest's `v: 3` is retained as supplied. The consultation index, this README, the preview generator and its output are additions.
 
 The original boards reference `support.js`, an editor resource absent from the supplied canvas.
-Their markup and CSS display as static HTML without it; a browser may report that missing script.
-The `text/x-dc` scripts are editor metadata, not application code. Host-page links target Cockpit mockups
-outside this canvas, and controls are design examples. Montserrat loads from Google Fonts;
+The consultation pages in `preview/` omit that reference and the `text/x-dc` editor metadata,
+load the original CSS, and disable links to Cockpit mockups outside this canvas. Controls remain
+static design examples. Rebuild these pages from the repository root with:
+
+```bash
+python doc/features/ask-coco/design/build_preview.py
+```
+
+The original sources remain unchanged in `canvas/project/`. Montserrat loads from Google Fonts;
 offline viewing uses the CSS system-font fallback.
 
 ## Delivery

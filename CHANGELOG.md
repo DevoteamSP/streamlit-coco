@@ -17,7 +17,7 @@ Migration sheet: [`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask
 
 ### Added
 
-- [Ask CoCo design canvas](doc/features/ask-coco/design/README.md): 86 frames, two host-page views, the original manifest and styles, and a browser consultation index.
+- [Ask CoCo design canvas](doc/features/ask-coco/design/README.md): 86 frames, two host-page views, the original manifest and styles, and standalone browser consultation pages.
 
 - `ask_coco(cwd, ...)` mounts the launcher and the window; `get_window(key)` returns its handle (`ask`, `result`, `form`, `open`, `notice`, `latest_answer`, `new`, `disconnect`, `conversation`).
 - `Features` and `Attachments` (comfort, planning, display switches, session details, files attached in the field), `Gate`, and the `policy` module (`FolderPolicy`, `Command`, `git_readonly`, `request`, ...) as `st_coco.policy.X`. The default policy is the safest: reading inside the working folder is free, everything else asks.
@@ -25,6 +25,8 @@ Migration sheet: [`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask
 - `examples/headless_pipeline.py` answers approvals in code through a `Conversation` with a policy.
 
 ### Changed
+
+- README and API documentation reflect working-folder validation and label changes that keep the conversation; historical roadmap links lead to the current migration sheet.
 
 - `render_output_field(coco, ...)` takes the window's handle (it was a `CocoSession`), refreshes itself, and no longer draws tool cards, a copy button or the status line; `text_renderer=` stays here.
 - The examples run on the window: `chat_app.py` (test-prompt picker through `coco.ask`; the two pill groups build a `FolderPolicy`), `approval_gate.py` (a policy with a listed command, `git_readonly`, a file-change rule, `sql=True`, `standing=True`), `structured_output.py` (`CocoOptions(output_schema=...)`, `coco.result`), `cwd_upload_chat.py` (attachments plus `cwd_uploader`; its folder is now `./cwd_upload_workspace`).

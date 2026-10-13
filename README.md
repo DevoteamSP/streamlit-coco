@@ -78,7 +78,7 @@ What happens: click **Ask CoCo** (bottom right), then **Connect mock**. Type a m
 
 Without the variable, the same file talks to a real Cortex Code agent. The window offers your Snowflake connections and connects when the user presses **Connect**. Nothing starts before that.
 
-`ask_coco(cwd)` is the only call a first application needs. The argument is the agent's working folder. A relative path (like `"."`) is taken from the folder the Streamlit server was started in, not from the folder of the script. The package does not create the folder and does not check that it exists: create it first. With the scripted agent a missing folder still connects, and every read fails as a failed step. With a real agent the program is given a folder that is not there; this was not run. It returns a handle; see [Talk to the window](#talk-to-the-window).
+`ask_coco(cwd)` is the only call a first application needs. The argument is the agent's working folder. A relative path (like `"."`) is taken from the folder the Streamlit server was started in, not from the folder of the script. The package checks that the working folder exists and is a directory before connecting, and raises `CocoError` otherwise. It does not create the folder: create it first. It returns a handle; see [Talk to the window](#talk-to-the-window).
 
 ---
 
