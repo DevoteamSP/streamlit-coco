@@ -1,7 +1,7 @@
 """App Builder — streamlit-coco example.
 
-Library of app types → filled brief (form + user sketches) → Copilot writes
-a Streamlit app under approval → Preview with Fix with CoCo.
+Library of app types → filled brief (form + user sketches) → CoCo (the Ask CoCo
+window) writes a Streamlit app under approval → Preview with Fix with CoCo.
 """
 
 from __future__ import annotations
@@ -18,17 +18,11 @@ if str(APP_ROOT) not in sys.path:
 
 from engine import state  # noqa: E402
 from engine.brief import slug_dir  # noqa: E402
-from engine.copilot_panel import (  # noqa: E402
-    render_coco_cooking_indicator,
-    render_copilot_rail,
-)
+from engine.coco_window import mount_window, render_brief_expander  # noqa: E402
 from engine.jobs import (  # noqa: E402
-    get_job,
-    is_copilot_open,
     is_preview_full,
     is_preview_open,
-    set_copilot_open,
-    toggle_copilot,
+    job_finished,
     toggle_preview,
 )
 from engine.paths import WORKSPACE_DIR  # noqa: E402
@@ -67,7 +61,6 @@ _ON_ADMIN = page.title == "Admin"
 
 
 def _chrome() -> None:
-    copilot_on = is_copilot_open()
     preview_on = is_preview_open()
     app_type = state.selected_type()
 
@@ -78,14 +71,6 @@ def _chrome() -> None:
             st.badge(current_app, color="blue")
         elif app_type and not _ON_ADMIN:
             st.badge(app_type.name, color="blue")
-        if st.button(
-            "Close Copilot" if copilot_on else "Open Copilot",
-            icon=":material/close:" if copilot_on else ":material/psychology:",
-            type="secondary" if copilot_on else "primary",
-            key="ab_toggle_copilot",
-        ):
-            toggle_copilot()
-            st.rerun()
         show_preview = not _ON_WELCOME and not _ON_ADMIN
         if show_preview and st.button(
             "Close Preview" if preview_on else "Open Preview",
@@ -99,41 +84,28 @@ def _chrome() -> None:
     if _ON_WELCOME:
         st.caption(
             "App Builder · pick a type, fill its brief, CoCo writes the app. "
-            "Open Copilot once — later screens reuse that session."
+            "Connect CoCo once from the launcher — later screens reuse that session."
         )
     elif _ON_ADMIN:
         st.caption("App Builder · add, edit, or delete the types that appear in the Library.")
     else:
         st.caption(
-            "App Builder · Open Copilot and Open Preview can sit side by side. "
+            "App Builder · Open Preview sits beside the page, CoCo floats above it. "
             "Screens queue jobs; they do not open a new agent."
         )
-    render_coco_cooking_indicator()
 
 
 _chrome()
-
-if get_job() and not is_copilot_open():
-    set_copilot_open(True)
+mount_window()
+if job_finished():  # a build or a fix just finished: the preview starts on its own
+    st.session_state["ab_preview_auto_run"] = True
 
 _preview_ok = not _ON_WELCOME and not _ON_ADMIN
 
-if is_copilot_open() and _preview_ok and is_preview_open():
-    preview_col, rail = resizable_columns(
-        [1.15, 1],
-        min_width=280,
-        key="ab_fix_split",
-    )
-    with preview_col:
-        with st.container(border=True):
-            render_preview_rail()
-    with rail:
-        with st.container(border=True):
-            render_copilot_rail()
-elif _preview_ok and is_preview_open() and is_preview_full():
+if _preview_ok and is_preview_open() and is_preview_full():
     with st.container(border=True):
         render_preview_rail()
-elif is_copilot_open() or (_preview_ok and is_preview_open()):
+elif _preview_ok and is_preview_open():
     main, rail = resizable_columns(
         [1.15, 1],
         min_width=280,
@@ -141,10 +113,8 @@ elif is_copilot_open() or (_preview_ok and is_preview_open()):
     )
     with rail:
         with st.container(border=True):
-            if is_copilot_open():
-                render_copilot_rail()
-            else:
-                render_preview_rail()
+            render_brief_expander()
+            render_preview_rail()
     with main:
         page.run()
 else:

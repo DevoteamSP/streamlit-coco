@@ -23,7 +23,6 @@ from engine.brief_form import (
     seed_form_widget_keys,
 )
 from engine.catalog import AppType
-from engine.jobs import set_copilot_open
 from engine.paths import FIXTURES_DIR
 from engine.profile import EMPTY_PROFILE, DataProfile, profile_csv
 from engine.state import (
@@ -137,9 +136,6 @@ def _render_actions(app_type: AppType, current: str, missing: list[str]) -> None
             key="ab_build_demo",
         ):
             start_demo_scaffold()
-        if st.button("Open Copilot", icon=":material/psychology:", key="ab_brief_copilot"):
-            set_copilot_open(True)
-            st.rerun()
         if st.button("Open Studio", icon=":material/web:", key="ab_to_studio"):
             go("Studio")
         with st.popover("Delete app", icon=":material/delete:"):

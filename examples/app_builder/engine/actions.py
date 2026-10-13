@@ -8,7 +8,7 @@ import streamlit as st
 
 from engine.brief import answers_complete, slug_dir
 from engine.generate import build_prompt
-from engine.jobs import is_connected, queue_build, set_copilot_open, set_preview_open
+from engine.jobs import queue_build, set_preview_open
 from engine.scaffold import copy_fixture, write_demo_scaffold
 from engine.state import answers, persist_brief, selected_type, slug
 
@@ -29,15 +29,9 @@ def start_coco_build(*, regenerate: bool, values: dict[str, Any] | None = None) 
     dest = slug_dir(current)
     copy_fixture(app_type, dest)
     persist_brief(values)
-    if not is_connected():
-        st.session_state["ab_coco_connect_hint"] = True
-        set_copilot_open(True)
-        st.rerun()
-        return
-    queue_build(build_prompt(app_type, regenerate=regenerate), dest)
+    # Sent when CoCo is connected, shown as waiting until then; this reruns the page.
     set_preview_open(True)
-    st.toast("Queued · Build with CoCo")
-    st.rerun()
+    queue_build(build_prompt(app_type, regenerate=regenerate), dest)
 
 
 def start_demo_scaffold() -> None:

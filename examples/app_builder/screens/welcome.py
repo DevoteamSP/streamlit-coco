@@ -64,9 +64,9 @@ def run() -> None:
     st.subheader("How to use it")
     h1, h2 = st.columns(2, gap="medium")
     with h1.container(border=True, height="stretch"):
-        st.markdown("**Open Copilot**")
+        st.markdown("**Ask CoCo**")
         st.caption(
-            "Connect once from the header. **Build this app** queues a Write. "
+            "Connect once from the launcher at the bottom right. **Build this app** sends a job. "
             "Approve the files in plain language; expand the diff if you want."
         )
     with h2.container(border=True, height="stretch"):

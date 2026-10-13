@@ -1,4 +1,4 @@
-"""Shared filled-brief widgets for the Brief page and Copilot rail."""
+"""Shared filled-brief widgets for the Brief page and the preview column."""
 
 from __future__ import annotations
 

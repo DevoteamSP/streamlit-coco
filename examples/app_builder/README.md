@@ -1,6 +1,6 @@
 # App Builder
 
-Example for [streamlit-coco](https://github.com/DevoteamSP/streamlit-coco): a **library of app types**. Pick a type, fill its **brief** (context, what it allows, what it does not, questions), optionally attach **sketches** of the app you want, then CoCo writes a Streamlit app under approval. Preview and **Fix with CoCo** reuse `copilot_rail()` + `app_viewer()`.
+Example for [streamlit-coco](https://github.com/DevoteamSP/streamlit-coco): a **library of app types**. Pick a type, fill its **brief** (context, what it allows, what it does not, questions), optionally attach **sketches** of the app you want, then CoCo writes a Streamlit app under approval. Preview and **Fix with CoCo** reuse `app_viewer()`; CoCo is the package's floating **Ask CoCo** window.
 
 Product brief: [`doc/features/app-builder/UX.md`](../../doc/features/app-builder/UX.md).
 
@@ -29,7 +29,7 @@ uv run --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m st
 | Welcome | You never start from a blank `app.py`; three steps |
 | Library | **Resume** project cards; **Create a new project** type cards (icon, name, users, grounding, screenshot) |
 | Brief | Columns: your brief + sketches · type questions |
-| Studio | **Build this app** / regenerate; header **Open Copilot** and **Open Preview**. Copilot has an **App brief** expander (owner brief + questions; **Save** / **Save & regenerate**) |
+| Studio | **Build this app** / regenerate; header **Open Preview**; the preview column has an **App brief** expander (owner brief + questions; **Save** / **Save & regenerate**) |
 | Admin | Type cards on the left (Edit / Delete / Create); paired Topics / Context and Allows / Does not; question cards; **Guidelines skills** editors for `types/shared/SKILL.md` and the type `SKILL.md` |
 
 **Build with CoCo** needs the CLI. **Build demo scaffold** writes a disconnected `streamlit_app.py` from the fixture CSV (no warehouse, no agent).
@@ -65,5 +65,14 @@ Each app type is one folder under `types/`. The shared generation skill sits nex
 
 Agent / generated files:
 
-- Host cwd for Copilot: `examples/app_builder/out/<slug>/` (`brief.json`, `BRIEF.md`, `sketches/`, `streamlit_app.py`)
+- Working folder of the Ask CoCo window: `examples/app_builder/out/<slug>/` (`brief.json`, `BRIEF.md`, `sketches/`, `streamlit_app.py`)
 - Preview: `app_viewer()` on that folder (port **8513**)
+
+## How it uses Ask CoCo
+
+- `engine/coco_window.py` mounts `ask_coco(cwd)` on every run, with the current app folder as `cwd` (the workspace folder before an app is picked; switching app starts a new conversation). Connect (config file, profile) from the window.
+- **Rights**: a `FolderPolicy` on the app folder. Read / Glob / Grep there are free, and so are the guidelines skills under `types/` that the build prompt names; every Write or Edit asks (Allow / Decline) each time.
+- **Jobs**: **Build this app**, **Regenerate** and **Fix with CoCo** call `coco.ask(label, prompt, key="build" | "fix")`. Pressed before connecting, they wait in the window ("Sent when you connect"). When one finishes, `coco.result(key)` tells the page, which starts the preview on its own.
+- **First screen**: three example questions (`prompts=`); the placeholder text is a `labels=` override; the window's menu offers "Latest exchange only" and "Shorten long messages" (`Features(display=...)`); Copy is off.
+- The preview (`app_viewer`) and the sketches uploader stay page components.
+- `APP_BUILDER_HOME=<folder>` moves the two folders the app writes to (a scratch run).
