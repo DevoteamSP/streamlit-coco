@@ -378,8 +378,8 @@ class FolderPolicy:
     def flag(self, parts: tuple[str, ...]):
         """One more reason a place inside the scope is not read freely. `parts`: the names of the
         path, from the scope. None, or (a key of your own, the words): the words are what a read
-        asks for ("a budget file"), or a pair when a search needs its own ("a folder with budget
-        files"). A search of a folder that holds such a file asks too."""
+        asks for ("a draft"), or a pair when a search needs its own ("a draft", "a folder with
+        drafts"). A search of a folder that holds such a file asks too."""
         return None
 
     def commands(self) -> list[Command]:
