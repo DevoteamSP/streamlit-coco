@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from engine.bi_sources import has_powerbi, has_tableau, list_bi_files, source_kind
@@ -10,8 +11,11 @@ APP_ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = APP_ROOT.parents[1]
 TABLEAU_FIXTURES_DIR = REPO_ROOT / "examples" / "bi_samples" / "tableau" / "workbooks"
 POWERBI_FIXTURES_DIR = REPO_ROOT / "examples" / "bi_samples" / "powerbi"
-WORKSPACE_DIR = REPO_ROOT / "examples" / "workspaces" / "bi_to_semantic"
-OUT_DIR = APP_ROOT / "out"
+# BI_TO_SEMANTIC_HOME moves both folders the app writes to (a scratch run, a test).
+_HOME = os.environ.get("BI_TO_SEMANTIC_HOME")
+_WORKSPACES = REPO_ROOT / "examples" / "workspaces" / "bi_to_semantic"
+WORKSPACE_DIR = Path(_HOME) / "workspace" if _HOME else _WORKSPACES
+OUT_DIR = Path(_HOME) / "out" if _HOME else APP_ROOT / "out"
 CONTRACTS_DIR = APP_ROOT / "contracts"
 
 # Back-compat alias used by older comments / imports.

@@ -4,7 +4,7 @@ Reads Tableau workbooks and/or Power BI reports, surfaces KPI and access-rule
 drift, arbitrates with the human, then Writes a semantic view + row access
 policy under approval.
 
-Copilot and Preview can open together (preview | Copilot) so a failing
+CoCo is the floating Ask CoCo window; Preview opens beside the page so a failing
 generated app can be fixed in place. Screens only queue jobs.
 """
 
@@ -22,19 +22,11 @@ if str(APP_ROOT) not in sys.path:
 
 from engine import state  # noqa: E402
 from engine.coco_jobs import (  # noqa: E402
-    get_job,
-    is_copilot_open,
     is_preview_full,
     is_preview_open,
-    is_rail_open,
-    set_copilot_open,
-    toggle_copilot,
     toggle_preview,
 )
-from engine.copilot_panel import (  # noqa: E402
-    render_coco_cooking_indicator,
-    render_copilot_rail,
-)
+from engine.coco_window import collect_results, dispatch_pending, mount_window  # noqa: E402
 from engine.paths import WORKSPACE_DIR  # noqa: E402
 from engine.preview_panel import render_preview_rail  # noqa: E402
 
@@ -80,18 +72,9 @@ page = st.navigation(
 
 
 def _chrome() -> None:
-    copilot_on = is_copilot_open()
     preview_on = is_preview_open()
     with st.container(horizontal=True, vertical_alignment="center"):
         st.title(f"{page.icon} {page.title}")
-        if st.button(
-            "Close Copilot" if copilot_on else "Copilot",
-            icon=":material/close:" if copilot_on else ":material/psychology:",
-            type="secondary" if copilot_on else "primary",
-            key="bts_toggle_copilot_header",
-        ):
-            toggle_copilot()
-            st.rerun()
         if page.title != "Welcome" and st.button(
             "Close Preview" if preview_on else "Preview",
             icon=":material/close:" if preview_on else ":material/preview:",
@@ -102,45 +85,31 @@ def _chrome() -> None:
             st.rerun()
     if page.title == "Welcome":
         st.caption(
-            "BI → Semantic · Tableau and Power BI · Open Copilot once — later "
-            "screens reuse that session."
+            "BI → Semantic · Tableau and Power BI · Connect CoCo once from the "
+            "launcher — later screens reuse that session."
         )
     else:
         st.caption(
-            "BI → Semantic · Tableau and Power BI · Copilot and Preview can sit "
-            "side by side — screens queue jobs, they do not open new agents."
+            "BI → Semantic · Tableau and Power BI · Preview sits beside the page, CoCo "
+            "floats above it — screens queue jobs, they do not open new agents."
         )
     restored = state.hydrated_files()
     if restored:
         st.caption("Restored from disk · " + ", ".join(f"`{n}`" for n in restored))
-    render_coco_cooking_indicator()
 
 
 _chrome()
-
-# Keep the Copilot rail open while a structured job is queued/running.
-if get_job() and not is_copilot_open():
-    set_copilot_open(True)
+coco = mount_window()
+dispatch_pending(coco)
+collect_results(coco)
 
 _preview_ok = page.title != "Welcome"
 
-if is_copilot_open() and _preview_ok and is_preview_open():
-    preview_col, rail = resizable_columns(
-        [1.15, 1],
-        min_width=280,
-        key="bts_fix_split",
-    )
-    with preview_col:
-        with st.container(border=True):
-            render_preview_rail()
-    with rail:
-        with st.container(border=True):
-            render_copilot_rail()
-elif _preview_ok and is_preview_open() and is_preview_full():
+if _preview_ok and is_preview_open() and is_preview_full():
     with st.container(border=True):
         render_preview_rail()
-elif is_copilot_open() or (_preview_ok and is_rail_open()):
-    # Rail FIRST: if a page stops early, Copilot still streams.
+elif _preview_ok and is_preview_open():
+    # Preview FIRST: if a page stops early, the preview still renders.
     main, rail = resizable_columns(
         [1.15, 1],
         min_width=280,
@@ -148,10 +117,7 @@ elif is_copilot_open() or (_preview_ok and is_rail_open()):
     )
     with rail:
         with st.container(border=True):
-            if is_copilot_open():
-                render_copilot_rail()
-            else:
-                render_preview_rail()
+            render_preview_rail()
     with main:
         page.run()
 else:

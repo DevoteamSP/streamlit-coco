@@ -252,7 +252,7 @@ def run() -> None:
     st.caption(
         "Drop Tableau (`.twb` / `.twbx`) or Power BI (`.pbix` / `.pbit`) files, "
         "or load a bundled pack. Files land in the agent's working directory. "
-        "Open **Copilot** (header) once to connect — later screens reuse that "
+        "Open **Ask CoCo** (bottom right) once to connect — later screens reuse that "
         "same streamed session."
     )
 
@@ -269,7 +269,7 @@ def run() -> None:
         st.markdown("**Upload your own**")
         st.caption(
             "Bring Tableau (`.twb` / `.twbx`) or Power BI (`.pbix` / `.pbit` / TMDL). "
-            "Files are copied into `_uploads/` in the agent workspace so Copilot can "
+            "Files are copied into `_uploads/` in the agent workspace so CoCo can "
             "read them. 200 MB per file."
         )
         st.space("stretch")

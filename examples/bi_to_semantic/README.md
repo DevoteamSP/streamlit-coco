@@ -28,8 +28,8 @@ uv run streamlit run app.py
 ```
 
 `make bi-semantic` uses the repo checkout of `streamlit-coco` (so it tracks this
-tree) and pulls in `streamlit-extras` (`resizable_columns` for the Copilot / Preview split).
-From **`0.1.6`**, `copilot_rail()` / `preview_chars=` ship on PyPI. From **`0.1.7`**, so does `app_viewer()`.
+tree) and pulls in `streamlit-extras` (`resizable_columns` for the page / Preview split).
+CoCo is the package's floating **Ask CoCo** window (`ask_coco`, `streamlit-coco` 0.2.0).
 
 ## Screens (Welcome + slice 1–6)
 
@@ -39,12 +39,12 @@ From **`0.1.6`**, `copilot_rail()` / `preview_chars=` ship on PyPI. From **`0.1.
 | 1 | Load | `cwd_uploader` / fixture copy | nothing |
 | 2 | Estate map | Deterministic Tableau `.twb` XML and/or Power BI `.pbix` → Graphviz | nothing |
 | 3 | KPI inventory | Deterministic calculated fields / DAX measures | nothing |
-| 4 | Access-rule comparator | Power BI table contracts (or RLS) parsed locally; Tableau User Filters via Copilot | CoCo for Tableau |
-| 5 | Arbitration | `request_input(schema=…)` | CoCo env optional |
+| 4 | Access-rule comparator | Power BI table contracts (or RLS) parsed locally; Tableau User Filters via CoCo | CoCo for Tableau |
+| 5 | Arbitration | `coco.form(...)`, answered in the window | CoCo env optional |
 | 6 | Generate | Write approval (SV + RAP) · Streamlit **Build with python** or **Build with CoCo** (save brief, then generate) · disconnected preview | CoCo for Write / CoCo generator; nothing for disconnected run |
 
-Screens **2–3** are deterministic parse — no Copilot job.
-Screens **4 / 6** share **one** Copilot session on the right; buttons only **queue a job**.
+Screens **2–3** are deterministic parse — no CoCo job.
+Screens **4 / 6** share **one** CoCo session (the window); buttons only **queue a job**.
 
 Screens **7–8** (question set + headless evaluation) are deferred.
 
@@ -76,8 +76,8 @@ Artifacts: `examples/bi_to_semantic/out/` (gitignored) — step JSON
 generated SQL/YAML, and `out/streamlit_dash/` (deterministic) plus
 `out/streamlit_dash_coco/` (CoCo-authored).
 **Preview** (header) runs the selected tree in disconnected mode: Python at
-`http://127.0.0.1:8511`, CoCo at `http://127.0.0.1:8512`. Copilot and Preview
-can open together; Preview is `st_coco.app_viewer()` and **Fix with CoCo** queues a job.
+`http://127.0.0.1:8511`, CoCo at `http://127.0.0.1:8512`. Preview opens
+beside the page; it is `st_coco.app_viewer()` and **Fix with CoCo** calls `coco.ask`.
 
 ## Layout
 
@@ -91,3 +91,12 @@ out/                   generated artifacts (gitignored)
 
 Semantic view deploy SQL follows atomic-studio's
 `SYSTEM$CREATE_SEMANTIC_VIEW_FROM_YAML` wrap — not hand-rolled `CREATE SEMANTIC VIEW` DDL.
+
+## How it uses Ask CoCo
+
+- `engine/coco_window.py` mounts `ask_coco(cwd)` on every run. Connect (config file, profile) from the window. The first screen offers three example questions (`prompts=`); the menu offers "Latest exchange only" / "Shorten long messages"; Copy is off.
+- **Jobs** (`engine/coco_jobs.py`): a screen button calls `queue_job(kind, ...)`. The next run sets the window up for that kind, then `coco.ask(label, prompt, key=kind)` sends it. A job pressed before connecting waits in the window.
+  - `estate`, `kpi`, `access` answer with data: the session's `output_schema` is that kind's JSON Schema, the working folder is `examples/workspaces/bi_to_semantic/`, and Write / Edit are refused (`BiPolicy`). When the job finishes, `coco.result(kind)["data"]` is validated and stored by `collect_results`; a failure is said in the thread (`coco.notice`).
+  - `generate`, `streamlit` (and **Fix with CoCo**) write files in `out/`: reading is free, every Write / Edit asks (Allow / Decline). A job of another kind starts a new conversation.
+- **Arbitration** asks each judgement call with `coco.form(...)`, answered in the window; a skipped one comes back with **Decide in the CoCo window**.
+- `BI_TO_SEMANTIC_HOME=<folder>` moves the two folders the app writes to (a scratch run).

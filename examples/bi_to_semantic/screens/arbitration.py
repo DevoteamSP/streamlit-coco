@@ -1,4 +1,4 @@
-"""Screen 5 — Arbitration (request_input judgement calls + provenance log)."""
+"""Screen 5 — Arbitration (judgement calls asked in the Ask CoCo window + provenance log)."""
 
 from __future__ import annotations
 
@@ -8,12 +8,30 @@ import streamlit as st
 from engine import state
 from engine.persist import render_save_then_next
 
-import streamlit_coco as st_coco
+from streamlit_coco.window import get_window
 
 
 def _safe_key(prefix: str, subject: str) -> str:
     slug = re.sub(r"[^\w]+", "_", subject.strip())[:48].strip("_") or "item"
     return f"{prefix}_{slug}"
+
+
+def _ask(prefix: str, subject: str, title: str, fields: list[dict]) -> dict | None:
+    """A judgement call, asked in the window (`coco.form`), once per try. The answer comes once.
+    A skipped one is not asked again by itself: the page offers to ask it again."""
+    key = _safe_key(prefix, subject)
+    tries = st.session_state.get(f"{key}_tries", 0)
+    if st.session_state.get(f"{key}_skipped"):
+        if st.button("Decide in the CoCo window", icon=":material/gavel:", key=f"{key}_again"):
+            st.session_state[f"{key}_skipped"] = False
+            st.session_state[f"{key}_tries"] = tries + 1
+            st.rerun()
+        return None
+    answer = get_window().form(title, fields, key=f"{key}_{tries}")
+    if answer and answer["skipped"]:
+        st.session_state[f"{key}_skipped"] = True
+        st.rerun()
+    return answer["values"] if answer else None
 
 
 def _next_metric() -> dict | None:
@@ -90,48 +108,48 @@ def _arbitrate_metric(metric: dict) -> None:
         st.markdown(f"**{d.get('workbook')}**")
         st.code(str(d.get("formula") or ""), language="text")
 
-    decision = st_coco.request_input(
-        "Arbitrate this metric — choose a canonical formula, name it, confirm the definition.",
-        key=_safe_key("tts_metric", name),
-        schema=[
+    decision = _ask(
+        "tts_metric",
+        name,
+        f"Arbitrate metric {name} — choose a canonical formula, name it, confirm the definition.",
+        [
             {
-                "name": "formula_choice",
+                "id": "formula_choice",
                 "label": "Canonical formula source",
-                "type": "select",
-                "options": options or ["custom"],
+                "type": "choice",
+                "choices": options or ["custom"],
             },
             {
-                "name": "canonical_formula",
+                "id": "canonical_formula",
                 "label": "Formula (edit if custom / refine)",
-                "type": "textarea",
-                "default": str((defs[0] or {}).get("formula") or "") if defs else "",
+                "type": "longtext",
+                "value": str((defs[0] or {}).get("formula") or "") if defs else "",
             },
             {
-                "name": "metric_name",
+                "id": "metric_name",
                 "label": "Canonical metric name",
                 "type": "text",
-                "default": name,
+                "value": name,
             },
             {
-                "name": "plain_english",
+                "id": "plain_english",
                 "label": "Plain-English definition",
-                "type": "textarea",
-                "default": str(metric.get("plain_english") or ""),
+                "type": "longtext",
+                "value": str(metric.get("plain_english") or ""),
             },
             {
-                "name": "action",
+                "id": "action",
                 "label": "Action",
-                "type": "select",
-                "options": ["keep", "drop"],
+                "type": "choice",
+                "choices": ["keep", "drop"],
             },
             {
-                "name": "rationale",
+                "id": "rationale",
                 "label": "Why",
-                "type": "textarea",
+                "type": "longtext",
                 "required": False,
             },
         ],
-        submit_label="Record decision",
     )
     if decision and isinstance(decision, dict):
         formula = str(decision.get("canonical_formula") or "")
@@ -162,29 +180,29 @@ def _arbitrate_access(div: dict) -> None:
     absent = ", ".join(div.get("absent_from") or [])
     st.caption(f"Present in: {present} · Absent from: {absent}")
 
-    decision = st_coco.request_input(
-        "Keep, drop, or merge this access branch — and say why.",
-        key=_safe_key("tts_access", branch),
-        schema=[
+    decision = _ask(
+        "tts_access",
+        branch,
+        f"Access branch {branch} — keep, drop, or merge it, and say why.",
+        [
             {
-                "name": "action",
+                "id": "action",
                 "label": "Action",
-                "type": "select",
-                "options": ["keep", "drop", "merge"],
+                "type": "choice",
+                "choices": ["keep", "drop", "merge"],
             },
             {
-                "name": "grants_to",
+                "id": "grants_to",
                 "label": "Grants to (role / persona)",
                 "type": "text",
-                "default": branch,
+                "value": branch,
             },
             {
-                "name": "rationale",
+                "id": "rationale",
                 "label": "Why",
-                "type": "textarea",
+                "type": "longtext",
             },
         ],
-        submit_label="Record decision",
     )
     if decision and isinstance(decision, dict):
         state.add_decision(
