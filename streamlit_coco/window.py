@@ -120,8 +120,10 @@ class Window:
         until it is finished. `data` is the structured result when the session has an
         output_schema, else None."""
         s = self._s
-        s["asked"].discard(key)
-        return s["conv"].result_for(key)
+        found = s["conv"].result_for(key)
+        if found is not None:  # while it is pending, the window still reruns the page when it ends
+            s["asked"].discard(key)
+        return found
 
     def form(self, title: str, fields: list[dict], *, key: str) -> dict | None:
         """A form asked by the application, answered in the window (no agent, no connection).

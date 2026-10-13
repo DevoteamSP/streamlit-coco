@@ -521,6 +521,18 @@ class WindowTest(unittest.TestCase):
             window.ask_coco(".", options=SimpleNamespace(allowed_tools=["Read"]))
         self.assertIn("policy", str(caught.exception))
 
+    def test_result_keeps_the_key_asked_while_pending_and_hands_over_once(self) -> None:
+        pending = [None]
+        conv = SimpleNamespace(result_for=lambda key: pending[0])
+        state = {window._slot("k"): {"conv": conv, "asked": {"job"}}}
+        with mock.patch.object(window.st, "session_state", state):
+            handle = window.Window("k")
+            self.assertIsNone(handle.result("job"))
+            self.assertEqual(state[window._slot("k")]["asked"], {"job"})  # the page is still rerun
+            pending[0] = {"text": "done", "data": None}
+            self.assertEqual(handle.result("job"), {"text": "done", "data": None})
+            self.assertEqual(state[window._slot("k")]["asked"], set())
+
     def run_act(self, acts: list[dict]) -> tuple[list, dict]:
         calls, state = [], {}
         slot = window._slot("k")
