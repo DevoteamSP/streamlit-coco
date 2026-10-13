@@ -18,6 +18,7 @@
 | 2 | Observe `query()` section | Assistant and/or tool-related events, then a `result` |
 | 3 | Observe `session.run()` / `session.stream()` | Multi-turn completes; script exits cleanly |
 | 4 | Optional: pending AskUser / ExitPlan auto-resolved by the example loop | No hung approval |
+| 5 | Observe the `Conversation` section (a `FolderPolicy`) | Reads are answered in code, a change is declined; no hang; the answer prints |
 
 ## Edge cases
 
@@ -30,7 +31,7 @@
 
 | Field | Value |
 | --- | --- |
-| Tester | Cursor agent |
+| Tester | Cursor agent (steps 1 to 4 only; step 5 was added in 0.2.0 and has not been run live) |
 | Date | 2026-07-27 |
 | Build / commit | `feature/phase3-hitl-headless` (uncommitted) |
 | Pass? | **Yes** — `make headless` completed: `query()` success (~18s); `session.run()` `completed` (211 events); `session.stream()` success; script asserted `streamlit` not loaded; clean exit. |

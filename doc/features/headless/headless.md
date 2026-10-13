@@ -6,7 +6,9 @@
 - `CocoSession.stream()` — multi-turn async event stream from the background worker
 - `await CocoSession.run(prompt)` — send a prompt and wait until the turn completes
 
-No Streamlit browser UI is required. Approvals can be resolved programmatically with `approve_pending` / `deny_pending`.
+- `streamlit_coco.conversation.Conversation` with a policy: the same rights as the Ask CoCo window, with each request answered in code
+
+No Streamlit browser UI is required. A `CocoSession`'s own approvals are answered with `session.permission_manager.resolve(request_id, approved=...)`. A `Conversation`'s requests are plain data in `conv.view()["request"]`, answered with `conv.act({"type": "allow" | "decline", "id": ...})`.
 
 ## Why
 
@@ -39,12 +41,12 @@ async def main():
 asyncio.run(main())
 ```
 
-Demo: `make headless` → `examples/headless_pipeline.py`.
+Demo: `make headless` → `examples/headless_pipeline.py` (`query()`, a multi-turn `CocoSession`, and a `Conversation` with `policy.FolderPolicy` whose requests a script answers).
 
 ## Limitations
 
-- Streamlit remains a package dependency (apps install it), but **core headless imports do not load Streamlit** — `import streamlit_coco` + `CocoSession` / `query` / permissions stay UI-free. Accessing `panel` / `chat` loads Streamlit lazily.
-- AskUserQuestion / ExitPlanMode always block until resolved or timed out — scripts must auto-approve or answer.
+- Streamlit remains a package dependency (apps install it), but **core headless imports do not load Streamlit** — `import streamlit_coco` + `CocoSession` / `query` / `Conversation` / `policy` stay UI-free. Accessing `ask_coco` or `cwd_uploader` loads Streamlit lazily.
+- AskUserQuestion / ExitPlanMode always block until resolved or timed out. Scripts must answer them (`conv.act({"type": "answer", ...})`, or `permission_manager.resolve` on a `CocoSession`).
 - Requires CoCo CLI + Snowflake connection like the UI.
 
 ## Related

@@ -22,28 +22,25 @@ Helpers (Streamlit-free) are also exported:
 | `last_preview_exception` / `preview_log_tail` | Scrape `.preview.log` |
 | `default_fix_prompt` | Prompt text only — the host queues the job |
 
-The component does **not** import `copilot_rail` or know about job queues.
-Hosts compose `app_viewer` | `copilot_rail` and wire `on_fix`.
+The component does not import the window or know about job queues.
+Hosts put `app_viewer` beside the Ask CoCo window and wire `on_fix` to `coco.ask`.
 
 ## Why
 
 Embedding a generated Streamlit app next to CoCo needs one preview column, not
 a studio widget. The BI → Semantic example proved the pattern (child process,
-iframe, log scrape); it belongs in the library the same way `copilot_rail()`
-was extracted in `0.1.6`.
+iframe, log scrape); it belongs in the library as a separate piece from the window.
 
 ## How to use
 
 ```python
 import streamlit_coco as st_coco
 
+coco = st_coco.ask_coco(dest)
+
+
 def _on_fix(trace: str) -> None:
-    queue_job(
-        "streamlit",
-        prompt=st_coco.default_fix_prompt(trace, dest),
-        label="Fix Streamlit app",
-    )
-    open_copilot_for_job()
+    coco.ask("Fix Streamlit app", st_coco.default_fix_prompt(trace, dest), key="fix")
 
 st_coco.app_viewer(
     dest,  # folder with streamlit_app.py — not the host app
@@ -78,5 +75,5 @@ the button to do work; if omitted, the button toasts “wire `on_fix=`”.
 ## Related
 
 - Checklist: [`test-checklist.md`](test-checklist.md)
-- Copilot rail: [`../copilot-rail/copilot-rail.md`](../copilot-rail/copilot-rail.md)
+- Ask CoCo window: [`../ask-coco/ask-coco.md`](../ask-coco/ask-coco.md)
 - Example: [`examples/bi_to_semantic/`](../../../examples/bi_to_semantic/)

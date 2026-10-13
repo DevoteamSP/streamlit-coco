@@ -2,7 +2,7 @@
 
 **Checklist:** `doc/features/app-builder/test-checklist.md`
 **App:** `examples/app_builder` (`make app-builder`)
-**API:** compose `copilot_rail()` + `app_viewer()`; guidelines skills — see [`app-builder.md`](app-builder.md)
+**API:** compose `ask_coco()` (the Ask CoCo window) + `app_viewer()`; guidelines skills — see [`app-builder.md`](app-builder.md)
 **Status:** Shipped in `0.1.8`. Automated gate (`make test-all`) passed 2026-09-06. Live CoCo golden-path sign-off still open.
 
 ## Preconditions
@@ -20,7 +20,7 @@ Flows: [`UX.md`](UX.md) UC1–UC8.
 
 | # | Step | Expected | Pass |
 | --- | --- | --- | --- |
-| 1 | Welcome copy + menu **Welcome · Library · Brief · Studio · Admin**; **Open Copilot** in the header | Copilot label is explicit | |
+| 1 | Welcome copy + menu **Welcome · Library · Brief · Studio · Admin**; the **Ask CoCo** launcher at the bottom right | The launcher opens the window on every page | |
 | 2 | Welcome → Library **Create a new project** (KPI card) → **Create a new app** (name) → Brief: pick the demo pack | A named folder is created under `out/`; header shows the app name (no **New app**); returning to Library shows a **Resume** project card; deterministic profile runs, **no agent call**; Brief shows **Your brief** + sketches on the left and **Questions** on the right | |
 | 2a | Library topic pills at the top: select **Local**, then **Snowflake** | Resume and Create a new project both filter; empty pills show everything | |
 | 2b | Brief: change **App name** | `brief.json` / `BRIEF.md` and the header badge use the new name; `out/<slug>/` folder is unchanged | |
@@ -33,8 +33,8 @@ Flows: [`UX.md`](UX.md) UC1–UC8.
 | 9 | Self-check exhausted (still red after one pass) | Falls back to manual **Fix with CoCo** exactly as `0.1.7` (UC4) | |
 | 10 | "Chart by month, not week" | Edit under approval (UC3); grain in `brief.json` updated because it is a question | |
 | 11 | **Regenerate** from filled brief | App rewritten from full `BRIEF.md` + confirmed profile (UC8); form still pre-filled on Resume; profile itself is **not** silently re-run | |
-| 11a | Copilot **App brief** expander: edit owner brief or a type question → **Save** | `BRIEF.md` / `brief.json` update (all answers); Preview stays; no new CoCo job | |
-| 11c | After Connect, empty transcript: starter buttons **List the files** / **Explain the brief** / **Suggest a change** | Hover shows the full question; click sends it and hides the starters | |
+| 11a | The preview column's **App brief** expander: edit owner brief or a type question → **Save** | `BRIEF.md` / `brief.json` update (all answers); Preview stays; no new CoCo job | |
+| 11c | After Connect, empty thread: the example questions (`prompts=`, at most three) such as **List the files** | Clicking one sends it; the prompts leave the first screen | |
 | 11b | Same expander → **Save & regenerate** | Brief saved; Build job queued; CoCo rewrites `streamlit_app.py` from the new brief (UC8) | |
 | 12 | **Re-profile** (separate action) | Re-runs profiling; conflicts with confirmed answers are surfaced for reconciliation, not silently overwritten | |
 | 13 | Admin: click a type card → Edit, rename, save; Create a throwaway type then Delete | Left cards select the editor; Topics \| Context and Allows \| Does not share rows; questions are tabs (add / edit / delete), not JSON; catalog CRUD persists under `types/`; delete is confirmed | |
@@ -60,7 +60,7 @@ those folders land.
 - [ ] Skills missing / not loaded — visible failure, not silent unconstrained generation
 - [ ] Preview pointed at host app — must not happen (same rule as `app_viewer`)
 - [ ] Profile pre-fills a field that is then required — user can still override every inferred value
-- [ ] `ships_copilot` type (if live): generated app's embedded rail never has access to the App Builder's own session/credentials — a separate connection
+- [ ] `ships_copilot` type (if live): generated app's embedded window never has access to the App Builder's own session/credentials — a separate connection
 
 ## Sign-off
 
