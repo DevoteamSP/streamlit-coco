@@ -304,8 +304,15 @@ class StandingTest(GateCase):
                         },
                     )
                 ],
-                [("Write", {"file_path": str(Path(self._tmp.name) / "o.md"), "content": "x"})],
-            ),  # outside the project
+                [  # outside the scope; and inside it, a hook or a file that may hold secrets
+                    ("Write", {"file_path": str(Path(self._tmp.name) / "o.md"), "content": "x"}),
+                    (
+                        "Write",
+                        {"file_path": str(self.alpha / ".git" / "hooks" / "x"), "content": "x"},
+                    ),
+                    ("Write", {"file_path": str(self.alpha / ".env"), "content": "x"}),
+                ],
+            ),
             "queries": (
                 ("sql_execute", {"sql": "select 1"}),
                 [("sql_execute", {"sql": "show tables"})],

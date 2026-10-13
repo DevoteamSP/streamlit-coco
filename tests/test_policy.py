@@ -142,8 +142,7 @@ class CockpitPolicy(FolderPolicy):
             "large": "a folder too large to check for secret or budget files",
             "files": "changes in this project",
             "elsewhere": "reading outside the project",
-            "elsewhere_covers": "Reading and searching outside {scope}, except the .git folder, "
-            "files that may hold secrets and budget files.",
+            "except": "the .git folder, files that may hold secrets and budget files",
             "also_asks": "Reading outside the scope, in .git, a file that may hold secrets or a "
             "budget file also asks",
         }
@@ -1106,6 +1105,38 @@ class FileChangeTest(PolicyCase):
                 )
                 self.assertEqual(facts["changes"]["file"], relative)
                 self.assertNotIn("outside", facts["question"])
+                # asked like any other, but .git is never left to a standing permission
+                family = None if relative == ".git/config" else "files"
+                self.assertEqual(facts["standing"] and facts["standing"]["id"], family)
+
+    def test_the_files_family_never_covers_a_place_a_read_asks_for(self) -> None:
+        """The package's rule, a deliberate change from the Cockpit's: with the permission given,
+        an agent turned by a file it read could rewrite a hook or a credentials file unseen."""
+
+        def offer(policy, relative):
+            call = {"file_path": self.path(relative), "content": "x"}
+            edit = {"file_path": self.path(relative), "old_string": "a", "new_string": "b"}
+            write, change = self.ask(policy, "Write", call), self.ask(policy, "Edit", edit)
+            self.assertEqual((write["kind"], change["kind"]), ("change", "change"))  # still asked
+            self.assertEqual(write["standing"], change["standing"])
+            return write["standing"]
+
+        guarded = (".git/config", ".git/hooks/pre-commit", ".GIT/hooks/x", ".env", "specs/a.key")
+        for relative in (*guarded, "secrets/notes.md", "specs/my_credentials.md", "specs/x.md:s"):
+            with self.subTest(relative=relative):
+                self.assertIsNone(offer(self.manager, relative))
+                self.assertIsNone(offer(self.member, relative))
+        for relative in ("98_project/budget.md", "98_project/timesheets/lea.md"):  # what flag marks
+            with self.subTest(relative=relative):
+                self.assertIsNone(offer(self.member, relative))
+                self.assertEqual(offer(self.manager, relative)["id"], "files")
+        for policy in (self.manager, self.member):
+            self.assertEqual(
+                offer(policy, "specs/x.md")["covers"],
+                "Any change to any file inside alpha, except the .git folder, files that may hold "
+                "secrets and budget files: create, change or replace.",
+            )
+        self.assertIsNone(offer(self.manager, str(self.tmp / "id_rsa")))  # outside, and a secret
 
     def test_outside_the_project_the_full_path_and_the_words_outside(self) -> None:
         for target in (
@@ -1429,6 +1460,9 @@ class StandingOfferTest(PolicyCase):
         ]["covers"]
         self.assertIn("secrets", elsewhere)
         self.assertIn(".git", elsewhere)
+        call = {"file_path": self.path("a.md"), "content": "x"}
+        covers = self.ask(self.manager, "Write", call)["standing"]["covers"]
+        self.assertIn("except the .git folder, files that may hold secrets", covers)
 
 
 class WordsTest(PolicyCase):
@@ -1675,9 +1709,19 @@ class SwitchTest(FolderCase):
         near = self.ask(policy, "Edit", edit)
         self.assertEqual(near["changes"], {"file": "src/app.py", "lines": 1, "note": "1 line"})
         self.assertEqual(near["standing"]["id"], "files")
+        self.assertEqual(
+            near["standing"]["covers"],
+            "Any change to any file inside work, except the .git folder and files that may hold "
+            "secrets: create, change or replace.",
+        )
         far = self.write(policy, self.outside)
         self.assertEqual(far["changes"]["note"], "outside the working folder")
         self.assertIsNone(far["standing"])
+        for name in (".git/hooks/pre-commit", ".env", "docs/id_rsa", "notes.md:stream"):
+            with self.subTest(name=name):  # asked each time, whatever was said to stop asking
+                guarded = self.write(policy, name)
+                self.assertEqual(guarded["kind"], "change")
+                self.assertIsNone(guarded["standing"])
 
     def test_changes_as_patterns(self) -> None:
         unusual = "outside what it usually changes"
@@ -1688,6 +1732,10 @@ class SwitchTest(FolderCase):
                     facts = self.write(policy, name)
                     self.assertEqual(facts["changes"]["file"], name)
                     self.assertEqual(facts["standing"]["id"], "files")
+                    named = ", ".join([patterns] if isinstance(patterns, str) else patterns)
+                    covers = facts["standing"]["covers"]
+                    self.assertIn(f"the files inside work that match {named}, except", covers)
+                    self.assertNotIn("any file", covers)  # it says no more than it gives
                 facts = self.write(policy, "src/app.py")
                 self.assertIn(f"replace a file {unusual}? It cannot be undone.", facts["question"])
                 self.assertEqual(facts["changes"]["file"], (self.folder / "src/app.py").as_posix())
@@ -1696,6 +1744,10 @@ class SwitchTest(FolderCase):
                 far = self.write(policy, "../outside.md")
                 self.assertIn("outside the working folder", far["question"])
                 self.assertIsNone(far["standing"])
+        everything = self.policy(changes="*", standing=True)  # a pattern does not open what is kept
+        self.assertEqual(self.write(everything, "src/app.py")["standing"]["id"], "files")
+        for name in (".env", ".git/config"):
+            self.assertIsNone(self.write(everything, name)["standing"])
 
     def test_changes_as_a_function(self) -> None:
         seen = []
@@ -1711,7 +1763,12 @@ class SwitchTest(FolderCase):
         self.assertEqual(facts["changes"]["note"], "2 lines, that is not a note")
         self.assertIsNone(facts["standing"])
         self.assertEqual(seen, [self.folder / "src" / "app.py"])  # the resolved path
-        self.assertEqual(self.write(policy, "a.md")["standing"]["id"], "files")
+        offer = self.write(policy, "a.md")["standing"]
+        self.assertEqual(offer["id"], "files")
+        self.assertIn("to the files this application calls ordinary, except", offer["covers"])
+        self.assertEqual(self.write(policy, self.outside)["standing"]["id"], "files")  # its rule
+        for name in (".git/notes.md", "secrets/a.md"):  # ordinary for the rule, still asked
+            self.assertIsNone(self.write(policy, name)["standing"])
         broken = self.policy(changes=lambda path: 1 / 0)  # a rule that fails: the call does not run
         reason, facts = broken.judge("Write", {"file_path": "a.md", "content": "x"})
         self.assertTrue(reason)
@@ -1818,6 +1875,8 @@ class ExtensionTest(FolderCase):
             self.assertIn("a draft", searched["question"])
             self.assertEqual(policy.judge(tool, {"pattern": "x", "path": "src"}), (None, None))
         self.assertEqual(policy.judge("Read", {"file_path": "notes.md"}), (None, None))
+        self.assertEqual(self.write(policy, "docs/new.md")["standing"]["id"], "files")
+        self.assertIsNone(self.write(policy, "docs/draft.md")["standing"])  # nor changed unseen
         # outside the scope the place is outside, whatever the host calls it
         far = self.ask(policy, "Read", {"file_path": "../draft.md"})
         self.assertEqual(far["standing"]["id"], "elsewhere")

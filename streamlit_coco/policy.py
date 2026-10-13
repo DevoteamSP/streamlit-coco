@@ -329,7 +329,9 @@ class FolderPolicy:
     sql         a SQL call shows its exact statement and is told apart as a query (surely one
                 reading statement) or a statement (anything else)
     lookups     the known read-only tools of Cortex Code are shown as reads
-    standing    each request offers its family as a standing permission
+    standing    each request offers its family as a standing permission. "File changes" covers
+                only what `changes` calls ordinary, and never a place a read asks for (.git, a
+                secret name, what `flag` marks): those are asked each time
 
     A host with rules of its own subclasses it: `flag` (one more reason a place is not read
     freely), `commands` (commands that depend on the request) and `words`.
@@ -344,8 +346,9 @@ class FolderPolicy:
         "unusual": "outside what it usually changes",  # a file the `changes` patterns leave out
         "files": "changes in this folder",  # the standing permissions, after "Do not ask again for"
         "elsewhere": "reading outside {scope}",
-        "elsewhere_covers": "Reading and searching outside {scope}, except the .git folder and "
-        "files that may hold secrets.",
+        # what no standing permission covers, and what `changes` as a function lets through
+        "except": "the .git folder and files that may hold secrets",
+        "ordinary": "the files this application calls ordinary",
         "also_asks": "Reading outside the scope, in .git or a file that may hold secrets also asks",
     }
 
@@ -654,9 +657,8 @@ class FolderPolicy:
         offer = None
         if kind[0] == "outside":
             label = self.words["elsewhere"].format(scope=scope)
-            offer = self._offer(
-                "elsewhere", label, self.words["elsewhere_covers"].format(scope=scope)
-            )
+            covers = f"Reading and searching outside {scope}, except {self.words['except']}."
+            offer = self._offer("elsewhere", label, covers)
         return request(
             "read",
             f"Allow CoCo to {verb} {what}?",
@@ -714,7 +716,10 @@ class FolderPolicy:
             lines, note, verb = None, "", "replace" if path.exists() else "create"
             evidence = [("New content", payload["content"])]
             evidence += _extra(payload, {"file_path", "content"})
-        covers = f"Any change to any file inside {self.where}: create, change or replace."
+        # A standing permission never covers a place a read asks for: with one, an agent that
+        # a file it read has turned could rewrite a hook or a credentials file unseen.
+        place = self._place(payload["file_path"])
+        asked = far or (place and place[0] != "outside")
         return request(
             "change",
             f"Allow CoCo to {verb} a file{' ' + far if far else ''}?" + self.words["undo"],
@@ -727,8 +732,18 @@ class FolderPolicy:
             evidence=evidence,
             evidence_label="Show change",
             pill="Allow a file change?",
-            standing=None if far else self._offer("files", self.words["files"], covers),
+            standing=None if asked else self._offer("files", self.words["files"], self._covers()),
         )
+
+    def _covers(self) -> str:
+        """What the "File changes" standing permission covers: no more than `changes` does."""
+        if self._changes is None:
+            what = f"any file inside {self.where}"
+        elif callable(self._changes):
+            what = self.words["ordinary"]
+        else:
+            what = f"the files inside {self.where} that match " + ", ".join(self._changes)
+        return f"Any change to {what}, except {self.words['except']}: create, change or replace."
 
     def _sql_facts(self, payload: dict) -> dict:
         sql = payload.get("sql")
