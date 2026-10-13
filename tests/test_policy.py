@@ -635,7 +635,10 @@ class PathTricksTest(PolicyCase):
         question = "cannot tell" if os.name == "nt" else "outside"
         self.assertIn(question, facts["question"])
         self.assertEqual(facts["evidence"], [{"label": "Path", "text": value}])
-        self.assertIsNone(facts["standing"])
+        if os.name == "nt":
+            self.assertIsNone(facts["standing"])
+        else:
+            self.assertEqual(facts["standing"]["id"], "elsewhere")
 
     def test_a_network_path_is_outside(self) -> None:
         facts = self.ask(
