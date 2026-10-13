@@ -76,7 +76,7 @@ What happens: click **Ask CoCo** (bottom right), then **Connect mock**. Type a m
 
 Without the variable, the same file talks to a real Cortex Code agent. The window offers your Snowflake connections and connects when the user presses **Connect**. Nothing starts before that.
 
-`ask_coco(cwd)` is the only call a first application needs. The argument is the agent's working folder. It returns a handle; see [Talk to the window](#talk-to-the-window).
+`ask_coco(cwd)` is the only call a first application needs. The argument is the agent's working folder. A relative path (like `"."`) is taken from the folder the Streamlit server was started in, not from the folder of the script. The package does not create the folder and does not check that it exists: create it first. With the scripted agent a missing folder still connects, and every read fails as a failed step. With a real agent the program is given a folder that is not there; this was not run. It returns a handle; see [Talk to the window](#talk-to-the-window).
 
 ---
 
@@ -124,6 +124,15 @@ Connect, then type these words. The scripted agent picks its script from a keywo
 | `status` | A request to look at what has changed: **Allow CoCo to look at what has changed?** It is a read. **Show command** opens the exact line, `git status --short`. |
 | `edit` | A request to change a file: **Allow CoCo to change a file?** It says `README.md`, one line. **Show change** opens the text. |
 | `snowflake drop` | A request to run a statement that can change Snowflake. It says `DROP`. **Show statement** opens `drop table DEMO.PUBLIC.OLD_CALLS`. |
+
+If you type while a request waits, the message is queued behind it ("Queued", with **Take back**) and is sent after Allow or Decline.
+
+To see a file that `changes` does not call ordinary, give the policy a narrower rule, for example `changes="docs/*.md"`. The `edit` request on `README.md` is then flagged: it reads "Allow CoCo to change a file outside what it usually changes? It cannot be undone.", it names the full path of the file instead of `README.md`, and its note says "1 line, outside what it usually changes". **Show change** still opens the text. With `changes="*.md"` it is the ordinary request shown above.
+
+The scripted agent only ever makes its own fixed calls, so it cannot exercise every rule you write:
+
+- The one command it asks for is `git status --short`. Another command you list in `commands` cannot be tried with it.
+- `edit` changes the first Markdown file of the folder, and `write` creates `coco_note.md`. A rule about other file types shows only as "not ordinary", on those two files.
 
 In each case nothing runs until the user presses **Allow**. **Decline** ends the call. The scripted agent never runs the command or reaches Snowflake: it only shows and asks. With a real agent the same policy decides, and **Allow** runs the call.
 

@@ -51,6 +51,15 @@ make e2e-install      # optional: Playwright + Chromium
 make e2e              # browser tests of the window, on the scripted agent (no login)
 ```
 
+To run an application kept in another folder (a scratch folder outside the repository, to try the README's examples), use this repository's environment without syncing it:
+
+```bash
+cd /path/to/scratch
+uv run --no-sync --project /path/to/streamlit-coco python -m streamlit run app.py --server.port 8611 --server.headless true
+```
+
+`--project` points `uv` at this checkout's `.venv`; `--no-sync` stops it changing that environment. Pick a free port. A relative `cwd` in the application is the folder you started it from.
+
 See [`doc/testing.md`](doc/testing.md) for the full gate (unit → e2e → audit → manual checklists).
 
 Running live demos needs the CoCo CLI on your `PATH` and a Snowflake connection

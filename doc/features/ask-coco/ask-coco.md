@@ -75,6 +75,8 @@ page:
 - `options` is read when a session connects, and the object given on the first run of a browser session is the one used. A new object on a later run is ignored. `cwd`, `policy`, `prompts`, `features`, `context`, `theme` and the `window.*` labels are read on every run; the `agent.*` labels, once.
 - A policy function that raises falls back to the default folder policy, and the error is logged.
 - Files attached in the field are saved when the message is sent, in `<cwd>/_coco_uploads/<id>/`, and the policy lets the agent read those files only.
+- A relative `cwd` is resolved from the folder the server was started in. The package neither creates the folder nor checks it exists; with the scripted agent a missing folder connects and reads fail as failed steps.
+- While a request waits, what is typed is queued behind it ("Queued", "Take back") until Allow or Decline.
 - `get_window(key)` raises `CocoError` until `ask_coco` has run with that key in this browser session.
 
 *Reason for a handle and not more arguments:* what a page does to the window happens at another time and place than

@@ -51,7 +51,7 @@ Mounts the launcher (bottom right) and the window, and returns the handle. Call 
 
 | Argument | What it is |
 | --- | --- |
-| `cwd` | The agent's working folder, and the base of relative paths. Changing it between runs ends the conversation and says why in the thread. |
+| `cwd` | The agent's working folder, and the base of relative paths. A relative `cwd` is resolved from the folder the Streamlit server was started in (`~` is expanded). The package neither creates the folder nor checks that it exists: with the scripted agent a missing folder connects and every read fails as a failed step; with a real agent it is passed to the program unchecked. Changing it between runs ends the conversation and says why in the thread. |
 | `key` | One window per key and per browser session. Two keys draw two launchers at the same place. |
 | `policy` | A [`Policy`](#rights-streamlit_cocopolicy), or a function `(context) -> Policy` called once per message. `None` means `FolderPolicy(cwd)`. A function that raises falls back to that default, and the error is logged. |
 | `context` | A function `() -> dict`, called when a message is sent. See [Context](#context). |
@@ -258,7 +258,7 @@ A feature appears only when you switch it on or supply its data. A host that use
 
 | Field | What it does |
 | --- | --- |
-| `queue` | The user may type while CoCo works or connects: the message waits its turn and can be taken back. Off: Send is unavailable meanwhile and what was typed stays in the field. |
+| `queue` | The user may type while CoCo works, connects, or while a request waits for Allow or Decline: the message is queued behind it ("Queued") and can be taken back ("Take back"). Off: Send is unavailable meanwhile and what was typed stays in the field. |
 | `steps` | One card per tool call. Off: only failed and refused steps stay, and the sentences CoCo said. |
 | `motion` | The window's animation. It ignores the system's reduced-motion setting. |
 | `copy` | Copy on answers, code and tables. |
@@ -664,6 +664,8 @@ class ScriptedAgent:
 ```
 
 It goes through the real policy and the real gate, and really reads and changes the files of its working folder. Nothing is simulated but the model and the programs: a command or a SQL statement is shown and asked about, and never run. Pass it to `ask_coco(agent=lambda emit: ScriptedAgent(emit))` or to a `Conversation`.
+
+The scripted agent only ever emits its own fixed calls, so it cannot exercise every rule a host writes. The one command it asks for is `git status --short`: another command listed in `FolderPolicy(commands=...)` cannot be tried with it. `edit` changes the first Markdown file of the folder and `write` creates `coco_note.md`: a rule about other file types shows only as "not ordinary" on those two files. To see that, narrow `changes` (for example `changes="docs/*.md"`): the request then says "outside what it usually changes" and names the full path.
 
 The script is chosen by a keyword in the user's message (first match wins). A message that starts with `Plain:` is answered plainly whatever words it holds.
 
