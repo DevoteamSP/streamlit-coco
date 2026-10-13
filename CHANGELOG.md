@@ -28,6 +28,10 @@ Migration sheet: [`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask
 
 - README and API documentation reflect working-folder validation and label changes that keep the conversation; historical roadmap links lead to the current migration sheet.
 
+### Fixed
+
+- Path-policy regression tests respect native Windows and POSIX path semantics while checking that ambiguous paths never become free reads.
+
 - `render_output_field(coco, ...)` takes the window's handle (it was a `CocoSession`), refreshes itself, and no longer draws tool cards, a copy button or the status line; `text_renderer=` stays here.
 - The examples run on the window: `chat_app.py` (test-prompt picker through `coco.ask`; the two pill groups build a `FolderPolicy`), `approval_gate.py` (a policy with a listed command, `git_readonly`, a file-change rule, `sql=True`, `standing=True`), `structured_output.py` (`CocoOptions(output_schema=...)`, `coco.result`), `cwd_upload_chat.py` (attachments plus `cwd_uploader`; its folder is now `./cwd_upload_workspace`).
 - `make e2e` drives the window on the scripted agent and uses the installed Edge when Playwright's Chromium is not installed.

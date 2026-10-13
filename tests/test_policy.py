@@ -621,13 +621,21 @@ class PathTricksTest(PolicyCase):
             "C:alpha/PROJECT.md",
             "C:",
             "alpha/PROJECT.md:Zone.Identifier",
-            self.BS * 2 + "?" + self.BS + self.path("PROJECT.md"),
         ):
             with self.subTest(value=value):
                 facts = self.ask(self.member, "Read", {"file_path": value})
                 self.assertIn("cannot tell", facts["question"])
                 self.assertEqual(facts["evidence"], [{"label": "Path", "text": value}])
                 self.assertIsNone(facts["standing"])
+
+    def test_a_windows_device_prefix_never_makes_a_read_free(self) -> None:
+        value = self.BS * 2 + "?" + self.BS + self.path("PROJECT.md")
+        facts = self.ask(self.member, "Read", {"file_path": value})
+        # On POSIX, backslashes are literal names, not a Windows device namespace.
+        question = "cannot tell" if os.name == "nt" else "outside"
+        self.assertIn(question, facts["question"])
+        self.assertEqual(facts["evidence"], [{"label": "Path", "text": value}])
+        self.assertIsNone(facts["standing"])
 
     def test_a_network_path_is_outside(self) -> None:
         facts = self.ask(
@@ -662,7 +670,9 @@ class PathTricksTest(PolicyCase):
         mixed = (
             str(self.alpha).replace(self.BS, "/") + self.BS + "98_PROJECT/" + self.BS + "Team.MD"
         )
-        self.assertIn("budget", self.ask(self.member, "Read", {"file_path": mixed})["question"])
+        # Windows aliases case and separators; POSIX treats this as a different path.
+        question = "budget" if os.name == "nt" else "outside"
+        self.assertIn(question, self.ask(self.member, "Read", {"file_path": mixed})["question"])
 
     def test_a_short_name_is_expanded_before_the_rules_apply(self) -> None:
         out = (
