@@ -740,7 +740,7 @@ class Conversation:
             "profile": self.profile,
             "error": self.error,
             "prompts": list(self.prompts[:_PROMPTS_SHOWN]) if first else [],
-            "thread": [view for item in self.items for view in self._item(item)],
+            "thread": self.thread(),
             "request": {"id": request["id"], **request["facts"]} if request else None,
             "queue": [{"id": m["id"], "text": m["text"]} for m in self.queue],
             "restore": restore,
@@ -754,6 +754,10 @@ class Conversation:
         if not self.features.queue and status in ("working", "waiting", "connecting"):
             base["send_held"] = True
         return base
+
+    def thread(self) -> list[dict]:
+        """The view's thread alone: no side effect (view() hands `restore` over once)."""
+        return [view for item in self.items for view in self._item(item)]
 
     def _profile_names(self) -> list[str]:
         """The agent reads the connections file for its list: once every few seconds, not on every

@@ -157,7 +157,7 @@ class Window:
     @property
     def latest_answer(self) -> str:
         """The latest answer's text, for a page that shows it elsewhere."""
-        for item in reversed(self._s["conv"].view().get("thread", [])):
+        for item in reversed(self._s["conv"].thread()):
             for part in reversed(item.get("items", [item])):
                 if part.get("kind") == "answer":
                     return part.get("text", "")

@@ -533,6 +533,16 @@ class WindowTest(unittest.TestCase):
             self.assertEqual(handle.result("job"), {"text": "done", "data": None})
             self.assertEqual(state[window._slot("k")]["asked"], set())
 
+    def test_latest_answer_does_not_hand_over_the_restore_text(self) -> None:
+        from streamlit_coco.conversation import Conversation
+
+        conv = Conversation(".", agent=lambda emit: SimpleNamespace(setup=lambda: None))
+        conv.items.append({"kind": "answer", "id": "a1", "text": "Hello"})
+        conv.restore = "typed text"
+        with mock.patch.object(window.st, "session_state", {window._slot("k"): {"conv": conv}}):
+            self.assertEqual(window.Window("k").latest_answer, "Hello")
+        self.assertEqual(conv.restore, "typed text")
+
     def run_act(self, acts: list[dict]) -> tuple[list, dict]:
         calls, state = [], {}
         slot = window._slot("k")
