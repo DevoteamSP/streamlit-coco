@@ -1,4 +1,4 @@
-"""Tool name normalization and family detection for CoCo UI."""
+"""Tool name normalization and family detection ."""
 
 from __future__ import annotations
 
@@ -56,31 +56,3 @@ def is_sql_tool(tool_name: str) -> bool:
 
 def is_exit_plan_mode(tool_name: str) -> bool:
     return tool_family(tool_name) == ToolFamily.EXIT_PLAN
-
-
-def family_label(family: ToolFamily, tool_name: str = "") -> str:
-    """Human label for card headers."""
-    labels = {
-        ToolFamily.ASK_USER: "Question",
-        ToolFamily.SQL: "SQL",
-        ToolFamily.READ: "Read",
-        ToolFamily.WRITE: "Write",
-        ToolFamily.EDIT: "Edit",
-        ToolFamily.BASH: "Bash",
-        ToolFamily.GLOB: "Glob",
-        ToolFamily.GREP: "Grep",
-        ToolFamily.EXIT_PLAN: "Plan",
-        ToolFamily.GENERIC: tool_name or "Tool",
-    }
-    return labels[family]
-
-
-def status_label(status: str) -> str:
-    normalized = (status or "running").lower()
-    if normalized == "running":
-        return "Running"
-    if normalized == "completed":
-        return "Completed"
-    if normalized == "error":
-        return "Failed"
-    return status

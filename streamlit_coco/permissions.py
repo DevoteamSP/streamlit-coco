@@ -8,10 +8,9 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Any
 
-from streamlit_coco.ask_user import is_ask_user_question
 from streamlit_coco.errors import ApprovalTimeoutError
 from streamlit_coco.messages import permission_request_event
-from streamlit_coco.tool_names import is_exit_plan_mode
+from streamlit_coco.tool_names import is_ask_user_question, is_exit_plan_mode
 
 try:
     from cortex_code_agent_sdk import PermissionResultAllow, PermissionResultDeny
@@ -127,50 +126,6 @@ class PermissionManager:
 
 
 CallableHook = Any
-
-
-def approve_pending(
-    session: Any,
-    request_id: str,
-    *,
-    always: bool = False,
-    updated_input: dict[str, Any] | None = None,
-) -> None:
-    if session.permission_manager.resolve(
-        request_id,
-        approved=True,
-        always=always,
-        updated_input=updated_input,
-    ):
-        _mark_transcript_approval(session, request_id, approved=True, always=always)
-
-
-def deny_pending(
-    session: Any,
-    request_id: str,
-    *,
-    reason: str | None = None,
-) -> None:
-    if session.permission_manager.resolve(request_id, approved=False, reason=reason):
-        _mark_transcript_approval(session, request_id, approved=False, reason=reason)
-
-
-def _mark_transcript_approval(
-    session: Any,
-    request_id: str,
-    *,
-    approved: bool,
-    always: bool = False,
-    reason: str | None = None,
-) -> None:
-    for item in session.transcript:
-        if item.get("kind") == "approval" and item.get("id") == request_id:
-            item["status"] = "approved" if approved else "denied"
-            if always:
-                item["always"] = True
-            if reason:
-                item["reason"] = reason
-            break
 
 
 def build_can_use_tool(

@@ -362,8 +362,8 @@ class CocoSession:
         """Leave plan mode and optionally queue an execute prompt.
 
         If ``ExitPlanMode`` is awaiting approval, approving it is preferred —
-        call ``approve_pending`` instead. This helper is for the banner CTA when
-        the user wants to exit plan mode and start implementation.
+        resolve it with ``permission_manager.resolve`` instead. This helper is for leaving plan
+        mode and starting implementation.
         """
         pending = self.permission_manager.active_pending()
         if pending is not None and is_exit_plan_mode(pending.tool_name):
@@ -410,7 +410,7 @@ class CocoSession:
         """Send ``prompt`` and wait until the turn finishes; return ``chat_result()``.
 
         While awaiting approvals, resolve them from another task with
-        ``approve_pending`` / ``deny_pending``, or rely on ``approval_timeout_seconds``.
+        ``permission_manager.resolve``, or rely on ``approval_timeout_seconds``.
         """
         text = prompt.strip()
         if not text:
