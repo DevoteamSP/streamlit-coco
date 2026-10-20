@@ -2,7 +2,9 @@
 
 **Owner:** streamlit-coco maintainers
 **Target tag date:** 2026-10-20  
-**GitHub Release / PyPI:** see *Published URLs* below (filled in after the tag)
+**GitHub Release (publisher):** https://github.com/lletourmy/streamlit-coco/releases/tag/v0.2.0  
+**GitHub Release (org mirror):** https://github.com/DevoteamSP/streamlit-coco/releases/tag/v0.2.0  
+**PyPI:** https://pypi.org/project/streamlit-coco/0.2.0/
 
 Do not run `make sync-release` or tag `v0.2.0` until Product docs + QA are done.
 
@@ -41,13 +43,13 @@ Outreach drafts: [`../../../doc-dev/releases/0.2.0/`](../../../doc-dev/releases/
 
 ## 4. GitHub + PyPI (required before this is public)
 
-Follow [`doc/deployment/publish.md`](../../deployment/publish.md). **Left undone on purpose.**
+Follow [`doc/deployment/publish.md`](../../deployment/publish.md). Done 2026-10-20.
 
-- [ ] Merge to `-dev` `main`
-- [ ] `COMMIT=1 PUSH=1 MESSAGE="Release 0.2.0" make sync-release`
-- [ ] Tag `v0.2.0` on public `streamlit-coco` and push
-- [ ] Confirm GitHub Release + PyPI wheel
-- [ ] GitHub Release body: CHANGELOG excerpt + screenshots
+- [x] Merge to `-dev` `main` ([#17](https://github.com/DevoteamSP/streamlit-coco-dev/pull/17); #16, the same lock bumps, closed as superseded)
+- [x] `COMMIT=1 PUSH=1 MESSAGE="Release 0.2.0" make sync-release` to `lletourmy/streamlit-coco` and to `DevoteamSP/streamlit-coco` (identical trees)
+- [x] Tag `v0.2.0` on public `streamlit-coco` and push (also mirrored on `DevoteamSP/streamlit-coco`)
+- [x] Confirm GitHub Release + PyPI wheel; SBOM attached to both Releases. A clean `pip install "streamlit-coco[sdk]==0.2.0"` gives 0.2.0 and the 0.1.9 API guard passes against it
+- [x] GitHub Release body: the CHANGELOG `[0.2.0]` section (written by the workflow). Screenshots are in the repository, not in the body
 
 ## 5. Narrative & outreach (strongly recommended — `doc-dev`)
 
@@ -55,14 +57,15 @@ Follow [`doc/deployment/publish.md`](../../deployment/publish.md). **Left undone
 - [x] Medium draft — [`medium.md`](../../../doc-dev/releases/0.2.0/medium.md) (not posted)
 - [x] Community pass — [`COMMUNITY.md`](../../../doc-dev/releases/0.2.0/COMMUNITY.md) (not posted)
 - [ ] Refresh [`doc/marketing/one-pager.md`](../../marketing/one-pager.md) if positioning changed
-- [ ] Paste published URLs below
+- [x] Paste published URLs below
 
 ### Published URLs
 
 | Channel | URL | Date |
 | --- | --- | --- |
-| GitHub Release | | |
-| PyPI | | |
+| GitHub Release (lletourmy) | https://github.com/lletourmy/streamlit-coco/releases/tag/v0.2.0 | 2026-10-20 |
+| GitHub Release (DevoteamSP) | https://github.com/DevoteamSP/streamlit-coco/releases/tag/v0.2.0 | 2026-10-20 |
+| PyPI | https://pypi.org/project/streamlit-coco/0.2.0/ | 2026-10-20 |
 | LinkedIn | | |
 | Medium | | |
 | Streamlit Forum | | |
