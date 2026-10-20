@@ -2,10 +2,10 @@
 
 Living plan. Product detail: [doc/prd.md](prd.md). Shipped history: [CHANGELOG.md](../CHANGELOG.md).
 
-**Status:** `0.2.0` published on 2026-10-20. The 0.1.9 chat family stays the default; Ask CoCo is opt-in ([feature file](features/ask-coco/ask-coco.md)). The last public release is `0.2.0` ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)). Next: API mode, as `0.3.0`.
+**Status:** `0.2.1` published on 2026-10-20 (the README of `0.2.0` with the asset contributor named; no code change). `0.2.0` was published the same day. The 0.1.9 chat family stays the default; Ask CoCo is opt-in ([feature file](features/ask-coco/ask-coco.md)). The last public release is `0.2.1` ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)). Next: API mode, as `0.3.0`.
 **Publisher:** temporary Trusted Publisher on [lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco); public tree also synced to [DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco). Used for this cut (`0.2.0`).
 **Last updated:** 2026-10-20
-**Last cut:** [releases/0.2.0/](releases/0.2.0/)
+**Last cut:** [releases/0.2.1/](releases/0.2.1/) (feature cut: [releases/0.2.0/](releases/0.2.0/))
 **Next cuts:** `0.3.0` API mode (no CLI), branch `0.3.0-remote-api` → `0.3.5` Streamlit in Snowflake → `0.4.0` Native App
 
 > **Before every release:** complete [releases/X.Y.Z/CHECKLIST.md](releases/README.md) (CHANGELOG, this roadmap, PRD, screenshots, [public issues](https://github.com/DevoteamSP/streamlit-coco/issues)) and outreach under `doc-dev/releases/` in the development repository, then [deployment/publish.md](deployment/publish.md).

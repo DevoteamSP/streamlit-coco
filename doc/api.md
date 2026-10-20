@@ -1,6 +1,6 @@
 # API reference: streamlit-coco
 
-Public surface of `import streamlit_coco as st_coco`, and of `streamlit_coco.policy` and `streamlit_coco.testing`. `0.2.0`: signatures may still move. Every signature below was read from the code.
+Public surface of `import streamlit_coco as st_coco`, and of `streamlit_coco.policy` and `streamlit_coco.testing`. `0.2.1`: signatures may still move. Every signature below was read from the code.
 
 **Related:** [README](../README.md) · [Ask CoCo feature file](features/ask-coco/ask-coco.md) (the decisions and their reasons) · [Local deployment](deployment/local.md) · [SDK docs](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
 
@@ -716,5 +716,5 @@ python -m streamlit_coco.testing.domdiff [--ref HEAD] [--only REGEX]
 ## Package metadata
 
 ```python
-st_coco.__version__  # "0.2.0"
+st_coco.__version__  # "0.2.1"
 ```

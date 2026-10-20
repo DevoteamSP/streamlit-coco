@@ -12,6 +12,14 @@ Living plan (what’s next): [`doc/roadmap.md`](doc/roadmap.md).
 
 ## [Unreleased]
 
+## [0.2.1] — 2026-10-20
+
+The README names the asset contributor. No code change: `0.2.1` is `0.2.0` with the README that PyPI shows (a published file cannot be changed).
+
+### Changed
+
+- README ownership table: Alentz Joseph (Devoteam) is listed as asset contributor, in place of the generic contributors row.
+
 ## [0.2.0] — 2026-10-20
 
 Ask CoCo, a floating window, beside the 0.1.9 chat family. `chat`, `panel`, and `copilot_rail` stay the default.

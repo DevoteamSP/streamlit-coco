@@ -5,7 +5,7 @@
 [![CI](https://github.com/lletourmy/streamlit-coco/actions/workflows/ci.yml/badge.svg)](https://github.com/lletourmy/streamlit-coco/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-> `0.2.0` (alpha). The API may still move. The default interface is still the 0.1.9 chat family (`chat`, `panel`, `copilot_rail`). The floating window is opt-in: `mini=True` on those calls, or `ask_coco(cwd)`. See [`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask-coco.md).
+> `0.2.1` (alpha). The API may still move. The default interface is still the 0.1.9 chat family (`chat`, `panel`, `copilot_rail`). The floating window is opt-in: `mini=True` on those calls, or `ask_coco(cwd)`. See [`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask-coco.md).
 
 **Repo:** [github.com/lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco) *(temporary PyPI source)* · **Dev:** [streamlit-coco-dev](https://github.com/DevoteamSP/streamlit-coco-dev)
 **SDK docs:** [Cortex Code Agent SDK](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
