@@ -284,7 +284,7 @@ Releases: develop here, sync and tag on [`lletourmy/streamlit-coco`](https://git
 | Role | Name | Contact |
 | --- | --- | --- |
 | Asset Owner | Laurent Letourmy | laurent.letourmy@devoteam.com |
-| Contributors | DevoteamSP / streamlit-coco contributors | [streamlit-coco-dev](https://github.com/DevoteamSP/streamlit-coco-dev) |
+| Asset Contributor | Alentz Joseph | alentz.joseph@devoteam.com |
 
 **Snow Builders level:** N0 (alpha), targeting N1. Identity sheet: [`ID.md`](ID.md).
 
