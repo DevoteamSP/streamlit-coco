@@ -251,10 +251,7 @@ def last_preview_exception(app_dir: Path) -> str | None:
     lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
     start = None
     for i in range(len(lines) - 1, -1, -1):
-        if (
-            "Traceback (most recent call last):" in lines[i]
-            or "Uncaught app exception" in lines[i]
-        ):
+        if "Traceback (most recent call last):" in lines[i] or "Uncaught app exception" in lines[i]:
             start = i
             break
     if start is None:
@@ -270,8 +267,7 @@ def last_preview_exception(app_dir: Path) -> str | None:
 def default_fix_prompt(traceback: str, app_dir: Path) -> str:
     name = Path(app_dir).name
     body = (traceback or "").strip() or (
-        "(no traceback in .preview.log — inspect the preview UI and fix "
-        f"`{name}/streamlit_app.py`)"
+        f"(no traceback in .preview.log — inspect the preview UI and fix `{name}/streamlit_app.py`)"
     )
     return (
         f"The Streamlit app under `{name}/` is running and raised this exception.\n\n"

@@ -23,6 +23,10 @@ GATE_KEY = "tts_coco_connected"
 CONN_KEY = "tts_coco_connection"
 JOB_KEY = "tts_coco_job"
 SCHEMA_KIND_KEY = "tts_coco_schema_kind"
+PENDING_KEY = "tts_coco_pending"
+SESSION_KIND_KEY = "tts_coco_session_kind"
+STRUCTURED = ("estate", "kpi", "access")
+WRITES = ("generate", "streamlit")
 OPEN_KEY = "tts_copilot_open"
 RAIL_KEY = "tts_rail"
 PREVIEW_KEY = "tts_preview_open"
@@ -129,6 +133,19 @@ def set_job(job: dict[str, Any]) -> None:
 
 def clear_job() -> None:
     st.session_state.pop(JOB_KEY, None)
+
+
+def current_kind() -> str:
+    """The job the window should be set up for, or ``chat`` when nothing is queued."""
+    job = get_job() or st.session_state.get(PENDING_KEY)
+    if isinstance(job, dict) and job.get("kind"):
+        return str(job["kind"])
+    return str(st.session_state.get(SESSION_KIND_KEY) or "chat")
+
+
+def cwd_for(kind: str) -> Path:
+    """Generated apps live in ``out/``; reading the sources stays in the workspace."""
+    return OUT_DIR if kind in WRITES else WORKSPACE_DIR
 
 
 def queue_job(kind: JobKind, *, prompt: str, label: str) -> None:

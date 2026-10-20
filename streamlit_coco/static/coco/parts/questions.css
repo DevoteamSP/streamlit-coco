@@ -1,0 +1,8 @@
+/* Ask CoCo, part "questions" (frames 38-46): the rules of ui-rebuild/design/coco22.css, scoped like coco.css. */
+.ag-opts { display: flex; flex-direction: column; gap: calc(var(--r) * .4); }
+.ag-opt { display: flex; align-items: flex-start; gap: calc(var(--r) * .6); min-height: calc(var(--r) * 2.5); padding: calc(var(--r) * .6) calc(var(--r) * .7); border: 1px solid var(--line); border-radius: calc(var(--r) * .5); background: var(--surface); font-size: var(--fz-body); line-height: 1.4; cursor: pointer; }
+.ag-opt:hover { border-color: var(--ink-3); }
+.ag-opt.on { border-color: var(--ink); background: var(--canvas); }
+.ag-opt input { margin-top: calc(var(--r) * .1); }
+.ag-ot { flex: 1; min-width: 0; font-weight: 500; overflow-wrap: anywhere; }
+.ag-od { margin-left: calc(var(--r) * .5); font-weight: 400; color: var(--ink-2); }

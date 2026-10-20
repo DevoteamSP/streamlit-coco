@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Streamlit CoCo — Enablement</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200;0,6..12,300;0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900&display=swap');
+    :root {
+      --red: #F5364B; --red2: #E8001D;
+      --snow: #29B5E8; --gold: #F59B23; --green: #27AE60;
+      --purple: #7B61FF; --teal: #1ABC9C;
+      --dark: #1E2028; --text: #2D2D2D; --muted: #7B7F8E;
+      --border: #E2E4EA; --card: #F4F5F7; --bg: #FAFAFA;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px; line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    .logo-badge { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-circle { width: 38px; height: 38px; background: var(--red); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 15px; flex-shrink: 0; }
+    .logo-text { line-height: 1.2; }
+    .logo-name { font-weight: 700; font-size: 13px; color: var(--text); }
+    .logo-partner { font-size: 10px; color: var(--muted); }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+    .subtitle { font-size: 14px; color: var(--muted); font-weight: 400; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+    .card-top { border-top: 3px solid var(--red); }
+    .card-snow { border-top: 3px solid var(--snow); }
+    .card-gold { border-top: 3px solid var(--gold); }
+    .card-green { border-top: 3px solid var(--green); }
+    .card-purple { border-top: 3px solid var(--purple); }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px;
+      font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .badge-snow { background: rgba(41,181,232,.12); color: var(--snow); border: 1px solid rgba(41,181,232,.3); }
+    .badge-gold { background: rgba(245,155,35,.12); color: var(--gold); border: 1px solid rgba(245,155,35,.3); }
+    .badge-green { background: rgba(39,174,96,.12); color: var(--green); border: 1px solid rgba(39,174,96,.3); }
+    .badge-red { background: rgba(245,54,75,.12); color: var(--red); border: 1px solid rgba(245,54,75,.3); }
+    .badge-purple { background: rgba(123,97,255,.12); color: var(--purple); border: 1px solid rgba(123,97,255,.3); }
+    .badge-dark { background: rgba(30,32,40,.75); color: white; }
+    .topbar { position: sticky; top: 0; z-index: 100; background: white;
+      border-bottom: 1px solid var(--border); padding: 10px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .topnav { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; }
+    .topnav a { color: var(--text); text-decoration: none; font-weight: 600; padding: 4px 2px; }
+    .topnav a:hover { color: var(--red); }
+    .topnav a[aria-current="page"] { color: var(--red); font-weight: 700; border-bottom: 2px solid var(--red); }
+    .layout { max-width: none; margin: 0; padding: 28px 32px 0;
+      display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
+    .content { max-width: none; width: 100%; min-width: 0; background: white; border: 1px solid var(--border);
+      border-radius: 12px; box-shadow: 0 2px 24px rgba(30,32,40,.06); padding: 36px 44px 44px;
+      overflow-wrap: break-word; }
+    .content > *, .content section, .exbody, .exblock, .actmain, .qcard { min-width: 0; }
+    code.inline { overflow-wrap: anywhere; }
+    @media (max-width: 700px) {
+      .content { padding: 24px 18px 30px; }
+      .pagehead { flex-direction: column; }
+      .meta-strip { text-align: left; }
+      .layout { padding: 18px 12px 0; }
+    }
+    .pagehead { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px;
+      flex-wrap: wrap; margin-bottom: 28px; }
+    .pagehead h1 { font-size: 36px; font-weight: 300; color: var(--text); line-height: 1.15; margin-bottom: 8px; }
+    .pagehead h1 strong { font-weight: 800; color: var(--red); }
+    .meta-strip { text-align: right; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+    .meta-strip .dur { display: block; font-weight: 700; color: var(--text); font-size: 13px; margin-bottom: 4px; }
+    .meta-strip a { color: var(--red); font-weight: 700; text-decoration: none; }
+    .meta-strip a:hover { text-decoration: underline; }
+    .toc-side { display: none; }
+    .toc details { border: 1px solid var(--border); border-radius: 10px; background: white; padding: 10px 16px; margin-bottom: 24px; }
+    .toc summary { cursor: pointer; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); }
+    .toc ul { list-style: none; margin: 10px 0 4px; }
+    .toc li { margin: 3px 0; }
+    .toc li.lvl3 { padding-left: 16px; }
+    .toc a { color: var(--muted); text-decoration: none; font-size: 12.5px; }
+    .toc a:hover { color: var(--red); }
+    .toc li.lvl2 > a { color: var(--text); font-weight: 600; }
+    @media (min-width: 1100px) {
+      .layout { grid-template-columns: 260px minmax(0, 1fr); }
+      .toc-side { min-width: 0; display: block; position: sticky; top: 76px;
+        max-height: calc(100vh - 100px); overflow-y: auto; }
+      .toc-side ul { list-style: none; }
+      .toc-inline { display: none; }
+    }
+    .content h2 { font-size: 24px; font-weight: 800; color: var(--text); margin: 34px 0 12px; scroll-margin-top: 80px; }
+    .content h3 { font-size: 17px; font-weight: 700; color: var(--text); margin: 24px 0 8px; scroll-margin-top: 80px; }
+    .content h4 { font-size: 14px; font-weight: 700; color: var(--muted); margin: 18px 0 6px;
+      text-transform: uppercase; letter-spacing: .06em; }
+    .content h2:first-child, .content h3:first-child { margin-top: 0; }
+    .content p { margin: 10px 0; }
+    .content ul, .content ol { margin: 10px 0 10px 22px; }
+    .content li { margin: 5px 0; }
+    .content a { color: var(--red2); text-decoration: none; border-bottom: 1px solid rgba(245,54,75,.35); }
+    .content a:hover { border-bottom-color: var(--red); }
+    .content strong { font-weight: 700; }
+    .anchor { opacity: 0; margin-left: 8px; font-size: .7em; color: var(--muted); text-decoration: none; border: 0; }
+    h2:hover .anchor, h3:hover .anchor { opacity: 1; }
+    code.inline { background: rgba(245,54,75,.07); color: var(--red2); border-radius: 4px;
+      padding: 1px 5px; font-size: .92em; font-family: 'SFMono-Regular', Menlo, Consolas, monospace; }
+    .sep { height: 1px; background: var(--border); border: 0; margin: 32px 0; }
+    .codewrap { position: relative; margin: 16px 0; border-radius: 10px; overflow: hidden; background: var(--dark); }
+    .codebar { display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 14px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .codelang { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.45); }
+    .copybtn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); color: white;
+      font-family: inherit; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 5px; cursor: pointer; }
+    .copybtn:hover { background: rgba(245,54,75,.3); border-color: var(--red); }
+    .copybtn.ok { background: rgba(39,174,96,.25); border-color: var(--green); }
+    .codewrap pre { overflow-x: auto; padding: 14px 16px; }
+    .codewrap code { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 13px;
+      line-height: 1.6; color: rgba(255,255,255,.9); white-space: pre; }
+    .tablewrap { overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 10px; }
+    table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+    thead th { position: sticky; top: 0; background: var(--card); text-align: left;
+      font-weight: 700; padding: 10px 14px; border-bottom: 2px solid var(--border); white-space: nowrap; z-index: 2; }
+    tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tbody tr:nth-child(even) { background: rgba(244,245,247,.55); }
+    tbody tr:last-child td { border-bottom: 0; }
+    .callout { border-left: 3px solid var(--border); background: var(--card); border-radius: 0 10px 10px 0;
+      padding: 12px 18px; margin: 16px 0; }
+    .callout-snow { border-left-color: var(--snow); background: rgba(41,181,232,.06); }
+    .callout-gold { border-left-color: var(--gold); background: rgba(245,155,35,.06); }
+    .callout-red  { border-left-color: var(--red);  background: rgba(245,54,75,.06); }
+    .callout-green{ border-left-color: var(--green);background: rgba(39,174,96,.06); }
+    .callout p:first-child { margin-top: 0; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout-tag { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      display: block; margin-bottom: 4px; }
+    ul.tasklist { list-style: none; margin-left: 0; }
+    ul.tasklist li { display: flex; align-items: flex-start; gap: 10px; padding: 7px 12px; background: white;
+      border: 1px solid var(--border); border-radius: 8px; margin-bottom: 7px; }
+    ul.tasklist input[type=checkbox] { margin-top: 4px; width: 15px; height: 15px; accent-color: var(--green);
+      flex-shrink: 0; cursor: pointer; }
+    ul.tasklist li.done .tasktext { text-decoration: line-through; color: var(--muted); }
+    ul.tasklist li.done { background: rgba(39,174,96,.05); border-color: rgba(39,174,96,.3); }
+    .counter { font-size: 12px; font-weight: 700; color: var(--muted); }
+    .counter .n { color: var(--green); }
+    .pagefoot { max-width: none; margin: 0; padding: 0 32px 48px; }
+    .prevnext { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin: 28px 0 18px; }
+    .prevnext a { display: block; padding: 12px 18px; background: white; border: 1px solid var(--border);
+      border-radius: 10px; text-decoration: none; min-width: 220px; }
+    .prevnext a:hover { border-color: var(--red); }
+    .pn-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .pn-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .slide-footer { height: 36px; display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border); }
+    .footer-brand { font-size: 11px; font-weight: 700; color: var(--red); }
+    .footer-page { font-size: 11px; color: var(--muted); }
+    a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--red); outline-offset: 2px; border-radius: 4px; }
+    @page { size: A4; margin: 14mm; }
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background: white; font-size: 11pt; }
+      .topbar, .toc, .prevnext, .copybtn, .noprint { display: none !important; }
+      .layout { display: block; max-width: none; padding: 0; }
+      .content { max-width: none; border: 0; box-shadow: none; border-radius: 0; padding: 0; }
+      details { display: block !important; }
+      details > summary { list-style: none; }
+      .answer, .hidden-print-reveal { display: block !important; }
+      .codewrap { background: var(--card); border: 1px solid var(--border); }
+      .codewrap code, .codelang { color: var(--text); }
+      .card, .callout, .tablewrap, table, tr, .exercise { page-break-inside: avoid; break-inside: avoid; }
+      h2, h3 { page-break-after: avoid; break-after: avoid; }
+    }
+
+    .quizbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+      padding: 14px 18px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin: 18px 0; }
+    .scorebox { display: flex; align-items: baseline; gap: 6px; }
+    .scoren { font-size: 26px; font-weight: 800; color: var(--purple); }
+    .scored { font-size: 15px; font-weight: 700; color: var(--muted); }
+    .scorelabel { font-size: 11px; color: var(--muted); margin-left: 10px; }
+    .quizbtns button { font-family: inherit; font-size: 11px; font-weight: 700; letter-spacing: .06em;
+      text-transform: uppercase; padding: 8px 14px; border-radius: 6px; cursor: pointer;
+      border: 1px solid var(--border); background: white; color: var(--text); margin-left: 8px; }
+    .quizbtns button:hover { border-color: var(--red); color: var(--red); }
+    .verdictbar { padding: 12px 18px; border-radius: 10px; font-weight: 700; font-size: 14px; margin-bottom: 18px; }
+    .verdictbar.pass { background: rgba(39,174,96,.1); border: 1px solid rgba(39,174,96,.4); color: var(--green); }
+    .verdictbar.fail { background: rgba(245,54,75,.08); border: 1px solid rgba(245,54,75,.35); color: var(--red); }
+    .qcard { background: white; margin: 16px 0; scroll-margin-top: 80px; }
+    .qhead { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .qnum { font-size: 12px; font-weight: 800; color: var(--purple); letter-spacing: .06em; }
+    .qtitle { font-size: 16px; font-weight: 700; margin: 0 0 12px; }
+    .opts { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .opt { display: flex; align-items: flex-start; gap: 10px; padding: 9px 13px; border: 1px solid var(--border);
+      border-radius: 8px; cursor: pointer; font-size: 14px; background: white; }
+    .opt:hover { border-color: var(--purple); }
+    .opt input { margin-top: 3px; accent-color: var(--purple); cursor: pointer; }
+    .optl { font-weight: 800; color: var(--muted); min-width: 20px; }
+    .opt.right { background: rgba(39,174,96,.08); border-color: var(--green); }
+    .opt.wrong { background: rgba(245,54,75,.07); border-color: var(--red); }
+    .shortans { width: 100%; font-family: inherit; font-size: 14px; padding: 10px 12px; border-radius: 8px;
+      border: 1px solid var(--border); background: white; color: var(--text); margin-bottom: 12px; resize: vertical; }
+    .revealbtn { font-family: inherit; font-size: 11px; font-weight: 700; letter-spacing: .06em;
+      text-transform: uppercase; padding: 7px 13px; border-radius: 6px; cursor: pointer;
+      border: 1px solid var(--border); background: white; color: var(--text); }
+    .revealbtn:hover { border-color: var(--green); color: var(--green); }
+    .answer { margin-top: 12px; padding: 12px 16px; background: rgba(39,174,96,.06);
+      border-left: 3px solid var(--green); border-radius: 0 8px 8px 0; font-size: 13.5px; }
+    .verdict { margin-top: 8px; font-weight: 800; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+    .verdict.ok { color: var(--green); }
+    .verdict.ko { color: var(--red); }
+    .verdict.manual { color: var(--gold); }
+    .keydump { border: 1px solid var(--border); border-radius: 10px; background: white; padding: 12px 18px; }
+    .keydump > summary { cursor: pointer; font-weight: 700; font-size: 13px; color: var(--red); }
+    .keyrow { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .keyrow:last-child { border-bottom: 0; }
+</style>
+</head>
+<body data-page="certifications/enablement.es">
+<header class="topbar">
+  <a class="logo-badge" href="../enablement/intro.es.html"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></a>
+  <nav class="topnav" aria-label="Training pack"><a href="../enablement/intro.es.html">Enablement</a><a href="../training/01-simple.es.html">Training</a><a href="enablement.es.html" aria-current="page">Certifications</a><a href="../user-guide/index.es.html">User Guide</a><a href="../technical-guide/index.es.html">Technical Guide</a></nav>
+</header>
+<div class="layout">
+  <nav class="toc toc-side" aria-label="En esta página"><div class="section-label">En esta página</div><ul><li class="lvl3"><a href="#q1">Q1. ¿Qué problema resuelve `streamlit-coco` para quien escribe una app Streamlit?</a></li><li class="lvl3"><a href="#q2">Q2. ¿Qué afirmación describe mejor `panel()`?</a></li><li class="lvl3"><a href="#q3">Q3. ¿Qué añade `copilot_rail()` sobre `panel()`?</a></li><li class="lvl3"><a href="#q4">Q4. ¿Qué hace `app_viewer()`?</a></li><li class="lvl3"><a href="#q5">Q5. ¿Qué comando lanza la implementación de referencia de primera parte del patrón preferido (`panel()` + `chat_input_bar()`)?</a></li><li class="lvl3"><a href="#q6">Q6. ¿Qué conjunto de prerrequisitos es correcto para empezar la ruta de Enablement?</a></li><li class="lvl3"><a href="#q7">Q7. ¿Cuáles de estos forman parte del pipeline del patrón preferido demostrado en `examples/chat_app.py`? (Opción múltiple — selecciona todas las que apliquen)</a></li><li class="lvl3"><a href="#q8">Q8. ¿Qué comando instala `streamlit-coco` para alguien que solo necesita el paquete publicado, sin un checkout del repositorio de desarrollo?</a></li><li class="lvl3"><a href="#q9">Q9. ¿Bajo qué licencia se publica `streamlit-coco`?</a></li><li class="lvl3"><a href="#q10">Q10. ¿Cuál es la versión actual del paquete y el estado de lanzamiento que describe este pack de entrenamiento?</a></li><li class="lvl2"><a href="#questions">Questions</a></li><li class="lvl2"><a href="#answer-key">Answer Key</a></li></ul></nav>
+  <main class="content">
+    <div class="pagehead">
+      <div>
+        <div class="section-label">Pack de formación · Devoteam Snowflake Practice · 2026</div>
+        <h1>Enablement <strong>quiz</strong></h1>
+        <div class="subtitle"></div>
+      </div>
+      <div class="meta-strip"><span class="dur">20 min</span><a href="../enablement/intro.es.html">← Volver al índice</a></div>
+    </div>
+    <nav class="toc toc-inline" aria-label="En esta página"><details><summary>En esta página</summary><ul><li class="lvl3"><a href="#q1">Q1. ¿Qué problema resuelve `streamlit-coco` para quien escribe una app Streamlit?</a></li><li class="lvl3"><a href="#q2">Q2. ¿Qué afirmación describe mejor `panel()`?</a></li><li class="lvl3"><a href="#q3">Q3. ¿Qué añade `copilot_rail()` sobre `panel()`?</a></li><li class="lvl3"><a href="#q4">Q4. ¿Qué hace `app_viewer()`?</a></li><li class="lvl3"><a href="#q5">Q5. ¿Qué comando lanza la implementación de referencia de primera parte del patrón preferido (`panel()` + `chat_input_bar()`)?</a></li><li class="lvl3"><a href="#q6">Q6. ¿Qué conjunto de prerrequisitos es correcto para empezar la ruta de Enablement?</a></li><li class="lvl3"><a href="#q7">Q7. ¿Cuáles de estos forman parte del pipeline del patrón preferido demostrado en `examples/chat_app.py`? (Opción múltiple — selecciona todas las que apliquen)</a></li><li class="lvl3"><a href="#q8">Q8. ¿Qué comando instala `streamlit-coco` para alguien que solo necesita el paquete publicado, sin un checkout del repositorio de desarrollo?</a></li><li class="lvl3"><a href="#q9">Q9. ¿Bajo qué licencia se publica `streamlit-coco`?</a></li><li class="lvl3"><a href="#q10">Q10. ¿Cuál es la versión actual del paquete y el estado de lanzamiento que describe este pack de entrenamiento?</a></li><li class="lvl2"><a href="#questions">Questions</a></li><li class="lvl2"><a href="#answer-key">Answer Key</a></li></ul></details></nav>
+<p><strong>Umbral de aprobación: 8/10.</strong> Prerrequisito: ruta de Enablement.</p>
+<section><h2 id="questions">Questions<a class="anchor" href="#questions" aria-label="Link to this section">#</a></h2><div class="quizbar noprint"><div class="scorebox"><span class="scoren">0</span><span class="scored">/ 10</span><span class="scorelabel">auto-scored: 0 / 10 · pass 8/10</span></div><div class="quizbtns"><button type="button" id="revealall">Reveal all answers</button><button type="button" id="resetquiz">Reset quiz</button></div></div><div class="verdictbar noprint" id="passline" hidden></div><article class="qcard card card-purple" id="q1" data-q="1" data-auto="1" data-correct="B" data-multi="0"><div class="qhead"><span class="qnum">Q1</span><span class="qtype badge badge-purple">Multiple choice</span></div><h3 class="qtitle">¿Qué problema resuelve <code class="inline">streamlit-coco</code> para quien escribe una app Streamlit?<a class="anchor" href="#q1">#</a></h3><div class="opts"><label class="opt" data-letter="A"><input type="radio" name="q1" value="A"><span class="optl">A)</span><span class="optt">Reemplaza por completo el CLI de CoCo, así que nunca es necesario instalar ningún CLI</span></label><label class="opt" data-letter="B"><input type="radio" name="q1" value="B"><span class="optl">B)</span><span class="optt">Proporciona plomería lista para usar de sesión, renderizado en streaming, tarjetas de herramienta y flujo de aprobación, para que quien escribe la app no la construya a mano</span></label><label class="opt" data-letter="C"><input type="radio" name="q1" value="C"><span class="optl">C)</span><span class="optt">Genera automáticamente definiciones de roles y grants de Snowflake</span></label><label class="opt" data-letter="D"><input type="radio" name="q1" value="D"><span class="optl">D)</span><span class="optt">Aprovisiona y gestiona el warehouse de Snowflake contra el que se ejecuta una sesión de CoCo</span></label></div><button type="button" class="revealbtn noprint">Show answer</button><div class="answer" hidden><div class="section-label" style="color:var(--green)">Answer</div><p><strong>B</strong> — La librería proporciona estado de sesión, streaming de transcripción, tarjetas de herramienta y plomería de aprobación como funciones componibles, para que quien escribe la app se ocupe de la página y las opciones, no del puente de sesión.</p><div class="verdict"></div></div></article><article class="qcard card card-purple" id="q2" data-q="2" data-auto="1" data-correct="B" data-multi="0"><div class="qhead"><span class="qnum">Q2</span><span class="qtype badge badge-purple">Multiple choice</span></div><h3 class="qtitle">¿Qué afirmación describe mejor <code class="inline">panel()</code>?<a class="anchor" href="#q2">#</a></h3><div class="opts"><label class="opt" data-letter="A"><input type="radio" name="q2" value="A"><span class="optl">A)</span><span class="optt">Un Copilot en rail lateral compuesto para apps multipágina</span></label><label class="opt" data-letter="B"><input type="radio" name="q2" value="B"><span class="optl">B)</span><span class="optt">Un primitivo nativo de transcripción/campo/aprobaciones/Stop que devuelve un <code class="inline">CocoChatResult</code></span></label><label class="opt" data-letter="C"><input type="radio" name="q2" value="C"><span class="optl">C)</span><span class="optt">Un widget de chat todo-en-uno heredado de Custom Component v2</span></label><label class="opt" data-letter="D"><input type="radio" name="q2" value="D"><span class="optl">D)</span><span class="optt">Una columna de vista previa que incrusta una app Streamlit hija en un iframe</span></label></div><button type="button" class="revealbtn noprint">Show answer</button><div class="answer" hidden><div class="section-label" style="color:var(--green)">Answer</div><p><strong>B</strong> — <code class="inline">panel(session, kwargs) -&gt; CocoChatResult</code> es el primitivo nativo de salida de transcripción/campo con aprobaciones y un control Stop.</p><div class="verdict"></div></div></article><article class="qcard card card-purple" id="q3" data-q="3" data-auto="1" data-correct="A" data-multi="0"><div class="qhead"><span class="qnum">Q3</span><span class="qtype badge badge-purple">Multiple choice</span></div><h3 class="qtitle">¿Qué añade <code class="inline">copilot_rail()</code> sobre <code class="inline">panel()</code>?<a class="anchor" href="#q3">#</a></h3><div class="opts"><label class="opt" data-letter="A"><input type="radio" name="q3" value="A"><span class="optl">A)</span><span class="optt">Un Copilot en rail lateral derecho con un selector de conexión, trabajos encolados y preguntas de ejemplo</span></label><label class="opt" data-letter="B"><input type="radio" name="q3" value="B"><span class="optl">B)</span><span class="optt">Una API headless puramente asíncrona sin import de Streamlit</span></label><label class="opt" data-letter="C"><input type="radio" name="q3" value="C"><span class="optl">C)</span><span class="optt">Un enrutador de salida estructurada basado en JSON Schema</span></label><label class="opt" data-letter="D"><input type="radio" name="q3" value="D"><span class="optl">D)</span><span class="optt">Una protección contra path-traversal en los nombres de archivo subidos</span></label></div><button type="button" class="revealbtn noprint">Show answer</button><div class="answer" hidden><div class="section-label" style="color:var(--green)">Answer</div><p><strong>A</strong> — <code class="inline">copilot_rail()</code> compone <code class="inline">panel()</code> en un Copilot en rail lateral derecho con un selector de conexión, trabajos encolados, configuración de visualización de la transcripción y preguntas de ejemplo.</p><div class="verdict"></div></div></article><article class="qcard card card-purple" id="q4" data-q="4" data-auto="1" data-correct="B" data-multi="0"><div class="qhead"><span class="qnum">Q4</span><span class="qtype badge badge-purple">Multiple choice</span></div><h3 class="qtitle">¿Qué hace <code class="inline">app_viewer()</code>?<a class="anchor" href="#q4">#</a></h3><div class="opts"><label class="opt" data-letter="A"><input type="radio" name="q4" value="A"><span class="optl">A)</span><span class="optt">Ejecuta la herramienta SQL del agente contra el rol de Snowflake conectado</span></label><label class="opt" data-letter="B"><input type="radio" name="q4" value="B"><span class="optl">B)</span><span class="optt">Lanza un proceso hijo <code class="inline">streamlit run</code> para una app generada, lo incrusta en un iframe y ofrece una acción Fix</span></label><label class="opt" data-letter="C"><input type="radio" name="q4" value="C"><span class="optl">C)</span><span class="optt">Transmite los eventos NDJSON en bruto del agente a la terminal</span></label><label class="opt" data-letter="D"><input type="radio" name="q4" value="D"><span class="optl">D)</span><span class="optt">Sube archivos del navegador al directorio de trabajo del agente</span></label></div><button type="button" class="revealbtn noprint">Show answer</button><div class="answer" hidden><div class="section-label" style="color:var(--green)">Answer</div><p><strong>B</strong> — <code class="inline">app_viewer(app_dir, ...)</code> lanza un proceso hijo <code class="inline">streamlit run</code>, lo incrusta en un iframe y ofrece Fix with CoCo raspando el log de la vista previa.</p><div class="verdict"></div></div></article><article class="qcard card card-purple" id="q5" data-q="5" data-auto="1" data-correct="B" data-multi="0"><div class="qhead"><span class="qnum">Q5</span><span class="qtype badge badge-purple">Multiple choice</span></div><h3 class="qtitle">¿Qué comando lanza la implementación de referencia de primera parte del patrón preferido (<code class="inline">panel()</code> + <code class="inline">chat_input_bar()</code>)?<a class="anchor" href="#q5">#</a></h3><div class="opts"><label class="opt" data-letter="A"><input type="radio" name="q5" value="A"><span class="optl">A)</span><span class="optt"><code class="inline">make demo</code></span></label><label class="opt" data-letter="B"><input type="radio" name="q5" value="B"><span class="optl">B)</span><span class="optt"><code class="inline">make chat</code></span></label><label class="opt" data-letter="C"><input type="radio" name="q5" value="C"><span class="optl">C)</span><span class="optt"><code class="inline">make run-app</code></span></label><label class="opt" data-letter="D"><input type="radio" name="q5" value="D"><span class="optl">D)</span><span class="optt"><code class="inline">make copilot</code></span></label></div><button type="button" class="revealbtn noprint">Show answer</button><div class="answer" hidden><div class="section-label" style="color:var(--green)">Answer</div><p><strong>B</strong> — El Makefile mapea <code class="inline">chat</code> a <code class="inline">Run examples/chat_app.py</code>; <code class="inline">demo</code>, <code class="inline">run-app</code> y <code class="inline">copilot</code> no son objetivos del Makefile.</p><div class="verdict"></div></div></article><article class="qcard card card-purple" id="q6" data-q="6" data-auto="1" data-correct="A" data-multi="0"><div class="qhead"><span class="qnum">Q6</span><span class="qtype badge badge-purple">Multiple choice</span></div><h3 class="qtitle">¿Qué conjunto de prerrequisitos es correcto para empezar la ruta de Enablement?<a class="anchor" href="#q6">#</a></h3><div class="opts"><label class="opt" data-letter="A"><input type="radio" name="q6" value="A"><span class="optl">A)</span><span class="optt">Python 3.10+, una cuenta de Snowflake con acceso a Cortex Code, el CLI de CoCo (<code class="inline">cortex</code>) accesible en <code class="inline">PATH</code> o mediante <code class="inline">CORTEX_CODE_CLI_PATH</code>, y una configuración de conexión de Snowflake funcional</span></label><label class="opt" data-letter="B"><input type="radio" name="q6" value="B"><span class="optl">B)</span><span class="optt">Node.js 18+, un warehouse de Snowflake dedicado y una licencia GHAS de pago</span></label><label class="opt" data-letter="C"><input type="radio" name="q6" value="C"><span class="optl">C)</span><span class="optt">Python 3.8+, Docker, y un manifiesto de Native App</span></label><label class="opt" data-letter="D"><input type="radio" name="q6" value="D"><span class="optl">D)</span><span class="optt">Una cuenta de Streamlit Community Cloud y un archivo <code class="inline">snowflake.yml</code></span></label></div><button type="button" class="revealbtn noprint">Show answer</button><div class="answer" hidden><div class="section-label" style="color:var(--green)">Answer</div><p><strong>A</strong> — Los prerrequisitos son Python 3.10+, una cuenta de Snowflake habilitada para Cortex Code, el CLI <code class="inline">cortex</code> en PATH (o <code class="inline">CORTEX_CODE_CLI_PATH</code>), y un <code class="inline">connections.toml</code>/<code class="inline">config.toml</code> funcional — no se requiere warehouse dedicado, Docker ni manifiesto de Native App.</p><div class="verdict"></div></div></article><article class="qcard card card-purple" id="q7" data-q="7" data-auto="1" data-correct="A,B,C,D,E" data-multi="1"><div class="qhead"><span class="qnum">Q7</span><span class="qtype badge badge-purple">Select all that apply</span></div><h3 class="qtitle">¿Cuáles de estos forman parte del pipeline del patrón preferido demostrado en <code class="inline">examples/chat_app.py</code>? (Opción múltiple — selecciona todas las que apliquen)<a class="anchor" href="#q7">#</a></h3><div class="opts"><label class="opt" data-letter="A"><input type="checkbox" name="q7" value="A"><span class="optl">A)</span><span class="optt"><code class="inline">check_environment()</code></span></label><label class="opt" data-letter="B"><input type="checkbox" name="q7" value="B"><span class="optl">B)</span><span class="optt"><code class="inline">render_start_gate()</code></span></label><label class="opt" data-letter="C"><input type="checkbox" name="q7" value="C"><span class="optl">C)</span><span class="optt"><code class="inline">get_or_create_session()</code></span></label><label class="opt" data-letter="D"><input type="checkbox" name="q7" value="D"><span class="optl">D)</span><span class="optt"><code class="inline">panel()</code></span></label><label class="opt" data-letter="E"><input type="checkbox" name="q7" value="E"><span class="optl">E)</span><span class="optt"><code class="inline">chat_input_bar()</code></span></label><label class="opt" data-letter="F"><input type="checkbox" name="q7" value="F"><span class="optl">F)</span><span class="optt"><code class="inline">chat()</code> (componente CCv2 heredado)</span></label></div><button type="button" class="revealbtn noprint">Show answer</button><div class="answer" hidden><div class="section-label" style="color:var(--green)">Answer</div><p><strong>A, B, C, D, E</strong> — A, B, C, D, E</p><div class="verdict"></div></div></article><article class="qcard card card-purple" id="q8" data-q="8" data-auto="1" data-correct="A" data-multi="0"><div class="qhead"><span class="qnum">Q8</span><span class="qtype badge badge-purple">Multiple choice</span></div><h3 class="qtitle">¿Qué comando instala <code class="inline">streamlit-coco</code> para alguien que solo necesita el paquete publicado, sin un checkout del repositorio de desarrollo?<a class="anchor" href="#q8">#</a></h3><div class="opts"><label class="opt" data-letter="A"><input type="radio" name="q8" value="A"><span class="optl">A)</span><span class="optt"><code class="inline">pip install "streamlit-coco[sdk]"</code></span></label><label class="opt" data-letter="B"><input type="radio" name="q8" value="B"><span class="optl">B)</span><span class="optt"><code class="inline">npm install streamlit-coco</code></span></label><label class="opt" data-letter="C"><input type="radio" name="q8" value="C"><span class="optl">C)</span><span class="optt"><code class="inline">make install</code> (funciona solo dentro del checkout del repo de desarrollo)</span></label><label class="opt" data-letter="D"><input type="radio" name="q8" value="D"><span class="optl">D)</span><span class="optt"><code class="inline">uv build</code></span></label></div><button type="button" class="revealbtn noprint">Show answer</button><div class="answer" hidden><div class="section-label" style="color:var(--green)">Answer</div><p><strong>A</strong> — La ruta que solo requiere el paquete publicado es <code class="inline">pip install "streamlit-coco[sdk]"</code>; <code class="inline">make install</code> apunta a un checkout del repositorio, y los otros dos comandos no instalan este paquete.</p><div class="verdict"></div></div></article><article class="qcard card card-purple" id="q9" data-q="9" data-auto="1" data-correct="B" data-multi="0"><div class="qhead"><span class="qnum">Q9</span><span class="qtype badge badge-purple">Multiple choice</span></div><h3 class="qtitle">¿Bajo qué licencia se publica <code class="inline">streamlit-coco</code>?<a class="anchor" href="#q9">#</a></h3><div class="opts"><label class="opt" data-letter="A"><input type="radio" name="q9" value="A"><span class="optl">A)</span><span class="optt">MIT</span></label><label class="opt" data-letter="B"><input type="radio" name="q9" value="B"><span class="optl">B)</span><span class="optt">Apache-2.0</span></label><label class="opt" data-letter="C"><input type="radio" name="q9" value="C"><span class="optl">C)</span><span class="optt">GPL-3.0</span></label><label class="opt" data-letter="D"><input type="radio" name="q9" value="D"><span class="optl">D)</span><span class="optt">BSD-3-Clause</span></label></div><button type="button" class="revealbtn noprint">Show answer</button><div class="answer" hidden><div class="section-label" style="color:var(--green)">Answer</div><p><strong>B</strong> — <code class="inline">streamlit-coco</code> se publica bajo Apache-2.0.</p><div class="verdict"></div></div></article><article class="qcard card card-purple" id="q10" data-q="10" data-auto="1" data-correct="B" data-multi="0"><div class="qhead"><span class="qnum">Q10</span><span class="qtype badge badge-purple">Multiple choice</span></div><h3 class="qtitle">¿Cuál es la versión actual del paquete y el estado de lanzamiento que describe este pack de entrenamiento?<a class="anchor" href="#q10">#</a></h3><div class="opts"><label class="opt" data-letter="A"><input type="radio" name="q10" value="A"><span class="optl">A)</span><span class="optt"><code class="inline">0.1.6</code>, una versión estable</span></label><label class="opt" data-letter="B"><input type="radio" name="q10" value="B"><span class="optl">B)</span><span class="optt"><code class="inline">0.1.9</code>, alpha — la API todavía puede cambiar</span></label><label class="opt" data-letter="C"><input type="radio" name="q10" value="C"><span class="optl">C)</span><span class="optt"><code class="inline">1.0.0</code>, disponibilidad general</span></label><label class="opt" data-letter="D"><input type="radio" name="q10" value="D"><span class="optl">D)</span><span class="optt"><code class="inline">0.2.0</code>, beta</span></label></div><button type="button" class="revealbtn noprint">Show answer</button><div class="answer" hidden><div class="section-label" style="color:var(--green)">Answer</div><p><strong>B</strong> — El pack describe la versión <code class="inline">0.1.9</code>, indicada como alpha — la API todavía puede cambiar.</p><div class="verdict"></div></div></article></section>
+<section><h2 id="answer-key">Answer Key<a class="anchor" href="#answer-key" aria-label="Link to this section">#</a></h2><p>Every answer is also reachable per question above. This section keeps the full key for offline review and printing.</p><details class="keydump"><summary>Show the complete answer key</summary><div class="keyrow"><span class="badge badge-green">A1</span><p>B — La librería proporciona estado de sesión, streaming de transcripción, tarjetas de herramienta y plomería de aprobación como funciones componibles, para que quien escribe la app se ocupe de la página y las opciones, no del puente de sesión.</p></div><div class="keyrow"><span class="badge badge-green">A2</span><p>B — <code class="inline">panel(session, kwargs) -&gt; CocoChatResult</code> es el primitivo nativo de salida de transcripción/campo con aprobaciones y un control Stop.</p></div><div class="keyrow"><span class="badge badge-green">A3</span><p>A — <code class="inline">copilot_rail()</code> compone <code class="inline">panel()</code> en un Copilot en rail lateral derecho con un selector de conexión, trabajos encolados, configuración de visualización de la transcripción y preguntas de ejemplo.</p></div><div class="keyrow"><span class="badge badge-green">A4</span><p>B — <code class="inline">app_viewer(app_dir, ...)</code> lanza un proceso hijo <code class="inline">streamlit run</code>, lo incrusta en un iframe y ofrece Fix with CoCo raspando el log de la vista previa.</p></div><div class="keyrow"><span class="badge badge-green">A5</span><p>B — El Makefile mapea <code class="inline">chat</code> a <code class="inline">Run examples/chat_app.py</code>; <code class="inline">demo</code>, <code class="inline">run-app</code> y <code class="inline">copilot</code> no son objetivos del Makefile.</p></div><div class="keyrow"><span class="badge badge-green">A6</span><p>A — Los prerrequisitos son Python 3.10+, una cuenta de Snowflake habilitada para Cortex Code, el CLI <code class="inline">cortex</code> en PATH (o <code class="inline">CORTEX_CODE_CLI_PATH</code>), y un <code class="inline">connections.toml</code>/<code class="inline">config.toml</code> funcional — no se requiere warehouse dedicado, Docker ni manifiesto de Native App.</p></div><div class="keyrow"><span class="badge badge-green">A7</span><p>A, B, C, D, E — A, B, C, D, E</p></div><div class="keyrow"><span class="badge badge-green">A8</span><p>A — La ruta que solo requiere el paquete publicado es <code class="inline">pip install "streamlit-coco[sdk]"</code>; <code class="inline">make install</code> apunta a un checkout del repositorio, y los otros dos comandos no instalan este paquete.</p></div><div class="keyrow"><span class="badge badge-green">A9</span><p>B — <code class="inline">streamlit-coco</code> se publica bajo Apache-2.0.</p></div><div class="keyrow"><span class="badge badge-green">A10</span><p>B — El pack describe la versión <code class="inline">0.1.9</code>, indicada como alpha — la API todavía puede cambiar.</p></div></details></section>
+  </main>
+</div>
+<footer class="pagefoot">
+  <div class="prevnext noprint"><span></span><a href="user.es.html" style="text-align:right"><span class="pn-label">Siguiente →</span><span class="pn-title">User</span></a></div>
+  <div class="slide-footer">
+    <div class="footer-brand">Creative tech for Better Change</div>
+    <div class="footer-page">Streamlit CoCo · Generado a partir de certifications/enablement.es.md</div>
+  </div>
+</footer>
+<script>
+(function () {
+  var PAGE = document.body.getAttribute('data-page') || 'page';
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  document.querySelectorAll('.copybtn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.closest('.codewrap').querySelector('code').textContent;
+      var done = function () {
+        btn.textContent = 'Copied'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(done, function () {});
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = code; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+  var boxes = document.querySelectorAll('input.chk');
+  boxes.forEach(function (box, idx) {
+    var key = 'dsp-training:' + PAGE + ':chk:' + idx;
+    var saved = load(key);
+    if (saved === '1') box.checked = true;
+    else if (saved === '0') box.checked = false;
+    sync(box);
+    box.addEventListener('change', function () {
+      store(key, box.checked ? '1' : '0');
+      sync(box); counters();
+    });
+  });
+  function sync(box) {
+    var li = box.closest('li');
+    if (li) li.classList.toggle('done', box.checked);
+  }
+  function counters() {
+    document.querySelectorAll('[data-count-scope]').forEach(function (el) {
+      var scope = document.querySelector(el.getAttribute('data-count-scope'));
+      if (!scope) return;
+      var all = scope.querySelectorAll('input.chk');
+      var on = scope.querySelectorAll('input.chk:checked');
+      el.innerHTML = '<span class="n">' + on.length + '</span> of ' + all.length + ' ready';
+    });
+    document.querySelectorAll('[data-progress]').forEach(function (el) {
+      var sel = el.getAttribute('data-progress');
+      var all = document.querySelectorAll(sel);
+      var on = document.querySelectorAll(sel + ':checked');
+      var pct = all.length ? Math.round(on.length / all.length * 100) : 0;
+      var bar = el.querySelector('.bar-fill');
+      var lab = el.querySelector('.bar-label');
+      if (bar) bar.style.width = pct + '%';
+      if (lab) lab.textContent = on.length + ' of ' + all.length + ' exercises complete';
+    });
+  }
+  counters();
+  var links = document.querySelectorAll('.toc-side a');
+  if (links.length && 'IntersectionObserver' in window) {
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var a = map[en.target.id];
+        if (a && en.isIntersecting) {
+          links.forEach(function (x) { x.style.color = ''; x.style.fontWeight = ''; });
+          a.style.color = 'var(--red)'; a.style.fontWeight = '700';
+        }
+      });
+    }, { rootMargin: '-70px 0px -75% 0px' });
+    document.querySelectorAll('.content h2[id], .content h3[id]').forEach(function (h) { obs.observe(h); });
+  }
+})();
+
+(function () {
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.qcard'));
+  var KEY = 'dsp-training:quiz:';
+  var PASS = 8;
+  function store(k, v) { try { localStorage.setItem(KEY + k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(KEY + k); } catch (e) { return null; } }
+  function drop() { try { Object.keys(localStorage).forEach(function (k) {
+      if (k.indexOf(KEY) === 0) localStorage.removeItem(k); }); } catch (e) {} }
+  function selected(card) {
+    return Array.prototype.slice.call(card.querySelectorAll('input:checked')).map(function (i) { return i.value; });
+  }
+  function grade(card) {
+    var auto = card.getAttribute('data-auto') === '1';
+    var correct = (card.getAttribute('data-correct') || '').split(',').filter(Boolean);
+    var v = card.querySelector('.verdict');
+    if (!auto) { v.className = 'verdict manual'; v.textContent = 'Self-assess against the model answer'; return null; }
+    var got = selected(card);
+    card.querySelectorAll('.opt').forEach(function (o) {
+      var L = o.getAttribute('data-letter');
+      o.classList.remove('right', 'wrong');
+      if (correct.indexOf(L) > -1) o.classList.add('right');
+      else if (got.indexOf(L) > -1) o.classList.add('wrong');
+    });
+    var ok = got.length === correct.length && correct.every(function (c) { return got.indexOf(c) > -1; });
+    if (!got.length) { v.className = 'verdict manual'; v.textContent = 'Not answered'; return false; }
+    v.className = 'verdict ' + (ok ? 'ok' : 'ko');
+    v.textContent = ok ? 'Correct' : 'Incorrect';
+    return ok;
+  }
+  function tally() {
+    var auto = 0, right = 0, revealed = 0;
+    cards.forEach(function (c) {
+      if (c.getAttribute('data-auto') === '1') {
+        auto++;
+        if (!c.querySelector('.answer').hidden) {
+          revealed++;
+          if (c.querySelector('.verdict').classList.contains('ok')) right++;
+        }
+      }
+    });
+    document.querySelector('.scoren').textContent = right;
+    document.querySelector('.scorelabel').textContent =
+      'auto-scored: ' + revealed + ' / ' + auto + ' · pass ' + PASS + '/' + cards.length;
+    var line = document.getElementById('passline');
+    if (revealed === auto && revealed > 0) {
+      line.hidden = false;
+      var pass = right >= PASS;
+      line.className = 'verdictbar noprint ' + (pass ? 'pass' : 'fail');
+      line.textContent = pass
+        ? 'Pass — ' + right + ' correct on auto-scored questions. Score short answers yourself to confirm.'
+        : right + ' auto-scored. Add short-answer points; below the pass mark, review the pack and retry.';
+    } else { line.hidden = true; }
+  }
+  cards.forEach(function (card) {
+    var n = card.getAttribute('data-q');
+    card.querySelectorAll('input').forEach(function (inp) {
+      var saved = load('q' + n);
+      if (saved && saved.split(',').indexOf(inp.value) > -1) inp.checked = true;
+      inp.addEventListener('change', function () { store('q' + n, selected(card).join(',')); });
+    });
+    var ta = card.querySelector('.shortans');
+    if (ta) {
+      var sv = load('t' + n); if (sv) ta.value = sv;
+      ta.addEventListener('input', function () { store('t' + n, ta.value); });
+    }
+    card.querySelector('.revealbtn').addEventListener('click', function () {
+      var a = card.querySelector('.answer');
+      a.hidden = !a.hidden;
+      this.textContent = a.hidden ? 'Show answer' : 'Hide answer';
+      if (!a.hidden) grade(card);
+      tally();
+    });
+  });
+  document.getElementById('revealall').addEventListener('click', function () {
+    cards.forEach(function (c) {
+      c.querySelector('.answer').hidden = false;
+      c.querySelector('.revealbtn').textContent = 'Hide answer';
+      grade(c);
+    });
+    tally();
+  });
+  document.getElementById('resetquiz').addEventListener('click', function () {
+    drop();
+    cards.forEach(function (c) {
+      c.querySelectorAll('input').forEach(function (i) { i.checked = false; });
+      var ta = c.querySelector('.shortans'); if (ta) ta.value = '';
+      c.querySelector('.answer').hidden = true;
+      c.querySelector('.revealbtn').textContent = 'Show answer';
+      c.querySelector('.verdict').className = 'verdict';
+      c.querySelector('.verdict').textContent = '';
+      c.querySelectorAll('.opt').forEach(function (o) { o.classList.remove('right', 'wrong'); });
+    });
+    tally();
+  });
+  tally();
+})();
+</script>
+</body>
+</html>

@@ -122,7 +122,7 @@ def _connections() -> list[str]:
     return [str(secret)] if secret else []
 
 
-def render_copilot_rail() -> None:
+def render_copilot_rail(*, ask: bool = False) -> None:
     import streamlit_coco as st_coco
 
     job = get_job()
@@ -222,4 +222,6 @@ def render_copilot_rail() -> None:
         input_placeholder=placeholder,
         example_questions=EXAMPLE_QUESTIONS,
         deferred=True,
+        ask=ask,
+        own_window=False,
     )

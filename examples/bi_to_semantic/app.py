@@ -22,7 +22,9 @@ if str(APP_ROOT) not in sys.path:
 
 from engine import state  # noqa: E402
 from engine.coco_jobs import (  # noqa: E402
+    connection_name,
     get_job,
+    is_connected,
     is_copilot_open,
     is_preview_full,
     is_preview_open,
@@ -31,6 +33,7 @@ from engine.coco_jobs import (  # noqa: E402
     toggle_copilot,
     toggle_preview,
 )
+from engine.coco_window import mount_window  # noqa: E402
 from engine.copilot_panel import (  # noqa: E402
     render_coco_cooking_indicator,
     render_copilot_rail,
@@ -38,11 +41,18 @@ from engine.copilot_panel import (  # noqa: E402
 from engine.paths import WORKSPACE_DIR  # noqa: E402
 from engine.preview_panel import render_preview_rail  # noqa: E402
 
+from streamlit_coco.rail import (  # noqa: E402
+    ask_coco_switch,
+    ask_restore,
+    present_ask,
+    rail_minimized,
+)
+
 st.set_page_config(
     page_title="BI → Semantic",
     page_icon=":material/account_tree:",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 state.ensure_defaults()
@@ -79,7 +89,7 @@ page = st.navigation(
 )
 
 
-def _chrome() -> None:
+def _chrome() -> bool:
     copilot_on = is_copilot_open()
     preview_on = is_preview_open()
     with st.container(horizontal=True, vertical_alignment="center"):
@@ -100,6 +110,7 @@ def _chrome() -> None:
         ):
             toggle_preview()
             st.rerun()
+    show_ask = ask_coco_switch("tts_ask_coco")
     if page.title == "Welcome":
         st.caption(
             "BI → Semantic · Tableau and Power BI · Open Copilot once — later "
@@ -114,17 +125,29 @@ def _chrome() -> None:
     if restored:
         st.caption("Restored from disk · " + ", ".join(f"`{n}`" for n in restored))
     render_coco_cooking_indicator()
+    return show_ask
 
 
-_chrome()
+show_ask = _chrome()
 
 # Keep the Copilot rail open while a structured job is queued/running.
 if get_job() and not is_copilot_open():
     set_copilot_open(True)
 
-_preview_ok = page.title != "Welcome"
+present_ask(
+    show_ask,
+    "tts_coco",
+    lambda: mount_window(
+        connection=connection_name() if is_connected() else None,
+        on_rail=ask_restore("tts_coco"),
+    ),
+)
 
-if is_copilot_open() and _preview_ok and is_preview_open():
+_preview_ok = page.title != "Welcome"
+_minimized = show_ask and rail_minimized("tts_coco")
+_layout_copilot = is_copilot_open() and not _minimized
+
+if _layout_copilot and _preview_ok and is_preview_open():
     preview_col, rail = resizable_columns(
         [1.15, 1],
         min_width=280,
@@ -135,11 +158,11 @@ if is_copilot_open() and _preview_ok and is_preview_open():
             render_preview_rail()
     with rail:
         with st.container(border=True):
-            render_copilot_rail()
-elif _preview_ok and is_preview_open() and is_preview_full():
+            render_copilot_rail(ask=show_ask)
+elif _preview_ok and is_preview_open() and (is_preview_full() or _minimized):
     with st.container(border=True):
         render_preview_rail()
-elif is_copilot_open() or (_preview_ok and is_rail_open()):
+elif _layout_copilot or (_preview_ok and is_rail_open() and not _minimized):
     # Rail FIRST: if a page stops early, Copilot still streams.
     main, rail = resizable_columns(
         [1.15, 1],
@@ -148,8 +171,8 @@ elif is_copilot_open() or (_preview_ok and is_rail_open()):
     )
     with rail:
         with st.container(border=True):
-            if is_copilot_open():
-                render_copilot_rail()
+            if _layout_copilot:
+                render_copilot_rail(ask=show_ask)
             else:
                 render_preview_rail()
     with main:

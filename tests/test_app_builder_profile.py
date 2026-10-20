@@ -71,10 +71,7 @@ def test_no_numeric_columns(tmp_path: Path) -> None:
 def test_unambiguous_date_column(tmp_path: Path) -> None:
     path = tmp_path / "dated.csv"
     path.write_text(
-        "order_date,region,revenue\n"
-        "2024-01-15,EMEA,10\n"
-        "2024-08-01,AMER,20\n"
-        "2024-12-31,APAC,30\n",
+        "order_date,region,revenue\n2024-01-15,EMEA,10\n2024-08-01,AMER,20\n2024-12-31,APAC,30\n",
         encoding="utf-8",
     )
     profile = profile_csv(path)

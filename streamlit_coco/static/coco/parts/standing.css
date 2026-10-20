@@ -1,0 +1,5 @@
+/* Ask CoCo, part "standing" (frames 55-61), ported from ui-rebuild/design/coco22.css */
+.ag-std { display: flex; flex-direction: column; gap: calc(var(--r) * .4); margin: 0 var(--r) calc(var(--r) * .65); padding-top: calc(var(--r) * .65); border-top: 1px solid var(--line); }
+.ag-std label { display: flex; align-items: center; gap: calc(var(--r) * .6); min-height: calc(var(--r) * 1.9); font-size: var(--fz-body); line-height: 1.4; cursor: pointer; }
+.ag-pr { display: flex; align-items: center; justify-content: space-between; gap: calc(var(--r) * .75); padding-top: calc(var(--r) * .6); border-top: 1px solid var(--line); font-size: var(--fz-body); line-height: 1.4; color: var(--ink); }
+.ag-pr .b { flex: none; }

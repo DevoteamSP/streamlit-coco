@@ -19,8 +19,8 @@
 | 2 | **Run** | Caption shows `http://127.0.0.1:8511` (Python) or `:8512` (CoCo); iframe loads the child |
 | 3 | **Open** | New tab on the same URL |
 | 4 | Break `streamlit_app.py` so the child raises | **Preview exception** expander shows the traceback; **Fix with CoCo** is primary |
-| 5 | **Fix with CoCo** while connected | Job queued (“Fix Streamlit app”); Copilot rail sends the prompt; prompt includes the traceback and `streamlit_app.py` |
-| 6 | **Fix with CoCo** while disconnected | Copilot opens; connect hint; no job until connected (BI adapter) |
+| 5 | **Fix with CoCo** while connected | `coco.ask("Fix Streamlit app", ...)` queues the job; the window shows it and sends the prompt; the prompt includes the traceback and `streamlit_app.py` |
+| 6 | **Fix with CoCo** while disconnected | The window opens; the job waits ("Sent when you connect") until connected |
 | 7 | After CoCo Writes a fix | Child hot-reloads; expander clears once a later timestamped log line appears |
 | 8 | **Stop** | Iframe gone; pid/port files cleared; **Run** enabled again |
 | 9 | **Close** | Preview column hides; host `on_close` ran |

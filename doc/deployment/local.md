@@ -8,7 +8,7 @@ Run **streamlit-coco** on your laptop or VM with the CoCo CLI and Snowflake cred
 
 ## 1. Python environment
 
-**Requirements:** Python **3.10+**, Streamlit **≥ 1.53**.
+**Requirements:** Python **3.10+**, Streamlit **≥ 1.55**.
 
 ### Install from PyPI (when published)
 
@@ -106,15 +106,7 @@ st_coco.require_environment(connection="analytics")
 
 Typed errors (`SDKNotInstalledError`, `CLINotFoundError`, …) replace opaque runtime failures — see `streamlit_coco.errors`.
 
-In Streamlit apps, use the built-in start gate:
-
-```python
-env = st_coco.check_environment(connection=opts.connection)
-if not st_coco.render_start_gate(opts, session_key="copilot", env=env):
-    st.stop()
-```
-
-The gate shows SDK / CLI / Snowflake status and only starts the session after you click **Start CoCo Chat**.
+In a Streamlit application you need not call it: the Ask CoCo window checks the environment itself, says what is missing and how to fix it, and starts nothing before the user presses **Connect**. Call `check_environment()` for a page of your own.
 
 ---
 
@@ -124,11 +116,14 @@ From the repo root (after `make install`):
 
 | Command | App | What it exercises |
 | --- | --- | --- |
-| `make chat` | `examples/chat_app.py` | Preferred `panel()` + `chat_input_bar`, tool cards, approvals |
-| `make approval` | `examples/approval_gate.py` | Legacy CCv2 `chat()` |
-| `make structured` | `examples/structured_output.py` | Structured output callback |
-| `make headless` | `examples/headless_pipeline.py` | `query()` without Streamlit UI |
-| `make backlog` | `examples/backlog_desk/` | Multipage product backlog desk (file-backed, no SQL) + right-rail Copilot |
+| `make chat` | `examples/chat_app.py` | The window, a test-prompt picker, rights as pills |
+| `make approval` | `examples/approval_gate.py` | A listed command, a file rule, SQL, a standing permission |
+| `make structured` | `examples/structured_output.py` | A structured result handed to the page (`coco.result`) |
+| `make cwd-upload` | `examples/cwd_upload_chat.py` | Files attached in the window, and an uploader on the page |
+| `make headless` | `examples/headless_pipeline.py` | `query()`, a `CocoSession` and a `Conversation` without Streamlit |
+| `make backlog` | `examples/backlog_desk/` | Multipage product backlog desk (file-backed, no SQL) |
+
+No login yet? Set `STREAMLIT_COCO_AGENT=mock` (PowerShell: `$env:STREAMLIT_COCO_AGENT="mock"`) and any of them runs on a scripted agent.
 
 Or run Streamlit directly:
 
@@ -146,21 +141,11 @@ Exploratory prompts: [`examples/testdata/prompts.json`](../../examples/testdata/
 import streamlit as st
 import streamlit_coco as st_coco
 
-opts = st_coco.CocoOptions(
-    connection="analytics",
-    cwd=".",
-    allowed_tools=["Read", "Glob", "Grep"],
-    require_approval_for=["Edit", "Write", "Bash"],
-)
-
-env = st_coco.check_environment(connection=opts.connection)
-if not st_coco.render_start_gate(opts, session_key="copilot", env=env):
-    st.stop()
-
-session = st_coco.get_or_create_session(opts, key="copilot")
-st_coco.panel(session=session, warm_up=True, show_status=True, run_every=0.25)
-st_coco.chat_input_bar(session, placeholder="Ask CoCo…")
+st.title("My app")
+st_coco.ask_coco(".")  # the agent works in this folder; reading is free, everything else asks
 ```
+
+The rights, the features and the two applications of the README: [`README.md`](../../README.md) and [`doc/api.md`](../api.md).
 
 ---
 
@@ -172,8 +157,8 @@ st_coco.chat_input_bar(session, placeholder="Ask CoCo…")
 | `CLINotFoundError` | `cortex` not on PATH | Install CLI; set `CORTEX_CODE_CLI_PATH` |
 | `CLIProbeError` | Binary exists but `--version` fails | Reinstall CLI; check permissions |
 | `CocoConnectionError` | Bad connection name or auth | Fix `connections.toml`; test with Snowflake CLI |
-| Session stuck on **Starting CoCo…** | CLI or network issue | Check terminal logs; enable debug (`STREAMLIT_COCO_DEBUG=1`) |
-| Input disabled after boot | `SessionNotReadyError` / ERROR status | Fix environment; reset session from sidebar |
+| The window stays on **Connecting** or shows a problem | CLI or network issue | Read the problem text in the window and **Try again**; check the terminal log; **Session details** (with `Features(session_details=True)`) shows versions |
+| The window says the package or the program is not installed | SDK or Cortex Code missing | Run the command the window shows, or `pip install streamlit-coco[sdk]` |
 
 Run the test suite locally:
 

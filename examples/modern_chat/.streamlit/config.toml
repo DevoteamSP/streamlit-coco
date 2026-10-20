@@ -1,0 +1,43 @@
+# Modern chat — warm paper, ink buttons, a dark rail for the sidebar.
+
+[theme]
+base = "light"
+primaryColor = "#111111"
+backgroundColor = "#F6F5F2"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1A1A1A"
+linkColor = "#3D4FE0"
+borderColor = "#E6E4DF"
+codeBackgroundColor = "#EEECE7"
+codeTextColor = "#1A1A1A"
+showWidgetBorder = true
+showSidebarBorder = false
+baseRadius = "14px"
+buttonRadius = "full"
+font = "'Outfit':https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap"
+headingFont = "'Outfit':https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&display=swap"
+codeFont = "'JetBrains Mono':https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+codeFontSize = "13px"
+baseFontSize = 15
+baseFontWeight = 400
+headingFontSizes = ["34px", "24px", "18px", "16px", "14px", "12px"]
+headingFontWeights = [600, 600, 600, 500, 500, 500]
+linkUnderline = false
+
+redColor = "#E11D48"
+blueColor = "#3D4FE0"
+orangeColor = "#D97706"
+greenColor = "#3F7D1A"
+violetColor = "#6D28D9"
+yellowColor = "#CA8A04"
+grayColor = "#6B6862"
+
+[theme.sidebar]
+backgroundColor = "#12141A"
+secondaryBackgroundColor = "#1C1F27"
+textColor = "#F4F2EE"
+borderColor = "#2A2E38"
+primaryColor = "#D6FF4A"
+linkColor = "#D6FF4A"
+codeBackgroundColor = "#1C1F27"
+codeTextColor = "#F4F2EE"

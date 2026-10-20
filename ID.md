@@ -32,7 +32,7 @@
 
 - Clients where used: 0 (alpha). Internal: Data Product Studio + Data Product Forge
 - Consultants trained: 0 additional. Enablement pack + workshop W01 shipped in `0.1.6`; registry `consultants_enabled: 1` is the asset owner.
-- Demo available: yes (`make chat`, `make backlog`, `make bi-semantic`, `make app-builder`, [`doc/training/`](doc/training/training-overview.md))
+- Demo available: yes (`make chat`, `make backlog`, `make bi-semantic`, `make app-builder`, [`doc/training/`](doc/training/enablement/intro.md))
 - Snowflake Alliance pre-alignment: no
 
 **Next milestone**: N1 — conditions needed:

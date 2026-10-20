@@ -109,8 +109,7 @@ def value_expr(table, col, typ, fk_target, rows_of, pk):
         # CURRENT_TIMESTAMP() is TIMESTAMP_LTZ — cast explicitly, do not rely on
         # an implicit conversion into the TIMESTAMP_NTZ column.
         base = (
-            "DATEADD(second, -UNIFORM(0, 63072000, RANDOM()), "
-            "CURRENT_TIMESTAMP())::TIMESTAMP_NTZ"
+            "DATEADD(second, -UNIFORM(0, 63072000, RANDOM()), CURRENT_TIMESTAMP())::TIMESTAMP_NTZ"
         )
         return base if typ == "TIMESTAMP_NTZ" else f"TO_DATE({base})"
 

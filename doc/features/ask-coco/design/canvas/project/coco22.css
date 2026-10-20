@@ -1,0 +1,313 @@
+/* Spec-First Cockpit 2.2: CoCo layer. Load AFTER cockpit.css and cockpit22.css.
+   <link rel="stylesheet" href="cockpit.css"><link rel="stylesheet" href="cockpit22.css"><link rel="stylesheet" href="coco22.css">
+   Binding source: DESIGN_2.2.md section 7. Launcher = .cl, window = .cc; both override the 2.1 rules of the same names
+   by cascade. Same unit as 2.1: calc(var(--r)*n) is n rem of the app.
+   CoCo blue (--coco) is used for the spark, the send button and the focus ring inside the window, and for the pending arc
+   of the launcher. Nowhere else. Everything else uses the Cockpit tokens. */
+
+.cl,.cc{--coco:#5498FF;--disc:#16181D}
+
+/* ======================================================================
+   1. LAUNCHER (.cl): the round logo, 3rem, icon only; the label appears on hover and focus
+   The pill is as wide as its label: the label is in the flow, left of the disc's own 3rem (the right padding), and the
+   width goes from the disc to the content, animated (interpolate-size) where the browser can, otherwise it simply opens.
+   The same inner margin left of the label whatever its length; no fixed pill width anywhere.
+   ====================================================================== */
+.cl{interpolate-size:allow-keywords;position:fixed;right:calc(var(--r)*1.5);bottom:calc(var(--r)*1.5);z-index:7;display:flex;justify-content:flex-end;align-items:center;box-sizing:border-box;width:calc(var(--r)*3);height:calc(var(--r)*3);min-width:0;padding:0 calc(var(--r)*3) 0 0;margin:0;gap:0;border:0;border-radius:99px;background:var(--disc);color:#fff;font:inherit;line-height:1;cursor:pointer;
+  opacity:1;transform:translateY(0);
+  /* the disc's two-layer shadow from coco-logo-round.svg (1 unit = r*.1): stdDeviation .5 and 4, dy 2, alpha .4 */
+  filter:drop-shadow(0 0 calc(var(--r)*.05) rgba(0,0,0,.4)) drop-shadow(0 calc(var(--r)*.2) calc(var(--r)*.4) rgba(0,0,0,.4));
+  transition:opacity 160ms ease-out,transform 160ms ease-out,filter 160ms ease-out,width 160ms ease-out}
+.cl.off{opacity:.7}                             /* dimmed only when CoCo cannot answer (not connected, not installed) */
+.cl.abs{position:absolute}                     /* inside a sheet stage instead of the viewport */
+.cl.up{bottom:calc(var(--r)*4.5)}              /* above an action bar: bar 3.5rem + 1rem; never inside it */
+.cl>svg{position:absolute;right:0;top:0;display:block;width:calc(var(--r)*3);height:calc(var(--r)*3)}   /* the spark stays at the right end */
+
+/* hover and focus (and the static classes that draw them on the sheet): ONE object. The disc extends leftwards into a
+   pill on the disc colour, opaque; 100%, lifted 2px, deeper shadow; the label fades in, the spark stays where it was */
+.cl:hover,.cl.hv,.cl:focus-visible,.cl.fv,.cl.ex,.cl.aw,.cl.dn,.cl.er{width:max-content;opacity:1;transform:translateY(-2px);
+  filter:drop-shadow(0 0 calc(var(--r)*.05) rgba(0,0,0,.5)) drop-shadow(0 calc(var(--r)*.4) calc(var(--r)*.7) rgba(0,0,0,.5))}
+.cl:focus-visible,.cl.fv{outline:2px solid var(--poppy);outline-offset:2px}   /* follows the pill; outside the window the ring is the Cockpit one */
+.cl.ex,.cl.aw,.cl.dn,.cl.er{transform:none}                         /* first session only: shown expanded, never at rest afterwards */
+
+.cl .lb{flex:none;padding:calc(var(--r)*.1) 0 0 calc(var(--r)*1.25);/* optical: Montserrat 600 at line-height 1 sits ~.05r high; measured with Range and ink pixels */color:#fff;font-size:var(--fz-body);font-weight:600;line-height:1;white-space:nowrap;pointer-events:none;
+  opacity:0;visibility:hidden;transition:opacity 160ms ease-out,visibility 0s linear 160ms}
+.cl:hover .lb,.cl.hv .lb,.cl:focus-visible .lb,.cl.fv .lb,.cl.ex .lb,.cl.aw .lb,.cl.dn .lb,.cl.er .lb{opacity:1;visibility:visible;transition-delay:0s}
+
+/* answer pending: a thin blue arc turns around the disc; no text (the accessible name says "CoCo is answering") */
+.cl.pn{opacity:1}
+.cl.pn::after{content:"";position:absolute;right:calc(var(--r)*-.35);top:calc(var(--r)*-.35);width:calc(var(--r)*3.7);height:calc(var(--r)*3.7);box-sizing:border-box;border-radius:50%;border:2px solid transparent;border-top-color:var(--coco);animation:cl-spin 1s linear infinite;pointer-events:none}
+@keyframes cl-spin{to{transform:rotate(1turn)}}
+
+/* Motion always plays, whatever the system's reduced-motion setting says (client, 2026-10-11). */
+
+/* ======================================================================
+   2. WINDOW (.cc): 27rem by min(36rem, 72% of the viewport), no scrim
+   ====================================================================== */
+.cc{position:relative;display:flex;flex-direction:column;width:calc(var(--r)*27);height:min(calc(var(--r)*36),72vh);min-height:0;border:1px solid var(--line);border-radius:var(--r);background:var(--canvas);box-shadow:var(--shadow);overflow:hidden}
+.cc.fl{position:fixed;right:calc(var(--r)*1.5);bottom:calc(var(--r)*1.5);z-index:8;transform-origin:100% 100%;animation:cc-in 160ms ease-out}
+.cc.fl.up{bottom:calc(var(--r)*4.5)}
+@keyframes cc-in{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+
+.cc :focus-visible{outline:2px solid var(--coco);outline-offset:2px}   /* the one focus ring inside the window */
+
+/* header: the disc colour, the spark, the title and what CoCo looks at, two icon buttons */
+.cc .hd{position:relative;z-index:2;transition:box-shadow 160ms ease-out;flex:none;align-items:center;gap:calc(var(--r)*.75);height:calc(var(--r)*3.75);padding:0 calc(var(--r)*.75) 0 var(--r);background:var(--disc);color:#fff;border-bottom:0}
+.cc .hd .sk{display:block;width:calc(var(--r)*1.5);height:calc(var(--r)*1.5);flex:none}
+.cc .hd .tt{flex:1;min-width:0;display:flex;align-items:baseline;gap:calc(var(--r)*.5);line-height:1.25}
+.cc .hd h2{flex:none;margin:0;font-size:var(--fz-mod);font-weight:600;color:#fff}
+.cc .hd .cx{display:block;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fz-cap);color:rgba(255,255,255,.68);font-weight:500}
+.cc .ib{display:grid;place-items:center;flex:none;width:calc(var(--r)*2.25);height:calc(var(--r)*2.25);padding:0;border:0;border-radius:var(--rad-c);background:transparent;color:#fff;cursor:pointer}
+.cc .ib:hover,.cc .ib[aria-expanded=true]{background:rgba(255,255,255,.14)}
+
+/* menu: Clear conversation, Disconnect */
+.cc .pop.mn{top:calc(var(--r)*3.5);right:calc(var(--r)*.75);width:calc(var(--r)*13);z-index:3}
+.cc .pop.mn .mh{padding:calc(var(--r)*.5) calc(var(--r)*.75);margin-bottom:calc(var(--r)*.25);border-bottom:1px solid var(--line);font-size:var(--fz-cap);color:var(--ink-2)}
+.cc .pop.mn .it:hover{background:var(--canvas)}
+.cc .pop.mn .it .i{color:var(--ink-2)}
+
+/* body: CoCo's messages on white with a hairline, the user's on beige */
+.cc .bd{flex:1;min-height:0;gap:calc(var(--r)*.75);padding:var(--r);background:var(--canvas);overflow-y:auto;scrollbar-width:thin}
+.cc .bd.conv{flex-direction:column-reverse}               /* starts at the latest message */
+.cc .thr{display:flex;flex-direction:column;gap:calc(var(--r)*.75);margin-bottom:auto}
+.cc .msg{align-self:flex-start;max-width:100%;padding:calc(var(--r)*.65) calc(var(--r)*.85);border:1px solid var(--line);border-radius:calc(var(--r)*.75) calc(var(--r)*.75) calc(var(--r)*.75) calc(var(--r)*.25);background:var(--surface);font-size:var(--fz-body);line-height:1.5;color:var(--ink)}
+.cc .msg.me{align-self:flex-end;max-width:85%;border-color:var(--beige);border-radius:calc(var(--r)*.75) calc(var(--r)*.75) calc(var(--r)*.25) calc(var(--r)*.75);background:var(--beige)}
+.cc .msg .act{display:flex;align-items:center;gap:calc(var(--r)*.5);margin-top:calc(var(--r)*.6)}
+.cc .thr>.cap{padding:0 calc(var(--r)*.25)}
+
+/* empty / not connected / not installed */
+.cc .emp{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:var(--r);padding:0;text-align:center}
+.cc .emp .mk{display:block;width:calc(var(--r)*2.5);height:calc(var(--r)*2.5)}
+.cc .emp .t{font-size:var(--fz-lead);font-weight:600;line-height:1.3}
+.cc .emp .cap{max-width:calc(var(--r)*20)}
+.cc .pps{display:flex;flex-direction:column;gap:calc(var(--r)*.5);width:100%;margin-top:calc(var(--r)*.25)}
+.cc .pp{display:flex;align-items:center;justify-content:space-between;gap:calc(var(--r)*.6);width:100%;min-height:calc(var(--r)*2.5);padding:calc(var(--r)*.4) calc(var(--r)*.85);border:1px solid var(--line);border-radius:calc(var(--r)*.75);background:var(--surface);font-size:var(--fz-body);font-weight:500;line-height:1.35;text-align:left;cursor:pointer}
+.cc .pp .i{color:var(--ink-3)}
+.cc .pp:hover{border-color:var(--ink-3);background:var(--canvas)}
+.cc .pp:hover .i{color:var(--ink)}
+.cc .selw{position:relative;width:100%}
+.cc .selw select.in{appearance:none;-webkit-appearance:none;height:calc(var(--r)*2.5);padding-right:calc(var(--r)*2.2);background:var(--surface);cursor:pointer}
+.cc .selw .i{position:absolute;right:calc(var(--r)*.8);top:50%;transform:translateY(-50%);pointer-events:none;color:var(--ink-2)}
+.cc .fix{display:flex;flex-direction:column;gap:calc(var(--r)*.5)}
+.cc .fix .b{width:100%;height:calc(var(--r)*2.5)}
+.cc .fix .mut{margin:0}
+.cc .fix .pre{margin:0;text-align:left}
+
+/* footer: one field with the send button inside it, a suggested prompt above, the connection line under */
+.cc .ft{flex:none;padding:calc(var(--r)*.75) var(--r);border-top:1px solid var(--line);background:var(--surface)}
+.cc .sg{display:flex;flex-wrap:wrap;gap:calc(var(--r)*.5);margin-bottom:calc(var(--r)*.6)}
+.cc .fld{display:flex;align-items:flex-end;gap:calc(var(--r)*.5);padding:calc(var(--r)*.35) calc(var(--r)*.35) calc(var(--r)*.35) calc(var(--r)*.85);border:1px solid var(--line);border-radius:calc(var(--r)*.75);background:var(--canvas)}
+.cc .fld:focus-within,.cc .fld.fc{border-color:var(--ink-3)}   /* used or focused: a neutral, slightly darker border, no blue ring */
+.cc .fld textarea{flex:1;min-width:0;height:calc(var(--r)*2);padding:calc(var(--r)*.25) 0;border:0;border-radius:0;background:transparent;font-size:var(--fz-body);line-height:1.5;resize:none;outline:0}
+.cc .fld textarea:focus-visible{outline:0}
+.cc .fld textarea::placeholder{color:var(--ink-2);opacity:1}
+.cc .fld.dis{opacity:.6}
+.cc .sd{display:grid;place-items:center;flex:none;width:calc(var(--r)*2);height:calc(var(--r)*2);padding:0;border:0;border-radius:50%;background:var(--line);color:var(--ink-3);cursor:default}   /* always shown; quiet while the field is empty */
+.cc .sd.on{background:var(--coco);color:var(--disc);cursor:pointer}   /* blue disc only when there is text */
+.cc .sd.on:hover{filter:brightness(.95)}
+.cc .sd.st{position:relative;background:var(--coco);color:var(--disc);cursor:pointer}   /* the same blue disc, with the stop mark, while CoCo works */
+.cc .sd.st .i rect{fill:currentColor}
+.cc .sd .arc{position:absolute;inset:calc(var(--r)*-.2);border-radius:50%;border:2px solid transparent;border-top-color:var(--coco);animation:cl-spin 1s linear infinite;pointer-events:none}
+
+/* ======================================================================
+   3. SHEET HELPERS (the states sheet only)
+   ====================================================================== */
+.stg{position:relative;height:calc(var(--r)*13);padding:var(--r);border:1px solid var(--line);border-radius:var(--rad-m);background:var(--canvas);overflow:hidden;display:flex;flex-direction:column;gap:calc(var(--r)*.75)}
+.stg.tall{height:calc(var(--r)*17)}
+.stg .pgs{background:var(--surface);border:1px solid var(--line);border-radius:var(--rad-m);padding:calc(var(--r)*.75) var(--r);display:flex;flex-direction:column;gap:calc(var(--r)*.9)}
+.stg .ab{position:absolute;left:0;right:0;bottom:0;margin:0;border-width:1px 0 0;border-radius:0}
+
+/* scrolled list: the header casts a hairline and a soft 0.5rem shadow onto the body (set as .scr when scrollTop moves off the latest message) */
+.cc.scr .hd{box-shadow:0 1px 0 var(--line),0 calc(var(--r)*.5) calc(var(--r)*.5) rgba(44,44,42,.16)}
+
+/* typing indicator: three small dots in an assistant bubble */
+.cc .msg.ty{display:flex;align-items:center;gap:calc(var(--r)*.35);padding:calc(var(--r)*.95) calc(var(--r)*1.1)}
+.cc .msg.ty i{width:calc(var(--r)*.45);height:calc(var(--r)*.45);border-radius:50%;background:var(--ink-3);animation:cc-dot 1.2s ease-in-out infinite}
+.cc .msg.ty i:nth-child(2){animation-delay:.15s}
+.cc .msg.ty i:nth-child(3){animation-delay:.3s}
+@keyframes cc-dot{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(calc(var(--r)*-.25));opacity:1}}
+
+/* sheet captions: frame number, name and note on one line */
+.sheet .stl{flex-wrap:nowrap;white-space:nowrap;min-width:0}
+.sheet .stl span{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.stg.wide{height:calc(var(--r)*11)}
+
+/* ======================================================================
+   4. AGENT: steps, trail, request for agreement, notices. Every class here is prefixed ag- so no shared rule can reach it.
+   One plain sentence per step (written by the agent); command and result one click away. Status is a glyph shape, never a colour.
+   ====================================================================== */
+/* launcher, minimised: ONE signal, the pill kept open with a short label, as wide as that label. aw = needs the user, dn = answer ready, er = could not finish */
+
+/* a step: flat line, no card. The glyph column has one fixed width, so the sentence never moves when the step completes */
+.cc .ag-step,.cc .ag-trail{align-self:stretch;color:var(--ink)}
+.cc .ag-step>summary,.cc .ag-trail>summary{display:flex;align-items:flex-start;gap:calc(var(--r)*.6);min-height:calc(var(--r)*2);padding:calc(var(--r)*.3) calc(var(--r)*.25);font-size:var(--fz-body);line-height:1.4;cursor:pointer;list-style:none;border-radius:calc(var(--r)*.5)}
+.cc .ag-step>summary::-webkit-details-marker,.cc .ag-trail>summary::-webkit-details-marker{display:none}
+.cc .ag-step>summary:hover,.cc .ag-trail>summary:hover{background:rgba(44,44,42,.06)}
+.cc .ag-g{display:grid;place-items:center;flex:none;width:calc(var(--r)*1.25);height:calc(var(--r)*1.225)}
+.cc .ag-g .i{width:calc(var(--r)*1);height:calc(var(--r)*1);stroke-width:2.2}
+.cc .ag-run{display:block;width:calc(var(--r)*.9);height:calc(var(--r)*.9);border-radius:50%;border:2px solid var(--line);border-top-color:var(--ink-2);box-sizing:border-box;animation:cl-spin 1s linear infinite}
+.cc .ag-tx{flex:1;min-width:0}
+.cc .ag-d{color:var(--ink-2)}                              /* history reads quieter than what is happening now */
+.cc .ag-step.st-run .ag-d,.cc .ag-step.st-bad .ag-d{color:var(--ink)}
+.cc .ag-step.st-bad .ag-d{font-weight:600}                    /* failed: the one step that needs a look */
+.cc .ag-n{display:block;font-size:var(--fz-cap);color:var(--ink-2)}
+.cc .ag-ch{flex:none;width:calc(var(--r)*1);height:calc(var(--r)*1.225);color:var(--ink-3);transition:transform 160ms ease-out}
+.cc .ag-step[open]>summary .ag-ch,.cc .ag-trail[open]>summary .ag-ch{transform:rotate(180deg)}
+.cc .ag-det{padding:calc(var(--r)*.1) calc(var(--r)*.25) calc(var(--r)*.5) calc(var(--r)*2.1);display:flex;flex-direction:column;gap:calc(var(--r)*.3)}
+.cc .ag-det .cap{margin:0}
+.cc .ag-det pre,.cc .ag-ask pre{margin:0;padding:calc(var(--r)*.5) calc(var(--r)*.65);max-height:calc(var(--r)*7);overflow-y:auto;overflow-x:hidden;white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid var(--line);border-radius:calc(var(--r)*.5);background:var(--surface);font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-size:var(--fz-cap);line-height:1.5;color:var(--ink)}
+
+/* the trail: several steps; open while CoCo works, folded to one line when the answer is complete. Failed, declined and stopped steps stay outside the fold */
+.cc .ag-trail>summary{color:var(--ink-2)}
+.cc .ag-trail>summary b{font-weight:600;color:var(--ink)}   /* the sentence CoCo said keeps its bold */
+.cc .ag-trail .ag-bad{font-weight:600;color:var(--ink)}
+.cc .ag-rows{display:flex;flex-direction:column;margin:0 0 0 calc(var(--r)*.7);padding-left:calc(var(--r)*.6);border-left:1px solid var(--line)}
+.cc .ag-nar{margin:0;padding:calc(var(--r)*.3) calc(var(--r)*.25);font-size:var(--fz-body);line-height:1.4;color:var(--ink)}
+
+/* request for agreement: in the thread, strongest border of the window, pinned to the bottom of the thread while it waits */
+.cc .ag-ask{position:sticky;bottom:0;z-index:1;align-self:stretch;display:flex;flex-direction:column;gap:calc(var(--r)*.65);padding:calc(var(--r)*.8) calc(var(--r)*.85);border:2px solid var(--ink);border-radius:calc(var(--r)*.75);background:var(--surface);box-shadow:0 calc(var(--r)*.4) calc(var(--r)*.5) rgba(44,44,42,.14)}
+.cc .ag-q{margin:0;font-size:var(--fz-body);font-weight:600;line-height:1.45}
+.cc .ag-fx{display:grid;grid-template-columns:auto 1fr;gap:calc(var(--r)*.2) calc(var(--r)*.75);margin:0;font-size:var(--fz-body);line-height:1.4}
+.cc .ag-fx .k{color:var(--ink-2)}
+.cc .ag-fx .v{min-width:0;overflow-wrap:anywhere}
+.cc .ag-fx .v.ag-w{font-weight:600}                           /* a change is the only emphasised value */
+.cc .ag-ask details>summary{display:inline-flex;align-items:center;gap:calc(var(--r)*.3);min-height:calc(var(--r)*1.9);font-size:var(--fz-cap);font-weight:500;color:var(--ink-2);cursor:pointer;list-style:none}
+.cc .ag-ask details>summary::-webkit-details-marker{display:none}
+.cc .ag-ask details>summary .ag-ch{height:1em;width:1em}
+.cc .ag-ask details>summary .on{display:none}
+.cc .ag-ask details[open]>summary .on{display:inline}
+.cc .ag-ask details[open]>summary .off{display:none}
+.cc .ag-ask details[open]>summary{margin-bottom:calc(var(--r)*.3)}
+.cc .ag-acts{display:flex;gap:calc(var(--r)*.5)}
+.cc .ag-ask .ag-acts .b{height:calc(var(--r)*2.5);padding:0 calc(var(--r)*1.4);font-size:var(--fz-body)}   /* the buttons that decide are the largest controls of the window (as in the app) */
+
+/* small pieces */
+.cc .ag-cur{display:inline-block;width:2px;height:1em;margin-left:2px;vertical-align:text-bottom;background:var(--ink);animation:cc-blink 1s steps(2,start) infinite}
+@keyframes cc-blink{to{visibility:hidden}}
+.cc .msg.ag-cpy{position:relative;padding-right:calc(var(--r)*2.6)}
+.cc .ag-cp{position:absolute;top:calc(var(--r)*.3);right:calc(var(--r)*.3);display:grid;place-items:center;width:calc(var(--r)*1.9);height:calc(var(--r)*1.9);padding:0;border:0;border-radius:calc(var(--r)*.5);background:transparent;color:var(--ink-2);cursor:pointer}
+.cc .ag-cp:hover{background:var(--canvas);color:var(--ink)}
+.cc .ag-ref{color:var(--ink);font-weight:600;white-space:nowrap;text-underline-offset:2px}
+.cc .ag-sys{display:flex;align-items:center;justify-content:space-between;gap:calc(var(--r)*.6);align-self:stretch;padding:calc(var(--r)*.3) calc(var(--r)*.25);font-size:var(--fz-body);color:var(--ink)}
+.cc .ag-sub{display:block;font-size:var(--fz-cap);color:var(--ink-2);white-space:nowrap}
+.cc .msg .act .b{margin-top:0}
+.cc .msg .ag-n{display:block;margin-top:calc(var(--r)*.15);font-size:var(--fz-cap);color:var(--ink-2)}
+/* new conversation: asked once, inside the window, over the thread; no undo exists, so it is a confirmation, not a toast */
+.cc .ag-cf{position:absolute;z-index:4;left:calc(var(--r)*.75);right:calc(var(--r)*.75);top:calc(var(--r)*4.25);display:flex;flex-direction:column;gap:calc(var(--r)*.6);padding:calc(var(--r)*.85);border:2px solid var(--ink);border-radius:calc(var(--r)*.75);background:var(--surface);box-shadow:var(--shadow)}
+.cc .ag-cft{margin:0;font-size:var(--fz-body);line-height:1.45;color:var(--ink)}
+
+/* ======================================================================
+   5. PACKAGE FEATURES (frames 38 and after): questions, plans, a standing permission, data, files, requests sent by
+   the page, display and session. Same law as section 4: ag- prefix, ink tokens, no new colour, CoCo blue nowhere new.
+   Whatever waits for the user is an .ag-ask block; whatever is evidence is behind one fold.
+   ====================================================================== */
+.sheet .shd{margin-top:calc(var(--r)*1.5);padding-top:calc(var(--r)*1.25);border-top:1px solid var(--line)}
+.sheet .shd h2{margin:0;font-size:var(--fz-lead);font-weight:600}
+.sheet .shd p{margin:calc(var(--r)*.2) 0 0;max-width:calc(var(--r)*62);font-size:var(--fz-body);line-height:1.45;color:var(--ink-2)}
+
+/* a waiting block: what is in it besides the question and the buttons */
+.cc .ag-ask input,.cc .ag-ask textarea,.cc .ag-ask select{color:var(--ink)}
+.cc .ag-kk{margin:0;font-size:var(--fz-cap);line-height:1.4;color:var(--ink-2)}
+.cc .b.ag-off{background:var(--line);border-color:var(--line);color:var(--ink-3);cursor:default}   /* shown and quiet until it can be used: the law of the composer */
+.cc .ag-body{display:flex;flex-direction:column;gap:calc(var(--r)*.6);flex:none;max-height:calc(var(--r)*13.5);overflow-y:auto;scrollbar-width:thin}   /* a long form or plan scrolls here; the question and the buttons never leave the window, at 768 high too */
+.cc .ag-body.sh{max-height:calc(var(--r)*6.5)}
+.cc .ag-body.cut{border-bottom:1px solid var(--line)}   /* set while its content is taller than it: there is more below */
+.cc .ag-opts{display:flex;flex-direction:column;gap:calc(var(--r)*.4)}
+.cc .ag-opt{display:flex;align-items:flex-start;gap:calc(var(--r)*.6);min-height:calc(var(--r)*2.5);padding:calc(var(--r)*.6) calc(var(--r)*.7);border:1px solid var(--line);border-radius:calc(var(--r)*.5);background:var(--surface);font-size:var(--fz-body);line-height:1.4;cursor:pointer}
+.cc .ag-opt:hover{border-color:var(--ink-3)}
+.cc .ag-opt.on{border-color:var(--ink);background:var(--canvas)}
+.cc .ag-opt input{margin-top:calc(var(--r)*.1)}
+.cc .ag-ot{flex:1;min-width:0;font-weight:500}
+.cc .ag-od{margin-left:calc(var(--r)*.5);font-weight:400;color:var(--ink-2)}
+.cc .ag-ask textarea.in,.cc .ag-ask input.in{background:var(--surface)}
+.cc .ag-fr{display:flex;flex-direction:column;gap:calc(var(--r)*.25)}
+.cc .ag-fr label{font-size:var(--fz-body);font-weight:500;line-height:1.4}
+.cc .ag-fr label .mut{font-weight:400}
+.cc .ag-fr .selw select.in{height:calc(var(--r)*2.25)}
+
+/* a plan: the words of CoCo, numbered; as evidence (.ev) inside a folded step */
+.cc .ag-plan{display:flex;flex-direction:column;gap:calc(var(--r)*.3);margin:0;padding:calc(var(--r)*.6) calc(var(--r)*.75) calc(var(--r)*.6) calc(var(--r)*2.1);border-radius:calc(var(--r)*.5);background:var(--canvas);list-style:decimal;font-size:var(--fz-body);line-height:1.45;color:var(--ink)}
+.cc .ag-plan.ev{border:1px solid var(--line);background:var(--surface)}
+.cc .ag-plan li{display:list-item;padding-left:calc(var(--r)*.15)}
+.cc .ag-mode{flex:none;display:flex;align-items:center;justify-content:space-between;gap:calc(var(--r)*.75);padding:calc(var(--r)*.5) var(--r);border-bottom:1px solid var(--line);background:var(--surface);font-size:var(--fz-body);line-height:1.35;color:var(--ink)}
+
+/* a standing permission: one line under the evidence; what it covers appears when it is ticked */
+.cc .ag-std{display:flex;flex-direction:column;gap:calc(var(--r)*.4);padding-top:calc(var(--r)*.65);border-top:1px solid var(--line)}
+.cc .ag-std label{display:flex;align-items:center;gap:calc(var(--r)*.6);min-height:calc(var(--r)*1.9);font-size:var(--fz-body);line-height:1.4;cursor:pointer}
+
+/* a table: readable at 27rem (text wraps, figures do not, the box scrolls sideways only when it must) */
+.cc .ag-tbl{align-self:stretch;max-width:100%;overflow-x:auto;scrollbar-width:thin;border:1px solid var(--line);border-radius:calc(var(--r)*.5);background:var(--surface)}
+.cc .ag-tbl table{min-width:100%;border-collapse:collapse;font-size:var(--fz-body);line-height:1.35;color:var(--ink)}
+.cc .ag-tbl th{position:sticky;top:0;padding:calc(var(--r)*.4) calc(var(--r)*.55);border-bottom:1px solid var(--line);background:var(--canvas);font-size:var(--fz-cap);font-weight:500;color:var(--ink-2);text-align:left;white-space:nowrap}
+.cc .ag-tbl td{padding:calc(var(--r)*.4) calc(var(--r)*.55);border-bottom:1px solid var(--line-2);vertical-align:top;white-space:nowrap}
+.cc .ag-tbl td.t{white-space:normal;min-width:calc(var(--r)*5)}
+.cc .ag-tbl .n{text-align:right;font-variant-numeric:tabular-nums}
+.cc .ag-tbl tr:last-child td{border-bottom:0}
+.cc .ag-det .ag-tbl{max-height:calc(var(--r)*8.5);overflow:auto}   /* as evidence, a table scrolls in its own box like a command or a result */
+.cc .msg .ag-tbl,.cc .msg .ag-fx,.cc .msg .ag-code{margin-top:calc(var(--r)*.5)}
+.cc .msg>.cap{margin:calc(var(--r)*.6) 0 0}
+.cc .ag-tf{display:flex;align-items:center;justify-content:space-between;gap:calc(var(--r)*.5);margin-top:calc(var(--r)*.35)}
+.cc .ag-ta{display:flex;align-items:center;gap:calc(var(--r)*.4);flex:none}
+.cc .ag-ib{display:grid;place-items:center;flex:none;width:calc(var(--r)*1.9);height:calc(var(--r)*1.9);padding:0;border:0;border-radius:calc(var(--r)*.5);background:transparent;color:var(--ink-2);cursor:pointer}
+.cc .ag-ib:hover{background:var(--canvas);color:var(--ink)}
+
+/* the same window, wider: the data takes the place of the thread; header and field do not change */
+.cc.ag-xl{width:min(calc(var(--r)*64),100%)}
+.cc .ag-xv{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;gap:calc(var(--r)*.75);padding:var(--r);background:var(--canvas)}
+.cc .ag-xh{flex:none;display:flex;align-items:center;gap:calc(var(--r)*.75)}
+.cc .ag-xh .cap{flex:1;min-width:0}
+.cc .ag-xv .ag-tbl{flex:1;min-height:0;overflow:auto}
+.cc .ag-xv .ag-ask{position:static;flex:none;align-self:flex-end;width:calc(var(--r)*25);max-width:100%}   /* a request takes its own row under the table: it covers no figure */
+
+/* evidence folds outside a request (JSON, the full request, the raw message): the fold of the request, reused */
+.cc .ag-ev{align-self:stretch}
+.cc .ag-ev>summary{display:inline-flex;align-items:center;gap:calc(var(--r)*.3);min-height:calc(var(--r)*1.9);font-size:var(--fz-cap);font-weight:500;color:var(--ink-2);cursor:pointer;list-style:none}
+.cc .ag-ev>summary::-webkit-details-marker{display:none}
+.cc .ag-ev>summary .ag-ch{height:1em;width:1em}
+.cc .ag-ev>summary .on,.cc .ag-ev[open]>summary .off{display:none}
+.cc .ag-ev[open]>summary .on{display:inline}
+.cc .ag-ev[open]>summary .ag-ch{transform:rotate(180deg)}
+.cc .ag-ev pre,.cc .ag-code pre{margin:0;padding:calc(var(--r)*.5) calc(var(--r)*.65);max-height:calc(var(--r)*9);overflow-y:auto;overflow-x:hidden;white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid var(--line);border-radius:calc(var(--r)*.5);background:var(--surface);font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-size:var(--fz-cap);line-height:1.5;color:var(--ink);text-align:left}
+.cc .msg.me .ag-ev>summary{color:var(--ink)}
+.cc .emp .ag-ev{width:100%;text-align:center}
+.cc .ag-code{border:1px solid var(--line);border-radius:calc(var(--r)*.5);background:var(--canvas);overflow:hidden}
+.cc .ag-cb{display:flex;align-items:center;justify-content:space-between;padding:0 calc(var(--r)*.15) 0 calc(var(--r)*.65);border-bottom:1px solid var(--line)}
+.cc .ag-code pre{border:0;border-radius:0;max-height:calc(var(--r)*12)}
+
+/* files: one quiet control at the left of the field; chosen files are lines of the field; in a sent message, lines of the message */
+.cc .fld.ag-at{flex-wrap:wrap;padding-left:calc(var(--r)*.35)}
+.cc .ag-clip{display:grid;place-items:center;flex:none;width:calc(var(--r)*2);height:calc(var(--r)*2);padding:0;border:0;border-radius:50%;background:transparent;color:var(--ink-2);cursor:pointer}
+.cc .ag-clip:hover{background:var(--line);color:var(--ink)}
+.cc .ag-files{flex:0 0 100%;display:flex;flex-direction:column;padding:0 0 calc(var(--r)*.25) calc(var(--r)*.4)}
+.cc .ag-file{display:flex;align-items:flex-start;gap:calc(var(--r)*.5);min-height:calc(var(--r)*1.9);font-size:var(--fz-body);line-height:1.4;color:var(--ink)}
+.cc .ag-file .ag-g{margin-top:calc(var(--r)*.3);color:var(--ink-2)}
+.cc .ag-file.bad .ag-g{color:var(--ink)}
+.cc .ag-file .ag-fn{flex:1;min-width:0;padding:calc(var(--r)*.3) 0;overflow-wrap:anywhere}
+.cc .ag-file .ag-fn .ag-n{display:inline;margin-left:calc(var(--r)*.5)}
+.cc .ag-file.bad .ag-fn .ag-n{display:block;margin-left:0}
+.cc .ag-att{display:flex;align-items:flex-start;gap:calc(var(--r)*.4);margin-top:calc(var(--r)*.3);font-weight:500;overflow-wrap:anywhere}
+.cc .ag-att .i{margin-top:calc(var(--r)*.2);color:var(--ink-2)}
+.cc .fld.ag-drop{justify-content:center;align-items:center;min-height:calc(var(--r)*4.5);border:2px dashed var(--ink-3)}
+.cc .ag-dz{margin:0;font-size:var(--fz-body);font-weight:500;color:var(--ink)}
+.cc .msg.me.ag-qd{border:1px dashed var(--ink-3);background:transparent}   /* waiting to be sent: as in the app */
+.cc .msg.me.ag-qd .ag-n{display:flex;align-items:center;justify-content:space-between;gap:var(--r)}
+.cc .ag-tk{margin:calc(var(--r)*-.3) 0;padding:calc(var(--r)*.3) 0;border:0;background:transparent;font:inherit;font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+
+/* the menu with everything switched on, and what it opens */
+.cc .pop.mn.ag-mw{width:calc(var(--r)*17)}
+.cc .pop.mn hr{margin:calc(var(--r)*.3) 0;border:0;border-top:1px solid var(--line)}
+.cc .pop.mn .ag-sl{display:grid;place-items:center;flex:none;box-sizing:border-box;width:calc(var(--r)*.95);height:calc(var(--r)*.95);border:1px solid var(--ink-3);border-radius:calc(var(--r)*.2)}   /* a switch of the menu: an empty box, or a ticked one */
+.cc .pop.mn .ag-sl.on{border-color:var(--ink);background:var(--ink)}
+.cc .pop.mn .it .ag-sl .i{width:calc(var(--r)*.7);height:calc(var(--r)*.7);stroke-width:3.2;color:#fff}
+.cc .ag-pan{position:absolute;z-index:4;left:calc(var(--r)*.75);right:calc(var(--r)*.75);top:calc(var(--r)*4.25);max-height:calc(100% - var(--r)*9.5);overflow-y:auto;display:flex;flex-direction:column;gap:calc(var(--r)*.6);padding:calc(var(--r)*.85);border:1px solid var(--line);border-radius:calc(var(--r)*.75);background:var(--surface);box-shadow:var(--shadow)}
+.cc .ag-pr{display:flex;align-items:center;justify-content:space-between;gap:calc(var(--r)*.75);padding-top:calc(var(--r)*.6);border-top:1px solid var(--line);font-size:var(--fz-body);line-height:1.4;color:var(--ink)}
+.cc .ag-pr .b{flex:none}
+.cc .ag-pan .ag-acts{justify-content:flex-end}
+.cc .pop.ag-ls{left:var(--r);right:var(--r);bottom:calc(var(--r)*8.2);z-index:3}
+.cc .pop.ag-ls .mh{margin:0;padding:calc(var(--r)*.4) calc(var(--r)*.6) calc(var(--r)*.1);font-size:var(--fz-cap);color:var(--ink-2)}
+.cc .pop.ag-ls .it:hover{background:var(--canvas)}
+
+/* display options and the waiting states of the first screen */
+.cc .ag-more{align-self:center}
+.cc .ag-clp{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+.cc .emp .ag-run{width:calc(var(--r)*1.5);height:calc(var(--r)*1.5)}

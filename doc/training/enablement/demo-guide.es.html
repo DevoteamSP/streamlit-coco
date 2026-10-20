@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Streamlit CoCo — Demo</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200;0,6..12,300;0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900&display=swap');
+    :root {
+      --red: #F5364B; --red2: #E8001D;
+      --snow: #29B5E8; --gold: #F59B23; --green: #27AE60;
+      --purple: #7B61FF; --teal: #1ABC9C;
+      --dark: #1E2028; --text: #2D2D2D; --muted: #7B7F8E;
+      --border: #E2E4EA; --card: #F4F5F7; --bg: #FAFAFA;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px; line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    .logo-badge { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-circle { width: 38px; height: 38px; background: var(--red); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 15px; flex-shrink: 0; }
+    .logo-text { line-height: 1.2; }
+    .logo-name { font-weight: 700; font-size: 13px; color: var(--text); }
+    .logo-partner { font-size: 10px; color: var(--muted); }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+    .subtitle { font-size: 14px; color: var(--muted); font-weight: 400; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+    .card-top { border-top: 3px solid var(--red); }
+    .card-snow { border-top: 3px solid var(--snow); }
+    .card-gold { border-top: 3px solid var(--gold); }
+    .card-green { border-top: 3px solid var(--green); }
+    .card-purple { border-top: 3px solid var(--purple); }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px;
+      font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .badge-snow { background: rgba(41,181,232,.12); color: var(--snow); border: 1px solid rgba(41,181,232,.3); }
+    .badge-gold { background: rgba(245,155,35,.12); color: var(--gold); border: 1px solid rgba(245,155,35,.3); }
+    .badge-green { background: rgba(39,174,96,.12); color: var(--green); border: 1px solid rgba(39,174,96,.3); }
+    .badge-red { background: rgba(245,54,75,.12); color: var(--red); border: 1px solid rgba(245,54,75,.3); }
+    .badge-purple { background: rgba(123,97,255,.12); color: var(--purple); border: 1px solid rgba(123,97,255,.3); }
+    .badge-dark { background: rgba(30,32,40,.75); color: white; }
+    .topbar { position: sticky; top: 0; z-index: 100; background: white;
+      border-bottom: 1px solid var(--border); padding: 10px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .topnav { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; }
+    .topnav a { color: var(--text); text-decoration: none; font-weight: 600; padding: 4px 2px; }
+    .topnav a:hover { color: var(--red); }
+    .topnav a[aria-current="page"] { color: var(--red); font-weight: 700; border-bottom: 2px solid var(--red); }
+    .layout { max-width: none; margin: 0; padding: 28px 32px 0;
+      display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
+    .content { max-width: none; width: 100%; min-width: 0; background: white; border: 1px solid var(--border);
+      border-radius: 12px; box-shadow: 0 2px 24px rgba(30,32,40,.06); padding: 36px 44px 44px;
+      overflow-wrap: break-word; }
+    .content > *, .content section, .exbody, .exblock, .actmain, .qcard { min-width: 0; }
+    code.inline { overflow-wrap: anywhere; }
+    @media (max-width: 700px) {
+      .content { padding: 24px 18px 30px; }
+      .pagehead { flex-direction: column; }
+      .meta-strip { text-align: left; }
+      .layout { padding: 18px 12px 0; }
+    }
+    .pagehead { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px;
+      flex-wrap: wrap; margin-bottom: 28px; }
+    .pagehead h1 { font-size: 36px; font-weight: 300; color: var(--text); line-height: 1.15; margin-bottom: 8px; }
+    .pagehead h1 strong { font-weight: 800; color: var(--red); }
+    .meta-strip { text-align: right; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+    .meta-strip .dur { display: block; font-weight: 700; color: var(--text); font-size: 13px; margin-bottom: 4px; }
+    .meta-strip a { color: var(--red); font-weight: 700; text-decoration: none; }
+    .meta-strip a:hover { text-decoration: underline; }
+    .toc-side { display: none; }
+    .toc details { border: 1px solid var(--border); border-radius: 10px; background: white; padding: 10px 16px; margin-bottom: 24px; }
+    .toc summary { cursor: pointer; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); }
+    .toc ul { list-style: none; margin: 10px 0 4px; }
+    .toc li { margin: 3px 0; }
+    .toc li.lvl3 { padding-left: 16px; }
+    .toc a { color: var(--muted); text-decoration: none; font-size: 12.5px; }
+    .toc a:hover { color: var(--red); }
+    .toc li.lvl2 > a { color: var(--text); font-weight: 600; }
+    @media (min-width: 1100px) {
+      .layout { grid-template-columns: 260px minmax(0, 1fr); }
+      .toc-side { min-width: 0; display: block; position: sticky; top: 76px;
+        max-height: calc(100vh - 100px); overflow-y: auto; }
+      .toc-side ul { list-style: none; }
+      .toc-inline { display: none; }
+    }
+    .content h2 { font-size: 24px; font-weight: 800; color: var(--text); margin: 34px 0 12px; scroll-margin-top: 80px; }
+    .content h3 { font-size: 17px; font-weight: 700; color: var(--text); margin: 24px 0 8px; scroll-margin-top: 80px; }
+    .content h4 { font-size: 14px; font-weight: 700; color: var(--muted); margin: 18px 0 6px;
+      text-transform: uppercase; letter-spacing: .06em; }
+    .content h2:first-child, .content h3:first-child { margin-top: 0; }
+    .content p { margin: 10px 0; }
+    .content ul, .content ol { margin: 10px 0 10px 22px; }
+    .content li { margin: 5px 0; }
+    .content a { color: var(--red2); text-decoration: none; border-bottom: 1px solid rgba(245,54,75,.35); }
+    .content a:hover { border-bottom-color: var(--red); }
+    .content strong { font-weight: 700; }
+    .anchor { opacity: 0; margin-left: 8px; font-size: .7em; color: var(--muted); text-decoration: none; border: 0; }
+    h2:hover .anchor, h3:hover .anchor { opacity: 1; }
+    code.inline { background: rgba(245,54,75,.07); color: var(--red2); border-radius: 4px;
+      padding: 1px 5px; font-size: .92em; font-family: 'SFMono-Regular', Menlo, Consolas, monospace; }
+    .sep { height: 1px; background: var(--border); border: 0; margin: 32px 0; }
+    .codewrap { position: relative; margin: 16px 0; border-radius: 10px; overflow: hidden; background: var(--dark); }
+    .codebar { display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 14px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .codelang { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.45); }
+    .copybtn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); color: white;
+      font-family: inherit; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 5px; cursor: pointer; }
+    .copybtn:hover { background: rgba(245,54,75,.3); border-color: var(--red); }
+    .copybtn.ok { background: rgba(39,174,96,.25); border-color: var(--green); }
+    .codewrap pre { overflow-x: auto; padding: 14px 16px; }
+    .codewrap code { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 13px;
+      line-height: 1.6; color: rgba(255,255,255,.9); white-space: pre; }
+    .tablewrap { overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 10px; }
+    table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+    thead th { position: sticky; top: 0; background: var(--card); text-align: left;
+      font-weight: 700; padding: 10px 14px; border-bottom: 2px solid var(--border); white-space: nowrap; z-index: 2; }
+    tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tbody tr:nth-child(even) { background: rgba(244,245,247,.55); }
+    tbody tr:last-child td { border-bottom: 0; }
+    .callout { border-left: 3px solid var(--border); background: var(--card); border-radius: 0 10px 10px 0;
+      padding: 12px 18px; margin: 16px 0; }
+    .callout-snow { border-left-color: var(--snow); background: rgba(41,181,232,.06); }
+    .callout-gold { border-left-color: var(--gold); background: rgba(245,155,35,.06); }
+    .callout-red  { border-left-color: var(--red);  background: rgba(245,54,75,.06); }
+    .callout-green{ border-left-color: var(--green);background: rgba(39,174,96,.06); }
+    .callout p:first-child { margin-top: 0; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout-tag { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      display: block; margin-bottom: 4px; }
+    ul.tasklist { list-style: none; margin-left: 0; }
+    ul.tasklist li { display: flex; align-items: flex-start; gap: 10px; padding: 7px 12px; background: white;
+      border: 1px solid var(--border); border-radius: 8px; margin-bottom: 7px; }
+    ul.tasklist input[type=checkbox] { margin-top: 4px; width: 15px; height: 15px; accent-color: var(--green);
+      flex-shrink: 0; cursor: pointer; }
+    ul.tasklist li.done .tasktext { text-decoration: line-through; color: var(--muted); }
+    ul.tasklist li.done { background: rgba(39,174,96,.05); border-color: rgba(39,174,96,.3); }
+    .counter { font-size: 12px; font-weight: 700; color: var(--muted); }
+    .counter .n { color: var(--green); }
+    .pagefoot { max-width: none; margin: 0; padding: 0 32px 48px; }
+    .prevnext { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin: 28px 0 18px; }
+    .prevnext a { display: block; padding: 12px 18px; background: white; border: 1px solid var(--border);
+      border-radius: 10px; text-decoration: none; min-width: 220px; }
+    .prevnext a:hover { border-color: var(--red); }
+    .pn-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .pn-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .slide-footer { height: 36px; display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border); }
+    .footer-brand { font-size: 11px; font-weight: 700; color: var(--red); }
+    .footer-page { font-size: 11px; color: var(--muted); }
+    a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--red); outline-offset: 2px; border-radius: 4px; }
+    @page { size: A4; margin: 14mm; }
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background: white; font-size: 11pt; }
+      .topbar, .toc, .prevnext, .copybtn, .noprint { display: none !important; }
+      .layout { display: block; max-width: none; padding: 0; }
+      .content { max-width: none; border: 0; box-shadow: none; border-radius: 0; padding: 0; }
+      details { display: block !important; }
+      details > summary { list-style: none; }
+      .answer, .hidden-print-reveal { display: block !important; }
+      .codewrap { background: var(--card); border: 1px solid var(--border); }
+      .codewrap code, .codelang { color: var(--text); }
+      .card, .callout, .tablewrap, table, tr, .exercise { page-break-inside: avoid; break-inside: avoid; }
+      h2, h3 { page-break-after: avoid; break-after: avoid; }
+    }
+</style>
+</head>
+<body data-page="enablement/demo-guide.es">
+<header class="topbar">
+  <a class="logo-badge" href="intro.es.html"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></a>
+  <nav class="topnav" aria-label="Training pack"><a href="intro.es.html">Enablement</a><a href="../training/01-simple.es.html">Training</a><a href="../certifications/enablement.es.html">Certifications</a><a href="../user-guide/index.es.html">User Guide</a><a href="../technical-guide/index.es.html">Technical Guide</a></nav>
+</header>
+<div class="layout">
+  <nav class="toc toc-side" aria-label="En esta página"><div class="section-label">En esta página</div><ul><li class="lvl2"><a href="#lista-de-requisitos-t-cnicos-antes-de-la-demo">Lista de requisitos técnicos (antes de la demo)</a></li><li class="lvl2"><a href="#gancho-de-apertura-30-seg-el-problema">Gancho de apertura (30 seg — el problema)</a></li><li class="lvl2"><a href="#recorrido-en-vivo-7-min-paso-a-paso-con-puntos-de-conversaci-n">Recorrido en vivo (7 min — paso a paso con puntos de conversación)</a></li><li class="lvl3"><a href="#paso-1-primera-impresi-n-2-min">Paso 1 — Primera impresión (2 min)</a></li><li class="lvl3"><a href="#paso-2-puertas-de-aprobaci-n-3-min">Paso 2 — Puertas de aprobación (3 min)</a></li><li class="lvl3"><a href="#paso-3-salida-estructurada-1-5-min">Paso 3 — Salida estructurada (1.5 min)</a></li><li class="lvl3"><a href="#margen-0-5-min">Margen (0.5 min)</a></li><li class="lvl2"><a href="#cierre-2-5-min-recapitulaci-n-de-valor-cta">Cierre (2.5 min — recapitulación de valor + CTA)</a></li><li class="lvl2"><a href="#si-preguntan-faq">Si preguntan… (FAQ)</a></li><li class="lvl2"><a href="#limpieza">Limpieza</a></li></ul></nav>
+  <main class="content">
+    <div class="pagehead">
+      <div>
+        <div class="section-label">Pack de formación · Devoteam Snowflake Practice · 2026</div>
+        <h1>Demo <strong>guide</strong></h1>
+        <div class="subtitle"></div>
+      </div>
+      <div class="meta-strip"><span class="dur">15 min</span><a href="intro.es.html">← Volver al índice</a></div>
+    </div>
+    <nav class="toc toc-inline" aria-label="En esta página"><details><summary>En esta página</summary><ul><li class="lvl2"><a href="#lista-de-requisitos-t-cnicos-antes-de-la-demo">Lista de requisitos técnicos (antes de la demo)</a></li><li class="lvl2"><a href="#gancho-de-apertura-30-seg-el-problema">Gancho de apertura (30 seg — el problema)</a></li><li class="lvl2"><a href="#recorrido-en-vivo-7-min-paso-a-paso-con-puntos-de-conversaci-n">Recorrido en vivo (7 min — paso a paso con puntos de conversación)</a></li><li class="lvl3"><a href="#paso-1-primera-impresi-n-2-min">Paso 1 — Primera impresión (2 min)</a></li><li class="lvl3"><a href="#paso-2-puertas-de-aprobaci-n-3-min">Paso 2 — Puertas de aprobación (3 min)</a></li><li class="lvl3"><a href="#paso-3-salida-estructurada-1-5-min">Paso 3 — Salida estructurada (1.5 min)</a></li><li class="lvl3"><a href="#margen-0-5-min">Margen (0.5 min)</a></li><li class="lvl2"><a href="#cierre-2-5-min-recapitulaci-n-de-valor-cta">Cierre (2.5 min — recapitulación de valor + CTA)</a></li><li class="lvl2"><a href="#si-preguntan-faq">Si preguntan… (FAQ)</a></li><li class="lvl2"><a href="#limpieza">Limpieza</a></li></ul></details></nav>
+<p>Una demo guionizada de 10 minutos: gancho de apertura, recorrido en vivo, cierre. Audiencia: responsables técnicos de decisión, ingenieros de datos, profesionales de Snowflake.</p>
+<section><h2 id="lista-de-requisitos-t-cnicos-antes-de-la-demo">Lista de requisitos técnicos (antes de la demo)<a class="anchor" href="#lista-de-requisitos-t-cnicos-antes-de-la-demo" aria-label="Link to this section">#</a></h2>
+<ul class="tasklist"><li><input type="checkbox" class="chk"><span class="tasktext">Cuenta de Snowflake con acceso a Cortex Code, conexión configurada</span></li><li><input type="checkbox" class="chk"><span class="tasktext"><code class="inline">cortex --version</code> funciona correctamente</span></li><li><input type="checkbox" class="chk"><span class="tasktext"><code class="inline">make install</code> ejecutado, <code class="inline">make check</code> pasa</span></li><li><input type="checkbox" class="chk"><span class="tasktext">Una base de datos de Snowflake con tablas de muestra disponibles (por</span><p>ejemplo <code class="inline">SNOWFLAKE_SAMPLE_DATA.TPCH_SF1</code>)</p></li><li><input type="checkbox" class="chk"><span class="tasktext">Ventanas de terminal y navegador dispuestas una al lado de la otra</span></li><li><input type="checkbox" class="chk"><span class="tasktext">Ensayo cronometrado una vez, dentro de las últimas 24 horas</span></li></ul></section>
+<section><h2 id="gancho-de-apertura-30-seg-el-problema">Gancho de apertura (30 seg — el problema)<a class="anchor" href="#gancho-de-apertura-30-seg-el-problema" aria-label="Link to this section">#</a></h2>
+<div class="callout"><p>"Conectar un agente CoCo a una app Streamlit tú mismo implica construir gestión de sesión a través de reruns, renderizado en streaming, visualización de tarjetas de herramienta y puertas de seguridad desde cero. <code class="inline">streamlit-coco</code> te da eso en unas pocas líneas de Python. Déjame mostrártelo."</p></div></section>
+<section><h2 id="recorrido-en-vivo-7-min-paso-a-paso-con-puntos-de-conversaci-n">Recorrido en vivo (7 min — paso a paso con puntos de conversación)<a class="anchor" href="#recorrido-en-vivo-7-min-paso-a-paso-con-puntos-de-conversaci-n" aria-label="Link to this section">#</a></h2>
+<h3 id="paso-1-primera-impresi-n-2-min">Paso 1 — Primera impresión (2 min)<a class="anchor" href="#paso-1-primera-impresi-n-2-min" aria-label="Link to this section">#</a></h3>
+<ol><li>Muestra <code class="inline">examples/chat_app.py</code> — señala que es un archivo corto y<p>legible construido a partir de cuatro llamadas: <code class="inline">check_environment()</code>, <code class="inline">render_start_gate()</code>, <code class="inline">get_or_create_session()</code>, <code class="inline">panel()</code> + <code class="inline">chat_input_bar()</code>.</p></li><li>Ejecuta <code class="inline">make chat</code>.</li><li>Se abre el navegador → muestra la interfaz del panel (puerta de inicio,<p>luego la transcripción vacía y la línea de estado una vez iniciado).</p></li><li>Escribe: <em>"What tables are available in SNOWFLAKE_SAMPLE_DATA.TPCH_SF1?"</em></li><li>Observa la transcripción en streaming renderizándose en tiempo real;<p>señala la tarjeta de herramienta que aparece (Glob/SQL).</p></li></ol>
+<div class="callout"><p>Punto de conversación: "Un archivo Python corto. Interfaz de agente completa con streaming, visibilidad de herramientas y gestión de sesión resueltas por ti."</p></div>
+<h3 id="paso-2-puertas-de-aprobaci-n-3-min">Paso 2 — Puertas de aprobación (3 min)<a class="anchor" href="#paso-2-puertas-de-aprobaci-n-3-min" aria-label="Link to this section">#</a></h3>
+<ol><li>Escribe: *"Show me the top 5 customers by total order amount. Write the<p>SQL and run it."*</p></li><li>El agente propone SQL → se dispara el banner de aprobación. Recorre el<p>SQL completo mostrado, haz clic en <strong>Approve once</strong> → aparecen los resultados.</p></li><li>Escribe: *"Now create a summary table called TOP_CUSTOMERS in my<p>schema."*</p></li><li>La puerta de aprobación se dispara de nuevo — esta vez haz clic en<p><strong>Deny</strong> con un motivo ("let's not create tables in the demo"). El agente lo reconoce y sugiere una alternativa.</p></li></ol>
+<div class="callout"><p>Punto de conversación: "Cada acción destructiva — SQL, escritura de archivos, comandos bash — requiere aprobación humana explícita, configurada por herramienta en <code class="inline">CocoOptions.require_approval_for</code>."</p></div>
+<h3 id="paso-3-salida-estructurada-1-5-min">Paso 3 — Salida estructurada (1.5 min)<a class="anchor" href="#paso-3-salida-estructurada-1-5-min" aria-label="Link to this section">#</a></h3>
+<ol><li>Cambia a <code class="inline">make structured</code> (<code class="inline">examples/structured_output.py</code>).</li><li>Muestra el <code class="inline">output_schema</code> en el código.</li><li>Escribe: <em>"Give me a breakdown of orders by status."</em></li><li>El agente devuelve JSON estructurado → la app lo renderiza como un<p>gráfico, no como texto en bruto.</p></li></ol>
+<div class="callout"><p>Punto de conversación: "La salida del agente puede fluir directamente hacia tus propios widgets mediante un callback <code class="inline">on_structured_output</code> — sin parseo manual de JSON."</p></div>
+<h3 id="margen-0-5-min">Margen (0.5 min)<a class="anchor" href="#margen-0-5-min" aria-label="Link to this section">#</a></h3>
+<p>Aterriza en el cierre desde donde estés en el Paso 3. Si queda tiempo en la sala tras el cierre guionizado, hay dos cosas que vale la pena mostrar pero que <strong>no</strong> forman parte del guion cronometrado de 10 minutos:</p>
+<ul><li><code class="inline">make headless</code> (<code class="inline">examples/headless_pipeline.py</code>) — la misma API<p><code class="inline">query()</code> sin import de Streamlit, para CI y trabajos por lotes.</p></li><li><code class="inline">make bi-semantic</code> o <code class="inline">make backlog</code> — <code class="inline">copilot_rail()</code>, mostrando CoCo<p>como una columna derecha en una app de producto en lugar de un chat de página completa.</p></li></ul></section>
+<section><h2 id="cierre-2-5-min-recapitulaci-n-de-valor-cta">Cierre (2.5 min — recapitulación de valor + CTA)<a class="anchor" href="#cierre-2-5-min-recapitulaci-n-de-valor-cta" aria-label="Link to this section">#</a></h2>
+<p>Puntos resumen para dejar en pantalla o decir en voz alta:</p>
+<ul><li><code class="inline">pip install "streamlit-coco[sdk]"</code> — una app funcional en un puñado de<p>líneas</p></li><li>Puertas de aprobación activadas por defecto para herramientas<p>destructivas</p></li><li>Una sola librería cubre panel interactivo, salida estructurada y uso<p>headless</p></li><li>Código abierto (Apache-2.0), construido para Snowflake</li></ul>
+<p><strong>Llamada a la acción</strong>: "Pruébalo contra tu propia cuenta de Snowflake esta semana — el quickstart del README te lleva rápidamente a una app funcional. Contacta con el asset owner si te encuentras problemas de configuración."</p></section>
+<section><h2 id="si-preguntan-faq">Si preguntan… (FAQ)<a class="anchor" href="#si-preguntan-faq" aria-label="Link to this section">#</a></h2>
+<div class="tablewrap"><table><thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead><tbody><tr><td>¿Funciona con Streamlit in Snowflake (SiS)?</td><td>No está lanzado hoy. El despliegue local (CLI + Streamlit + configuración de Snowflake en el mismo host) es la única topología lanzada; SiS/SPCS son solo alcance del modelo de amenazas.</td></tr><tr><td>¿Qué LLM usa?</td><td>El que use Cortex Code por debajo — no hay configuración de modelo en esta librería más allá de <code class="inline">CocoOptions.model</code>.</td></tr><tr><td>¿Puedo personalizar qué herramientas necesitan aprobación?</td><td>Sí — <code class="inline">allowed_tools</code> / <code class="inline">require_approval_for</code> en <code class="inline">CocoOptions</code>, por herramienta.</td></tr><tr><td>¿Está lista para producción?</td><td>Alpha (<code class="inline">0.1.9</code>) — la API todavía puede cambiar.</td></tr><tr><td>¿En qué se diferencia de usar el CLI de CoCo directamente?</td><td>Esta librería se encarga de la plomería específica de Streamlit: estado de sesión seguro frente a reruns, renderizado en streaming, tarjetas de herramienta e interfaz de aprobación — el CLI por sí solo no tiene nada de eso.</td></tr><tr><td>¿Qué hay de la subida de archivos?</td><td><code class="inline">upload_to_cwd()</code> / <code class="inline">cwd_uploader()</code> / <code class="inline">chat_input_bar(accept_file=...)</code> suben archivos al directorio de trabajo del agente; ver <code class="inline">make cwd-upload</code>.</td></tr><tr><td>¿Qué es <code class="inline">copilot_rail()</code>?</td><td>Un Copilot en rail lateral derecho alrededor de <code class="inline">panel()</code> — conexión, trabajos encolados y un popover Display config (límites de mensajes/caracteres) para una transcripción compacta. Ver <code class="inline">make bi-semantic</code> / <code class="inline">make backlog</code>.</td></tr><tr><td>¿Hay un registro de auditoría de aprobaciones?</td><td>No persistido hoy — "Always allow" tiene alcance de sesión únicamente y se borra al reiniciar.</td></tr></tbody></table></div></section>
+<section><h2 id="limpieza">Limpieza<a class="anchor" href="#limpieza" aria-label="Link to this section">#</a></h2>
+<div class="codewrap"><div class="codebar"><span class="codelang">bash</span><button class="copybtn noprint" type="button">Copy</button></div><pre><code></code></pre></div></section>
+  </main>
+</div>
+<footer class="pagefoot">
+  <div class="prevnext noprint"><a href="hands-on.es.html"><span class="pn-label">← Anterior</span><span class="pn-title">Hands-on</span></a><span></span></div>
+  <div class="slide-footer">
+    <div class="footer-brand">Creative tech for Better Change</div>
+    <div class="footer-page">Streamlit CoCo · Generado a partir de enablement/demo-guide.es.md</div>
+  </div>
+</footer>
+<script>
+(function () {
+  var PAGE = document.body.getAttribute('data-page') || 'page';
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  document.querySelectorAll('.copybtn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.closest('.codewrap').querySelector('code').textContent;
+      var done = function () {
+        btn.textContent = 'Copied'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(done, function () {});
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = code; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+  var boxes = document.querySelectorAll('input.chk');
+  boxes.forEach(function (box, idx) {
+    var key = 'dsp-training:' + PAGE + ':chk:' + idx;
+    var saved = load(key);
+    if (saved === '1') box.checked = true;
+    else if (saved === '0') box.checked = false;
+    sync(box);
+    box.addEventListener('change', function () {
+      store(key, box.checked ? '1' : '0');
+      sync(box); counters();
+    });
+  });
+  function sync(box) {
+    var li = box.closest('li');
+    if (li) li.classList.toggle('done', box.checked);
+  }
+  function counters() {
+    document.querySelectorAll('[data-count-scope]').forEach(function (el) {
+      var scope = document.querySelector(el.getAttribute('data-count-scope'));
+      if (!scope) return;
+      var all = scope.querySelectorAll('input.chk');
+      var on = scope.querySelectorAll('input.chk:checked');
+      el.innerHTML = '<span class="n">' + on.length + '</span> of ' + all.length + ' ready';
+    });
+    document.querySelectorAll('[data-progress]').forEach(function (el) {
+      var sel = el.getAttribute('data-progress');
+      var all = document.querySelectorAll(sel);
+      var on = document.querySelectorAll(sel + ':checked');
+      var pct = all.length ? Math.round(on.length / all.length * 100) : 0;
+      var bar = el.querySelector('.bar-fill');
+      var lab = el.querySelector('.bar-label');
+      if (bar) bar.style.width = pct + '%';
+      if (lab) lab.textContent = on.length + ' of ' + all.length + ' exercises complete';
+    });
+  }
+  counters();
+  var links = document.querySelectorAll('.toc-side a');
+  if (links.length && 'IntersectionObserver' in window) {
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var a = map[en.target.id];
+        if (a && en.isIntersecting) {
+          links.forEach(function (x) { x.style.color = ''; x.style.fontWeight = ''; });
+          a.style.color = 'var(--red)'; a.style.fontWeight = '700';
+        }
+      });
+    }, { rootMargin: '-70px 0px -75% 0px' });
+    document.querySelectorAll('.content h2[id], .content h3[id]').forEach(function (h) { obs.observe(h); });
+  }
+})();
+</script>
+</body>
+</html>

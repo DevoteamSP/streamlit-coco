@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Streamlit CoCo — Intro</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200;0,6..12,300;0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900&display=swap');
+    :root {
+      --red: #F5364B; --red2: #E8001D;
+      --snow: #29B5E8; --gold: #F59B23; --green: #27AE60;
+      --purple: #7B61FF; --teal: #1ABC9C;
+      --dark: #1E2028; --text: #2D2D2D; --muted: #7B7F8E;
+      --border: #E2E4EA; --card: #F4F5F7; --bg: #FAFAFA;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px; line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    .logo-badge { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-circle { width: 38px; height: 38px; background: var(--red); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 15px; flex-shrink: 0; }
+    .logo-text { line-height: 1.2; }
+    .logo-name { font-weight: 700; font-size: 13px; color: var(--text); }
+    .logo-partner { font-size: 10px; color: var(--muted); }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+    .subtitle { font-size: 14px; color: var(--muted); font-weight: 400; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+    .card-top { border-top: 3px solid var(--red); }
+    .card-snow { border-top: 3px solid var(--snow); }
+    .card-gold { border-top: 3px solid var(--gold); }
+    .card-green { border-top: 3px solid var(--green); }
+    .card-purple { border-top: 3px solid var(--purple); }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px;
+      font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .badge-snow { background: rgba(41,181,232,.12); color: var(--snow); border: 1px solid rgba(41,181,232,.3); }
+    .badge-gold { background: rgba(245,155,35,.12); color: var(--gold); border: 1px solid rgba(245,155,35,.3); }
+    .badge-green { background: rgba(39,174,96,.12); color: var(--green); border: 1px solid rgba(39,174,96,.3); }
+    .badge-red { background: rgba(245,54,75,.12); color: var(--red); border: 1px solid rgba(245,54,75,.3); }
+    .badge-purple { background: rgba(123,97,255,.12); color: var(--purple); border: 1px solid rgba(123,97,255,.3); }
+    .badge-dark { background: rgba(30,32,40,.75); color: white; }
+    .topbar { position: sticky; top: 0; z-index: 100; background: white;
+      border-bottom: 1px solid var(--border); padding: 10px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .topnav { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; }
+    .topnav a { color: var(--text); text-decoration: none; font-weight: 600; padding: 4px 2px; }
+    .topnav a:hover { color: var(--red); }
+    .topnav a[aria-current="page"] { color: var(--red); font-weight: 700; border-bottom: 2px solid var(--red); }
+    .layout { max-width: none; margin: 0; padding: 28px 32px 0;
+      display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
+    .content { max-width: none; width: 100%; min-width: 0; background: white; border: 1px solid var(--border);
+      border-radius: 12px; box-shadow: 0 2px 24px rgba(30,32,40,.06); padding: 36px 44px 44px;
+      overflow-wrap: break-word; }
+    .content > *, .content section, .exbody, .exblock, .actmain, .qcard { min-width: 0; }
+    code.inline { overflow-wrap: anywhere; }
+    @media (max-width: 700px) {
+      .content { padding: 24px 18px 30px; }
+      .pagehead { flex-direction: column; }
+      .meta-strip { text-align: left; }
+      .layout { padding: 18px 12px 0; }
+    }
+    .pagehead { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px;
+      flex-wrap: wrap; margin-bottom: 28px; }
+    .pagehead h1 { font-size: 36px; font-weight: 300; color: var(--text); line-height: 1.15; margin-bottom: 8px; }
+    .pagehead h1 strong { font-weight: 800; color: var(--red); }
+    .meta-strip { text-align: right; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+    .meta-strip .dur { display: block; font-weight: 700; color: var(--text); font-size: 13px; margin-bottom: 4px; }
+    .meta-strip a { color: var(--red); font-weight: 700; text-decoration: none; }
+    .meta-strip a:hover { text-decoration: underline; }
+    .toc-side { display: none; }
+    .toc details { border: 1px solid var(--border); border-radius: 10px; background: white; padding: 10px 16px; margin-bottom: 24px; }
+    .toc summary { cursor: pointer; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); }
+    .toc ul { list-style: none; margin: 10px 0 4px; }
+    .toc li { margin: 3px 0; }
+    .toc li.lvl3 { padding-left: 16px; }
+    .toc a { color: var(--muted); text-decoration: none; font-size: 12.5px; }
+    .toc a:hover { color: var(--red); }
+    .toc li.lvl2 > a { color: var(--text); font-weight: 600; }
+    @media (min-width: 1100px) {
+      .layout { grid-template-columns: 260px minmax(0, 1fr); }
+      .toc-side { min-width: 0; display: block; position: sticky; top: 76px;
+        max-height: calc(100vh - 100px); overflow-y: auto; }
+      .toc-side ul { list-style: none; }
+      .toc-inline { display: none; }
+    }
+    .content h2 { font-size: 24px; font-weight: 800; color: var(--text); margin: 34px 0 12px; scroll-margin-top: 80px; }
+    .content h3 { font-size: 17px; font-weight: 700; color: var(--text); margin: 24px 0 8px; scroll-margin-top: 80px; }
+    .content h4 { font-size: 14px; font-weight: 700; color: var(--muted); margin: 18px 0 6px;
+      text-transform: uppercase; letter-spacing: .06em; }
+    .content h2:first-child, .content h3:first-child { margin-top: 0; }
+    .content p { margin: 10px 0; }
+    .content ul, .content ol { margin: 10px 0 10px 22px; }
+    .content li { margin: 5px 0; }
+    .content a { color: var(--red2); text-decoration: none; border-bottom: 1px solid rgba(245,54,75,.35); }
+    .content a:hover { border-bottom-color: var(--red); }
+    .content strong { font-weight: 700; }
+    .anchor { opacity: 0; margin-left: 8px; font-size: .7em; color: var(--muted); text-decoration: none; border: 0; }
+    h2:hover .anchor, h3:hover .anchor { opacity: 1; }
+    code.inline { background: rgba(245,54,75,.07); color: var(--red2); border-radius: 4px;
+      padding: 1px 5px; font-size: .92em; font-family: 'SFMono-Regular', Menlo, Consolas, monospace; }
+    .sep { height: 1px; background: var(--border); border: 0; margin: 32px 0; }
+    .codewrap { position: relative; margin: 16px 0; border-radius: 10px; overflow: hidden; background: var(--dark); }
+    .codebar { display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 14px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .codelang { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.45); }
+    .copybtn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); color: white;
+      font-family: inherit; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 5px; cursor: pointer; }
+    .copybtn:hover { background: rgba(245,54,75,.3); border-color: var(--red); }
+    .copybtn.ok { background: rgba(39,174,96,.25); border-color: var(--green); }
+    .codewrap pre { overflow-x: auto; padding: 14px 16px; }
+    .codewrap code { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 13px;
+      line-height: 1.6; color: rgba(255,255,255,.9); white-space: pre; }
+    .tablewrap { overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 10px; }
+    table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+    thead th { position: sticky; top: 0; background: var(--card); text-align: left;
+      font-weight: 700; padding: 10px 14px; border-bottom: 2px solid var(--border); white-space: nowrap; z-index: 2; }
+    tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tbody tr:nth-child(even) { background: rgba(244,245,247,.55); }
+    tbody tr:last-child td { border-bottom: 0; }
+    .callout { border-left: 3px solid var(--border); background: var(--card); border-radius: 0 10px 10px 0;
+      padding: 12px 18px; margin: 16px 0; }
+    .callout-snow { border-left-color: var(--snow); background: rgba(41,181,232,.06); }
+    .callout-gold { border-left-color: var(--gold); background: rgba(245,155,35,.06); }
+    .callout-red  { border-left-color: var(--red);  background: rgba(245,54,75,.06); }
+    .callout-green{ border-left-color: var(--green);background: rgba(39,174,96,.06); }
+    .callout p:first-child { margin-top: 0; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout-tag { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      display: block; margin-bottom: 4px; }
+    ul.tasklist { list-style: none; margin-left: 0; }
+    ul.tasklist li { display: flex; align-items: flex-start; gap: 10px; padding: 7px 12px; background: white;
+      border: 1px solid var(--border); border-radius: 8px; margin-bottom: 7px; }
+    ul.tasklist input[type=checkbox] { margin-top: 4px; width: 15px; height: 15px; accent-color: var(--green);
+      flex-shrink: 0; cursor: pointer; }
+    ul.tasklist li.done .tasktext { text-decoration: line-through; color: var(--muted); }
+    ul.tasklist li.done { background: rgba(39,174,96,.05); border-color: rgba(39,174,96,.3); }
+    .counter { font-size: 12px; font-weight: 700; color: var(--muted); }
+    .counter .n { color: var(--green); }
+    .pagefoot { max-width: none; margin: 0; padding: 0 32px 48px; }
+    .prevnext { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin: 28px 0 18px; }
+    .prevnext a { display: block; padding: 12px 18px; background: white; border: 1px solid var(--border);
+      border-radius: 10px; text-decoration: none; min-width: 220px; }
+    .prevnext a:hover { border-color: var(--red); }
+    .pn-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .pn-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .slide-footer { height: 36px; display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border); }
+    .footer-brand { font-size: 11px; font-weight: 700; color: var(--red); }
+    .footer-page { font-size: 11px; color: var(--muted); }
+    a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--red); outline-offset: 2px; border-radius: 4px; }
+    @page { size: A4; margin: 14mm; }
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background: white; font-size: 11pt; }
+      .topbar, .toc, .prevnext, .copybtn, .noprint { display: none !important; }
+      .layout { display: block; max-width: none; padding: 0; }
+      .content { max-width: none; border: 0; box-shadow: none; border-radius: 0; padding: 0; }
+      details { display: block !important; }
+      details > summary { list-style: none; }
+      .answer, .hidden-print-reveal { display: block !important; }
+      .codewrap { background: var(--card); border: 1px solid var(--border); }
+      .codewrap code, .codelang { color: var(--text); }
+      .card, .callout, .tablewrap, table, tr, .exercise { page-break-inside: avoid; break-inside: avoid; }
+      h2, h3 { page-break-after: avoid; break-after: avoid; }
+    }
+</style>
+</head>
+<body data-page="enablement/intro.fr">
+<header class="topbar">
+  <a class="logo-badge" href="intro.fr.html"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></a>
+  <nav class="topnav" aria-label="Training pack"><a href="intro.fr.html" aria-current="page">Enablement</a><a href="../training/01-simple.fr.html">Training</a><a href="../certifications/enablement.fr.html">Certifications</a><a href="../user-guide/index.fr.html">User Guide</a><a href="../technical-guide/index.fr.html">Technical Guide</a></nav>
+</header>
+<div class="layout">
+  <nav class="toc toc-side" aria-label="Sur cette page"><div class="section-label">Sur cette page</div><ul><li class="lvl2"><a href="#ce-qu-est-streamlit-coco">Ce qu'est streamlit-coco</a></li><li class="lvl2"><a href="#le-probl-me-qu-elle-r-sout">Le problème qu'elle résout</a></li><li class="lvl2"><a href="#qui-a-s-adresse">À qui ça s'adresse</a></li><li class="lvl2"><a href="#objectifs-p-dagogiques">Objectifs pédagogiques</a></li><li class="lvl2"><a href="#estimation-du-temps">Estimation du temps</a></li><li class="lvl2"><a href="#pr-requis">Prérequis</a></li></ul></nav>
+  <main class="content">
+    <div class="pagehead">
+      <div>
+        <div class="section-label">Pack de formation · Devoteam Snowflake Practice · 2026</div>
+        <h1>Enablement <strong>intro</strong></h1>
+        <div class="subtitle"></div>
+      </div>
+      <div class="meta-strip"><span class="dur">15 min</span></div>
+    </div>
+    <nav class="toc toc-inline" aria-label="Sur cette page"><details><summary>Sur cette page</summary><ul><li class="lvl2"><a href="#ce-qu-est-streamlit-coco">Ce qu'est streamlit-coco</a></li><li class="lvl2"><a href="#le-probl-me-qu-elle-r-sout">Le problème qu'elle résout</a></li><li class="lvl2"><a href="#qui-a-s-adresse">À qui ça s'adresse</a></li><li class="lvl2"><a href="#objectifs-p-dagogiques">Objectifs pédagogiques</a></li><li class="lvl2"><a href="#estimation-du-temps">Estimation du temps</a></li><li class="lvl2"><a href="#pr-requis">Prérequis</a></li></ul></details></nav>
+
+<section><h2 id="ce-qu-est-streamlit-coco">Ce qu'est streamlit-coco<a class="anchor" href="#ce-qu-est-streamlit-coco" aria-label="Link to this section">#</a></h2>
+<p><code class="inline">streamlit-coco</code> est une bibliothèque Python/Streamlit qui intègre le SDK Cortex Code Agent de Snowflake (« CoCo ») dans une application Streamlit : un Copilot en rail latéral ou en panneau complet, des portes d'approbation supervisées par un humain (human-in-the-loop) pour les outils destructifs, un aperçu en direct d'une application que CoCo vient d'écrire, une sortie structurée vers vos propres widgets, et une API headless <code class="inline">query()</code> / <code class="inline">CocoSession</code> pour les scripts et la CI.</p>
+<p>Paquet PyPI : <code class="inline">streamlit-coco</code>. Version actuelle : <strong>0.1.9</strong> (alpha — l'API peut encore évoluer). Python 3.10+, Streamlit 1.53+. Licence : Apache-2.0.</p></section>
+<section><h2 id="le-probl-me-qu-elle-r-sout">Le problème qu'elle résout<a class="anchor" href="#le-probl-me-qu-elle-r-sout" aria-label="Link to this section">#</a></h2>
+<p>Câbler le SDK CoCo dans une application Streamlit à la main signifie construire, à partir de zéro : un état de session qui survit aux reruns Streamlit, un rendu en streaming de l'historique de conversation de l'agent, des cartes d'outils lisibles plutôt que des dumps JSON bruts, et un flux d'approbation pour tout ce que l'agent pourrait écrire, modifier ou exécuter. <code class="inline">streamlit-coco</code> fournit cette plomberie sous forme d'un ensemble de fonctions composables (<code class="inline">panel()</code>, <code class="inline">chat_input_bar()</code>, <code class="inline">copilot_rail()</code>, <code class="inline">render_approvals()</code>, …) afin qu'un auteur d'application écrive la page et les options, pas le pont de session.</p></section>
+<section><h2 id="qui-a-s-adresse">À qui ça s'adresse<a class="anchor" href="#qui-a-s-adresse" aria-label="Link to this section">#</a></h2>
+<p>Aux consultants et ingénieurs qui doivent ajouter un Copilot basé sur CoCo à une application Streamlit sur un compte Snowflake avec accès à Cortex Code. Cela suppose des bases en Python et une familiarité suffisante avec Streamlit pour lire du code <code class="inline">st.container</code> / <code class="inline">st.session_state</code> — la bibliothèque masque l'essentiel de la plomberie de gestion de session, donc une expertise Streamlit approfondie n'est pas requise.</p></section>
+<section><h2 id="objectifs-p-dagogiques">Objectifs pédagogiques<a class="anchor" href="#objectifs-p-dagogiques" aria-label="Link to this section">#</a></h2>
+<p>À l'issue de ce parcours, vous serez capable de :</p>
+<ol><li>Expliquer ce que fait <code class="inline">streamlit-coco</code>, et quand l'utiliser plutôt que la<p>CLI CoCo ou le SDK directement (voir la section « When not to use » du README).</p></li><li>Installer la bibliothèque, la connecter à un compte Snowflake, et<p>exécuter chaque application d'exemple fournie (<code class="inline">make chat</code>, `make backlog<code class="inline">, </code>make bi-semantic<code class="inline">, </code>make headless`, …).</p></li><li>Construire une application Streamlit selon le pattern préféré —<p><code class="inline">panel()</code> + <code class="inline">chat_input_bar()</code> — avec <code class="inline">require_approval_for</code> configuré pour que les outils destructifs se mettent en pause en attendant une décision humaine.</p></li><li>Configurer <code class="inline">CocoOptions</code> pour un workflow réel et intégrer<p><code class="inline">copilot_rail()</code> dans une application multipage existante.</p></li><li>Diagnostiquer une session qui échoue à se connecter ou un outil qui ne<p>s'exécute pas, à l'aide de <code class="inline">check_environment()</code>, de <code class="inline">STREAMLIT_COCO_DEBUG</code>, et de la <a href="../technical-guide/help.html">référence d'aide</a> du Guide technique.</p></li></ol></section>
+<section><h2 id="estimation-du-temps">Estimation du temps<a class="anchor" href="#estimation-du-temps" aria-label="Link to this section">#</a></h2>
+<div class="tablewrap"><table><thead><tr><th>Module</th><th>Temps</th></tr></thead><tbody><tr><td><code class="inline">intro.md</code> (cette page)</td><td>10 min</td></tr><tr><td><a href="setup.html"><code class="inline">setup.md</code></a></td><td>20–30 min</td></tr><tr><td><a href="guided-tour.html"><code class="inline">guided-tour.md</code></a></td><td>20–30 min</td></tr><tr><td><a href="hands-on.html"><code class="inline">hands-on.md</code></a> — 6 exercices</td><td>120–150 min</td></tr><tr><td><a href="demo-guide.html"><code class="inline">demo-guide.md</code></a> — lecture + une répétition</td><td>30–40 min</td></tr><tr><td><strong>Total enablement</strong></td><td><strong>~3,5–4,5 heures</strong></td></tr></tbody></table></div>
+<p>Les cas d'entraînement (<a href="../training/01-simple.html"><code class="inline">01-simple</code></a>, <a href="../training/02-intermediate.html"><code class="inline">02-intermediate</code></a>, <a href="../training/03-advanced.html"><code class="inline">03-advanced</code></a>) constituent un parcours séparé, budgété respectivement à 20–30, 45–60 et 30–45 minutes.</p></section>
+<section><h2 id="pr-requis">Prérequis<a class="anchor" href="#pr-requis" aria-label="Link to this section">#</a></h2>
+<ul><li>Python 3.10+ et <code class="inline">uv</code> installés localement.</li><li>Un compte Snowflake avec <strong>accès à Cortex Code</strong>, et un fichier<p><code class="inline">~/.snowflake/connections.toml</code> fonctionnel (l'ancien <code class="inline">config.toml</code> fonctionne aussi) — ou la connexion par défaut de la Snowflake CLI.</p></li><li>La <strong>CLI CoCo</strong> (<code class="inline">cortex</code>) installée et accessible dans le <code class="inline">PATH</code><p>(vérifiez avec <code class="inline">cortex --version</code>), ou un chemin que vous pouvez définir via <code class="inline">CORTEX_CODE_CLI_PATH</code>.</p></li><li>Un accès Git au dépôt de développement<p>(<code class="inline">github.com/DevoteamSP/streamlit-coco-dev</code>) si vous prévoyez d'exécuter les exemples fournis, ou simplement <code class="inline">pip install "streamlit-coco[sdk]"</code> si vous n'avez besoin que du paquet publié.</p></li><li>Rien de plus : aucun entrepôt (warehouse) Snowflake dédié n'est requis pour<p>suivre ce parcours — les exemples utilisent par défaut des données d'exemple en lecture seule ou des fixtures déconnectées.</p></li></ul></section>
+  </main>
+</div>
+<footer class="pagefoot">
+  <div class="prevnext noprint"><span></span><a href="setup.fr.html" style="text-align:right"><span class="pn-label">Suivant →</span><span class="pn-title">Setup</span></a></div>
+  <div class="slide-footer">
+    <div class="footer-brand">Creative tech for Better Change</div>
+    <div class="footer-page">Streamlit CoCo · Généré à partir de enablement/intro.fr.md</div>
+  </div>
+</footer>
+<script>
+(function () {
+  var PAGE = document.body.getAttribute('data-page') || 'page';
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  document.querySelectorAll('.copybtn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.closest('.codewrap').querySelector('code').textContent;
+      var done = function () {
+        btn.textContent = 'Copied'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(done, function () {});
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = code; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+  var boxes = document.querySelectorAll('input.chk');
+  boxes.forEach(function (box, idx) {
+    var key = 'dsp-training:' + PAGE + ':chk:' + idx;
+    var saved = load(key);
+    if (saved === '1') box.checked = true;
+    else if (saved === '0') box.checked = false;
+    sync(box);
+    box.addEventListener('change', function () {
+      store(key, box.checked ? '1' : '0');
+      sync(box); counters();
+    });
+  });
+  function sync(box) {
+    var li = box.closest('li');
+    if (li) li.classList.toggle('done', box.checked);
+  }
+  function counters() {
+    document.querySelectorAll('[data-count-scope]').forEach(function (el) {
+      var scope = document.querySelector(el.getAttribute('data-count-scope'));
+      if (!scope) return;
+      var all = scope.querySelectorAll('input.chk');
+      var on = scope.querySelectorAll('input.chk:checked');
+      el.innerHTML = '<span class="n">' + on.length + '</span> of ' + all.length + ' ready';
+    });
+    document.querySelectorAll('[data-progress]').forEach(function (el) {
+      var sel = el.getAttribute('data-progress');
+      var all = document.querySelectorAll(sel);
+      var on = document.querySelectorAll(sel + ':checked');
+      var pct = all.length ? Math.round(on.length / all.length * 100) : 0;
+      var bar = el.querySelector('.bar-fill');
+      var lab = el.querySelector('.bar-label');
+      if (bar) bar.style.width = pct + '%';
+      if (lab) lab.textContent = on.length + ' of ' + all.length + ' exercises complete';
+    });
+  }
+  counters();
+  var links = document.querySelectorAll('.toc-side a');
+  if (links.length && 'IntersectionObserver' in window) {
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var a = map[en.target.id];
+        if (a && en.isIntersecting) {
+          links.forEach(function (x) { x.style.color = ''; x.style.fontWeight = ''; });
+          a.style.color = 'var(--red)'; a.style.fontWeight = '700';
+        }
+      });
+    }, { rootMargin: '-70px 0px -75% 0px' });
+    document.querySelectorAll('.content h2[id], .content h3[id]').forEach(function (h) { obs.observe(h); });
+  }
+})();
+</script>
+</body>
+</html>

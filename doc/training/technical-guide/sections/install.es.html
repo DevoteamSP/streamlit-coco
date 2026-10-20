@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Streamlit CoCo — Instalación</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200;0,6..12,300;0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900&display=swap');
+    :root {
+      --red: #F5364B; --red2: #E8001D;
+      --snow: #29B5E8; --gold: #F59B23; --green: #27AE60;
+      --purple: #7B61FF; --teal: #1ABC9C;
+      --dark: #1E2028; --text: #2D2D2D; --muted: #7B7F8E;
+      --border: #E2E4EA; --card: #F4F5F7; --bg: #FAFAFA;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px; line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    .logo-badge { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-circle { width: 38px; height: 38px; background: var(--red); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 15px; flex-shrink: 0; }
+    .logo-text { line-height: 1.2; }
+    .logo-name { font-weight: 700; font-size: 13px; color: var(--text); }
+    .logo-partner { font-size: 10px; color: var(--muted); }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+    .subtitle { font-size: 14px; color: var(--muted); font-weight: 400; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+    .card-top { border-top: 3px solid var(--red); }
+    .card-snow { border-top: 3px solid var(--snow); }
+    .card-gold { border-top: 3px solid var(--gold); }
+    .card-green { border-top: 3px solid var(--green); }
+    .card-purple { border-top: 3px solid var(--purple); }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px;
+      font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .badge-snow { background: rgba(41,181,232,.12); color: var(--snow); border: 1px solid rgba(41,181,232,.3); }
+    .badge-gold { background: rgba(245,155,35,.12); color: var(--gold); border: 1px solid rgba(245,155,35,.3); }
+    .badge-green { background: rgba(39,174,96,.12); color: var(--green); border: 1px solid rgba(39,174,96,.3); }
+    .badge-red { background: rgba(245,54,75,.12); color: var(--red); border: 1px solid rgba(245,54,75,.3); }
+    .badge-purple { background: rgba(123,97,255,.12); color: var(--purple); border: 1px solid rgba(123,97,255,.3); }
+    .badge-dark { background: rgba(30,32,40,.75); color: white; }
+    .topbar { position: sticky; top: 0; z-index: 100; background: white;
+      border-bottom: 1px solid var(--border); padding: 10px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .topnav { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; }
+    .topnav a { color: var(--text); text-decoration: none; font-weight: 600; padding: 4px 2px; }
+    .topnav a:hover { color: var(--red); }
+    .topnav a[aria-current="page"] { color: var(--red); font-weight: 700; border-bottom: 2px solid var(--red); }
+    .layout { max-width: none; margin: 0; padding: 28px 32px 0;
+      display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
+    .content { max-width: none; width: 100%; min-width: 0; background: white; border: 1px solid var(--border);
+      border-radius: 12px; box-shadow: 0 2px 24px rgba(30,32,40,.06); padding: 36px 44px 44px;
+      overflow-wrap: break-word; }
+    .content > *, .content section, .exbody, .exblock, .actmain, .qcard { min-width: 0; }
+    code.inline { overflow-wrap: anywhere; }
+    @media (max-width: 700px) {
+      .content { padding: 24px 18px 30px; }
+      .pagehead { flex-direction: column; }
+      .meta-strip { text-align: left; }
+      .layout { padding: 18px 12px 0; }
+    }
+    .pagehead { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px;
+      flex-wrap: wrap; margin-bottom: 28px; }
+    .pagehead h1 { font-size: 36px; font-weight: 300; color: var(--text); line-height: 1.15; margin-bottom: 8px; }
+    .pagehead h1 strong { font-weight: 800; color: var(--red); }
+    .meta-strip { text-align: right; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+    .meta-strip .dur { display: block; font-weight: 700; color: var(--text); font-size: 13px; margin-bottom: 4px; }
+    .meta-strip a { color: var(--red); font-weight: 700; text-decoration: none; }
+    .meta-strip a:hover { text-decoration: underline; }
+    .toc-side { display: none; }
+    .toc details { border: 1px solid var(--border); border-radius: 10px; background: white; padding: 10px 16px; margin-bottom: 24px; }
+    .toc summary { cursor: pointer; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); }
+    .toc ul { list-style: none; margin: 10px 0 4px; }
+    .toc li { margin: 3px 0; }
+    .toc li.lvl3 { padding-left: 16px; }
+    .toc a { color: var(--muted); text-decoration: none; font-size: 12.5px; }
+    .toc a:hover { color: var(--red); }
+    .toc li.lvl2 > a { color: var(--text); font-weight: 600; }
+    @media (min-width: 1100px) {
+      .layout { grid-template-columns: 260px minmax(0, 1fr); }
+      .toc-side { min-width: 0; display: block; position: sticky; top: 76px;
+        max-height: calc(100vh - 100px); overflow-y: auto; }
+      .toc-side ul { list-style: none; }
+      .toc-inline { display: none; }
+    }
+    .content h2 { font-size: 24px; font-weight: 800; color: var(--text); margin: 34px 0 12px; scroll-margin-top: 80px; }
+    .content h3 { font-size: 17px; font-weight: 700; color: var(--text); margin: 24px 0 8px; scroll-margin-top: 80px; }
+    .content h4 { font-size: 14px; font-weight: 700; color: var(--muted); margin: 18px 0 6px;
+      text-transform: uppercase; letter-spacing: .06em; }
+    .content h2:first-child, .content h3:first-child { margin-top: 0; }
+    .content p { margin: 10px 0; }
+    .content ul, .content ol { margin: 10px 0 10px 22px; }
+    .content li { margin: 5px 0; }
+    .content a { color: var(--red2); text-decoration: none; border-bottom: 1px solid rgba(245,54,75,.35); }
+    .content a:hover { border-bottom-color: var(--red); }
+    .content strong { font-weight: 700; }
+    .anchor { opacity: 0; margin-left: 8px; font-size: .7em; color: var(--muted); text-decoration: none; border: 0; }
+    h2:hover .anchor, h3:hover .anchor { opacity: 1; }
+    code.inline { background: rgba(245,54,75,.07); color: var(--red2); border-radius: 4px;
+      padding: 1px 5px; font-size: .92em; font-family: 'SFMono-Regular', Menlo, Consolas, monospace; }
+    .sep { height: 1px; background: var(--border); border: 0; margin: 32px 0; }
+    .codewrap { position: relative; margin: 16px 0; border-radius: 10px; overflow: hidden; background: var(--dark); }
+    .codebar { display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 14px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .codelang { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.45); }
+    .copybtn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); color: white;
+      font-family: inherit; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 5px; cursor: pointer; }
+    .copybtn:hover { background: rgba(245,54,75,.3); border-color: var(--red); }
+    .copybtn.ok { background: rgba(39,174,96,.25); border-color: var(--green); }
+    .codewrap pre { overflow-x: auto; padding: 14px 16px; }
+    .codewrap code { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 13px;
+      line-height: 1.6; color: rgba(255,255,255,.9); white-space: pre; }
+    .tablewrap { overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 10px; }
+    table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+    thead th { position: sticky; top: 0; background: var(--card); text-align: left;
+      font-weight: 700; padding: 10px 14px; border-bottom: 2px solid var(--border); white-space: nowrap; z-index: 2; }
+    tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tbody tr:nth-child(even) { background: rgba(244,245,247,.55); }
+    tbody tr:last-child td { border-bottom: 0; }
+    .callout { border-left: 3px solid var(--border); background: var(--card); border-radius: 0 10px 10px 0;
+      padding: 12px 18px; margin: 16px 0; }
+    .callout-snow { border-left-color: var(--snow); background: rgba(41,181,232,.06); }
+    .callout-gold { border-left-color: var(--gold); background: rgba(245,155,35,.06); }
+    .callout-red  { border-left-color: var(--red);  background: rgba(245,54,75,.06); }
+    .callout-green{ border-left-color: var(--green);background: rgba(39,174,96,.06); }
+    .callout p:first-child { margin-top: 0; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout-tag { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      display: block; margin-bottom: 4px; }
+    ul.tasklist { list-style: none; margin-left: 0; }
+    ul.tasklist li { display: flex; align-items: flex-start; gap: 10px; padding: 7px 12px; background: white;
+      border: 1px solid var(--border); border-radius: 8px; margin-bottom: 7px; }
+    ul.tasklist input[type=checkbox] { margin-top: 4px; width: 15px; height: 15px; accent-color: var(--green);
+      flex-shrink: 0; cursor: pointer; }
+    ul.tasklist li.done .tasktext { text-decoration: line-through; color: var(--muted); }
+    ul.tasklist li.done { background: rgba(39,174,96,.05); border-color: rgba(39,174,96,.3); }
+    .counter { font-size: 12px; font-weight: 700; color: var(--muted); }
+    .counter .n { color: var(--green); }
+    .pagefoot { max-width: none; margin: 0; padding: 0 32px 48px; }
+    .prevnext { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin: 28px 0 18px; }
+    .prevnext a { display: block; padding: 12px 18px; background: white; border: 1px solid var(--border);
+      border-radius: 10px; text-decoration: none; min-width: 220px; }
+    .prevnext a:hover { border-color: var(--red); }
+    .pn-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .pn-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .slide-footer { height: 36px; display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border); }
+    .footer-brand { font-size: 11px; font-weight: 700; color: var(--red); }
+    .footer-page { font-size: 11px; color: var(--muted); }
+    a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--red); outline-offset: 2px; border-radius: 4px; }
+    @page { size: A4; margin: 14mm; }
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background: white; font-size: 11pt; }
+      .topbar, .toc, .prevnext, .copybtn, .noprint { display: none !important; }
+      .layout { display: block; max-width: none; padding: 0; }
+      .content { max-width: none; border: 0; box-shadow: none; border-radius: 0; padding: 0; }
+      details { display: block !important; }
+      details > summary { list-style: none; }
+      .answer, .hidden-print-reveal { display: block !important; }
+      .codewrap { background: var(--card); border: 1px solid var(--border); }
+      .codewrap code, .codelang { color: var(--text); }
+      .card, .callout, .tablewrap, table, tr, .exercise { page-break-inside: avoid; break-inside: avoid; }
+      h2, h3 { page-break-after: avoid; break-after: avoid; }
+    }
+</style>
+</head>
+<body data-page="technical-guide/sections/install.es">
+<header class="topbar">
+  <a class="logo-badge" href="../../enablement/intro.es.html"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></a>
+  <nav class="topnav" aria-label="Training pack"><a href="../../enablement/intro.es.html">Enablement</a><a href="../../training/01-simple.es.html">Training</a><a href="../../certifications/enablement.es.html">Certifications</a><a href="../../user-guide/index.es.html">User Guide</a><a href="../index.es.html">Technical Guide</a></nav>
+</header>
+<div class="layout">
+  <nav class="toc toc-side" aria-label="En esta página"><div class="section-label">En esta página</div><ul><li class="lvl2"><a href="#matriz-de-prerrequisitos">Matriz de prerrequisitos</a></li><li class="lvl2"><a href="#instalaci-n-local-pasos-ordenados">Instalación local — pasos ordenados</a></li><li class="lvl3"><a href="#1-instalar-el-paquete">1. Instalar el paquete</a></li><li class="lvl3"><a href="#2-instalar-el-cli-de-coco">2. Instalar el CLI de CoCo</a></li><li class="lvl3"><a href="#3-configurar-una-conexi-n-de-snowflake">3. Configurar una conexión de Snowflake</a></li><li class="lvl3"><a href="#4-ejecutar-una-app-de-ejemplo">4. Ejecutar una app de ejemplo</a></li><li class="lvl2"><a href="#qu-no-es-instalable-hoy">Qué no es instalable hoy</a></li></ul></nav>
+  <main class="content">
+    <div class="pagehead">
+      <div>
+        <div class="section-label">Pack de formación · Devoteam Snowflake Practice · 2026</div>
+        <h1>Instalación</h1>
+        <div class="subtitle">Guía técnica · Operar</div>
+      </div>
+      <div class="meta-strip"><span class="dur"></span><a href="../../enablement/intro.es.html">← Volver al índice</a></div>
+    </div>
+    <nav class="toc toc-inline" aria-label="En esta página"><details><summary>En esta página</summary><ul><li class="lvl2"><a href="#matriz-de-prerrequisitos">Matriz de prerrequisitos</a></li><li class="lvl2"><a href="#instalaci-n-local-pasos-ordenados">Instalación local — pasos ordenados</a></li><li class="lvl3"><a href="#1-instalar-el-paquete">1. Instalar el paquete</a></li><li class="lvl3"><a href="#2-instalar-el-cli-de-coco">2. Instalar el CLI de CoCo</a></li><li class="lvl3"><a href="#3-configurar-una-conexi-n-de-snowflake">3. Configurar una conexión de Snowflake</a></li><li class="lvl3"><a href="#4-ejecutar-una-app-de-ejemplo">4. Ejecutar una app de ejemplo</a></li><li class="lvl2"><a href="#qu-no-es-instalable-hoy">Qué no es instalable hoy</a></li></ul></details></nav>
+<p>Un objetivo de despliegue se lanza hoy: <strong>local</strong> — Streamlit, el CLI de CoCo, y la configuración de conexión de Snowflake todos en el mismo host. Las rutas de instalación de Streamlit in Snowflake (SiS) y SPCS no están implementadas en este repositorio hoy. Aparecen solo como alcance en <a href="security.html#threat-model-summary">security</a> (contexto del modelo de amenazas) y en la hoja de ruta del proyecto, no como algo que se pueda instalar.</p>
+<section><h2 id="matriz-de-prerrequisitos">Matriz de prerrequisitos<a class="anchor" href="#matriz-de-prerrequisitos" aria-label="Link to this section">#</a></h2>
+<div class="tablewrap"><table><thead><tr><th>Requisito</th><th>Versión</th><th>Por qué</th></tr></thead><tbody><tr><td>Python</td><td>3.10+</td><td><code class="inline">requires-python = "&gt;=3.10"</code> en <code class="inline">pyproject.toml</code></td></tr><tr><td>Streamlit</td><td>&gt;=1.53</td><td><code class="inline">streamlit-coco</code> declara <code class="inline">streamlit&gt;=1.53</code> como su única dependencia obligatoria</td></tr><tr><td>CLI de CoCo (<code class="inline">cortex</code>)</td><td>accesible en <code class="inline">PATH</code>, o <code class="inline">CORTEX_CODE_CLI_PATH</code> definido</td><td>El SDK lo lanza como subproceso; la librería no lo empaqueta</td></tr><tr><td><code class="inline">cortex-code-agent-sdk</code></td><td>&gt;=1.0.7</td><td>Instalado vía el extra <code class="inline">[sdk]</code>; la librería habla con CoCo a través de este SDK</td></tr><tr><td>Conexión de Snowflake</td><td>un perfil en <code class="inline">~/.snowflake/connections.toml</code> (o el <code class="inline">config.toml</code> heredado)</td><td>El CLI/SDK se autentican a través de este archivo; la librería nunca almacena credenciales</td></tr></tbody></table></div></section>
+<section><h2 id="instalaci-n-local-pasos-ordenados">Instalación local — pasos ordenados<a class="anchor" href="#instalaci-n-local-pasos-ordenados" aria-label="Link to this section">#</a></h2>
+<h3 id="1-instalar-el-paquete">1. Instalar el paquete<a class="anchor" href="#1-instalar-el-paquete" aria-label="Link to this section">#</a></h3>
+<div class="codewrap"><div class="codebar"><span class="codelang">bash</span><button class="copybtn noprint" type="button">Copy</button></div><pre><code>pip install "streamlit-coco[sdk]"</code></pre></div>
+<p>o, desde un clon (contribuidores en <code class="inline">streamlit-coco-dev</code>):</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">bash</span><button class="copybtn noprint" type="button">Copy</button></div><pre><code>git clone https://github.com/DevoteamSP/streamlit-coco.git
+cd streamlit-coco
+make install   # uv sync --extra dev</code></pre></div>
+<p>Verifica:</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">bash</span><button class="copybtn noprint" type="button">Copy</button></div><pre><code>python -c "import streamlit_coco as c; print(c.__version__)"</code></pre></div>
+<h3 id="2-instalar-el-cli-de-coco">2. Instalar el CLI de CoCo<a class="anchor" href="#2-instalar-el-cli-de-coco" aria-label="Link to this section">#</a></h3>
+<p>El Cortex Code Agent SDK lanza el CLI de CoCo (<code class="inline">cortex</code>) como subproceso. Debe estar instalado y accesible en la misma máquina que la app Streamlit.</p>
+<p>Verifica:</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">bash</span><button class="copybtn noprint" type="button">Copy</button></div><pre><code>cortex --version</code></pre></div>
+<p>Si no está en <code class="inline">PATH</code>:</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">bash</span><button class="copybtn noprint" type="button">Copy</button></div><pre><code>export CORTEX_CODE_CLI_PATH=/path/to/cortex</code></pre></div>
+<p>(o pasa <code class="inline">cli_path=</code> en <code class="inline">CocoOptions</code> — ver <a href="configuration.html">configuration</a>).</p>
+<h3 id="3-configurar-una-conexi-n-de-snowflake">3. Configurar una conexión de Snowflake<a class="anchor" href="#3-configurar-una-conexi-n-de-snowflake" aria-label="Link to this section">#</a></h3>
+<p>Crea o actualiza <code class="inline">~/.snowflake/connections.toml</code>:</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">toml</span><button class="copybtn noprint" type="button">Copy</button></div><pre><code>[connections.analytics]
+account = "xy12345"
+user = "you@company.com"
+authenticator = "externalbrowser"</code></pre></div>
+<p>El <code class="inline">~/.snowflake/config.toml</code> heredado también se detecta. Ver <a href="security.html#roles-and-grants">security</a> para el rol que debería usar esta conexión.</p>
+<p>Verifica (sondea SDK, CLI, y configuración sin iniciar un agente):</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">python</span><button class="copybtn noprint" type="button">Copy</button></div><pre><code>import streamlit_coco as st_coco
+
+env = st_coco.check_environment(connection="analytics")
+print(env.ready, env.sdk_version, env.cli_version, env.snowflake_config_display)</code></pre></div>
+<p>Para un script que debería fallar rápido en lugar de devolver un objeto de estado:</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">python</span><button class="copybtn noprint" type="button">Copy</button></div><pre><code>st_coco.require_environment(connection="analytics")</code></pre></div>
+<h3 id="4-ejecutar-una-app-de-ejemplo">4. Ejecutar una app de ejemplo<a class="anchor" href="#4-ejecutar-una-app-de-ejemplo" aria-label="Link to this section">#</a></h3>
+<div class="codewrap"><div class="codebar"><span class="codelang">bash</span><button class="copybtn noprint" type="button">Copy</button></div><pre><code>make chat</code></pre></div>
+<p>Verifica: el navegador se abre en la demo de chat y la puerta de inicio ("Start CoCo Chat") muestra el estado SDK / CLI / Snowflake en verde antes de hacer clic en ella. Ver <a href="operations.html">operations</a> para la lista completa de objetivos <code class="inline">make</code> que ejecutan apps de ejemplo.</p></section>
+<section><h2 id="qu-no-es-instalable-hoy">Qué no es instalable hoy<a class="anchor" href="#qu-no-es-instalable-hoy" aria-label="Link to this section">#</a></h2>
+<ul><li><strong>Streamlit in Snowflake (SiS)</strong> — no existe ninguna ruta de<p>instalación en este repositorio. SiS aparece solo como contexto de despliegue en el modelo de amenazas, no como un objetivo soportado.</p></li><li><strong>SPCS</strong> — igual: solo alcance del modelo de amenazas, no un objetivo<p>de instalación.</p></li><li><strong>Native App</strong> — no hay <code class="inline">manifest.yml</code> / <code class="inline">snowflake.yml</code> en el<p>repositorio; no hay nada que instalar como Native App.</p></li></ul></section>
+  </main>
+</div>
+<footer class="pagefoot">
+  <div class="prevnext noprint"><a href="architecture.es.html"><span class="pn-label">← Anterior</span><span class="pn-title">Arquitectura</span></a><a href="configuration.es.html" style="text-align:right"><span class="pn-label">Siguiente →</span><span class="pn-title">Configuración</span></a></div>
+  <div class="slide-footer">
+    <div class="footer-brand">Creative tech for Better Change</div>
+    <div class="footer-page">Streamlit CoCo · Generado a partir de technical-guide/sections/install.es.md</div>
+  </div>
+</footer>
+<script>
+(function () {
+  var PAGE = document.body.getAttribute('data-page') || 'page';
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  document.querySelectorAll('.copybtn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.closest('.codewrap').querySelector('code').textContent;
+      var done = function () {
+        btn.textContent = 'Copied'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(done, function () {});
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = code; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+  var boxes = document.querySelectorAll('input.chk');
+  boxes.forEach(function (box, idx) {
+    var key = 'dsp-training:' + PAGE + ':chk:' + idx;
+    var saved = load(key);
+    if (saved === '1') box.checked = true;
+    else if (saved === '0') box.checked = false;
+    sync(box);
+    box.addEventListener('change', function () {
+      store(key, box.checked ? '1' : '0');
+      sync(box); counters();
+    });
+  });
+  function sync(box) {
+    var li = box.closest('li');
+    if (li) li.classList.toggle('done', box.checked);
+  }
+  function counters() {
+    document.querySelectorAll('[data-count-scope]').forEach(function (el) {
+      var scope = document.querySelector(el.getAttribute('data-count-scope'));
+      if (!scope) return;
+      var all = scope.querySelectorAll('input.chk');
+      var on = scope.querySelectorAll('input.chk:checked');
+      el.innerHTML = '<span class="n">' + on.length + '</span> of ' + all.length + ' ready';
+    });
+    document.querySelectorAll('[data-progress]').forEach(function (el) {
+      var sel = el.getAttribute('data-progress');
+      var all = document.querySelectorAll(sel);
+      var on = document.querySelectorAll(sel + ':checked');
+      var pct = all.length ? Math.round(on.length / all.length * 100) : 0;
+      var bar = el.querySelector('.bar-fill');
+      var lab = el.querySelector('.bar-label');
+      if (bar) bar.style.width = pct + '%';
+      if (lab) lab.textContent = on.length + ' of ' + all.length + ' exercises complete';
+    });
+  }
+  counters();
+  var links = document.querySelectorAll('.toc-side a');
+  if (links.length && 'IntersectionObserver' in window) {
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var a = map[en.target.id];
+        if (a && en.isIntersecting) {
+          links.forEach(function (x) { x.style.color = ''; x.style.fontWeight = ''; });
+          a.style.color = 'var(--red)'; a.style.fontWeight = '700';
+        }
+      });
+    }, { rootMargin: '-70px 0px -75% 0px' });
+    document.querySelectorAll('.content h2[id], .content h3[id]').forEach(function (h) { obs.observe(h); });
+  }
+})();
+</script>
+</body>
+</html>

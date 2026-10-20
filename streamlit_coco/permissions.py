@@ -8,10 +8,9 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Any
 
-from streamlit_coco.ask_user import is_ask_user_question
 from streamlit_coco.errors import ApprovalTimeoutError
 from streamlit_coco.messages import permission_request_event
-from streamlit_coco.tool_names import is_exit_plan_mode
+from streamlit_coco.tool_names import is_ask_user_question, is_exit_plan_mode
 
 try:
     from cortex_code_agent_sdk import PermissionResultAllow, PermissionResultDeny

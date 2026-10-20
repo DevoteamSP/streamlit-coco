@@ -1,0 +1,818 @@
+# Training pack manifest — format 2.2 (STANDARD §18)
+format: "2.2"
+asset: "Streamlit CoCo — Cortex Code Agent SDK for Streamlit"
+generated_by: "asset-owner-training 3.5"
+generated_at: "2026-09-22"
+
+documents:
+  # ── Enablement ──────────────────────────────────────────────────────────
+  - kind: intro
+    track: enablement
+    lang: en
+    source: enablement/intro.md
+    rendered: [enablement/intro.html]
+
+  - kind: intro
+    track: enablement
+    lang: fr
+    source: enablement/intro.fr.md
+    rendered: [enablement/intro.fr.html]
+
+  - kind: intro
+    track: enablement
+    lang: es
+    source: enablement/intro.es.md
+    rendered: [enablement/intro.es.html]
+
+  - kind: setup
+    track: enablement
+    lang: en
+    source: enablement/setup.md
+    rendered: [enablement/setup.html]
+
+  - kind: setup
+    track: enablement
+    lang: fr
+    source: enablement/setup.fr.md
+    rendered: [enablement/setup.fr.html]
+
+  - kind: setup
+    track: enablement
+    lang: es
+    source: enablement/setup.es.md
+    rendered: [enablement/setup.es.html]
+
+  - kind: guided-tour
+    track: enablement
+    lang: en
+    source: enablement/guided-tour.md
+    rendered: [enablement/guided-tour.html]
+
+  - kind: guided-tour
+    track: enablement
+    lang: fr
+    source: enablement/guided-tour.fr.md
+    rendered: [enablement/guided-tour.fr.html]
+
+  - kind: guided-tour
+    track: enablement
+    lang: es
+    source: enablement/guided-tour.es.md
+    rendered: [enablement/guided-tour.es.html]
+
+  - kind: hands-on
+    track: enablement
+    lang: en
+    source: enablement/hands-on.md
+    rendered: [enablement/hands-on.html]
+
+  - kind: hands-on
+    track: enablement
+    lang: fr
+    source: enablement/hands-on.fr.md
+    rendered: [enablement/hands-on.fr.html]
+
+  - kind: hands-on
+    track: enablement
+    lang: es
+    source: enablement/hands-on.es.md
+    rendered: [enablement/hands-on.es.html]
+
+  - kind: demo
+    track: enablement
+    lang: en
+    source: enablement/demo-guide.md
+    rendered: [enablement/demo-guide.html]
+
+  - kind: demo
+    track: enablement
+    lang: fr
+    source: enablement/demo-guide.fr.md
+    rendered: [enablement/demo-guide.fr.html]
+
+  - kind: demo
+    track: enablement
+    lang: es
+    source: enablement/demo-guide.es.md
+    rendered: [enablement/demo-guide.es.html]
+
+  - kind: deck
+    track: enablement
+    lang: en
+    source: enablement/deck.html
+    rendered: [enablement/deck.pdf]
+
+  - kind: deck
+    track: enablement
+    lang: fr
+    source: enablement/deck.html
+    rendered: [enablement/deck.pdf]
+
+  - kind: deck
+    track: enablement
+    lang: es
+    source: enablement/deck.html
+    rendered: [enablement/deck.pdf]
+
+  # ── Training ────────────────────────────────────────────────────────────
+  - kind: case
+    track: training
+    lang: en
+    source: training/01-simple.md
+    rendered: [training/01-simple.html]
+    level: simple
+
+  - kind: case
+    track: training
+    lang: fr
+    source: training/01-simple.fr.md
+    rendered: [training/01-simple.fr.html]
+    level: simple
+
+  - kind: case
+    track: training
+    lang: es
+    source: training/01-simple.es.md
+    rendered: [training/01-simple.es.html]
+    level: simple
+
+  - kind: case
+    track: training
+    lang: en
+    source: training/02-intermediate.md
+    rendered: [training/02-intermediate.html]
+    level: intermediate
+
+  - kind: case
+    track: training
+    lang: fr
+    source: training/02-intermediate.fr.md
+    rendered: [training/02-intermediate.fr.html]
+    level: intermediate
+
+  - kind: case
+    track: training
+    lang: es
+    source: training/02-intermediate.es.md
+    rendered: [training/02-intermediate.es.html]
+    level: intermediate
+
+  - kind: case
+    track: training
+    lang: en
+    source: training/03-advanced.md
+    rendered: [training/03-advanced.html]
+    level: advanced
+
+  - kind: case
+    track: training
+    lang: fr
+    source: training/03-advanced.fr.md
+    rendered: [training/03-advanced.fr.html]
+    level: advanced
+
+  - kind: case
+    track: training
+    lang: es
+    source: training/03-advanced.es.md
+    rendered: [training/03-advanced.es.html]
+    level: advanced
+
+  # ── Certifications ──────────────────────────────────────────────────────
+  - kind: quiz
+    track: certifications
+    lang: en
+    source: certifications/enablement.md
+    rendered: [certifications/enablement.html]
+    level: enablement
+    certifies: true
+
+  - kind: quiz
+    track: certifications
+    lang: fr
+    source: certifications/enablement.fr.md
+    rendered: [certifications/enablement.fr.html]
+    level: enablement
+    certifies: true
+
+  - kind: quiz
+    track: certifications
+    lang: es
+    source: certifications/enablement.es.md
+    rendered: [certifications/enablement.es.html]
+    level: enablement
+    certifies: true
+
+  - kind: quiz
+    track: certifications
+    lang: en
+    source: certifications/user.md
+    rendered: [certifications/user.html]
+    level: user
+    certifies: true
+
+  - kind: quiz
+    track: certifications
+    lang: fr
+    source: certifications/user.fr.md
+    rendered: [certifications/user.fr.html]
+    level: user
+    certifies: true
+
+  - kind: quiz
+    track: certifications
+    lang: es
+    source: certifications/user.es.md
+    rendered: [certifications/user.es.html]
+    level: user
+    certifies: true
+
+  - kind: quiz
+    track: certifications
+    lang: en
+    source: certifications/advanced.md
+    rendered: [certifications/advanced.html]
+    level: advanced
+    certifies: true
+
+  - kind: quiz
+    track: certifications
+    lang: fr
+    source: certifications/advanced.fr.md
+    rendered: [certifications/advanced.fr.html]
+    level: advanced
+    certifies: true
+
+  - kind: quiz
+    track: certifications
+    lang: es
+    source: certifications/advanced.es.md
+    rendered: [certifications/advanced.es.html]
+    level: advanced
+    certifies: true
+
+  - kind: quiz
+    track: certifications
+    lang: en
+    source: certifications/expert.md
+    rendered: [certifications/expert.html]
+    level: expert
+    certifies: true
+
+  - kind: quiz
+    track: certifications
+    lang: fr
+    source: certifications/expert.fr.md
+    rendered: [certifications/expert.fr.html]
+    level: expert
+    certifies: true
+
+  - kind: quiz
+    track: certifications
+    lang: es
+    source: certifications/expert.es.md
+    rendered: [certifications/expert.es.html]
+    level: expert
+    certifies: true
+
+  # ── User Guide ──────────────────────────────────────────────────────────
+  - kind: index
+    track: user-guide
+    lang: en
+    source: user-guide/index.md
+    rendered: [user-guide/index.html]
+    sources: [README.md, doc/api.md, CHANGELOG.md, pyproject.toml]
+
+  - kind: index
+    track: user-guide
+    lang: fr
+    source: user-guide/index.fr.md
+    rendered: [user-guide/index.fr.html]
+
+  - kind: index
+    track: user-guide
+    lang: es
+    source: user-guide/index.es.md
+    rendered: [user-guide/index.es.html]
+
+  - kind: section
+    track: user-guide
+    lang: en
+    source: user-guide/sections/concepts.md
+    rendered: [user-guide/sections/concepts.html]
+    sources: [streamlit_coco/options.py, streamlit_coco/session.py, streamlit_coco/messages.py, streamlit_coco/diagnostics.py, streamlit_coco/permissions.py]
+
+  - kind: section
+    track: user-guide
+    lang: fr
+    source: user-guide/sections/concepts.fr.md
+    rendered: [user-guide/sections/concepts.fr.html]
+
+  - kind: section
+    track: user-guide
+    lang: es
+    source: user-guide/sections/concepts.es.md
+    rendered: [user-guide/sections/concepts.es.html]
+
+  - kind: section
+    track: user-guide
+    lang: en
+    source: user-guide/sections/getting-started.md
+    rendered: [user-guide/sections/getting-started.html]
+    sources: [README.md, doc/deployment/local.md, pyproject.toml]
+
+  - kind: section
+    track: user-guide
+    lang: fr
+    source: user-guide/sections/getting-started.fr.md
+    rendered: [user-guide/sections/getting-started.fr.html]
+
+  - kind: section
+    track: user-guide
+    lang: es
+    source: user-guide/sections/getting-started.es.md
+    rendered: [user-guide/sections/getting-started.es.html]
+
+  - kind: section
+    track: user-guide
+    lang: en
+    source: user-guide/sections/task-build-a-minimal-app.md
+    rendered: [user-guide/sections/task-build-a-minimal-app.html]
+    sources: [examples/chat_app.py, streamlit_coco/bootstrap.py, streamlit_coco/ui.py]
+
+  - kind: section
+    track: user-guide
+    lang: fr
+    source: user-guide/sections/task-build-a-minimal-app.fr.md
+    rendered: [user-guide/sections/task-build-a-minimal-app.fr.html]
+
+  - kind: section
+    track: user-guide
+    lang: es
+    source: user-guide/sections/task-build-a-minimal-app.es.md
+    rendered: [user-guide/sections/task-build-a-minimal-app.es.html]
+
+  - kind: section
+    track: user-guide
+    lang: en
+    source: user-guide/sections/task-run-the-example-apps.md
+    rendered: [user-guide/sections/task-run-the-example-apps.html]
+    sources: [Makefile, examples/chat_app.py, examples/approval_gate.py, examples/structured_output.py, examples/headless_pipeline.py, examples/cwd_upload_chat.py, examples/backlog_desk/README.md, examples/bi_to_semantic/README.md, examples/app_builder/README.md]
+
+  - kind: section
+    track: user-guide
+    lang: fr
+    source: user-guide/sections/task-run-the-example-apps.fr.md
+    rendered: [user-guide/sections/task-run-the-example-apps.fr.html]
+
+  - kind: section
+    track: user-guide
+    lang: es
+    source: user-guide/sections/task-run-the-example-apps.es.md
+    rendered: [user-guide/sections/task-run-the-example-apps.es.html]
+
+  - kind: section
+    track: user-guide
+    lang: en
+    source: user-guide/sections/task-configure-tool-approvals.md
+    rendered: [user-guide/sections/task-configure-tool-approvals.html]
+    sources: [streamlit_coco/options.py, streamlit_coco/permissions.py, streamlit_coco/ui.py]
+
+  - kind: section
+    track: user-guide
+    lang: fr
+    source: user-guide/sections/task-configure-tool-approvals.fr.md
+    rendered: [user-guide/sections/task-configure-tool-approvals.fr.html]
+
+  - kind: section
+    track: user-guide
+    lang: es
+    source: user-guide/sections/task-configure-tool-approvals.es.md
+    rendered: [user-guide/sections/task-configure-tool-approvals.es.html]
+
+  - kind: section
+    track: user-guide
+    lang: en
+    source: user-guide/sections/task-add-file-uploads.md
+    rendered: [user-guide/sections/task-add-file-uploads.html]
+    sources: [streamlit_coco/upload.py, streamlit_coco/bootstrap.py, doc/features/file-upload/file-upload.md]
+
+  - kind: section
+    track: user-guide
+    lang: fr
+    source: user-guide/sections/task-add-file-uploads.fr.md
+    rendered: [user-guide/sections/task-add-file-uploads.fr.html]
+
+  - kind: section
+    track: user-guide
+    lang: es
+    source: user-guide/sections/task-add-file-uploads.es.md
+    rendered: [user-guide/sections/task-add-file-uploads.es.html]
+
+  - kind: section
+    track: user-guide
+    lang: en
+    source: user-guide/sections/task-use-structured-output.md
+    rendered: [user-guide/sections/task-use-structured-output.html]
+    sources: [streamlit_coco/options.py, streamlit_coco/ui.py, examples/structured_output.py, doc/features/structured-output/structured-output.md]
+
+  - kind: section
+    track: user-guide
+    lang: fr
+    source: user-guide/sections/task-use-structured-output.fr.md
+    rendered: [user-guide/sections/task-use-structured-output.fr.html]
+
+  - kind: section
+    track: user-guide
+    lang: es
+    source: user-guide/sections/task-use-structured-output.es.md
+    rendered: [user-guide/sections/task-use-structured-output.es.html]
+
+  - kind: section
+    track: user-guide
+    lang: en
+    source: user-guide/sections/task-run-headless.md
+    rendered: [user-guide/sections/task-run-headless.html]
+    sources: [streamlit_coco/query.py, streamlit_coco/session.py, examples/headless_pipeline.py, doc/features/headless/headless.md]
+
+  - kind: section
+    track: user-guide
+    lang: fr
+    source: user-guide/sections/task-run-headless.fr.md
+    rendered: [user-guide/sections/task-run-headless.fr.html]
+
+  - kind: section
+    track: user-guide
+    lang: es
+    source: user-guide/sections/task-run-headless.es.md
+    rendered: [user-guide/sections/task-run-headless.es.html]
+
+  - kind: section
+    track: user-guide
+    lang: en
+    source: user-guide/sections/reference-api.md
+    rendered: [user-guide/sections/reference-api.html]
+    sources: [doc/api.md, streamlit_coco/__init__.py, streamlit_coco/options.py, streamlit_coco/session.py, streamlit_coco/ui.py, streamlit_coco/rail.py, streamlit_coco/viewer.py, streamlit_coco/bootstrap.py, streamlit_coco/upload.py, streamlit_coco/query.py, streamlit_coco/messages.py, streamlit_coco/diagnostics.py, streamlit_coco/errors.py, streamlit_coco/tool_names.py, streamlit_coco/debug.py]
+
+  - kind: section
+    track: user-guide
+    lang: fr
+    source: user-guide/sections/reference-api.fr.md
+    rendered: [user-guide/sections/reference-api.fr.html]
+
+  - kind: section
+    track: user-guide
+    lang: es
+    source: user-guide/sections/reference-api.es.md
+    rendered: [user-guide/sections/reference-api.es.html]
+
+  - kind: section
+    track: user-guide
+    lang: en
+    source: user-guide/sections/reference-commands.md
+    rendered: [user-guide/sections/reference-commands.html]
+    sources: [Makefile]
+
+  - kind: section
+    track: user-guide
+    lang: fr
+    source: user-guide/sections/reference-commands.fr.md
+    rendered: [user-guide/sections/reference-commands.fr.html]
+
+  - kind: section
+    track: user-guide
+    lang: es
+    source: user-guide/sections/reference-commands.es.md
+    rendered: [user-guide/sections/reference-commands.es.html]
+
+  - kind: section
+    track: user-guide
+    lang: en
+    source: user-guide/sections/reference-examples.md
+    rendered: [user-guide/sections/reference-examples.html]
+    sources: [examples/chat_app.py, examples/approval_gate.py, examples/structured_output.py, examples/headless_pipeline.py, examples/cwd_upload_chat.py, examples/backlog_desk/README.md, examples/bi_to_semantic/README.md, examples/app_builder/README.md]
+
+  - kind: section
+    track: user-guide
+    lang: fr
+    source: user-guide/sections/reference-examples.fr.md
+    rendered: [user-guide/sections/reference-examples.fr.html]
+
+  - kind: section
+    track: user-guide
+    lang: es
+    source: user-guide/sections/reference-examples.es.md
+    rendered: [user-guide/sections/reference-examples.es.html]
+
+  - kind: section
+    track: user-guide
+    lang: en
+    source: user-guide/sections/outputs.md
+    rendered: [user-guide/sections/outputs.html]
+    sources: [streamlit_coco/upload.py, examples/app_builder/engine/paths.py, examples/bi_to_semantic/engine/paths.py, examples/backlog_desk/utils/paths.py]
+
+  - kind: section
+    track: user-guide
+    lang: fr
+    source: user-guide/sections/outputs.fr.md
+    rendered: [user-guide/sections/outputs.fr.html]
+
+  - kind: section
+    track: user-guide
+    lang: es
+    source: user-guide/sections/outputs.es.md
+    rendered: [user-guide/sections/outputs.es.html]
+
+  - kind: section
+    track: user-guide
+    lang: en
+    source: user-guide/sections/faq.md
+    rendered: [user-guide/sections/faq.html]
+    sources: [README.md, doc/marketing/demo.md, CHANGELOG.md]
+
+  - kind: section
+    track: user-guide
+    lang: fr
+    source: user-guide/sections/faq.fr.md
+    rendered: [user-guide/sections/faq.fr.html]
+
+  - kind: section
+    track: user-guide
+    lang: es
+    source: user-guide/sections/faq.es.md
+    rendered: [user-guide/sections/faq.es.html]
+
+  # ── Technical Guide ─────────────────────────────────────────────────────
+  - kind: index
+    track: technical-guide
+    lang: en
+    source: technical-guide/index.md
+    rendered: [technical-guide/index.html]
+    sources: [README.md, pyproject.toml, CHANGELOG.md]
+
+  - kind: index
+    track: technical-guide
+    lang: fr
+    source: technical-guide/index.fr.md
+    rendered: [technical-guide/index.fr.html]
+
+  - kind: index
+    track: technical-guide
+    lang: es
+    source: technical-guide/index.es.md
+    rendered: [technical-guide/index.es.html]
+
+  - kind: section
+    track: technical-guide
+    lang: en
+    source: technical-guide/sections/architecture.md
+    rendered: [technical-guide/sections/architecture.html]
+    sources: [streamlit_coco/__init__.py, streamlit_coco/session.py, streamlit_coco/options.py, streamlit_coco/permissions.py, doc/security/threat-model.md]
+
+  - kind: section
+    track: technical-guide
+    lang: fr
+    source: technical-guide/sections/architecture.fr.md
+    rendered: [technical-guide/sections/architecture.fr.html]
+
+  - kind: section
+    track: technical-guide
+    lang: es
+    source: technical-guide/sections/architecture.es.md
+    rendered: [technical-guide/sections/architecture.es.html]
+
+  - kind: section
+    track: technical-guide
+    lang: en
+    source: technical-guide/sections/install.md
+    rendered: [technical-guide/sections/install.html]
+    sources: [doc/deployment/local.md, pyproject.toml, Makefile]
+
+  - kind: section
+    track: technical-guide
+    lang: fr
+    source: technical-guide/sections/install.fr.md
+    rendered: [technical-guide/sections/install.fr.html]
+
+  - kind: section
+    track: technical-guide
+    lang: es
+    source: technical-guide/sections/install.es.md
+    rendered: [technical-guide/sections/install.es.html]
+
+  - kind: section
+    track: technical-guide
+    lang: en
+    source: technical-guide/sections/configuration.md
+    rendered: [technical-guide/sections/configuration.html]
+    sources: [streamlit_coco/options.py, streamlit_coco/diagnostics.py, streamlit_coco/upload.py, streamlit_coco/debug.py]
+
+  - kind: section
+    track: technical-guide
+    lang: fr
+    source: technical-guide/sections/configuration.fr.md
+    rendered: [technical-guide/sections/configuration.fr.html]
+
+  - kind: section
+    track: technical-guide
+    lang: es
+    source: technical-guide/sections/configuration.es.md
+    rendered: [technical-guide/sections/configuration.es.html]
+
+  - kind: section
+    track: technical-guide
+    lang: en
+    source: technical-guide/sections/security.md
+    rendered: [technical-guide/sections/security.html]
+    sources: [doc/security/threat-model.md, doc/security/findings-report.md, .github/workflows/security.yml, .gitignore]
+
+  - kind: section
+    track: technical-guide
+    lang: fr
+    source: technical-guide/sections/security.fr.md
+    rendered: [technical-guide/sections/security.fr.html]
+
+  - kind: section
+    track: technical-guide
+    lang: es
+    source: technical-guide/sections/security.es.md
+    rendered: [technical-guide/sections/security.es.html]
+
+  - kind: section
+    track: technical-guide
+    lang: en
+    source: technical-guide/sections/operations.md
+    rendered: [technical-guide/sections/operations.html]
+    sources: [Makefile, doc/testing.md]
+
+  - kind: section
+    track: technical-guide
+    lang: fr
+    source: technical-guide/sections/operations.fr.md
+    rendered: [technical-guide/sections/operations.fr.html]
+
+  - kind: section
+    track: technical-guide
+    lang: es
+    source: technical-guide/sections/operations.es.md
+    rendered: [technical-guide/sections/operations.es.html]
+
+  - kind: section
+    track: technical-guide
+    lang: en
+    source: technical-guide/sections/data-and-contracts.md
+    rendered: [technical-guide/sections/data-and-contracts.html]
+    sources: [streamlit_coco/messages.py, examples/bi_to_semantic/contracts, examples/app_builder/out]
+
+  - kind: section
+    track: technical-guide
+    lang: fr
+    source: technical-guide/sections/data-and-contracts.fr.md
+    rendered: [technical-guide/sections/data-and-contracts.fr.html]
+
+  - kind: section
+    track: technical-guide
+    lang: es
+    source: technical-guide/sections/data-and-contracts.es.md
+    rendered: [technical-guide/sections/data-and-contracts.es.html]
+
+  - kind: section
+    track: technical-guide
+    lang: en
+    source: technical-guide/sections/upgrade-and-release.md
+    rendered: [technical-guide/sections/upgrade-and-release.html]
+    sources: [doc/deployment/publish.md, CHANGELOG.md, pyproject.toml]
+
+  - kind: section
+    track: technical-guide
+    lang: fr
+    source: technical-guide/sections/upgrade-and-release.fr.md
+    rendered: [technical-guide/sections/upgrade-and-release.fr.html]
+
+  - kind: section
+    track: technical-guide
+    lang: es
+    source: technical-guide/sections/upgrade-and-release.es.md
+    rendered: [technical-guide/sections/upgrade-and-release.es.html]
+
+  - kind: section
+    track: technical-guide
+    lang: en
+    source: technical-guide/sections/testing-and-ci.md
+    rendered: [technical-guide/sections/testing-and-ci.html]
+    sources: [doc/testing.md, .github/workflows/ci.yml, tests]
+
+  - kind: section
+    track: technical-guide
+    lang: fr
+    source: technical-guide/sections/testing-and-ci.fr.md
+    rendered: [technical-guide/sections/testing-and-ci.fr.html]
+
+  - kind: section
+    track: technical-guide
+    lang: es
+    source: technical-guide/sections/testing-and-ci.es.md
+    rendered: [technical-guide/sections/testing-and-ci.es.html]
+
+  - kind: section
+    track: technical-guide
+    lang: en
+    source: technical-guide/sections/extending.md
+    rendered: [technical-guide/sections/extending.html]
+    sources: [streamlit_coco/text_renderer.py, streamlit_coco/tool_names.py, examples/app_builder/types]
+
+  - kind: section
+    track: technical-guide
+    lang: fr
+    source: technical-guide/sections/extending.fr.md
+    rendered: [technical-guide/sections/extending.fr.html]
+
+  - kind: section
+    track: technical-guide
+    lang: es
+    source: technical-guide/sections/extending.es.md
+    rendered: [technical-guide/sections/extending.es.html]
+
+  - kind: section
+    track: technical-guide
+    lang: en
+    source: technical-guide/sections/limits.md
+    rendered: [technical-guide/sections/limits.html]
+    sources: [doc/security/threat-model.md, doc/roadmap.md]
+
+  - kind: section
+    track: technical-guide
+    lang: fr
+    source: technical-guide/sections/limits.fr.md
+    rendered: [technical-guide/sections/limits.fr.html]
+
+  - kind: section
+    track: technical-guide
+    lang: es
+    source: technical-guide/sections/limits.es.md
+    rendered: [technical-guide/sections/limits.es.html]
+
+  - kind: help
+    track: technical-guide
+    lang: en
+    source: technical-guide/help.md
+    rendered: [technical-guide/help.html]
+    sources: [CHANGELOG.md, doc/deployment/local.md, streamlit_coco/errors.py]
+
+  - kind: help
+    track: technical-guide
+    lang: fr
+    source: technical-guide/help.fr.md
+    rendered: [technical-guide/help.fr.html]
+
+  - kind: help
+    track: technical-guide
+    lang: es
+    source: technical-guide/help.es.md
+    rendered: [technical-guide/help.es.html]
+
+routes:
+  - id: understand-what-was-delivered
+    title: "Understand what was delivered"
+    time: "15 min"
+    entry_cost: "nothing to install"
+    steps:
+      - user-guide/sections/concepts
+      - user-guide/sections/reference-examples
+    outcome: "you know what streamlit-coco does, what each example app demonstrates, and you can follow a meeting about it."
+
+  - id: use-it
+    title: "Build your first CoCo app"
+    time: "25 min"
+    entry_cost: "a working Python environment"
+    steps:
+      - user-guide/sections/getting-started
+      - user-guide/sections/task-build-a-minimal-app
+    outcome: "you have a running Streamlit app with a CoCo panel, approval gates, and a chat input bar."
+
+  - id: take-over-the-platform
+    title: "Take over the platform"
+    time: "25 min"
+    entry_cost: "a terminal and the CoCo CLI"
+    steps:
+      - technical-guide/sections/architecture
+      - technical-guide/sections/install
+    outcome: "you know how the pieces fit together, and can install and run the library on a new host."
+
+  - id: troubleshoot
+    title: "Troubleshoot a broken session"
+    time: "10 min"
+    entry_cost: "nothing to install"
+    steps:
+      - technical-guide/help
+      - user-guide/sections/faq
+    outcome: "you can diagnose a stuck session, a rejected upload, or a failed approval using the symptom-indexed help reference."
+
+  - id: extend-it
+    title: "Extend it — a new example or App Builder type"
+    time: "20 min"
+    entry_cost: "a checkout of the repo"
+    steps:
+      - technical-guide/sections/extending
+      - user-guide/sections/reference-api
+    outcome: "you know the extension points (text renderer, tool-card family, App Builder types) and the full API surface to build on."

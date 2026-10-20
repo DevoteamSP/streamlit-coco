@@ -12,6 +12,39 @@ Living plan (what’s next): [`doc/roadmap.md`](doc/roadmap.md).
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-10-20
+
+Ask CoCo, a floating window, beside the 0.1.9 chat family. `chat`, `panel`, and `copilot_rail` stay the default.
+Upgrading from 0.1.9: nothing to change. Every name, parameter and default of 0.1.9 is kept (a test holds the package to it). The one new requirement is Streamlit 1.55 or later.
+Migration sheet: [`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask-coco.md).
+
+### Added
+
+- [Ask CoCo design canvas](doc/features/ask-coco/design/README.md): 86 frames, two host-page views, the original manifest and styles, and finished standalone browser consultation pages, with no build step, and a styled index using the canvas palette and local Montserrat.
+- `ask_coco(cwd, ...)` mounts the launcher and the window; `get_window(key)` returns its handle (`ask`, `result`, `form`, `open`, `notice`, `latest_answer`, `new`, `disconnect`, `conversation`).
+- `Features` and `Attachments` (comfort, planning, display switches, session details, files attached in the field), `Gate`, and the `policy` module (`FolderPolicy`, `Command`, `git_readonly`, `request`, ...) as `st_coco.policy.X`. The default policy is the safest: reading inside the working folder is free, everything else asks.
+- `streamlit_coco.testing` and `STREAMLIT_COCO_AGENT=mock`: run any application on the scripted agent, with no Snowflake login.
+- `examples/headless_pipeline.py` answers approvals in code through a `Conversation` with a policy.
+- 0.1.9 compatibility guard: `tests/test_compat_019.py` holds the public API (names, modules, class members, parameter names, order and defaults) to a snapshot of 0.1.9, `tests/fixtures/api_0.1.9.json`. The 0.1.9 tests of the chat family are kept (`test_copilot_rail.py`, `test_rich_text.py`, `test_classic_core.py`, `test_classic_smoke.py`, `tests/e2e_classic/`).
+- `make modern-chat` (`examples/modern_chat`): Rail, Window, or Both. Both shows the Copilot column and Ask CoCo together.
+
+### Changed
+
+- The floating window is off until you pass `mini=True` to `chat`, `panel`, or `copilot_rail`, or call `ask_coco(cwd)`. On the rail, `copilot_rail(..., ask=True)` adds **Minimize** (off by default, so a 0.1.9 rail draws no new control): it hides the rail and opens the window; **Restore** closes the window and brings the rail back. `mini=True` returns the window handle. Session tool allow-lists are not copied onto the window; its rights are its policy. When the rail is already connected, the window starts with that same Snowflake profile. The two clients stay separate.
+- The demo apps (`make simple-chat`, `approval`, `structured`, `cwd-upload`, `backlog`, `bi-semantic`, `app-builder`) keep the 0.1.9 chat, panel, or rail. Each has an **Ask CoCo** control in the sidebar, Off by default. On keeps the window minimized until **Minimize**. `make chat` still runs the simple demo.
+- `render_output_field` accepts a `CocoSession` (the 0.1.9 field) or a window handle (text only, self-refreshing), in the same first parameter, `session`, as in 0.1.9.
+- Streamlit 1.55 or later is required (it was 1.53). `copilot_rail` has called `st.popover(key=)`, new in 1.55, since `0.1.8`: on 1.53 and 1.54 it raised a `TypeError`. pip upgrades Streamlit when it installs this version.
+- `make e2e` drives the window on the scripted agent and uses the installed Edge when Playwright's Chromium is not installed. It also runs the 0.1.9 browser tests of the chat helpers (`tests/e2e_classic`).
+
+### Fixed
+
+- Path-policy regression tests respect native Windows and POSIX path semantics while checking that ambiguous paths never become free reads.
+- A search request names the same kind of place on every machine: the folder walk that finds the first file a read would ask for now goes in name order, not in the filesystem's listing order (a Linux runner could say "a memo" where macOS said "a draft").
+
+### Security
+
+- Lockfiles: `gitpython` 3.1.61 → 3.2.1, `mcp` 1.28.1 → 1.30.0 (kept on 1.x: the fix is in 1.30.0, and the Snowflake SDKs expect `mcp<2`), `pyjwt` 2.13.0 → 2.15.1, `snowflake-connector-python` 4.7.1 → 4.8.0 and `urllib3` 2.7.0 → 2.8.0, in `uv.lock` and `examples/app_builder/uv.lock`. Every locked version is outside the vulnerable range of the 23 open Dependabot alerts, and `make audit` is clean. The alerts close once this reaches `main`.
+
 ## [0.1.9] — 2026-09-10
 
 Copilot rail can pick which Snowflake connections TOML to use.
@@ -87,7 +120,7 @@ Alpha follow-up: a reusable Streamlit App Viewer, and BI → Semantic now loads 
 Alpha follow-up: a reusable Copilot rail, consultant training pack, and a Tableau → Semantic example that uses the rail as a product copilot (not a chat window).
 
 ### Added
-- **Copilot rail** (`copilot_rail()`, `transcript_view_pills()`) — generic right-rail Copilot (connection, queued jobs, transcript pills: last messages / first 200 characters). `panel()` / `render_transcript()` gain `preview_chars=`. Feature: [`doc/features/copilot-rail/`](doc/features/copilot-rail/)
+- **Copilot rail** (`copilot_rail()`, `transcript_view_pills()`) — generic right-rail Copilot (connection, queued jobs, transcript pills: last messages / first 200 characters). `panel()` / `render_transcript()` gain `preview_chars=`. Feature: [`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask-coco.md)
 - **Example: Tableau → Semantic** — multipage demo (`examples/tableau_to_semantic`, `make tableau-semantic`) that extracts estate/KPI/access drift from MIT Tableau Server workbooks, arbitrates with `request_input`, Writes a semantic view + row access policy, and generates a Streamlit consumer (**Build with python** or **Build with CoCo** with **Save Brief** → generate; brief reloads from `BRIEF.md`) with **disconnected** (no warehouse) and live `SEMANTIC_VIEW(...)` modes. **Preview** shares the Copilot right-rail slot (inline studio or run-on-the-fly at `:8511`); the split uses `streamlit_extras.resizable_columns`. Screens 2–5 restore `out/*.json` when the session reopens.
 - **Training pack** — consultant enablement under [`doc/training/`](doc/training/) (overview, setup, hands-on lab, demo script, quiz, enablement deck) plus workshop [`W01`](doc/methodology/workshops/w01-setup-architecture-first-app.md)
 
@@ -106,7 +139,7 @@ Alpha follow-up: browser uploads into the agent workspace, safer transcript UX, 
 Published from temporary Trusted Publisher on [`lletourmy/streamlit-coco`](https://github.com/lletourmy/streamlit-coco); public tree also synced to [`DevoteamSP/streamlit-coco`](https://github.com/DevoteamSP/streamlit-coco).
 
 ### Added
-- **File upload into `cwd`** — `upload_to_cwd()` (+ `UploadedPath`, `CwdUploadError`), optional `chat_input_bar(..., accept_file=…)`, and `cwd_uploader()`; demo `examples/cwd_upload_chat.py` (`make cwd-upload`); docs [`doc/features/file-upload/`](doc/features/file-upload/)
+- **File upload into `cwd`** — `upload_to_cwd()` (+ `UploadedPath`, `CwdUploadError`), optional `chat_input_bar(..., accept_file=…)`, and `cwd_uploader()`; demo `examples/cwd_upload_chat.py` (`make cwd-upload`); docs [`doc/api.md`](doc/api.md)
 - **Copy-to-clipboard** — assistant messages + tool payloads via CCv2 copy control (`show_copy=` on `panel()` / `render_transcript()`)
 - **Rich markdown / SQL highlighting** — fenced code blocks in chat render with `st.code` + language (SQL/Python/…); bash tool output uses highlighted code blocks
 - **Transcript windowing** — optional `max_messages=` on `panel()` / `render_transcript()` with **Load earlier**
@@ -141,7 +174,7 @@ Published from temporary Trusted Publisher on [`lletourmy/streamlit-coco`](https
 - `doc-dev/` — development-only docs (excluded from sync + sdist)
 
 ### Changed
-- **Compact tool cards** — collapsed expanders (family · status · meta); auto-open on error; CCv2 `<details>` parity ([`doc/features/tools-display/SPEC.md`](doc/features/tools-display/SPEC.md))
+- **Compact tool cards** — collapsed expanders (family · status · meta); auto-open on error; CCv2 `<details>` parity ([`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask-coco.md))
 - Temporary PyPI release surface: [`lletourmy/streamlit-coco`](https://github.com/lletourmy/streamlit-coco) until DevoteamSP is PyPI-validated
 - Clear tool “running” captions when done (SDK `UserMessage` / NDJSON tool results)
 - CCv2 skill hygiene — AbortController cleanup; pause `run_every` on pending approval; `isolate_styles=True`
@@ -164,14 +197,14 @@ Published from temporary Trusted Publisher on [`lletourmy/streamlit-coco`](https
 ## [2026-07-24]
 
 ### Added
-- **Tools display & user interactions** — full spec + implementation ([`doc/features/tools-display/SPEC.md`](doc/features/tools-display/SPEC.md))
+- **Tools display & user interactions** — full spec + implementation ([`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask-coco.md))
   - Meaningful bordered tool cards (no default JSON expanders) for Glob, Grep, Read, Write, Edit, Bash, SQL / `sql_execute`, AskUserQuestion, ExitPlanMode, and generic / MCP tools
   - `streamlit_coco.tool_names`, `tool_extract`, `tool_cards` dispatch; CCv2 frontend parity
   - AskUserQuestion UI: radio / multiselect, **Other…** free-text, Submit / Cancel; always routed through `can_use_tool`
   - SQL card: query code block + dataframe / text results; SQL preview on approval
   - ExitPlanMode: Approve plan / Reject (with optional feedback); never “Always allow”
   - CoCo debug mode (`STREAMLIT_COCO_DEBUG` / `COCO_DEBUG` / `st.session_state["coco_debug"]`) for collapsed **Raw tool payload**
-- Feature checklist + `display_*` test prompt pack ([`doc/features/tools-display/test-checklist.md`](doc/features/tools-display/test-checklist.md), [`examples/testdata/prompts.json`](examples/testdata/prompts.json) v2 — 50+ prompts)
+- Feature checklist + `display_*` test prompt pack ([`doc/features/ask-coco/test-checklist.md`](doc/features/ask-coco/test-checklist.md), [`examples/testdata/prompts.json`](examples/testdata/prompts.json) v2 — 50+ prompts)
 - Chat demo: Plan mode toggle, debug checkbox, test-prompt runner by category
 
 ### Changed

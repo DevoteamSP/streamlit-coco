@@ -8,9 +8,21 @@ from pathlib import Path
 import streamlit as st
 
 import streamlit_coco as st_coco
+from streamlit_coco.rail import (
+    ask_coco_switch,
+    ask_minimize,
+    ask_restore,
+    present_ask,
+    rail_minimized,
+)
 
 st.set_page_config(page_title="CoCo Chat", layout="wide")
-st.title("CoCo for Streamlit")
+show_ask = ask_coco_switch("chat_ask_coco")
+_chat_min = show_ask and rail_minimized("chat_coco")
+with st.container(horizontal=True, vertical_alignment="center"):
+    st.title("CoCo for Streamlit")
+    if show_ask and not _chat_min:
+        ask_minimize("chat_coco")
 
 COCO_TOOLS = ["Read", "Write", "Edit", "Bash", "Glob", "Grep", "SQL"]
 DEFAULT_AUTO_ALLOWED = ["Read", "Glob", "Grep"]
@@ -59,6 +71,12 @@ opts = st_coco.CocoOptions(
     permission_mode="plan" if plan_mode else "default",
 )
 env = st_coco.check_environment(connection=connection)
+
+present_ask(
+    show_ask,
+    "chat_coco",
+    lambda: st_coco.ask_coco(".", connection=connection, on_rail=ask_restore("chat_coco")),
+)
 
 if not st_coco.render_start_gate(
     opts,
@@ -201,21 +219,22 @@ pending_test = st.session_state.pop("_coco_pending_test_prompt", None)
 if pending_test:
     st_coco.send_prompt(session, pending_test)
 
-st_coco.panel(
-    session=session,
-    output_label=output_label,
-    output_mode=output_mode,
-    show_tool_details=output_mode == "transcript",
-    show_status=True,
-    show_copy=show_copy,
-    warm_up=True,
-    run_every=0.25,
-)
+if not _chat_min:
+    st_coco.panel(
+        session=session,
+        output_label=output_label,
+        output_mode=output_mode,
+        show_tool_details=output_mode == "transcript",
+        show_status=True,
+        show_copy=show_copy,
+        warm_up=True,
+        run_every=0.25,
+    )
 
-st_coco.chat_input_bar(
-    session,
-    placeholder="Ask CoCo about your data…",
-)
+    st_coco.chat_input_bar(
+        session,
+        placeholder="Ask CoCo about your data…",
+    )
 
 with st.sidebar:
     if session.init_info:

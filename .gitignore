@@ -4,6 +4,8 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 dist/
+# Local library dependency resolution; releases use pyproject.toml.
+/uv.lock
 *.egg-info/
 .DS_Store
 *.tmp

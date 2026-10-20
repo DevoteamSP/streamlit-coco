@@ -1,0 +1,241 @@
+/* Ask CoCo: launcher and window. Lives in a shadow root (isolate_styles): nothing here reaches the app and the app's
+   rules do not reach in. Only inherited properties and custom properties cross the boundary, and `all: initial` on
+   .coco-root stops the inherited ones; the one custom property read from outside is --coco-bottom (set by coco.js to clear an action bar).
+   The theme is the --coco-* variables declared first below (accent on-accent surface text muted border danger font radius): a host
+   sets them through ask_coco(theme=...), coco.js writes them on .coco-root. Everything else derives from them or from --r.
+   Source: ui-rebuild/coco-board/project/coco22.css (approved), with the cockpit.css pieces it relies on, folded in.
+   1rem is the page's own unit, so a size here is as large as the page's text. */
+
+:host { all: initial; display: block; }
+.coco-root {   /* inside the shadow: a rule written for the page's `*` reaches the host element, never this one */
+  --coco-accent: #5498FF; --coco-on-accent: #16181D; --coco-surface: #FFFFFF; --coco-text: #3C3C3A; --coco-muted: #6E6E6B; --coco-border: #E8E6E1;
+  --coco-danger: #F8485E; --coco-font: Montserrat, system-ui, sans-serif; --coco-radius: 1rem;
+  all: initial; display: block; font-family: var(--coco-font); font-size: 1rem; line-height: 1.45; color: var(--coco-text);
+  --r: 1rem; --coco: var(--coco-accent); --disc: var(--coco-on-accent);
+  --ink: var(--coco-text); --ink-2: var(--coco-muted); --ink-3: #A3A3A0; --canvas: #F6F5F2; --surface: var(--coco-surface); --line: var(--coco-border); --beige: #EFEADC; --poppy: var(--coco-danger);
+  --fz-lead: calc(var(--r) * 1.05); --fz-mod: var(--r); --fz-body: calc(var(--r) * .875); --fz-cap: calc(var(--r) * .78);
+  --rad-m: var(--r); --rad-c: calc(var(--r) * .6); --shadow: 0 calc(var(--r) * .8) calc(var(--r) * 2.4) rgba(44, 44, 42, .24);
+  --bottom: var(--coco-bottom, calc(var(--r) * 1.5)); --wh: min(calc(var(--r) * 36), 72vh);
+}
+*, *::before, *::after { box-sizing: border-box; }
+h2, p, pre, ul, ol, blockquote { margin: 0; }
+button, textarea, select { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.i { width: calc(var(--r) * 1.15); height: calc(var(--r) * 1.15); flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.i.s { width: calc(var(--r) * .95); height: calc(var(--r) * .95); }
+.cap { font-size: var(--fz-cap); color: var(--ink-2); }
+.pre { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: var(--fz-cap); line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere;
+  padding: calc(var(--r) * .5) calc(var(--r) * .65); border: 1px solid var(--line); border-radius: calc(var(--r) * .5); background: var(--surface); color: var(--ink);
+  max-height: calc(var(--r) * 7); overflow: auto; text-align: left; }
+
+/* buttons, field, menu: the cockpit's own, redrawn here so the window does not depend on the page */
+.b { display: inline-flex; align-items: center; justify-content: center; gap: calc(var(--r) * .45); height: calc(var(--r) * 2.25); padding: 0 calc(var(--r) * .85); border-radius: var(--rad-c);
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: var(--fz-body); font-weight: 500; white-space: nowrap; cursor: pointer; }
+.b.k { background: var(--ink); border-color: var(--ink); color: var(--surface); font-weight: 600; }
+.b.sm { height: calc(var(--r) * 1.9); padding: 0 calc(var(--r) * .6); font-size: var(--fz-cap); }
+.b.big { height: calc(var(--r) * 2.5); padding: 0 calc(var(--r) * 1.4); font-size: var(--fz-body); }   /* Allow and Decline: the largest controls of the window */
+.b:hover:not(:disabled, .k) { background: var(--canvas); }
+.b.k:hover:not(:disabled) { filter: brightness(1.18); }
+.b:disabled { color: var(--ink-3); background: var(--canvas); cursor: default; }
+.in { display: block; width: 100%; height: calc(var(--r) * 2.5); padding: 0 calc(var(--r) * .7); border: 1px solid var(--line); border-radius: var(--rad-c); background: var(--surface); font-size: var(--fz-body); color: var(--ink); }
+.pop { position: absolute; z-index: 4; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: calc(var(--r) * .75); box-shadow: var(--shadow); padding: calc(var(--r) * .5); }
+.pop .it { line-height: normal; display: flex; align-items: center; gap: calc(var(--r) * .6); min-height: calc(var(--r) * 2.5); padding: calc(var(--r) * .3) calc(var(--r) * .6); border-radius: calc(var(--r) * .5);
+  font-size: var(--fz-body); border: 0; background: transparent; width: 100%; text-align: left; cursor: pointer; }
+
+/* ====================================================================== launcher */
+/* The pill is as wide as its label: the label is in the flow, left of the disc's own 3rem, and the width goes from the
+   disc to the content (animated where the browser can interpolate to a content size, otherwise it simply opens). */
+.cl { interpolate-size: allow-keywords; position: fixed; right: calc(var(--r) * 1.5); bottom: var(--bottom); z-index: 7; display: flex; justify-content: flex-end; align-items: center; box-sizing: border-box; width: calc(var(--r) * 3); height: calc(var(--r) * 3);
+  padding: 0 calc(var(--r) * 3) 0 0; margin: 0; border: 0; border-radius: 99px; background: var(--disc); color: var(--surface); font-size: var(--fz-body); font-weight: 600; line-height: 1; cursor: pointer; opacity: 1; overflow: visible;
+  filter: drop-shadow(0 0 calc(var(--r) * .05) rgba(0, 0, 0, .4)) drop-shadow(0 calc(var(--r) * .2) calc(var(--r) * .4) rgba(0, 0, 0, .4));
+  transition: opacity 160ms ease-out, transform 160ms ease-out, filter 160ms ease-out, width 160ms ease-out; }
+.cl.off { opacity: .7; }   /* dimmed only when CoCo cannot answer (not connected, not installed) */
+.cl > svg { position: absolute; right: 0; top: 0; display: block; width: calc(var(--r) * 3); height: calc(var(--r) * 3); }   /* the spark stays at the right end while the disc grows leftwards */
+.cl .lb { flex: none; padding: calc(var(--r) * .1) 0 0 calc(var(--r) * 1.25); white-space: nowrap; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 160ms ease-out, visibility 0s linear 160ms; }
+.cl:hover, .cl:focus-visible, .cl.ex, .cl.aw, .cl.dn, .cl.er { width: max-content; opacity: 1; transform: translateY(-2px);
+  filter: drop-shadow(0 0 calc(var(--r) * .05) rgba(0, 0, 0, .5)) drop-shadow(0 calc(var(--r) * .4) calc(var(--r) * .7) rgba(0, 0, 0, .5)); }
+.cl:hover .lb, .cl:focus-visible .lb, .cl.ex .lb, .cl.aw .lb, .cl.dn .lb, .cl.er .lb { opacity: 1; visibility: visible; transition-delay: 0s; }
+.cl:focus-visible { outline: 2px solid var(--poppy); outline-offset: 2px; }   /* outside the window the ring is the Cockpit's */
+.cl.ex, .cl.aw, .cl.dn, .cl.er { transform: none; }
+.cl.pn { opacity: 1; }
+.cl.pn::after { content: ""; position: absolute; right: calc(var(--r) * -.35); top: calc(var(--r) * -.35); width: calc(var(--r) * 3.7); height: calc(var(--r) * 3.7); border-radius: 50%; border: 2px solid transparent; border-top-color: var(--coco); animation: cl-spin 1s linear infinite; pointer-events: none; }
+@keyframes cl-spin { to { transform: rotate(1turn); } }
+
+/* ====================================================================== window */
+.cc { position: fixed; right: calc(var(--r) * 1.5); bottom: var(--bottom); z-index: 8; display: flex; flex-direction: column; width: min(calc(var(--r) * 27), calc(100vw - var(--r) * 2)); height: var(--wh); min-height: 0;
+  border: 1px solid var(--line); border-radius: var(--coco-radius); background: var(--canvas); box-shadow: var(--shadow); overflow: hidden; transform-origin: 100% 100%; animation: cc-in 160ms ease-out; }
+@keyframes cc-in { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
+.cc :focus-visible { outline: 2px solid var(--coco); outline-offset: 2px; }
+.cc :focus-visible:is(.b, .pp, summary) { outline-offset: 1px; }
+.fld textarea:focus-visible { outline: 0; }   /* the field answers with its border, not a ring */
+
+.hd { position: relative; z-index: 2; transition: box-shadow 160ms ease-out; flex: none; display: flex; align-items: center; gap: calc(var(--r) * .75); height: calc(var(--r) * 3.75); padding: 0 calc(var(--r) * .75) 0 var(--r); background: var(--disc); color: var(--surface); }
+.hd .sk { display: block; width: calc(var(--r) * 1.5); height: calc(var(--r) * 1.5); flex: none; }
+.hd .tt { flex: 1; min-width: 0; }
+.hd h2 { font-size: var(--fz-mod); font-weight: 600; color: var(--surface); }
+.ib { display: grid; place-items: center; flex: none; width: calc(var(--r) * 2.25); height: calc(var(--r) * 2.25); padding: 0; border: 0; border-radius: var(--rad-c); background: transparent; color: var(--surface); cursor: pointer; }
+.ib:hover, .ib[aria-expanded=true] { background: rgba(255, 255, 255, .14); }
+.cc.scr .hd { box-shadow: 0 1px 0 var(--line), 0 calc(var(--r) * .5) calc(var(--r) * .5) rgba(44, 44, 42, .16); }
+
+.pop.mn { top: calc(var(--r) * 3.5); right: calc(var(--r) * .75); width: calc(var(--r) * 13); }
+.pop.mn .it:hover, .pop.mn .it:focus-visible { background: var(--canvas); }
+.pop.mn .it .i { color: var(--ink-2); }
+
+.bd { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: calc(var(--r) * .75); padding: var(--r); background: var(--canvas); overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; overscroll-behavior: contain; }
+.bd.conv { flex-direction: column-reverse; }   /* scroll origin at the latest message; reading earlier ones is not undone by new text */
+.thr { display: flex; flex-direction: column; gap: calc(var(--r) * .75); margin-bottom: auto; min-width: 0; }
+.thr > .cap { padding: 0 calc(var(--r) * .25); overflow-wrap: anywhere; }
+.msg { align-self: flex-start; max-width: 100%; min-width: 0; padding: calc(var(--r) * .65) calc(var(--r) * .85); border: 1px solid var(--line); border-radius: calc(var(--r) * .75) calc(var(--r) * .75) calc(var(--r) * .75) calc(var(--r) * .25);
+  background: var(--surface); font-size: var(--fz-body); line-height: 1.5; color: var(--ink); overflow-wrap: anywhere; }
+.msg.me { align-self: flex-end; max-width: 85%; border-color: var(--beige); border-radius: calc(var(--r) * .75) calc(var(--r) * .75) calc(var(--r) * .25) calc(var(--r) * .75); background: var(--beige); white-space: pre-wrap; }
+.msg.me .ag-n { display: flex; align-items: center; gap: calc(var(--r) * .5); white-space: normal; }
+.msg.me .tk { margin: calc(var(--r) * -.3) 0 calc(var(--r) * -.3) auto; padding: calc(var(--r) * .3) 0; border: 0; background: transparent; font-size: var(--fz-cap); font-weight: 600; color: var(--ink); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.msg.me.ag-qd { border: 1px dashed var(--ink-3); background: transparent; }
+
+/* Markdown from the model */
+.md > :first-child { margin-top: 0; } .md > :last-child { margin-bottom: 0; }
+.md p, .md ul, .md ol, .md pre, .md blockquote, .md .tw { margin: 0 0 calc(var(--r) * .55); }
+.md ul, .md ol { padding-left: calc(var(--r) * 1.3); } .md li + li { margin-top: calc(var(--r) * .15); }
+.md li > :is(ul, ol) { margin: calc(var(--r) * .15) 0 0; }
+.md .mdh { font-weight: 600; margin: calc(var(--r) * .3) 0 calc(var(--r) * .25); }
+.md code, .ag-tx code, .ag-nar code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: .92em; padding: 0 .25em; border-radius: .3em; background: var(--canvas); }
+.md pre { max-height: calc(var(--r) * 14); overflow: auto; padding: calc(var(--r) * .5) calc(var(--r) * .65); border: 1px solid var(--line); border-radius: calc(var(--r) * .5); background: var(--canvas); white-space: pre-wrap; overflow-wrap: anywhere; }
+.md pre code { padding: 0; background: transparent; font-size: var(--fz-cap); line-height: 1.5; }
+.md blockquote { padding-left: calc(var(--r) * .7); border-left: 3px solid var(--line); color: var(--ink-2); }
+.md a { color: var(--ink); font-weight: 600; text-underline-offset: 2px; }
+.md hr { border: 0; border-top: 1px solid var(--line); margin: calc(var(--r) * .6) 0; }
+.md .tw { overflow-x: auto; } .md table { border-collapse: collapse; font-size: var(--fz-cap); } .md th, .md td { padding: calc(var(--r) * .25) calc(var(--r) * .5); border: 1px solid var(--line); text-align: left; vertical-align: top; overflow-wrap: normal; word-break: normal; } .md th { background: var(--canvas); font-weight: 600; }
+
+/* first screen, set-up states */
+.emp { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: var(--r); padding: 0; text-align: center; min-width: 0; }
+.emp .t { font-size: var(--fz-lead); font-weight: 600; line-height: 1.3; }
+.emp .cap { max-width: calc(var(--r) * 20); overflow-wrap: anywhere; }
+.pps { display: flex; flex-direction: column; gap: calc(var(--r) * .5); width: 100%; margin-top: calc(var(--r) * .25); }
+.pp { display: flex; align-items: center; justify-content: space-between; gap: calc(var(--r) * .6); width: 100%; min-height: calc(var(--r) * 2.5); padding: calc(var(--r) * .4) calc(var(--r) * .85); border: 1px solid var(--line); border-radius: calc(var(--r) * .75);
+  background: var(--surface); font-size: var(--fz-body); font-weight: 500; line-height: 1.35; text-align: left; cursor: pointer; }
+.pp .i { color: var(--ink-3); } .pp:hover { border-color: var(--ink-3); background: var(--canvas); } .pp:hover .i { color: var(--ink); }
+.selw { position: relative; width: 100%; }
+.selw select { appearance: none; -webkit-appearance: none; padding-right: calc(var(--r) * 2.2); cursor: pointer; }
+.selw .i { position: absolute; right: calc(var(--r) * .8); top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--ink-2); }
+.dot3 { display: inline-block; width: calc(var(--r) * .9); height: calc(var(--r) * .9); border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--ink-2); animation: cl-spin 1s linear infinite; vertical-align: -.15em; margin-right: calc(var(--r) * .4); }
+
+/* footer: one field with the send button inside it */
+.ft { flex: none; padding: calc(var(--r) * .75) var(--r); border-top: 1px solid var(--line); background: var(--surface); }
+.fix { display: flex; flex-direction: column; gap: calc(var(--r) * .5); }
+.fix .b { width: 100%; height: calc(var(--r) * 2.5); }
+.fix details > summary { font-size: var(--fz-cap); color: var(--ink-2); cursor: pointer; min-height: calc(var(--r) * 1.9); display: flex; align-items: center; }
+.fix .pre, .fix details .cap { margin-top: calc(var(--r) * .3); }
+.emp .t .i { color: var(--poppy); margin-right: calc(var(--r) * .4); vertical-align: -.2em; }
+.fld { display: flex; align-items: flex-end; gap: calc(var(--r) * .5); padding: calc(var(--r) * .35) calc(var(--r) * .35) calc(var(--r) * .35) calc(var(--r) * .85); border: 1px solid var(--line); border-radius: calc(var(--r) * .75); background: var(--canvas); }
+.fld:focus-within { border-color: var(--ink-3); }   /* used or focused: a neutral, slightly darker border; no blue ring */
+.fld textarea { flex: 1; min-width: 0; height: calc(var(--r) * 2); max-height: calc(var(--r) * 7); padding: calc(var(--r) * .25) 0; border: 0; border-radius: 0; background: transparent; font-size: var(--fz-body); line-height: 1.5; resize: none; outline: 0; overflow-y: hidden; scrollbar-width: thin; }   /* coco.js lets it scroll only beyond max-height */
+.fld textarea::placeholder { color: var(--ink-2); opacity: 1; }
+.sd { display: grid; place-items: center; flex: none; width: calc(var(--r) * 2); height: calc(var(--r) * 2); padding: 0; border: 0; border-radius: 50%; background: var(--line); color: var(--ink-3); cursor: default; }   /* always shown; quiet while the field is empty */
+.sd.on, .sd.st { position: relative; background: var(--coco); color: var(--disc); cursor: pointer; }   /* Send with text; the same disc, with the stop mark, while CoCo works */
+.sd.on:hover, .sd.st:hover { filter: brightness(.95); }
+.sd.st .i rect { fill: currentColor; }
+.sd .arc { position: absolute; inset: calc(var(--r) * -.2); border-radius: 50%; border: 2px solid transparent; border-top-color: var(--coco); animation: cl-spin 1s linear infinite; pointer-events: none; }
+
+/* steps, trail, request, notices */
+.ag-step, .ag-trail { align-self: stretch; color: var(--ink); min-width: 0; }
+.ag-step > summary, .ag-trail > summary { display: flex; align-items: flex-start; gap: calc(var(--r) * .6); min-height: calc(var(--r) * 2); padding: calc(var(--r) * .3) calc(var(--r) * .25); font-size: var(--fz-body); line-height: 1.4; cursor: pointer; list-style: none; border-radius: calc(var(--r) * .5); }
+.ag-step > summary::-webkit-details-marker, .ag-trail > summary::-webkit-details-marker, .ag-ask details > summary::-webkit-details-marker, .fix summary::-webkit-details-marker, .ag-sys summary::-webkit-details-marker { display: none; }
+.ag-step > summary:hover, .ag-trail > summary:hover { background: rgba(44, 44, 42, .06); }
+.ag-g { display: grid; place-items: center; flex: none; width: calc(var(--r) * 1.25); height: calc(var(--r) * 1.225); }
+.ag-g .i { width: var(--r); height: var(--r); stroke-width: 2.2; }
+.ag-run { display: block; width: calc(var(--r) * .9); height: calc(var(--r) * .9); border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--ink-2); animation: cl-spin 1s linear infinite; }
+.ag-tx { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.ag-d { color: var(--ink-2); }
+.ag-step.st-run .ag-d, .ag-step.st-bad .ag-d, .ag-step.st-no .ag-d { color: var(--ink); }
+.ag-step.st-bad .ag-d { font-weight: 600; }
+.ag-n { display: block; font-size: var(--fz-cap); color: var(--ink-2); }
+.ag-ch { flex: none; width: var(--r); height: calc(var(--r) * 1.225); fill: var(--ink); transition: transform 160ms ease-out; }
+details[open] > summary .ag-ch.rot { transform: rotate(180deg); }
+.ag-det { padding: calc(var(--r) * .1) calc(var(--r) * .25) calc(var(--r) * .5) calc(var(--r) * 2.1); display: flex; flex-direction: column; gap: calc(var(--r) * .3); min-width: 0; }
+.ag-det .cap { margin: 0; }
+.ag-trail > summary { color: var(--ink-2); }
+.ag-trail > summary b { font-weight: 600; color: var(--ink); }   /* the sentence CoCo said keeps its bold and code */
+.ag-rows { display: flex; flex-direction: column; margin: 0 0 0 calc(var(--r) * .7); padding-left: calc(var(--r) * .6); border-left: 1px solid var(--line); min-width: 0; }
+.ag-nar { margin: 0; padding: calc(var(--r) * .3) calc(var(--r) * .25); font-size: var(--fz-body); line-height: 1.4; color: var(--ink); overflow-wrap: anywhere; }
+
+.rq { flex: none; display: flex; flex-direction: column; min-height: 0; max-height: calc(var(--wh) * .5); padding: 0 var(--r) calc(var(--r) * .6); background: var(--canvas); }   /* folded: at most half the window */
+.rq:has(details[open], .ag-ask[data-k^="q:"], .ag-ask[data-k^="plan:"], .ag-std) { max-height: calc(var(--wh) - var(--r) * 11.5); }   /* evidence open, or a question, a plan, a choice to read whole: more, but the thread keeps a strip above and stays reachable */
+.ag-ask { flex: 0 1 auto; display: flex; flex-direction: column; min-height: 0; border: 2px solid var(--ink); border-radius: calc(var(--r) * .75); background: var(--surface); box-shadow: 0 calc(var(--r) * .4) calc(var(--r) * .5) rgba(44, 44, 42, .14); min-width: 0; overflow: hidden; }
+.ag-bd { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; gap: calc(var(--r) * .65); padding: calc(var(--r) * .8) calc(var(--r) * .85) calc(var(--r) * .3); overflow-y: auto; }
+.ag-q { margin: 0; font-size: var(--fz-body); font-weight: 600; line-height: 1.45; overflow-wrap: anywhere; }
+.ag-fx { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: calc(var(--r) * .2) calc(var(--r) * .75); margin: 0; font-size: var(--fz-body); line-height: 1.4; }
+.ag-fx .k { color: var(--ink-2); } .ag-fx .v { min-width: 0; overflow-wrap: anywhere; } .ag-fx .v.w { font-weight: 600; }
+.ag-ask details > summary { display: inline-flex; align-items: center; gap: calc(var(--r) * .3); min-height: calc(var(--r) * 1.9); font-size: var(--fz-cap); font-weight: 500; color: var(--ink-2); cursor: pointer; list-style: none; }
+.ag-ask details > summary .ag-ch { height: 1em; width: 1em; }
+.ag-ask details[open] > summary { margin-bottom: calc(var(--r) * .3); }
+.ag-ask pre { margin: 0; max-height: calc(var(--r) * 8.5); flex: none; }   /* six lines of a command, then it scrolls in its own box */
+.ag-ask details[data-n="2"] pre { max-height: calc(var(--r) * 6); }
+.ag-ask details > summary .on { display: none; } .ag-ask details[open] > summary .on { display: inline; } .ag-ask details[open] > summary .off { display: none; }
+.ag-acts { flex: none; display: flex; gap: calc(var(--r) * .6); }
+.ag-ask .ag-acts { padding: calc(var(--r) * .4) calc(var(--r) * .85) calc(var(--r) * .8); }
+.ag-ask .ag-acts .b { height: calc(var(--r) * 2.5); padding: 0 calc(var(--r) * 1.4); font-size: var(--fz-body); }   /* the buttons that decide are the largest controls of the window */   /* Allow and Decline sit below the scrolling body: nothing is ever under them */
+
+.ag-cur { display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: text-bottom; background: var(--ink); animation: cc-blink 1s steps(2, start) infinite; }
+@keyframes cc-blink { to { visibility: hidden; } }
+.ag-cpy { position: relative; padding-right: calc(var(--r) * 2.6); }
+.ag-cp { position: absolute; top: calc(var(--r) * .3); right: calc(var(--r) * .3); display: grid; place-items: center; width: calc(var(--r) * 1.9); height: calc(var(--r) * 1.9); padding: 0; border: 0; border-radius: calc(var(--r) * .5); background: transparent; color: var(--ink-2); cursor: pointer; }
+.ag-cp:hover { background: var(--canvas); color: var(--ink); }
+.ag-draft { white-space: pre-wrap; }
+.ag-sys { display: flex; flex-direction: column; gap: calc(var(--r) * .3); align-self: stretch; padding: calc(var(--r) * .3) calc(var(--r) * .25); font-size: var(--fz-body); color: var(--ink); overflow-wrap: anywhere; }
+.ag-sys > div { display: flex; align-items: center; justify-content: space-between; gap: calc(var(--r) * .6); }
+.ag-sys summary { margin: calc(var(--r) * -.3) 0; padding: calc(var(--r) * .3) 0; font-size: var(--fz-cap); color: var(--ink-2); cursor: pointer; list-style: none; text-decoration: underline; text-underline-offset: 2px; }
+.ag-sys .pre { margin-top: calc(var(--r) * .3); }
+.msg.ty { display: flex; align-items: center; gap: calc(var(--r) * .35); padding: calc(var(--r) * .95) calc(var(--r) * 1.1); }
+.msg.ty i { width: calc(var(--r) * .45); height: calc(var(--r) * .45); border-radius: 50%; background: var(--ink-3); animation: cc-dot 1.2s ease-in-out infinite; }
+.msg.ty i:nth-child(2) { animation-delay: .15s; } .msg.ty i:nth-child(3) { animation-delay: .3s; }
+@keyframes cc-dot { 0%, 60%, 100% { transform: none; opacity: .5; } 30% { transform: translateY(calc(var(--r) * -.25)); opacity: 1; } }
+
+.ag-cf { position: absolute; z-index: 4; left: calc(var(--r) * .75); right: calc(var(--r) * .75); top: calc(var(--r) * 4.25); display: flex; flex-direction: column; gap: calc(var(--r) * .6); padding: calc(var(--r) * .85);
+  border: 2px solid var(--ink); border-radius: calc(var(--r) * .75); background: var(--surface); box-shadow: var(--shadow); max-height: calc(var(--wh) - var(--r) * 6); overflow-y: auto; }
+.ag-off { flex: none; margin: 0; padding: calc(var(--r) * .4) var(--r); background: var(--canvas); border-top: 1px solid var(--line); }   /* the Cockpit has not answered for a while */
+.ag-cft { margin: 0; font-size: var(--fz-body); line-height: 1.45; color: var(--ink); }
+
+
+/* ====================================================================== shared by the feature parts (one copy, here) */
+input[type=checkbox], input[type=radio] { accent-color: var(--ink); width: calc(var(--r) * 1.05); height: calc(var(--r) * 1.05); margin: 0; flex: none; }
+.ag-kk { margin: 0; font-size: var(--fz-cap); line-height: 1.4; color: var(--ink-2); }   /* "Question 2 of 3", "First of 2 waiting", what approving does */
+.ag-ask > .ag-kk { padding: calc(var(--r) * .35) calc(var(--r) * .85) calc(var(--r) * .25); }   /* outside the scrolling body: always in view above the buttons */
+.ag-ask .b.ag-off { margin: 0; border-color: var(--line); background: var(--line); color: var(--ink-3); cursor: default; }   /* a button that is not usable yet; not the offline note of the same class */
+.ag-ask .b.ag-off:hover { filter: none; background: var(--line); }
+.ag-body { display: flex; flex-direction: column; gap: calc(var(--r) * .6); flex: none; max-height: calc(var(--r) * 13.5); overflow-y: auto; scrollbar-width: thin; }   /* a long form or plan scrolls here; the question and the buttons never leave the window */
+.ag-body.sh { max-height: calc(var(--r) * 6.5); }
+.ag-body.cut { border-bottom: 1px solid var(--line); }   /* set while its content is taller than it: there is more below */
+.ag-ask textarea.in, .ag-ask input.in, .ag-ask select.in { background: var(--surface); color: var(--ink); }
+.ag-ask textarea.in { height: auto; padding: calc(var(--r) * .5) calc(var(--r) * .7); line-height: 1.4; resize: none; }
+.ag-fr { display: flex; flex-direction: column; gap: calc(var(--r) * .25); }
+.ag-fr label { font-size: var(--fz-body); font-weight: 500; line-height: 1.4; }
+.ag-fr label .mut { font-weight: 400; color: var(--ink-2); }
+.ag-fr .selw select.in { height: calc(var(--r) * 2.25); }
+.ag-ev { align-self: stretch; }   /* an evidence fold: Show as JSON, Show full request, Show the message */
+.ag-ev > summary { display: inline-flex; align-items: center; gap: calc(var(--r) * .3); min-height: calc(var(--r) * 1.9); font-size: var(--fz-cap); font-weight: 500; color: var(--ink-2); cursor: pointer; list-style: none; }
+.ag-ev > summary::-webkit-details-marker { display: none; }
+.ag-ev > summary .ag-ch { height: 1em; width: 1em; }
+.ag-ev > summary .on, .ag-ev[open] > summary .off { display: none; }
+.ag-ev[open] > summary .on { display: inline; }
+.ag-ev pre { margin: 0; padding: calc(var(--r) * .5) calc(var(--r) * .65); max-height: calc(var(--r) * 9); overflow-y: auto; overflow-x: hidden; white-space: pre-wrap; overflow-wrap: anywhere; border: 1px solid var(--line); border-radius: calc(var(--r) * .5); background: var(--surface); font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: var(--fz-cap); line-height: 1.5; color: var(--ink); text-align: left; }
+.msg.me .ag-ev > summary { color: var(--ink); }
+.emp .ag-ev { width: 100%; text-align: center; }
+.msg .act { display: flex; align-items: center; justify-content: flex-end; gap: calc(var(--r) * .5); margin-top: calc(var(--r) * .6); }
+.ag-ib { display: grid; place-items: center; flex: none; width: calc(var(--r) * 1.9); height: calc(var(--r) * 1.9); padding: 0; border: 0; border-radius: calc(var(--r) * .5); background: transparent; color: var(--ink-2); cursor: pointer; }   /* a quiet icon button: copy, remove */
+.ag-ib:hover { background: var(--canvas); color: var(--ink); }
+.ag-sub { display: block; font-size: var(--fz-cap); color: var(--ink-2); white-space: nowrap; }   /* the second line of a menu entry */
+.pop.mn hr { margin: calc(var(--r) * .3) 0; border: 0; border-top: 1px solid var(--line); }
+.pop.mn.ag-mw { width: calc(var(--r) * 17); }
+.pop.mn .ag-sl { display: grid; place-items: center; flex: none; width: calc(var(--r) * .95); height: calc(var(--r) * .95); border: 1px solid var(--ink-3); border-radius: calc(var(--r) * .2); }   /* a switch of the menu: an empty box, or a ticked one */
+.pop.mn .ag-sl.on { border-color: var(--ink); background: var(--ink); }
+.pop.mn .it .ag-sl .i { width: calc(var(--r) * .7); height: calc(var(--r) * .7); stroke-width: 3.2; color: #fff; }
+.ag-pan { position: absolute; z-index: 4; left: calc(var(--r) * .75); right: calc(var(--r) * .75); top: calc(var(--r) * 4.25); max-height: calc(100% - var(--r) * 9.5); overflow-y: auto; display: flex; flex-direction: column; gap: calc(var(--r) * .6); padding: calc(var(--r) * .85); border: 1px solid var(--line); border-radius: calc(var(--r) * .75); background: var(--surface); box-shadow: var(--shadow); }   /* a panel over the window */
+.ag-pan .ag-acts { justify-content: flex-end; }
+
+/* Motion plays whatever the system's reduced-motion setting says (client, 2026-10-11); Features(motion=False) adds the class that restores it. */
+@media (prefers-reduced-motion: reduce) { .coco-root.calm *, .coco-root.calm *::before, .coco-root.calm *::after { animation: none !important; transition: none !important; } }
+
+/* Features(copy=False, steps=False): the window's classes say so; nothing else changes. */
+.coco-root.nocopy .ag-cp, .coco-root.nocopy [data-a="data-copy-table"], .coco-root.nocopy [data-a="data-copy-code"] { display: none; }
+.coco-root.nosteps .ag-step, .coco-root.nosteps .ag-trail { display: none; }

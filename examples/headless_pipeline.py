@@ -3,7 +3,8 @@
 Demonstrates:
 1. Single-turn ``query()``
 2. Multi-turn ``CocoSession.run()`` / ``stream()``
-3. Programmatic approvals via ``approve_pending`` / ``deny_pending``
+3. Approvals answered in code: a ``Conversation`` with a policy; each request is read as plain
+   data and answered with ``allow`` or ``decline``
 
 Imports only the headless surface — no Streamlit UI modules are loaded.
 """
@@ -12,9 +13,10 @@ from __future__ import annotations
 
 import asyncio
 import sys
+import time
 
 import streamlit_coco as coco
-from streamlit_coco.permissions import approve_pending
+from streamlit_coco.conversation import Conversation
 
 
 def _assert_no_streamlit() -> None:
@@ -58,7 +60,9 @@ async def _auto_approve_loop(session: coco.CocoSession) -> None:
                 updated = {"questions": questions, "answers": answers}
             elif coco.is_exit_plan_mode(pending.tool_name):
                 updated = {"message": "Plan approved (headless)."}
-            approve_pending(session, pending.request_id, updated_input=updated)
+            session.permission_manager.resolve(
+                pending.request_id, approved=True, updated_input=updated
+            )
         await asyncio.sleep(0.1)
 
 
@@ -95,12 +99,62 @@ async def multi_turn() -> None:
         session._wait_for_worker_stop(timeout=5.0)
 
 
+def run_with_approvals(conv: Conversation, text: str, decide, timeout: float = 120.0) -> list:
+    """Send `text` and answer every request through `decide(request) -> bool`; return the thread.
+
+    `request` is the plain dict the policy wrote ({kind, question, where, evidence, ...}):
+    allow what a script can vouch for, decline the rest.
+    """
+    conv.act({"type": "send", "text": text})
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        conv.drain()
+        view = conv.view()
+        request = view["request"]
+        if request:
+            verdict = "allow" if decide(request) else "decline"
+            conv.act({"type": verdict, "id": request["id"]})
+        elif view["status"] == "ready" and any(i["kind"] == "answer" for i in view["thread"]):
+            return view["thread"]
+        time.sleep(0.05)
+    raise TimeoutError(f"no answer to {text!r} within {timeout}s")
+
+
+def connect(conv: Conversation, timeout: float = 120.0) -> None:
+    """Connect with the first profile the agent lists, and wait until it is ready."""
+    conv.act({"type": "connect", "profile": (conv.view()["profiles"] or [""])[0]})
+    deadline = time.monotonic() + timeout
+    while conv.conn != "ready":
+        conv.drain()
+        if conv.conn == "none" or time.monotonic() > deadline:
+            raise RuntimeError("CoCo did not connect: " + str(conv.view()["error"]))
+        time.sleep(0.05)
+
+
+def approvals() -> None:
+    """Read inside the folder is free (the default policy); a change asks, and is answered here."""
+    print("\n=== Conversation with a policy ===")
+    conv = Conversation(".", policy=coco.policy.FolderPolicy("."))
+    try:
+        connect(conv)
+        thread = run_with_approvals(
+            conv,
+            "Summarize the top-level files.",
+            lambda request: request["kind"] == "read",  # never a change
+        )
+        print([i["text"] for i in thread if i["kind"] == "answer"][-1])
+    finally:
+        conv.close()
+
+
 def main() -> None:
     _assert_no_streamlit()
     # Separate event loops so SDK query() cleanup cannot cancel the session worker.
     asyncio.run(single_turn())
     _assert_no_streamlit()
     asyncio.run(multi_turn())
+    _assert_no_streamlit()
+    approvals()
     _assert_no_streamlit()
 
 

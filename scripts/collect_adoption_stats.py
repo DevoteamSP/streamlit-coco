@@ -5,6 +5,7 @@ Writes:
   doc-dev/metrics/snapshots/YYYY-MM-DD.json
   doc-dev/metrics/latest.json
   appends one line to doc-dev/metrics/history.jsonl
+  doc-dev/metrics/chart.html (from history)
 
 Requires: network, ``gh`` authenticated with push/admin on both traffic repos.
 """
@@ -19,7 +20,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -29,6 +30,19 @@ SNAPSHOTS_DIR = METRICS_DIR / "snapshots"
 HISTORY_PATH = METRICS_DIR / "history.jsonl"
 LATEST_PATH = METRICS_DIR / "latest.json"
 ROADMAP_PATH = ROOT / "doc" / "roadmap.md"
+
+
+def refresh_chart() -> Path:
+    import importlib.util
+
+    path = Path(__file__).resolve().parent / "render_adoption_chart.py"
+    spec = importlib.util.spec_from_file_location("_render_adoption_chart", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load {path}")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return Path(mod.render_chart())
+
 
 PACKAGE = "streamlit-coco"
 REPOS = (
@@ -161,6 +175,176 @@ def collect(as_of: date | None = None) -> dict[str, Any]:
     }
 
 
+def _history_rows() -> list[dict[str, Any]]:
+    if not HISTORY_PATH.exists():
+        return []
+    rows: list[dict[str, Any]] = []
+    for line in HISTORY_PATH.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            rows.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue
+    return rows
+
+
+def _missing_history_dates(rows: list[dict[str, Any]]) -> list[date]:
+    dates = sorted(
+        date.fromisoformat(row["date"]) for row in rows if isinstance(row.get("date"), str)
+    )
+    if not dates:
+        return []
+    have = {d.isoformat() for d in dates}
+    missing: list[date] = []
+    day = dates[0]
+    while day <= dates[-1]:
+        if day.isoformat() not in have:
+            missing.append(day)
+        day += timedelta(days=1)
+    return missing
+
+
+def _pypi_overall_by_date(payload: dict[str, Any] | None = None) -> dict[str, int]:
+    src = payload
+    if src is None and LATEST_PATH.exists():
+        src = json.loads(LATEST_PATH.read_text(encoding="utf-8"))
+    if not src:
+        return {}
+    days = (src.get("pypi") or {}).get("overall_without_mirrors") or []
+    out: dict[str, int] = {}
+    for row in days:
+        key = row.get("date")
+        if key:
+            out[str(key)] = int(row.get("downloads") or 0)
+    return out
+
+
+def _pypi_windows(overall: dict[str, int], as_of: date) -> dict[str, int]:
+    def window(days: int) -> int:
+        total = 0
+        for offset in range(1, days + 1):
+            total += overall.get((as_of - timedelta(days=offset)).isoformat(), 0)
+        return total
+
+    return {
+        "pypi_last_day": overall.get((as_of - timedelta(days=1)).isoformat(), 0),
+        "pypi_last_week": window(7),
+        "pypi_last_month": window(30),
+    }
+
+
+def _merge_github_series() -> tuple[
+    dict[str, dict[str, dict[str, dict[str, int]]]],
+    dict[str, dict[str, int]],
+    dict[str, dict[str, dict[str, int]]],
+]:
+    """Stitch per-day views/clones from stored snapshots (later file wins)."""
+    merged: dict[str, dict[str, dict[str, dict[str, int]]]] = {
+        name: {"views": {}, "clones": {}} for name in REPOS
+    }
+    stars: dict[str, dict[str, int]] = {name: {} for name in REPOS}
+    window_uniques: dict[str, dict[str, dict[str, int]]] = {
+        name: {"views": {}, "clones": {}} for name in REPOS
+    }
+    if not SNAPSHOTS_DIR.exists():
+        return merged, stars, window_uniques
+    for path in sorted(SNAPSHOTS_DIR.glob("*.json")):
+        snap = json.loads(path.read_text(encoding="utf-8"))
+        as_of = snap.get("date")
+        for name, repo in (snap.get("github") or {}).items():
+            if name not in merged:
+                continue
+            star = repo.get("stargazers_count")
+            if as_of and isinstance(star, int):
+                stars[name][str(as_of)] = star
+            for kind in ("views", "clones"):
+                block = repo.get(kind) or {}
+                uniq = block.get("uniques")
+                if as_of and isinstance(uniq, int):
+                    window_uniques[name][kind][str(as_of)] = uniq
+                days = block.get(kind) or []
+                if not isinstance(days, list):
+                    continue
+                for row in days:
+                    key = str(row.get("timestamp") or "")[:10]
+                    if not key:
+                        continue
+                    merged[name][kind][key] = {
+                        "count": int(row.get("count") or 0),
+                        "uniques": int(row.get("uniques") or 0),
+                    }
+    return merged, stars, window_uniques
+
+
+def _nearest_value(series: dict[str, int], as_of: date) -> int | None:
+    if not series:
+        return None
+    key = as_of.isoformat()
+    if key in series:
+        return series[key]
+    best_key = min(series, key=lambda d: abs((date.fromisoformat(d) - as_of).days))
+    return series[best_key]
+
+
+def _github_window_count(series: dict[str, dict[str, int]], as_of: date) -> int:
+    # Morning collections typically expose [as_of-15, as_of-2].
+    total = 0
+    day = as_of - timedelta(days=15)
+    end = as_of - timedelta(days=2)
+    while day <= end:
+        total += (series.get(day.isoformat()) or {}).get("count", 0)
+        day += timedelta(days=1)
+    return total
+
+
+def backfill_missing_history() -> list[dict[str, Any]]:
+    """Fill history.jsonl gaps from PyPI overall + stitched GitHub daily series.
+
+    Live ``make adoption-stats`` only writes *today*. GitHub's traffic API keeps
+    ~14 days, so missing dates are reconstructed — not re-fetched as of that day.
+    """
+    rows = _history_rows()
+    missing = _missing_history_dates(rows)
+    if not missing:
+        return []
+    overall = _pypi_overall_by_date()
+    if not overall:
+        raise FileNotFoundError(
+            f"{LATEST_PATH} has no pypi.overall_without_mirrors; run a normal collect first"
+        )
+    merged, stars, window_uniques = _merge_github_series()
+    devoteam, personal = REPOS
+    collected_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    added: list[dict[str, Any]] = []
+    by_date = {row.get("date"): row for row in rows}
+    for as_of in missing:
+        slim = {
+            "date": as_of.isoformat(),
+            "collected_at": collected_at,
+            **_pypi_windows(overall, as_of),
+            "devoteam_stars": _nearest_value(stars[devoteam], as_of),
+            "devoteam_views_14d": _github_window_count(merged[devoteam]["views"], as_of),
+            "devoteam_views_uniques_14d": _nearest_value(window_uniques[devoteam]["views"], as_of),
+            "devoteam_clones_14d": _github_window_count(merged[devoteam]["clones"], as_of),
+            "devoteam_clones_uniques_14d": _nearest_value(
+                window_uniques[devoteam]["clones"], as_of
+            ),
+            "lletourmy_stars": _nearest_value(stars[personal], as_of),
+            "lletourmy_views_14d": _github_window_count(merged[personal]["views"], as_of),
+            "lletourmy_clones_14d": _github_window_count(merged[personal]["clones"], as_of),
+            "backfilled": True,
+        }
+        by_date[slim["date"]] = slim
+        added.append(slim)
+    ordered = [by_date[key] for key in sorted(by_date)]
+    HISTORY_PATH.write_text(
+        "\n".join(json.dumps(row, separators=(",", ":")) for row in ordered) + "\n",
+        encoding="utf-8",
+    )
+    return added
+
+
 def write_snapshot(payload: dict[str, Any], *, force: bool = False) -> Path:
     METRICS_DIR.mkdir(parents=True, exist_ok=True)
     SNAPSHOTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -290,7 +474,42 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Fetch and print only; do not write files",
     )
+    parser.add_argument(
+        "--backfill-missing",
+        action="store_true",
+        help=(
+            "Insert history.jsonl rows for dates between the first and last "
+            "snapshot (PyPI overall + stitched GitHub daily series). Does not "
+            "overwrite existing days or latest.json"
+        ),
+    )
     args = parser.parse_args(argv)
+
+    if args.backfill_missing:
+        if args.dry_run:
+            rows = _history_rows()
+            missing = _missing_history_dates(rows)
+            print("Would backfill " + (", ".join(d.isoformat() for d in missing) or "(none)"))
+            return 0
+        try:
+            added = backfill_missing_history()
+        except (FileNotFoundError, json.JSONDecodeError) as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+        if not added:
+            print("history.jsonl already contiguous; nothing to backfill")
+        else:
+            print(f"Backfilled {len(added)} missing day(s) in {HISTORY_PATH.relative_to(ROOT)}")
+            for row in added:
+                print(
+                    f"  {row['date']}  PyPI "
+                    f"{row['pypi_last_day']}/{row['pypi_last_week']}/{row['pypi_last_month']}  "
+                    f"DevoteamSP views={row['devoteam_views_14d']} "
+                    f"clones={row['devoteam_clones_14d']}"
+                )
+        chart = refresh_chart()
+        print(f"wrote {chart.relative_to(ROOT)}")
+        return 0
 
     try:
         payload = collect()
@@ -311,6 +530,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"\nwrote {path.relative_to(ROOT)}")
     print(f"wrote {LATEST_PATH.relative_to(ROOT)}")
     print(f"appended {HISTORY_PATH.relative_to(ROOT)}")
+    chart = refresh_chart()
+    print(f"wrote {chart.relative_to(ROOT)}")
 
     if args.update_roadmap:
         if update_roadmap(payload):

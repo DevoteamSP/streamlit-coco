@@ -7,9 +7,21 @@ from pathlib import Path
 import streamlit as st
 
 import streamlit_coco as st_coco
+from streamlit_coco.rail import (
+    ask_coco_switch,
+    ask_minimize,
+    ask_restore,
+    present_ask,
+    rail_minimized,
+)
 
 st.set_page_config(page_title="CoCo cwd upload", layout="wide")
-st.title("CoCo — file upload into `cwd`")
+show_ask = ask_coco_switch("upload_ask_coco")
+_chat_min = show_ask and rail_minimized("upload_coco")
+with st.container(horizontal=True, vertical_alignment="center"):
+    st.title("CoCo — file upload into `cwd`")
+    if show_ask and not _chat_min:
+        ask_minimize("upload_coco")
 st.caption("Attach files in chat or use the sidebar uploader. Files land under `_uploads/`.")
 
 if not hasattr(st_coco, "cwd_uploader"):
@@ -35,6 +47,14 @@ def _optional_secret(key: str) -> str | None:
 
 
 connection = _optional_secret("snowflake_connection")
+present_ask(
+    show_ask,
+    "upload_coco",
+    lambda: st_coco.ask_coco(
+        WORKSPACE, connection=connection, on_rail=ask_restore("upload_coco")
+    ),
+)
+
 opts = st_coco.CocoOptions(
     connection=connection,
     cwd=str(WORKSPACE),
@@ -62,10 +82,11 @@ with st.sidebar:
         st.rerun()
     st_coco.render_environment_status(env, stacked=True, show_title=False)
 
-st_coco.panel(session=session, warm_up=True, show_status=True, run_every=0.25)
-st_coco.chat_input_bar(
-    session,
-    placeholder="Ask about an uploaded file, or attach one…",
-    accept_file="multiple",
-    file_type=["csv", "md", "txt", "json", "sql", "py", "yaml", "yml"],
-)
+if not _chat_min:
+    st_coco.panel(session=session, warm_up=True, show_status=True, run_every=0.25)
+    st_coco.chat_input_bar(
+        session,
+        placeholder="Ask about an uploaded file, or attach one…",
+        accept_file="multiple",
+        file_type=["csv", "md", "txt", "json", "sql", "py", "yaml", "yml"],
+    )

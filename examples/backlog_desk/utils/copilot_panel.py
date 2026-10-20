@@ -145,7 +145,7 @@ def _render_connection_popover() -> None:
                 st.rerun()
 
 
-def render_copilot_rail() -> None:
+def render_copilot_rail(*, ask: bool = False) -> None:
     """Skills + transcript for the right column."""
     try:
         import streamlit_coco as st_coco
@@ -155,6 +155,10 @@ def render_copilot_rail() -> None:
 
     with st.container(horizontal=True, vertical_alignment="center"):
         st.markdown("### :material/psychology: Copilot")
+        if ask:
+            from streamlit_coco.rail import ask_minimize
+
+            ask_minimize("bd_coco")
         _render_connection_popover()
         if st.button("Close", icon=":material/close:", key="bd_close_copilot"):
             set_copilot_open(False)

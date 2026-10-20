@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "streamlit-coco"
-version = "0.1.9"
+version = "0.2.0"
 description = "Streamlit component and Python library for Snowflake CoCo (Cortex Code)"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -22,7 +22,8 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "streamlit>=1.53",
+    # st.popover(key=), used by copilot_rail since 0.1.8, is new in 1.55; the browser tests pass on 1.55.0
+    "streamlit>=1.55",
 ]
 
 [project.optional-dependencies]
@@ -61,6 +62,7 @@ exclude = [
     "/.venv",
     "/tmp",
     "/dist",
+    "/uv.lock",
     "/doc-dev",
     "/apps",
     "/.pytest_cache",
@@ -71,7 +73,7 @@ exclude = [
 asyncio_mode = "auto"
 testpaths = ["tests"]
 markers = [
-    "e2e: browser Playwright tests against the UX harness (slow; needs Chromium)",
+    "e2e: browser tests of the Ask CoCo window on the scripted agent (slow; Playwright, Chromium or the installed Edge)",
 ]
 [tool.ruff]
 line-length = 100

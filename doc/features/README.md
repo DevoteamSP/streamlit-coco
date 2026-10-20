@@ -1,32 +1,33 @@
-# Feature docs & test plans
+# Feature docs and test plans
 
-Manual golden-path checklists (DSP N1). Run before releases; link from PRs that touch the feature. Automated gates (unit + Playwright UX): [`../testing.md`](../testing.md).
+Narrative docs follow DSP section 9 (What / Why / How / Limitations). Checklists are the manual, live sign-off, run before a release. Automated gates (unit tests and Playwright, on the scripted agent): [`../testing.md`](../testing.md).
 
-Narrative docs follow DSP §9 (What / Why / How / Limitations). Checklists are the executable sign-off.
-
-Package API (all public exports): [`../api.md`](../api.md).
+Package API (every public name): [`../api.md`](../api.md).
 
 ## Index
 
-| Feature | Narrative | Checklist | Preferred prompts / app |
+| Feature | Narrative | Checklist | Run it |
 | --- | --- | --- | --- |
-| Panel + chat input | [panel/panel.md](panel/panel.md) | [panel/test-checklist.md](panel/test-checklist.md) | `make chat`; `tools_auto`, `streaming` |
-| Copilot rail | [copilot-rail/copilot-rail.md](copilot-rail/copilot-rail.md) | [copilot-rail/test-checklist.md](copilot-rail/test-checklist.md) | `make bi-semantic`; `copilot_rail()` |
+| Ask CoCo (the window, rights, features, migration from 0.1.9) | [ask-coco/ask-coco.md](ask-coco/ask-coco.md) | [ask-coco/test-checklist.md](ask-coco/test-checklist.md) | `make chat`, `make approval`, `make structured`, `make cwd-upload` |
 | App viewer | [app-viewer/app-viewer.md](app-viewer/app-viewer.md) | [app-viewer/test-checklist.md](app-viewer/test-checklist.md) | `make bi-semantic`; `app_viewer()` |
-| App Builder | [app-builder/app-builder.md](app-builder/app-builder.md) ([UX](app-builder/UX.md)) | [app-builder/test-checklist.md](app-builder/test-checklist.md) | `make app-builder` — Library → brief → Studio |
-| Tool approvals | [approvals/approvals.md](approvals/approvals.md) | [approvals/test-checklist.md](approvals/test-checklist.md) | category `approval` |
-| Tools display + HITL | [tools-display/tools-display.md](tools-display/tools-display.md) ([SPEC](tools-display/SPEC.md)) | [tools-display/test-checklist.md](tools-display/test-checklist.md) | categories `display_*` |
-| Structured output | [structured-output/structured-output.md](structured-output/structured-output.md) | [structured-output/test-checklist.md](structured-output/test-checklist.md) | `make structured`; `structured-json` |
-| Headless query / multi-turn | [headless/headless.md](headless/headless.md) | [headless/test-checklist.md](headless/test-checklist.md) | `make headless` |
-| Pluggable text renderer | [text-renderer/text-renderer.md](text-renderer/text-renderer.md) | [text-renderer/test-checklist.md](text-renderer/test-checklist.md) | `panel(..., text_renderer=…)` |
-| File upload into `cwd` | [file-upload/file-upload.md](file-upload/file-upload.md) | [file-upload/test-checklist.md](file-upload/test-checklist.md) | `make cwd-upload` |
-| Legacy CCv2 chat | [chat-ccv2/chat-ccv2.md](chat-ccv2/chat-ccv2.md) | [chat-ccv2/test-checklist.md](chat-ccv2/test-checklist.md) | `make approval` |
+| App Builder | [app-builder/app-builder.md](app-builder/app-builder.md) ([UX](app-builder/UX.md)) | [app-builder/test-checklist.md](app-builder/test-checklist.md) | `make app-builder` |
+| Headless query, multi-turn, a `Conversation` answered in code | [headless/headless.md](headless/headless.md) | [headless/test-checklist.md](headless/test-checklist.md) | `make headless` |
+| Panel + chat input (0.1.9) | [panel/panel.md](panel/panel.md) | [panel/test-checklist.md](panel/test-checklist.md) | `make chat`; `tools_auto`, `streaming` |
+| Copilot rail (0.1.9) | [copilot-rail/copilot-rail.md](copilot-rail/copilot-rail.md) | [copilot-rail/test-checklist.md](copilot-rail/test-checklist.md) | `make bi-semantic`; `copilot_rail()` |
+| Tool approvals (0.1.9) | [approvals/approvals.md](approvals/approvals.md) | [approvals/test-checklist.md](approvals/test-checklist.md) | category `approval` |
+| Tools display + HITL (0.1.9) | [tools-display/tools-display.md](tools-display/tools-display.md) ([SPEC](tools-display/SPEC.md)) | [tools-display/test-checklist.md](tools-display/test-checklist.md) | categories `display_*` |
+| Structured output (0.1.9) | [structured-output/structured-output.md](structured-output/structured-output.md) | [structured-output/test-checklist.md](structured-output/test-checklist.md) | `make structured`; `structured-json` |
+| Pluggable text renderer (0.1.9) | [text-renderer/text-renderer.md](text-renderer/text-renderer.md) | [text-renderer/test-checklist.md](text-renderer/test-checklist.md) | `panel(..., text_renderer=…)` |
+| File upload into `cwd` (0.1.9) | [file-upload/file-upload.md](file-upload/file-upload.md) | [file-upload/test-checklist.md](file-upload/test-checklist.md) | `make cwd-upload` |
+| Legacy CCv2 chat (0.1.9) | [chat-ccv2/chat-ccv2.md](chat-ccv2/chat-ccv2.md) | [chat-ccv2/test-checklist.md](chat-ccv2/test-checklist.md) | `make approval` |
+
+The chat family of 0.1.9 (`chat`, `panel`, `copilot_rail` and their helpers) stays the default in 0.2.0, and so do its feature files, listed below as they were written for 0.1.9. The window is opt-in; what each 0.1.9 name does in the window is the migration sheet in [`ask-coco/ask-coco.md`](ask-coco/ask-coco.md) section 2.
 
 ## Suggested run order (release)
 
-1. **panel** → 2. **copilot-rail** → 3. **app-viewer** → 4. **approvals** → 5. **tools-display** → 6. **structured-output** → 7. **headless** → 8. **text-renderer** → 9. **chat-ccv2**
+1. **ask-coco** (the live checklist, on a real Cortex Code agent) 2. **app-viewer** 3. **app-builder** 4. **headless** 5. the chat family, as in 0.1.9: **panel**, **copilot-rail**, **approvals**, **tools-display**, **structured-output**, **text-renderer**, **file-upload**, **chat-ccv2**
 
-Approval / plan button order (left → right): **Approve once** · **Always allow** · **Deny** (Deny rightmost). AskUser: **Submit** · **Cancel**. Plan: **Approve plan** · **Reject**.
+Allow / Decline: the window's two buttons for a request. A request may also offer "Do not ask again for ...", a standing permission until the conversation ends. A question from CoCo: **Send answer**. A plan: **Approve plan**.
 
 Exploratory prompts: [`examples/testdata/`](../../examples/testdata/).
 
@@ -34,15 +35,7 @@ Exploratory prompts: [`examples/testdata/`](../../examples/testdata/).
 
 | Suite | Result | Notes |
 | --- | --- | --- |
-| `make e2e` (Playwright UX harness) | See CI / local | CoCo-free; [`../testing.md`](../testing.md) |
-| `uv run pytest tests/ --ignore=tests/e2e` | **78 passed** (2026-08-09) | Unit + smoke |
-| `make headless` / `examples/headless_pipeline.py` | **Pass** (2026-07-27) | Multi-turn `run()` + `stream()`; no Streamlit import; signed off in [`headless/test-checklist.md`](headless/test-checklist.md) |
-| UI golden path — panel | **Pass (core)** (2026-07-25) | Signed off in [`panel/test-checklist.md`](panel/test-checklist.md) — steps 1–5 live |
-| UI golden path — approvals | **Pass** (2026-07-26) | Signed off in [`approvals/test-checklist.md`](approvals/test-checklist.md) — golden path 1–10 live |
-| UI golden path — tools-display | **Pass (core)** (2026-07-27) | [`tools-display/test-checklist.md`](tools-display/test-checklist.md) — Glob/Grep/Read/Write/Edit live; SQL/AskUser/plan/debug deferred |
-| UI golden path — structured-output | **Pass (core)** (2026-07-27) | [`structured-output/test-checklist.md`](structured-output/test-checklist.md) — `make structured` + `output_schema` live |
-| UI golden path — chat-ccv2 | **Pass** (2026-07-27) | [`chat-ccv2/test-checklist.md`](chat-ccv2/test-checklist.md) — `make approval` live |
-| UI golden path — copilot-rail | **Pending** (`0.1.9` Config file row) | [`copilot-rail/test-checklist.md`](copilot-rail/test-checklist.md) — `make app-builder` (step 1a) |
-| UI golden path — app-viewer | **Pending** (`0.1.7`) | [`app-viewer/test-checklist.md`](app-viewer/test-checklist.md) — `make bi-semantic` |
-| UI golden path — app-builder | **Automated** (`0.1.8`) | [`app-builder/test-checklist.md`](app-builder/test-checklist.md) — `make test-all` 2026-09-06; live CoCo sign-off still open |
-
+| `make check` (ruff, unit tests) | not recorded in this file | Run it before a merge. |
+| `make e2e` (Playwright, Edge, scripted agent) | not recorded in this file | Covers the walk of the window, the code block copy, "Latest exchange only", attached files and the page uploader. |
+| Live run of the Ask CoCo checklist | **Not run for 0.2.0** | Needs the Cortex Code program and a Snowflake connection. |
+| App viewer, App Builder, headless live checklists | Signed for earlier versions only | See the sign-off tables in each checklist. They predate 0.2.0. |

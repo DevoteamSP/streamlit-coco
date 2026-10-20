@@ -173,8 +173,7 @@ def example_questions_visible(
     if not normalize_example_questions(items):
         return False
     return not any(
-        item.get("role") in {"user", "assistant"}
-        for item in session.get_transcript_snapshot()
+        item.get("role") in {"user", "assistant"} for item in session.get_transcript_snapshot()
     )
 
 
@@ -228,9 +227,7 @@ def transcript_display_config(
     else:
         stored_last = int(st.session_state[last_key])
         if stored_last < LAST_MESSAGES_MIN or stored_last > LAST_MESSAGES_MAX:
-            st.session_state[last_key] = max(
-                LAST_MESSAGES_MIN, min(LAST_MESSAGES_MAX, stored_last)
-            )
+            st.session_state[last_key] = max(LAST_MESSAGES_MIN, min(LAST_MESSAGES_MAX, stored_last))
     if chars_key not in st.session_state:
         st.session_state[chars_key] = preview_chars
     else:
@@ -278,6 +275,71 @@ def transcript_display_config(
     return resolve_transcript_view(selected, last_n=last_n_val, preview_chars=chars_val)
 
 
+def rail_minimized(key_prefix: str = "coco_rail") -> bool:
+    """True after Minimize, until Restore in the window brings the column back."""
+    return bool(st.session_state.get(f"{key_prefix}_ask_coco_on"))
+
+
+def ask_restore(key_prefix: str = "coco_rail"):
+    """Callback for the window's Restore icon: show this page's CoCo again."""
+
+    def _restore() -> None:
+        st.session_state[f"{key_prefix}_ask_coco_on"] = False
+
+    return _restore
+
+
+def present_ask(show: bool, key_prefix: str, mount, *, window_key: str = "coco"):
+    """Mount Ask CoCo when ``show`` is true, closed until this page's CoCo is minimized.
+
+    The launcher is there; the window stays shut. Minimize hides the rail or
+    chat and opens the window. Restore closes the window and brings that CoCo back.
+    """
+    open_key = f"{key_prefix}_ask_open"
+    if not show:
+        st.session_state.pop(f"{key_prefix}_ask_coco_on", None)
+        st.session_state.pop(open_key, None)
+        return None
+    if rail_minimized(key_prefix) and not st.session_state.get(open_key):
+        from streamlit_coco.window import request_open
+
+        st.session_state[open_key] = True
+        request_open(window_key)
+    elif not rail_minimized(key_prefix):
+        st.session_state.pop(open_key, None)
+    return mount()
+
+
+def ask_minimize(key_prefix: str = "coco_rail") -> None:
+    """Minimize icon. Hides this page's CoCo until Restore in the window."""
+    if st.button(
+        ":material/minimize:",
+        key=f"{key_prefix}_ask_coco",
+        help="Minimize",
+        type="tertiary",
+        width="content",
+    ):
+        st.session_state[f"{key_prefix}_ask_coco_on"] = True
+        st.rerun()
+
+
+def ask_coco_switch(key: str) -> bool:
+    """Off / On for the floating window, in addition to the page's own CoCo.
+
+    The control sits in the sidebar. Off is the default. It does not hide a
+    Copilot rail or a chat.
+    """
+    with st.sidebar:
+        choice = st.segmented_control(
+            "Ask CoCo",
+            options=["Off", "On"],
+            default="Off",
+            key=key,
+            help="Ask CoCo stays minimized until you press Minimize on this page's CoCo.",
+        )
+    return choice == "On"
+
+
 def copilot_rail(
     session: CocoSession | None,
     *,
@@ -310,8 +372,21 @@ def copilot_rail(
     example_questions: Sequence[Mapping[str, Any] | Sequence[Any]] | None = None,
     deferred: bool = False,
     render_environment: Callable[..., Any] | None = None,
-) -> None:
+    mini: bool = False,
+    ask: bool = False,
+    own_window: bool = True,
+) -> Any | None:
     """Render a Copilot column: connection, job, transcript, chat input.
+
+    ``mini=False`` and ``ask=False`` (the defaults) are the 0.1.9 rail, with no
+    new control. ``ask=True`` adds Minimize on the title row: it hides this
+    column and opens the floating window; Restore in that window's header
+    brings the column back.
+    ``own_window=False`` still shows Minimize, and leaves the floating window
+    to the page (pass ``on_rail=ask_restore(key_prefix)`` so Restore shows).
+    ``mini=True`` mounts that window immediately and returns its handle. Starter questions
+    become the window's first-screen prompts (``deferred`` fills the field
+    without sending). The rail's job queue is not replayed into the window.
 
     ``session`` may be ``None`` until the caller has connected. Queued jobs
     (``job["status"] == "queued"`` plus ``job["prompt"]``) are sent once the
@@ -331,11 +406,34 @@ def copilot_rail(
     ``connections`` values are extra names prepended (for example from
     ``st.secrets``).
     """
+    ask_on = f"{key_prefix}_ask_coco_on"
+    if mini or (ask and own_window and st.session_state.get(ask_on)):
+        from streamlit_coco.mini import mount_mini, prompts_from_questions
+
+        def _restore_rail() -> None:
+            st.session_state[ask_on] = False
+
+        seen = f"_streamlit_coco:{key_prefix}:rail_seen"
+        if not mini and not st.session_state.get(seen):
+            from streamlit_coco.window import request_open
+
+            st.session_state[seen] = True
+            request_open(key_prefix)
+        return mount_mini(
+            session,
+            key=key_prefix,
+            prompts=prompts_from_questions(example_questions, deferred=deferred),
+            labels={"window.field.placeholder": input_placeholder},
+            on_rail=None if mini else _restore_rail,
+        )
+
     import streamlit_coco as st_coco
 
     top = st.container(horizontal=True, vertical_alignment="center")
     with top:
         st.subheader(title)
+        if ask:
+            ask_minimize(key_prefix)
         if job and on_cancel_job is not None:
             if st.button(
                 "Cancel job",
@@ -439,9 +537,7 @@ def copilot_rail(
             run_every=run_every,
             on_structured_output=on_structured_output if job and expect_structured else None,
         )
-        if example_questions_visible(
-            session, example_questions, connected=True, job=job
-        ):
+        if example_questions_visible(session, example_questions, connected=True, job=job):
             _render_example_questions(
                 session,
                 example_questions,

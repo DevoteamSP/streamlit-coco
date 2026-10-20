@@ -1,0 +1,284 @@
+/* Spec-First Cockpit 2.2: the maturity layer. Load AFTER cockpit.css.
+   <link rel="stylesheet" href="cockpit.css"><link rel="stylesheet" href="cockpit22.css">
+   Binding source: DESIGN_2.2.md. Same unit as 2.1: every size is calc(var(--r)*n), 1 unit = 1rem of the app.
+   Overrides 2.1 by cascade order. 2.2 names that would collide with 2.1 are renamed: .hm (health mark), .tbar (toolbar),
+   .pbd (projects board). .hm.ok / .hm.at / .hm.cr reuse the 2.1 words .ok .at .cr, so .hm resets what 2.1 .ok sets. */
+
+/* --r is built from cqw. Registered as a <length> it computes ONCE, on .ck-in, and inherits as px: a nested container
+   (.ab is one) can no longer re-resolve it against itself. */
+@property --r{syntax:'<length>';inherits:true;initial-value:14px}
+
+/* ======================================================================
+   1. TOKENS
+   ====================================================================== */
+/* closed type scale: micro .68, cap .78, body .875, lead 1, head 1.25, page 1.45, fig 1.9 */
+.ck-in{--fz-lead:var(--r);--fz-head:calc(var(--r)*1.25)}   /* lead: row titles, the one figure of a cell; head: the verdict, dialog titles */
+/* raw controls inherit the type size instead of the 13.33px browser default (zero specificity: components still win) */
+:where(.ck-in) :where(button,input,select,textarea){font-size:inherit;font-family:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ======================================================================
+   2. STATUS VOCABULARY: .hm marks and .w.part  (unknown is never healthy)
+   ====================================================================== */
+.hm{display:inline-block;width:calc(var(--r)*.7);height:calc(var(--r)*.7);flex:none;padding:0;gap:0;border-radius:50%;background:transparent;font-size:inherit;font-weight:inherit;vertical-align:middle}
+.hm.ok{background:var(--sun-w);box-shadow:inset 0 0 0 1.5px var(--sun)}            /* Healthy, quiet on purpose */
+.hm.at{background:var(--cloud)}                                                   /* Attention */
+.hm.cr{background:var(--storm);border-radius:2px;transform:rotate(45deg) scale(.8)} /* Critical: shape differs, not hue alone */
+.hm.nr{position:relative;border:1.5px solid var(--ink-2)}   /* Not reported: solid ring + one diagonal stroke (the no-data sign); the ring is a border, so it stays crisp at 1x */
+.hm.nr::after{content:"";position:absolute;left:-1px;right:-1px;top:50%;height:1.5px;margin-top:-.75px;background:var(--ink-2);transform:rotate(-45deg)}
+.hm.l{width:var(--r);height:var(--r)}   /* group and band headers: the mark that carries the severity */
+.hm.na{width:calc(var(--r)*.5);height:2px;border-radius:1px;background:var(--ink-3)} /* Not applicable */
+/* overall weather with a Not reported dimension: sun tile, dashed ring, "partial" in its aria-label */
+.w.part{position:relative;outline:1.5px solid var(--ink-2);outline-offset:2px}   /* solid ring + a small no-data badge on the bottom-left corner (the trend badge owns bottom-right) */
+.w.part::after{content:"";position:absolute;left:calc(var(--r)*-.5);bottom:calc(var(--r)*-.5);width:var(--r);height:var(--r);border-radius:50%;box-shadow:0 0 0 2px var(--rowbg,var(--surface));background:var(--ink-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M7 17 17 7'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+
+/* ======================================================================
+   3. SHELL: RAIL  (.rail 12rem, .rail.mini 4.5rem)
+   Two groups: "All projects" (Projects, Decisions, My week, Weekly deck) and "This project" (the switcher; its six pages only
+   on a project page). No project open: the switcher says so and the six pages are absent, not greyed.
+   ====================================================================== */
+.rail{flex:0 0 calc(var(--r)*12);min-width:0}
+.rail.mini{flex-basis:calc(var(--r)*4.5)}
+.rail-b{position:relative}
+/* the page-level rail follows the viewport; the dark column keeps the page height, its content sticks.
+   Own scroll only when the viewport is shorter than the content (bands follow --r: 14px under 1380 wide, 21px from 2500):
+   overflow would clip the tooltips and the identity menu, so it is not set otherwise. */
+.ck-in>.rail>.rail-in{position:sticky;top:0;flex:none;height:100vh;max-height:none}
+@media (max-height:660px){.ck-in>.rail>.rail-in{overflow-y:auto}}
+@media (min-width:1400px) and (max-height:700px){.ck-in>.rail>.rail-in{overflow-y:auto}}
+@media (min-width:1700px) and (max-height:780px){.ck-in>.rail>.rail-in{overflow-y:auto}}
+@media (min-width:2100px) and (max-height:890px){.ck-in>.rail>.rail-in{overflow-y:auto}}
+@media (min-width:2500px) and (max-height:980px){.ck-in>.rail>.rail-in{overflow-y:auto}}
+.psw:has(.nm.no){border-style:dashed}
+.rail.mini .rhint{display:none}   /* the hint moves into the switcher's tooltip */
+.rail.mini .psw:has(.nm.no)::before{content:"";width:calc(var(--r)*1.5);height:calc(var(--r)*1.5);border:1.5px dashed var(--rail-mute);border-radius:28%}
+.ri:hover,.ri.hv{background:rgba(255,255,255,.07)}
+.ri.on,.ri.on:hover{background:rgba(255,255,255,.10);color:#fff;font-weight:600}
+.ri .tx{white-space:nowrap}
+
+/* brand lockup: hallmark 2rem + two lines; the toggle sits on the same line */
+.brand{gap:calc(var(--r)*.7);padding:0 calc(var(--r)*.25) 0 calc(var(--r)*.6);margin-bottom:calc(var(--r)*.5);min-height:calc(var(--r)*2)}
+.brand .mark{display:block;width:calc(var(--r)*2);height:calc(var(--r)*2);flex:none}
+.brand .bl{display:flex;flex-direction:column;min-width:0}
+.brand .bt{font-size:var(--fz-micro);letter-spacing:.09em;text-transform:uppercase;color:var(--rail-mute);font-weight:600;line-height:1.2;padding:0}
+.brand .bn{font-size:var(--fz-lead);letter-spacing:-.01em;color:#fff;font-weight:600;line-height:1.2}
+.rail-tg{margin-left:auto;display:grid;place-items:center;width:calc(var(--r)*1.9);height:calc(var(--r)*1.9);flex:none;padding:0;border:0;border-radius:var(--rad-c);background:transparent;color:var(--rail-mute);cursor:pointer}
+.rail-tg:hover{background:var(--rail-2);color:#fff}
+
+/* project switcher: the whole name, wrapped at its hyphens (a 64-character name takes four lines); no health mark, the page carries it */
+.psw{margin-top:0}
+.psw .nm{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;line-height:1.3}
+.psw .ini{display:none}
+.rail.mini .psw .ini{display:grid;place-items:center;width:calc(var(--r)*2);height:calc(var(--r)*2);border-radius:var(--rad-c);background:var(--rail-2);color:#fff;font-size:var(--fz-cap);font-weight:600;letter-spacing:.02em}
+
+/* identity: a button that opens a small menu (Change role, Change projects folder) */
+.whw{position:relative}
+button.who{width:100%;border-width:1px 0 0;border-style:solid;border-color:var(--rail-line);background:transparent;color:#fff;text-align:left;cursor:pointer;position:relative}
+button.who .tx2{min-width:0;flex:1}
+button.who .tx2 b,button.who .tx2 span{white-space:normal;overflow-wrap:anywhere}   /* a long name wraps, it is not cut */
+button.who>.i{color:var(--rail-mute)}
+.idm{left:calc(var(--r)*.1);bottom:calc(100% + var(--r)*.2);width:calc(var(--r)*14)}
+
+/* expanded rail: the switcher and the identity block use the rail's full width */
+.rail:not(.mini) .psw{margin-left:calc(var(--r)*-.5);width:calc(100% + var(--r));padding:calc(var(--r)*.45) calc(var(--r)*.5);gap:calc(var(--r)*.45);margin-bottom:calc(var(--r)*.3)}
+.rail:not(.mini) .psw>.i{width:calc(var(--r)*.8);height:calc(var(--r)*.8)}
+.rail:not(.mini) button.who{margin-left:calc(var(--r)*-.75);width:calc(100% + var(--r)*1.5);padding:calc(var(--r)*.8) calc(var(--r)*.5) 0 calc(var(--r)*.6);gap:calc(var(--r)*.5)}
+.rail:not(.mini) button.who>.i{display:none}   /* no chevron: the name needs the width; aria-haspopup carries the meaning */
+button.who .av{width:calc(var(--r)*2);height:calc(var(--r)*2)}
+
+/* tooltip (collapsed rail): to the right, on hover and focus; .show forces it for a static state */
+.tip{display:none;position:absolute;left:calc(100% + var(--r)*.6);top:50%;transform:translateY(-50%);z-index:5;padding:calc(var(--r)*.35) calc(var(--r)*.7);border-radius:calc(var(--r)*.5);background:var(--ink);color:#fff;font-size:var(--fz-cap);font-weight:500;line-height:1.3;white-space:nowrap;pointer-events:none;box-shadow:var(--shadow)}
+.tip.show{display:block}
+
+/* collapsed rail: icons only */
+.rail.mini .brand{flex-direction:column;gap:calc(var(--r)*.5);padding:0 0 calc(var(--r)*.6);margin-bottom:0}
+.rail.mini .brand .bl{display:none}
+.rail.mini .rail-tg{margin:0}
+.rail.mini .ri .tx,.rail.mini .psw .nm,.rail.mini .psw>.i,.rail.mini button.who .tx2,.rail.mini button.who>.i{display:none}
+.rail.mini .ri .n{position:absolute;top:calc(var(--r)*.45);left:calc(50% + var(--r)*.3);min-width:0;width:calc(var(--r)*.5);height:calc(var(--r)*.5);padding:0;font-size:0;background:#fff;box-shadow:0 0 0 2px var(--rail)}
+.rail.mini .ri.on .n{box-shadow:0 0 0 2px var(--rail-2)}
+.rail.mini :is(.ri,.psw,button.who):is(:hover,:focus-visible) .tip{display:block}
+.rail.mini .psw{margin-top:0}
+.rail.mini button.who{justify-content:center}
+.rail.mini .idm{width:calc(var(--r)*14)}
+
+/* ======================================================================
+   4. SHELL: MAIN COLUMN AND PAGE HEADER (.top)
+   ====================================================================== */
+.main{gap:calc(var(--r)*1.25);padding:0 calc(var(--r)*2) calc(var(--r)*1.25)}
+.top{gap:calc(var(--r)*.75);margin-bottom:calc(var(--r)*.75)}   /* 1.25 gap + .75 = 2rem under the header */
+.top .ctx{font-size:var(--fz-body);color:var(--ink-2);flex-wrap:nowrap}
+.top .ctx .dtm{text-decoration:underline dotted;text-underline-offset:3px;text-decoration-color:var(--ink-3);cursor:help}
+.top .bk{display:flex;align-items:center;gap:calc(var(--r)*.25);width:fit-content;margin-bottom:calc(var(--r)*.25);font-size:var(--fz-cap);font-weight:500;color:var(--ink-2);text-decoration:none}   /* the way back to where the user came from */
+.top .bk:hover{color:var(--ink);text-decoration:underline}
+.b.ol{border-color:var(--ink)}
+
+/* ======================================================================
+   5. TOOLBAR (.tbar): on the canvas, one control height, one component (.in)
+   ====================================================================== */
+.tbar{display:flex;align-items:center;gap:calc(var(--r)*.6);width:auto;min-width:0}
+.tbar .in{background:var(--surface)}
+.tbar .in.fnd{width:calc(var(--r)*17)}
+.tbar .in.sel{width:calc(var(--r)*12)}
+.tbar .in.sel .mut{margin-right:calc(var(--r)*.25)}
+.tbar .in.sel.au{width:auto;gap:calc(var(--r)*.6);padding:0 calc(var(--r)*.7);cursor:pointer}   /* sized by what it holds */
+.tbar .in.act,.tbar .in.fnd:has(input:not(:placeholder-shown)){border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}   /* a filter that is on does not look like All */
+.tbar .in.act .v{font-weight:600}
+.tbar .in.sel[aria-expanded=true]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.tbar .fm{left:0;top:calc(100% + var(--r)*.3);width:calc(var(--r)*14);z-index:5}   /* a filter menu, under its button */
+.tbar .fm .it{justify-content:space-between}
+.tbar .fm label.it{justify-content:flex-start;gap:calc(var(--r)*.7);cursor:pointer}
+.tbar .cnt{font-size:var(--fz-body);color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbar .in.tgl{width:auto;gap:calc(var(--r)*.7);padding:0 calc(var(--r)*.7) 0 calc(var(--r)*.8);cursor:pointer;font-weight:500}   /* label, then the switch; same border and radius as the other .in */
+.tbar .in.tgl[aria-checked=true]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.tbar .rt{margin-left:auto;display:flex;align-items:center;gap:calc(var(--r)*.6)}
+.tbar .in.srt{width:auto;gap:calc(var(--r)*.4);cursor:pointer;padding:0 calc(var(--r)*.7)}
+.tbar .in.sq{width:calc(var(--r)*2.25);padding:0;justify-content:center;cursor:pointer}
+.tbar .upd{font-size:var(--fz-cap);color:var(--ink-2);white-space:nowrap}
+
+/* ======================================================================
+   6. ACTION BAR (.ab) AND SAVE STEPPER (.stp)
+   ====================================================================== */
+.ab{width:fit-content;max-width:100%;box-sizing:border-box;margin:0 0 calc(var(--r)*-.25) auto;height:calc(var(--r)*3.5);min-height:calc(var(--r)*3.5);padding:0 calc(var(--r)*1.25);background:var(--surface);border:1px solid var(--line);border-radius:var(--rad-m);box-shadow:var(--shadow);flex-wrap:nowrap;gap:calc(var(--r)*1.25);position:sticky;bottom:calc(var(--r)*1.25);z-index:3;flex:none}   /* a tray at the end of the content, right-aligned under it; it sticks to the viewport foot on a long page */
+.ab.demo{position:static;margin:0 0 0 auto}
+.ab .stp,.ab .acts{flex:none}
+.ab .sn{flex:0 1 auto;min-width:0;font-size:var(--fz-body);line-height:1.3;color:var(--ink);display:flex;align-items:center;white-space:nowrap}   /* one line: the tray keeps one height in every state */
+.ab .fgs{flex:0 1 auto;min-width:0;font-size:var(--fz-body);color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ab .fgs b{color:var(--ink);font-weight:600}
+.ab .b:disabled{background:var(--surface);color:var(--ink-3);border-color:var(--line);cursor:default}
+.ab .acts{margin-left:auto;display:flex;align-items:center;gap:calc(var(--r)*.6)}
+/* the figures drop first when the bar is narrow, then the sentence wraps */
+.stp{display:flex;align-items:center}
+.stp .nd{display:inline-flex;align-items:center;gap:calc(var(--r)*.4);font-size:var(--fz-cap);font-weight:500;color:var(--ink-2);white-space:nowrap}
+.stp .nd i{width:calc(var(--r)*1.1);height:calc(var(--r)*1.1);border-radius:50%;flex:none;display:grid;place-items:center;box-shadow:inset 0 0 0 2px var(--line);color:#fff}
+.stp .nd i svg{width:calc(var(--r)*.7);height:calc(var(--r)*.7);fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.stp .nd.dn{color:var(--ink)}
+.stp .nd.dn i{background:var(--ink);box-shadow:none}
+.stp .nd.cu{color:var(--ink);font-weight:600}
+.stp .nd.cu i{box-shadow:inset 0 0 0 2px var(--ink)}
+.stp .nd.cu i::after{content:"";width:calc(var(--r)*.4);height:calc(var(--r)*.4);border-radius:50%;background:var(--ink)}
+.stp .lk2{width:calc(var(--r)*1.25);height:2px;margin:0 calc(var(--r)*.5);background:var(--line);flex:none}
+.stp .lk2.dn{background:var(--ink)}
+
+/* ======================================================================
+   7. KPI STRIP: label on top, the one figure, one caption line
+   ====================================================================== */
+.kpi{grid-auto-flow:row;grid-template-columns:1.35fr 1fr 1fr 1fr}
+.kpi>div{display:flex;flex-direction:column;gap:calc(var(--r)*.3);padding:var(--r) calc(var(--r)*1.25)}
+.kpi .l{order:-1;margin-top:0;font-size:var(--fz-cap);font-weight:500;color:var(--ink-2)}
+.kpi .f{font-size:var(--fz-page);font-weight:600;min-height:calc(var(--r)*1.9)}
+.kpi .d{margin-top:0;min-height:0;font-size:var(--fz-cap);color:var(--ink-2)}
+.kpi .wf{display:inline-flex;align-items:center;gap:calc(var(--r)*.4);height:calc(var(--r)*1.9);padding:0 calc(var(--r)*.6) 0 calc(var(--r)*.2);border:0;border-radius:var(--rad-c);background:transparent;font-size:inherit;font-weight:600;font-variant-numeric:tabular-nums;cursor:pointer}
+.kpi .wf:hover{background:var(--canvas)}
+.kpi .wf[aria-pressed=true]{box-shadow:inset 0 0 0 1.5px var(--ink)}
+
+/* ======================================================================
+   8. PROJECTS BOARD (.pbd): one surface, sticky column header, sticky severity groups, rows of two lines
+   A row is the project (its name, then why it is in this group in one sentence) and its budget forecast. The group says the
+   severity, the sentence says the cause, a tag appears only for an exception. No mark per row, no chevron: the row is a link.
+   ====================================================================== */
+.pbd{--bud:clamp(calc(var(--r)*9.5),22%,calc(var(--r)*20));--bhh:calc(var(--r)*2);--cols:minmax(0,1fr) var(--bud)}
+.pbd{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--rad-m);min-width:0;flex:none;overflow:clip}
+.pbd.nh{--bhh:0px}   /* a board without a column header */
+
+.bh{position:sticky;top:0;z-index:3;display:grid;grid-template-columns:var(--cols);column-gap:var(--r);align-items:end;height:var(--bhh);padding:0 calc(var(--r)*3.5) calc(var(--r)*.5) calc(var(--r)*1.25);background:var(--surface);border-bottom:1px solid var(--line);font-size:var(--fz-micro);font-weight:600;color:var(--ink-2);white-space:nowrap}
+.bh>*{min-width:0}
+
+.bgw{display:block;position:sticky;top:var(--bhh);z-index:2}
+.bg{display:flex;align-items:center;gap:calc(var(--r)*.6);width:100%;height:calc(var(--r)*2.25);margin:0;padding:0 var(--r);border:0;border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2);background:var(--canvas);font:inherit;color:inherit;text-align:left}
+button.bg{cursor:pointer}
+button.bg:hover{background:var(--line-2)}
+button.bg:focus-visible{outline:2px solid var(--poppy);outline-offset:-2px}
+.bg>.i{color:var(--ink-2)}
+.bg[aria-expanded=false]>.i{transform:rotate(-90deg)}
+.bgw:has(>.bg[aria-expanded=false])~.prw{display:none}   /* collapsed = the header alone */
+.bg b{font-size:var(--fz-lead);font-weight:600;line-height:1}
+.bg .ct{font-size:var(--fz-body);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.bh+section>.bgw .bg{border-top:0}
+
+.prw{position:relative}
+.pr{--rowbg:var(--surface);display:grid;grid-template-columns:var(--cols);column-gap:var(--r);align-items:center;height:calc(var(--r)*3.5);padding:0 calc(var(--r)*3.5) 0 calc(var(--r)*1.25);border-top:1px solid var(--line-2);background:var(--rowbg);color:var(--ink);text-decoration:none;cursor:pointer}
+.bgw+.prw .pr{border-top:0}
+.pr>*{min-width:0}
+.prw:hover .pr{--rowbg:var(--canvas)}
+.pr:focus-visible{outline:2px solid var(--poppy);outline-offset:-2px}
+/* selected row (details panel open on it): ink ring, no wash, no side bar */
+.prw.sel .pr{box-shadow:inset 0 0 0 1.5px var(--ink)}
+/* static copies of :hover and :focus-visible, for states sheets */
+.prw.hv .pr{--rowbg:var(--canvas)}
+.prw.hv .dt,.prw.fw .dt{color:var(--ink)}
+.pr.fv{outline:2px solid var(--poppy);outline-offset:-2px}
+.prw:last-child .pr{border-radius:0 0 var(--rad-m) var(--rad-m)}
+
+/* project cell: name (lead, 600) + tags that are exceptions, then the reason in one sentence; a quiet project has the name alone */
+.c-p{display:flex;flex-direction:column;justify-content:center;gap:calc(var(--r)*.1)}
+.c-p .l1{display:flex;align-items:center;gap:calc(var(--r)*.6);min-width:0}
+.c-p .l1>b{font-size:var(--fz-lead);font-weight:600;line-height:1.3}
+.c-p .ln{font-size:var(--fz-body);line-height:1.35;color:var(--ink)}
+.c-p .ln .mut{color:var(--ink-2)}
+/* quiet neutral tag: only exceptions (lifecycle not Running; worse, better or new since the last published week) */
+.qt{display:inline-flex;align-items:center;gap:calc(var(--r)*.3);flex:none;height:calc(var(--r)*1.35);padding:0 calc(var(--r)*.55);border-radius:99px;background:var(--line-2);font-size:var(--fz-cap);font-weight:500;color:var(--ink);white-space:nowrap}
+.qt .i{width:calc(var(--r)*.8);height:calc(var(--r)*.8);stroke-width:2.2}
+.qt.wo .i{color:var(--storm)}
+
+/* budget cell: forecast against the budget on one scale (track = 125%, the budget is the tick at 100%), then the percentage */
+.c-b{display:flex;align-items:center;gap:calc(var(--r)*.6)}
+.fb{position:relative;flex:1;min-width:0;height:calc(var(--r)*.5);border-radius:99px;background:var(--line)}   /* the track takes what the column gives: the longer, the finer the comparison */
+.fb .f{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--ink-2)}
+.fb .f.x{border-radius:99px 0 0 99px}
+.fb .o{position:absolute;top:0;bottom:0;border-radius:0 99px 99px 0;background:var(--storm)}
+.fb .n{position:absolute;left:80%;top:calc(var(--r)*-.2);bottom:calc(var(--r)*-.2);width:2px;margin-left:-1px;background:var(--ink)}
+.c-b .pc{flex:none;width:calc(var(--r)*3.1);font-size:var(--fz-lead);font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
+.c-b .nr{font-size:var(--fz-body);color:var(--ink-2)}
+
+/* Details: a visible icon button at the end of every row (evidence on demand); the row itself opens the project */
+.dt{position:absolute;top:50%;margin-top:calc(var(--r)*-.95);right:calc(var(--r)*.75);border-color:transparent;background:transparent;color:var(--ink-3)}
+.prw:hover .dt,.dt:focus-visible{color:var(--ink)}
+.dt:hover{background:var(--canvas)}
+
+/* ======================================================================
+   9. DETAILS PANEL (.dp): evidence on demand, 24rem, docked at the right of the page; the board keeps its rows and gives up width
+   ====================================================================== */
+.dp{position:sticky;top:0;align-self:flex-start;flex:0 0 calc(var(--r)*24);height:100vh;z-index:6;display:flex;flex-direction:column;background:var(--surface);border-left:1px solid var(--line)}
+.dp.stat{position:absolute;top:0;right:0;bottom:0;width:calc(var(--r)*24);height:auto;border-radius:0 var(--rad-m) var(--rad-m) 0;box-shadow:var(--shadow)}   /* framed inside a states sheet */
+.dp-h{flex:none;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:calc(var(--r)*.75);align-items:start;padding:var(--r) var(--pad-m) calc(var(--r)*.75)}
+.dp-h b{display:block;font-size:var(--fz-lead);font-weight:600;line-height:1.3;overflow-wrap:anywhere}
+.dp-h .qt{margin-top:calc(var(--r)*.35)}
+.dp-b{flex:1;min-height:0;overflow:auto;padding:0 var(--pad-m) var(--r)}
+.dp-s{padding:var(--r) 0 calc(var(--r)*.2);border-top:1px solid var(--line-2)}
+.dp-s h3{display:flex;justify-content:space-between;align-items:baseline;font-size:var(--fz-body);font-weight:600;margin-bottom:calc(var(--r)*.5)}
+.dp-s h3 .lk{font-size:var(--fz-cap)}
+/* one key/value grid for the whole panel: a 7rem label column and a value column, identical in every section */
+.dp-s .kv{display:grid;grid-template-columns:calc(var(--r)*7) minmax(0,1fr);gap:calc(var(--r)*.45) 0;align-items:baseline;margin:0}
+.dp-s .kv dt{margin:0;font-size:var(--fz-cap);font-weight:500;color:var(--ink-2)}
+.dp-s .kv dd{margin:0;font-size:var(--fz-body);color:var(--ink);font-variant-numeric:tabular-nums;text-align:left;overflow-wrap:anywhere}
+.dp-s .kv dd.q{color:var(--ink-2)}
+.dp-s .kv dt .hm{margin-right:calc(var(--r)*.5);vertical-align:-.05em}
+.dp-s .kv dt .i{vertical-align:-.15em;margin-right:calc(var(--r)*.3)}
+.dp-s .fd2{display:flex;gap:calc(var(--r)*.5);align-items:flex-start;font-size:var(--fz-body);line-height:1.4;padding:calc(var(--r)*.2) 0}
+.dp-s .fd2 .i{margin-top:calc(var(--r)*.15)}
+.dp-s .tm{display:flex;align-items:center;gap:calc(var(--r)*.6);padding:calc(var(--r)*.25) 0;font-size:var(--fz-body)}
+.dp-s .tm .av{width:calc(var(--r)*1.75);height:calc(var(--r)*1.75);font-size:var(--fz-micro)}
+.dp-s .tm b{font-weight:600}
+.dp-s .tm span.rl{font-size:var(--fz-cap);color:var(--ink-2);margin-left:auto}
+
+/* ======================================================================
+   10. HOVER AND FOCUS (rows, toolbar controls, rail items, buttons)
+   ====================================================================== */
+.pr:hover{--rowbg:var(--canvas)}
+.b:hover:not(:disabled,.dis,.p,.k){background:var(--canvas)}
+.b.p:hover{filter:brightness(.95)}
+.b:focus-visible,.in:focus-visible,.tbar .in:focus-within,.rail-tg:focus-visible,.wf:focus-visible,.psw:focus-visible,button.who:focus-visible{outline:2px solid var(--poppy);outline-offset:2px}
+.ri:focus-visible{outline:2px solid var(--poppy);outline-offset:-2px}
+.tbar .in:hover{border-color:var(--ink-3)}
+.tbar .in.act:hover{border-color:var(--ink)}
+.psw:hover,button.who:hover{background:rgba(255,255,255,.07)}
+
+/* ======================================================================
+   11. CHECKBOX: one styled checkbox for every 2.2 board
+   ====================================================================== */
+.ck-in input[type=checkbox]{appearance:none;-webkit-appearance:none;display:inline-grid;place-content:center;flex:none;width:calc(var(--r)*1.1);height:calc(var(--r)*1.1);margin:0;border:1px solid var(--ink-3);border-radius:calc(var(--rad-c)*.5);background:var(--surface) center/80% no-repeat;cursor:pointer}
+.ck-in input[type=checkbox]:checked{background-color:var(--ink);border-color:var(--ink);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")}
+.ck-in input[type=checkbox]:hover{border-color:var(--ink-2)}
+.ck-in input[type=checkbox]:focus-visible{outline:2px solid var(--poppy);outline-offset:2px}
+.ck-in input[type=checkbox]:disabled{opacity:.45;cursor:default}

@@ -1,12 +1,17 @@
 # App Builder — users, use cases, UX flows
 
+> **Status note (0.2.0).** Written for `0.1.8`, around the Copilot rail. The rail is gone: CoCo is now the Ask CoCo window
+> (`ask_coco`, a launcher at the bottom right), a job is `coco.ask(label, text, key=...)`, and a form asked by the page is
+> `coco.form(...)`. Read "Copilot", `the Ask CoCo window (`ask_coco`)` and `coco.form` below as those. The product decisions stand.
+
+
 **Feature:** [`app-builder.md`](app-builder.md)
 **Cut:** `0.1.8`
 **Status:** Shipped in `0.1.8` — example in `examples/app_builder` (`make app-builder`)
 **Last updated:** 2026-09-06
 
 This is the product brief for the **example app**, not for library integrators.
-PRD §4.1 “App builder” is the person who *embeds* `panel()`. The people below
+PRD §4.1 “App builder” is the person who *embeds* the window. The people below
 *use* App Builder.
 
 ---
@@ -60,7 +65,7 @@ minutes of a room demo.
 
 | Person | They use instead |
 | --- | --- |
-| Library integrator wiring `copilot_rail` | README / `doc/api.md` / `make chat` |
+| Library integrator wiring `ask_coco` | README / `doc/api.md` / `make chat` |
 | Someone migrating Tableau / Power BI | BI → Semantic (produces the semantic view some types then consume) |
 | Someone starting from a napkin photo *only* | RFC [#9](https://github.com/DevoteamSP/streamlit-coco/issues/9) — attaching a sketch *to a type brief* is App Builder |
 | Automation author (headless jobs) | `CocoSession` / `make headless` |
@@ -153,7 +158,7 @@ Pages sit in the Streamlit menu. Header actions are **Open Copilot**,
 | **Welcome** | Everyone | Orientation | No |
 | **Library** | Owner | **Resume** project cards · **Create a new project** type cards (name) | No |
 | **Brief** | Owner (+ steward) | Type story · **Your brief** + sketches · type **Questions** (profile metrics only when a file was read) | **Depends on grounding kind** (below) |
-| **Studio** | Owner | `app_viewer` + `copilot_rail` | Yes |
+| **Studio** | Owner | `app_viewer` + `ask_coco` | Yes |
 | **Admin** | Consultant | Left: type cards (2-col) with **Edit** / **Delete**. Right: type form (Material icon popover; Topics \| Context, Allows \| Does not) plus question tabs. Writes `types/<id>/type.json`. | No |
 
 **Agent use on the Brief screen is scoped by `grounding_kind` (§5.2), not blanket "no until Build":**
@@ -225,7 +230,7 @@ screenshot: types/semantic-kpis/card.png    # optional catalog thumbnail
 needs: [semantic_view]
 demo_fixture: sales_sv                      # optional; UC6
 guidelines_skill: semantic-kpis             # types/<id>/SKILL.md + reference/ + CHECKLIST.md (§7.1)
-ships_copilot: false                        # generated app embeds its own copilot_rail() — §5.5
+ships_copilot: false                        # generated app embeds its own the Ask CoCo window (`ask_coco`) — §5.5
 
 brief:
   context: |
@@ -279,7 +284,7 @@ question with no `infer:` (there are always at least the two above) always
 renders blank — the profiler is never asked to guess intent.
 
 **`ships_copilot: true`** means the generated app embeds its own
-`copilot_rail()` (§5.5). Off by default; opt in per type once a type has
+`the Ask CoCo window (`ask_coco`)` (§5.5). Off by default; opt in per type once a type has
 proven the pattern (build order, `app-builder-v2.md` §7 slice 7).
 
 **Brief screen layout** (read top to bottom):
@@ -365,7 +370,7 @@ grain), patch `brief.json` so the next regenerate does not revert it.
 ### 5.5 `ships_copilot` (capability, not a type)
 
 A type sets `ships_copilot: true` when its generated app should embed its
-own `copilot_rail()`. The owner keeps shaping the app **after it leaves the
+own `the Ask CoCo window (`ask_coco`)`. The owner keeps shaping the app **after it leaves the
 builder** — on their own machine, without App Builder open — by talking to
 it, under the same approval gates the builder itself uses.
 
@@ -429,7 +434,7 @@ items named in plain language.
 
 **Studio.** Preview | Copilot can open together. Copilot has an **App brief**
 expander (owner brief + type questions; **Save** / **Save & regenerate**) so
-the owner can change `BRIEF.md` without leaving the rail. First **Run** after
+the owner can change `BRIEF.md` without leaving the window. First **Run** after
 a successful Write happens automatically (§6.1a) — the human's first look is
 already self-checked.
 
@@ -613,7 +618,7 @@ catalog card.
 | Network access? | **Host only.** URL fetch and PDF text extraction happen outside the CoCo session; CoCo Reads local snapshots in `sources/`. No fetch tool granted to the session for this feature. |
 | Semantic view up front? | **Only if the type `needs` it** (a question inside the brief), and DESCRIBE is opt-in per §4's table. |
 | Where files live? | `out/<slug>/`, user-owned, not the host tree. |
-| New library API? | **No** — example + type YAML + skills. Reuse `request_input` / rail / viewer. |
+| New library API? | **No** — example + type YAML + skills. Reuse `coco.form` / the window / viewer. |
 | First-look quality? | **Self-check once, automatically, before the human sees Preview** (§6.1a), reusing `app_viewer` + `.preview.log` + `default_fix_prompt` from `0.1.7`. Does not skip approval; skips the human noticing. |
 | Apps that keep talking after they ship? | **`ships_copilot`, opt-in per type** (§5.5), scoped to one type once the rest of the catalogue is solid. Not the mechanism for iterating *inside* the builder — that's UC3. |
 | vs Napkin #9? | Photo as the **only** start stays #9. Sketches **on the filled brief** are in 0.1.8. |
@@ -687,7 +692,7 @@ than as static text areas.
 
 1. A no-CoCo fallback path so UC6 keeps working for the types that still
    need one (interview cannot be the *only* path).
-2. The interview driven by `request_input(schema=…)` so its output lands in
+2. The interview driven by `coco.form(schema=…)` so its output lands in
    `brief.json` as structured answers, not free prose — the form stays the
    audit trail and the fallback, per §8.
 3. The interview transcript persisted into the filled brief, so

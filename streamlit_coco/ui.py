@@ -511,8 +511,13 @@ def panel(
     preview_chars: int | None = None,
     on_structured_output: StructuredOutputCallback | None = None,
     structured_output_container: Any | None = None,
-) -> CocoChatResult:
+    mini: bool = False,
+) -> CocoChatResult | Any:
     """Render CoCo output and controls with native Streamlit widgets.
+
+    ``mini=False`` (the default) is the 0.1.9 panel. ``mini=True`` mounts the
+    floating Ask CoCo window for ``session.options.cwd`` and returns its handle.
+    Tool allow-lists on the session are not copied: the window uses its policy.
 
     Parameters
     ----------
@@ -533,7 +538,13 @@ def panel(
         Optional transcript window size; shows **Load earlier** when truncated.
     preview_chars:
         Optional cap on user/assistant text length in the transcript.
+    mini:
+        Mount the floating Ask CoCo window instead of this panel.
     """
+    if mini:
+        from streamlit_coco.mini import mount_mini
+
+        return mount_mini(session, key=approval_key_prefix)
 
     session.set_show_structured_inline(
         on_structured_output is None and structured_output_container is None

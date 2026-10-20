@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Streamlit CoCo — Référence des exemples d'apps</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200;0,6..12,300;0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900&display=swap');
+    :root {
+      --red: #F5364B; --red2: #E8001D;
+      --snow: #29B5E8; --gold: #F59B23; --green: #27AE60;
+      --purple: #7B61FF; --teal: #1ABC9C;
+      --dark: #1E2028; --text: #2D2D2D; --muted: #7B7F8E;
+      --border: #E2E4EA; --card: #F4F5F7; --bg: #FAFAFA;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px; line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    .logo-badge { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-circle { width: 38px; height: 38px; background: var(--red); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 15px; flex-shrink: 0; }
+    .logo-text { line-height: 1.2; }
+    .logo-name { font-weight: 700; font-size: 13px; color: var(--text); }
+    .logo-partner { font-size: 10px; color: var(--muted); }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+    .subtitle { font-size: 14px; color: var(--muted); font-weight: 400; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+    .card-top { border-top: 3px solid var(--red); }
+    .card-snow { border-top: 3px solid var(--snow); }
+    .card-gold { border-top: 3px solid var(--gold); }
+    .card-green { border-top: 3px solid var(--green); }
+    .card-purple { border-top: 3px solid var(--purple); }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px;
+      font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .badge-snow { background: rgba(41,181,232,.12); color: var(--snow); border: 1px solid rgba(41,181,232,.3); }
+    .badge-gold { background: rgba(245,155,35,.12); color: var(--gold); border: 1px solid rgba(245,155,35,.3); }
+    .badge-green { background: rgba(39,174,96,.12); color: var(--green); border: 1px solid rgba(39,174,96,.3); }
+    .badge-red { background: rgba(245,54,75,.12); color: var(--red); border: 1px solid rgba(245,54,75,.3); }
+    .badge-purple { background: rgba(123,97,255,.12); color: var(--purple); border: 1px solid rgba(123,97,255,.3); }
+    .badge-dark { background: rgba(30,32,40,.75); color: white; }
+    .topbar { position: sticky; top: 0; z-index: 100; background: white;
+      border-bottom: 1px solid var(--border); padding: 10px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .topnav { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; }
+    .topnav a { color: var(--text); text-decoration: none; font-weight: 600; padding: 4px 2px; }
+    .topnav a:hover { color: var(--red); }
+    .topnav a[aria-current="page"] { color: var(--red); font-weight: 700; border-bottom: 2px solid var(--red); }
+    .layout { max-width: none; margin: 0; padding: 28px 32px 0;
+      display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
+    .content { max-width: none; width: 100%; min-width: 0; background: white; border: 1px solid var(--border);
+      border-radius: 12px; box-shadow: 0 2px 24px rgba(30,32,40,.06); padding: 36px 44px 44px;
+      overflow-wrap: break-word; }
+    .content > *, .content section, .exbody, .exblock, .actmain, .qcard { min-width: 0; }
+    code.inline { overflow-wrap: anywhere; }
+    @media (max-width: 700px) {
+      .content { padding: 24px 18px 30px; }
+      .pagehead { flex-direction: column; }
+      .meta-strip { text-align: left; }
+      .layout { padding: 18px 12px 0; }
+    }
+    .pagehead { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px;
+      flex-wrap: wrap; margin-bottom: 28px; }
+    .pagehead h1 { font-size: 36px; font-weight: 300; color: var(--text); line-height: 1.15; margin-bottom: 8px; }
+    .pagehead h1 strong { font-weight: 800; color: var(--red); }
+    .meta-strip { text-align: right; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+    .meta-strip .dur { display: block; font-weight: 700; color: var(--text); font-size: 13px; margin-bottom: 4px; }
+    .meta-strip a { color: var(--red); font-weight: 700; text-decoration: none; }
+    .meta-strip a:hover { text-decoration: underline; }
+    .toc-side { display: none; }
+    .toc details { border: 1px solid var(--border); border-radius: 10px; background: white; padding: 10px 16px; margin-bottom: 24px; }
+    .toc summary { cursor: pointer; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); }
+    .toc ul { list-style: none; margin: 10px 0 4px; }
+    .toc li { margin: 3px 0; }
+    .toc li.lvl3 { padding-left: 16px; }
+    .toc a { color: var(--muted); text-decoration: none; font-size: 12.5px; }
+    .toc a:hover { color: var(--red); }
+    .toc li.lvl2 > a { color: var(--text); font-weight: 600; }
+    @media (min-width: 1100px) {
+      .layout { grid-template-columns: 260px minmax(0, 1fr); }
+      .toc-side { min-width: 0; display: block; position: sticky; top: 76px;
+        max-height: calc(100vh - 100px); overflow-y: auto; }
+      .toc-side ul { list-style: none; }
+      .toc-inline { display: none; }
+    }
+    .content h2 { font-size: 24px; font-weight: 800; color: var(--text); margin: 34px 0 12px; scroll-margin-top: 80px; }
+    .content h3 { font-size: 17px; font-weight: 700; color: var(--text); margin: 24px 0 8px; scroll-margin-top: 80px; }
+    .content h4 { font-size: 14px; font-weight: 700; color: var(--muted); margin: 18px 0 6px;
+      text-transform: uppercase; letter-spacing: .06em; }
+    .content h2:first-child, .content h3:first-child { margin-top: 0; }
+    .content p { margin: 10px 0; }
+    .content ul, .content ol { margin: 10px 0 10px 22px; }
+    .content li { margin: 5px 0; }
+    .content a { color: var(--red2); text-decoration: none; border-bottom: 1px solid rgba(245,54,75,.35); }
+    .content a:hover { border-bottom-color: var(--red); }
+    .content strong { font-weight: 700; }
+    .anchor { opacity: 0; margin-left: 8px; font-size: .7em; color: var(--muted); text-decoration: none; border: 0; }
+    h2:hover .anchor, h3:hover .anchor { opacity: 1; }
+    code.inline { background: rgba(245,54,75,.07); color: var(--red2); border-radius: 4px;
+      padding: 1px 5px; font-size: .92em; font-family: 'SFMono-Regular', Menlo, Consolas, monospace; }
+    .sep { height: 1px; background: var(--border); border: 0; margin: 32px 0; }
+    .codewrap { position: relative; margin: 16px 0; border-radius: 10px; overflow: hidden; background: var(--dark); }
+    .codebar { display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 14px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .codelang { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.45); }
+    .copybtn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); color: white;
+      font-family: inherit; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 5px; cursor: pointer; }
+    .copybtn:hover { background: rgba(245,54,75,.3); border-color: var(--red); }
+    .copybtn.ok { background: rgba(39,174,96,.25); border-color: var(--green); }
+    .codewrap pre { overflow-x: auto; padding: 14px 16px; }
+    .codewrap code { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 13px;
+      line-height: 1.6; color: rgba(255,255,255,.9); white-space: pre; }
+    .tablewrap { overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 10px; }
+    table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+    thead th { position: sticky; top: 0; background: var(--card); text-align: left;
+      font-weight: 700; padding: 10px 14px; border-bottom: 2px solid var(--border); white-space: nowrap; z-index: 2; }
+    tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tbody tr:nth-child(even) { background: rgba(244,245,247,.55); }
+    tbody tr:last-child td { border-bottom: 0; }
+    .callout { border-left: 3px solid var(--border); background: var(--card); border-radius: 0 10px 10px 0;
+      padding: 12px 18px; margin: 16px 0; }
+    .callout-snow { border-left-color: var(--snow); background: rgba(41,181,232,.06); }
+    .callout-gold { border-left-color: var(--gold); background: rgba(245,155,35,.06); }
+    .callout-red  { border-left-color: var(--red);  background: rgba(245,54,75,.06); }
+    .callout-green{ border-left-color: var(--green);background: rgba(39,174,96,.06); }
+    .callout p:first-child { margin-top: 0; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout-tag { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      display: block; margin-bottom: 4px; }
+    ul.tasklist { list-style: none; margin-left: 0; }
+    ul.tasklist li { display: flex; align-items: flex-start; gap: 10px; padding: 7px 12px; background: white;
+      border: 1px solid var(--border); border-radius: 8px; margin-bottom: 7px; }
+    ul.tasklist input[type=checkbox] { margin-top: 4px; width: 15px; height: 15px; accent-color: var(--green);
+      flex-shrink: 0; cursor: pointer; }
+    ul.tasklist li.done .tasktext { text-decoration: line-through; color: var(--muted); }
+    ul.tasklist li.done { background: rgba(39,174,96,.05); border-color: rgba(39,174,96,.3); }
+    .counter { font-size: 12px; font-weight: 700; color: var(--muted); }
+    .counter .n { color: var(--green); }
+    .pagefoot { max-width: none; margin: 0; padding: 0 32px 48px; }
+    .prevnext { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin: 28px 0 18px; }
+    .prevnext a { display: block; padding: 12px 18px; background: white; border: 1px solid var(--border);
+      border-radius: 10px; text-decoration: none; min-width: 220px; }
+    .prevnext a:hover { border-color: var(--red); }
+    .pn-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .pn-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .slide-footer { height: 36px; display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border); }
+    .footer-brand { font-size: 11px; font-weight: 700; color: var(--red); }
+    .footer-page { font-size: 11px; color: var(--muted); }
+    a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--red); outline-offset: 2px; border-radius: 4px; }
+    @page { size: A4; margin: 14mm; }
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background: white; font-size: 11pt; }
+      .topbar, .toc, .prevnext, .copybtn, .noprint { display: none !important; }
+      .layout { display: block; max-width: none; padding: 0; }
+      .content { max-width: none; border: 0; box-shadow: none; border-radius: 0; padding: 0; }
+      details { display: block !important; }
+      details > summary { list-style: none; }
+      .answer, .hidden-print-reveal { display: block !important; }
+      .codewrap { background: var(--card); border: 1px solid var(--border); }
+      .codewrap code, .codelang { color: var(--text); }
+      .card, .callout, .tablewrap, table, tr, .exercise { page-break-inside: avoid; break-inside: avoid; }
+      h2, h3 { page-break-after: avoid; break-after: avoid; }
+    }
+</style>
+</head>
+<body data-page="user-guide/sections/reference-examples.fr">
+<header class="topbar">
+  <a class="logo-badge" href="../../enablement/intro.fr.html"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></a>
+  <nav class="topnav" aria-label="Training pack"><a href="../../enablement/intro.fr.html">Enablement</a><a href="../../training/01-simple.fr.html">Training</a><a href="../../certifications/enablement.fr.html">Certifications</a><a href="../index.fr.html">User Guide</a><a href="../../technical-guide/index.fr.html">Technical Guide</a></nav>
+</header>
+<div class="layout">
+  <nav class="toc toc-side" aria-label="Sur cette page"><div class="section-label">Sur cette page</div><ul><li class="lvl2"><a href="#chatapp-py">chat_app.py</a></li><li class="lvl2"><a href="#approvalgate-py">approval_gate.py</a></li><li class="lvl2"><a href="#structuredoutput-py">structured_output.py</a></li><li class="lvl2"><a href="#headlesspipeline-py">headless_pipeline.py</a></li><li class="lvl2"><a href="#cwduploadchat-py">cwd_upload_chat.py</a></li><li class="lvl2"><a href="#backlogdesk">backlog_desk/</a></li><li class="lvl2"><a href="#bitosemantic">bi_to_semantic/</a></li><li class="lvl2"><a href="#appbuilder">app_builder/</a></li></ul></nav>
+  <main class="content">
+    <div class="pagehead">
+      <div>
+        <div class="section-label">Pack de formation · Devoteam Snowflake Practice · 2026</div>
+        <h1>Référence des exemples d'apps</h1>
+        <div class="subtitle">Guide utilisateur · Référence</div>
+      </div>
+      <div class="meta-strip"><span class="dur"></span><a href="../../enablement/intro.fr.html">← Retour au sommaire</a></div>
+    </div>
+    <nav class="toc toc-inline" aria-label="Sur cette page"><details><summary>Sur cette page</summary><ul><li class="lvl2"><a href="#chatapp-py">chat_app.py</a></li><li class="lvl2"><a href="#approvalgate-py">approval_gate.py</a></li><li class="lvl2"><a href="#structuredoutput-py">structured_output.py</a></li><li class="lvl2"><a href="#headlesspipeline-py">headless_pipeline.py</a></li><li class="lvl2"><a href="#cwduploadchat-py">cwd_upload_chat.py</a></li><li class="lvl2"><a href="#backlogdesk">backlog_desk/</a></li><li class="lvl2"><a href="#bitosemantic">bi_to_semantic/</a></li><li class="lvl2"><a href="#appbuilder">app_builder/</a></li></ul></details></nav>
+<p>Chaque exemple d'app maison sous <code class="inline">examples/</code>, ce qu'il démontre, comment l'exécuter, et ce dont il a besoin. Voir la <a href="reference-commands.html">Référence des commandes</a> pour les cibles <code class="inline">make</code> sous-jacentes et <a href="outputs.html">Sorties</a> pour les fichiers que chacun produit.</p>
+<section><h2 id="chatapp-py"><code class="inline">chat_app.py</code><a class="anchor" href="#chatapp-py" aria-label="Link to this section">#</a></h2>
+<p>À exécuter avec <code class="inline">make chat</code>. Démontre le pattern d'intégration préféré : <code class="inline">check_environment()</code> → <code class="inline">render_start_gate()</code> → <code class="inline">get_or_create_session()</code> → <code class="inline">panel()</code> + <code class="inline">chat_input_bar()</code>. Sa barre latérale inclut un lanceur de prompts de test adossé à <code class="inline">examples/testdata/prompts.json</code>. Nécessite une connexion Snowflake avec accès Cortex Code.</p></section>
+<section><h2 id="approvalgate-py"><code class="inline">approval_gate.py</code><a class="anchor" href="#approvalgate-py" aria-label="Link to this section">#</a></h2>
+<p>À exécuter avec <code class="inline">make approval</code>. Démontre le widget tout-en-un <code class="inline">chat()</code> CCv2 legacy au lieu de <code class="inline">panel()</code> — utile comme référence pour les apps encore sur l'ancienne API. Nécessite une connexion Snowflake.</p></section>
+<section><h2 id="structuredoutput-py"><code class="inline">structured_output.py</code><a class="anchor" href="#structuredoutput-py" aria-label="Link to this section">#</a></h2>
+<p>À exécuter avec <code class="inline">make structured</code>. Démontre <code class="inline">output_schema</code> avec <code class="inline">on_structured_output</code>, routant le JSON de l'agent vers un widget au lieu du texte de chat. Nécessite une connexion Snowflake.</p></section>
+<section><h2 id="headlesspipeline-py"><code class="inline">headless_pipeline.py</code><a class="anchor" href="#headlesspipeline-py" aria-label="Link to this section">#</a></h2>
+<p>À exécuter avec <code class="inline">make headless</code>. Du Python asynchrone pur sans aucun import Streamlit ; pilote <code class="inline">query()</code> et <code class="inline">CocoSession</code> depuis un terminal, chacun dans sa propre boucle d'événements. Nécessite une connexion Snowflake ; ne produit aucune interface navigateur.</p></section>
+<section><h2 id="cwduploadchat-py"><code class="inline">cwd_upload_chat.py</code><a class="anchor" href="#cwduploadchat-py" aria-label="Link to this section">#</a></h2>
+<p>À exécuter avec <code class="inline">make cwd-upload</code>. Démontre <code class="inline">chat_input_bar(accept_file=...)</code> et <code class="inline">cwd_uploader()</code> — des téléversements navigateur écrits dans le <code class="inline">cwd</code> de l'agent. Nécessite une connexion Snowflake pour les tours de l'agent ; les mécanismes de téléversement eux-mêmes n'en ont pas besoin.</p></section>
+<section><h2 id="backlogdesk"><code class="inline">backlog_desk/</code><a class="anchor" href="#backlogdesk" aria-label="Link to this section">#</a></h2>
+<p>À exécuter avec <code class="inline">make backlog</code>. Un Product Backlog Desk multipage : adossé à des fichiers/JSON (pas de SQL), avec des pages Board / Epic / Ticket / Release et un Copilot en rail à droite ouvert depuis un bouton <strong>Copilot</strong> d'en-tête ou un lien d'action (fermé avec <strong>Close</strong> — ce n'est pas une page de navigation). Son Copilot embarque quatre skills basées sur des prompts (pas des skills d'orchestration <code class="inline">.cortex/skills/</code>) : Summarize sprint, Draft release notes (soumis à approbation), Propose ticket update (soumis à approbation), Check definition of done. Les données vivent sous <code class="inline">data/{epics,tickets,releases,policies}</code>. C'est l'exemple maison d'un rail intégré dans un produit non-SQL, non-chat. Nécessite une connexion Snowflake pour le Copilot ; les pages Board/Epic/Ticket/Release elles-mêmes ne lisent que du JSON local.</p></section>
+<section><h2 id="bitosemantic"><code class="inline">bi_to_semantic/</code><a class="anchor" href="#bitosemantic" aria-label="Link to this section">#</a></h2>
+<p>À exécuter avec <code class="inline">make bi-semantic</code> (alias : <code class="inline">make tableau-semantic</code>, déprécié). Lit des classeurs Tableau (<code class="inline">.twb</code>/<code class="inline">.twbx</code>) et/ou Power BI (<code class="inline">.pbix</code>/<code class="inline">.pbit</code>), fait apparaître les KPI et les divergences de règles d'accès, arbitre les désaccords via <code class="inline">request_input(schema=...)</code>, et écrit une vue sémantique, une politique d'accès par ligne, et une app consommatrice Streamlit générée (déconnectée par défaut, aucun entrepôt requis pour la consulter). Six écrans : Welcome, 1 Load, 2 Estate map (parsing déterministe), 3 KPI inventory (déterministe), 4 Access-rule comparator (Power BI parsé localement ; Tableau parsé via CoCo), 5 Arbitration (<code class="inline">request_input</code>), 6 Generate (approbation Write + aperçu). Les écrans 2 et 3 ne nécessitent aucun agent CoCo ni entrepôt ; le chemin Tableau de l'écran 4 et l'écran 6 en ont besoin. Des fixtures d'exemple (un pack Tableau Server sous licence MIT et un pack Power BI Obvience) vivent sous <code class="inline">examples/bi_samples/</code>. Le <code class="inline">cwd</code> de l'agent pour cet exemple est <code class="inline">examples/workspaces/bi_to_semantic/</code> (ignoré par git). Aperçu : un consommateur Python (déterministe) sur <code class="inline">127.0.0.1:8511</code> et un consommateur rédigé par CoCo sur <code class="inline">:8512</code>, tous deux via <code class="inline">app_viewer()</code>. Les JSON Schemas des artefacts intermédiaires vivent sous <code class="inline">examples/bi_to_semantic/contracts/</code>. Voir <a href="outputs.html">Sorties</a> pour les noms de fichiers exacts.</p></section>
+<section><h2 id="appbuilder"><code class="inline">app_builder/</code><a class="anchor" href="#appbuilder" aria-label="Link to this section">#</a></h2>
+<p>À exécuter avec <code class="inline">make app-builder</code>. Génération guidée d'apps Streamlit pour les utilisateurs métier. Pages : Welcome, Library (cartes Resume et Create-a-new-project, avec un filtre par pill de sujet), Brief (un brief en texte libre et des croquis, ou des questions typées), Studio (Build this app / regenerate ; Open Copilot ; Open Preview ; un expandeur App brief avec Save / Save &amp; regenerate), Admin (éditeurs CRUD de types et de skills de directives). Chaque type d'app est un <code class="inline">types/&lt;id&gt;/type.json</code> (sa carte de catalogue) plus un <code class="inline">types/&lt;id&gt;/SKILL.md</code> optionnel (avec <code class="inline">reference/</code> et <code class="inline">CHECKLIST.md</code>) que CoCo lit via <code class="inline">add_dirs</code> ; <code class="inline">types/shared/SKILL.md</code> contient les règles de génération communes à tous les types et n'est pas lui-même une carte de catalogue. L'ensemble de types verrouillé et actif est : KPI presentation, Data quality, Call transcription, Meeting recap, Prompt library, CSV explorer — chacun déclare un <code class="inline">grounding_kind</code> (<code class="inline">tabular</code> / <code class="inline">semantic_view</code> / <code class="inline">documents</code> / <code class="inline">urls</code>) qui décide si son étape de profilage est un parseur pandas déterministe (<code class="inline">engine/profile.py</code>) ou un job CoCo. Les documents et URLs sont récupérés par l'application hôte, jamais par la session CoCo elle-même — aucun outil réseau ne lui est accordé. La sortie générée atterrit sous <code class="inline">examples/app_builder/out/&lt;slug&gt;/</code> (<code class="inline">brief.json</code>, <code class="inline">BRIEF.md</code>, <code class="inline">sketches/</code>, <code class="inline">streamlit_app.py</code>) ; l'aperçu tourne sur le port 8513. Nécessite une connexion Snowflake pour tout type utilisant une étape de profilage pilotée par CoCo ou pour l'étape Build/regenerate de Studio.</p></section>
+  </main>
+</div>
+<footer class="pagefoot">
+  <div class="prevnext noprint"><a href="reference-commands.fr.html"><span class="pn-label">← Précédent</span><span class="pn-title">Référence des commandes</span></a><a href="outputs.fr.html" style="text-align:right"><span class="pn-label">Suivant →</span><span class="pn-title">Sorties</span></a></div>
+  <div class="slide-footer">
+    <div class="footer-brand">Creative tech for Better Change</div>
+    <div class="footer-page">Streamlit CoCo · Généré à partir de user-guide/sections/reference-examples.fr.md</div>
+  </div>
+</footer>
+<script>
+(function () {
+  var PAGE = document.body.getAttribute('data-page') || 'page';
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  document.querySelectorAll('.copybtn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.closest('.codewrap').querySelector('code').textContent;
+      var done = function () {
+        btn.textContent = 'Copied'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(done, function () {});
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = code; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+  var boxes = document.querySelectorAll('input.chk');
+  boxes.forEach(function (box, idx) {
+    var key = 'dsp-training:' + PAGE + ':chk:' + idx;
+    var saved = load(key);
+    if (saved === '1') box.checked = true;
+    else if (saved === '0') box.checked = false;
+    sync(box);
+    box.addEventListener('change', function () {
+      store(key, box.checked ? '1' : '0');
+      sync(box); counters();
+    });
+  });
+  function sync(box) {
+    var li = box.closest('li');
+    if (li) li.classList.toggle('done', box.checked);
+  }
+  function counters() {
+    document.querySelectorAll('[data-count-scope]').forEach(function (el) {
+      var scope = document.querySelector(el.getAttribute('data-count-scope'));
+      if (!scope) return;
+      var all = scope.querySelectorAll('input.chk');
+      var on = scope.querySelectorAll('input.chk:checked');
+      el.innerHTML = '<span class="n">' + on.length + '</span> of ' + all.length + ' ready';
+    });
+    document.querySelectorAll('[data-progress]').forEach(function (el) {
+      var sel = el.getAttribute('data-progress');
+      var all = document.querySelectorAll(sel);
+      var on = document.querySelectorAll(sel + ':checked');
+      var pct = all.length ? Math.round(on.length / all.length * 100) : 0;
+      var bar = el.querySelector('.bar-fill');
+      var lab = el.querySelector('.bar-label');
+      if (bar) bar.style.width = pct + '%';
+      if (lab) lab.textContent = on.length + ' of ' + all.length + ' exercises complete';
+    });
+  }
+  counters();
+  var links = document.querySelectorAll('.toc-side a');
+  if (links.length && 'IntersectionObserver' in window) {
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var a = map[en.target.id];
+        if (a && en.isIntersecting) {
+          links.forEach(function (x) { x.style.color = ''; x.style.fontWeight = ''; });
+          a.style.color = 'var(--red)'; a.style.fontWeight = '700';
+        }
+      });
+    }, { rootMargin: '-70px 0px -75% 0px' });
+    document.querySelectorAll('.content h2[id], .content h3[id]').forEach(function (h) { obs.observe(h); });
+  }
+})();
+</script>
+</body>
+</html>

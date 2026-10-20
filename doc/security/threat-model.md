@@ -15,8 +15,8 @@
 │  ┌───────────────────────────────────────────────────────┐  │
 │  │  streamlit-coco library                               │  │
 │  │  ┌──────────┐  ┌──────────────┐  ┌───────────────┐   │  │
-│  │  │  panel() │  │PermissionMgr │  │  query()      │   │  │
-│  │  │  chat()  │  │(HITL gates)  │  │  (headless)   │   │  │
+│  │  │  window  │  │ Gate+Policy  │  │  query()      │   │  │
+│  │  │ (ask_coco)│ │(Allow/Decline)│ │  (headless)   │   │  │
 │  │  └────┬─────┘  └──────┬───────┘  └───────┬───────┘   │  │
 │  │       │               │                   │           │  │
 │  │       └───────────────┼───────────────────┘           │  │
@@ -72,7 +72,7 @@ Key surfaces:
 | **T**ampering — malicious tool input bypasses approval | PermissionManager | Medium | mitigated: HITL gates block Edit/Write/Bash/SQL by default |
 | **R**epudiation — no log of approved destructive actions | Approval flow | Medium | open: transcript in session state only, not persisted |
 | **I**nformation disclosure — secrets in transcript/logs | display module | Medium | mitigated: library does not log credentials; SDK redacts |
-| **I**nformation disclosure — SQL results with PII shown to unauthorized viewer | panel() UI | Medium | accepted: app developer responsibility (row-access policies) |
+| **I**nformation disclosure — SQL results with PII shown to unauthorized viewer | the window | Medium | accepted: app developer responsibility (row-access policies) |
 | **D**enial of service — infinite streaming from malformed NDJSON | message parser | Low | mitigated: SDK timeout; session can be stopped |
 | **E**levation of privilege — "always allow" bypasses future approvals | PermissionManager | Medium | mitigated: always-allow is per-tool, per-session only, resets on restart |
 | **E**levation of privilege — prompt injection triggers dangerous tools | CoCo agent | High | mitigated: approval gates intercept before execution; user must approve |
@@ -108,14 +108,16 @@ Key surfaces:
   - Streamlit's native session isolation prevents cross-user state bleed
   - App developers should not store transcripts in shared caches
 
-### Scenario 4: "Always allow" escalation
+### Scenario 4: standing permission escalation
 
-- **Path**: User clicks "Always allow" for SQL tool; later a prompt-injected query runs without review
+- **Path**: User ticks "Do not ask again for SQL statements"; later a prompt-injected statement runs without review
 - **Impact**: Unreviewed destructive SQL execution
 - **Mitigation**:
-  - "Always allow" is scoped per-tool, per-session (clears on page refresh / restart)
-  - Documentation warns against "Always allow" in production deployments
-  - Future: add configurable deny-list patterns even when "always allow" is active
+  - A standing permission exists only when the host sets `FolderPolicy(standing=True)`; the default offers none
+  - It covers one family (commands; changes in this folder; queries that only read; SQL statements; one tool; reading elsewhere) until the conversation ends (New conversation, Disconnect, a changed folder), and the menu lists it with "Ask again"
+  - It never covers the `.git` folder, a secret-named file or a place the policy flags; those ask each time
+  - A grant for queries does not cover a statement that changes; a grant for statements says nobody will read each call
+  - The call is judged again each time, and a call the app cannot read is still refused
 
 ---
 

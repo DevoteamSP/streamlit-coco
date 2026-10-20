@@ -1,4 +1,4 @@
-"""Tool name normalization and family detection for CoCo UI."""
+"""Tool name normalization and family detection."""
 
 from __future__ import annotations
 

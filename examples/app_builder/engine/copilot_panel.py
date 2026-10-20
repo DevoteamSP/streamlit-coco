@@ -143,7 +143,7 @@ def render_brief_expander() -> None:
             )
 
 
-def render_copilot_rail() -> None:
+def render_copilot_rail(*, ask: bool = False) -> None:
     import streamlit_coco as st_coco
 
     job = get_job()
@@ -199,7 +199,6 @@ def render_copilot_rail() -> None:
     write_job = bool(job and job.get("kind") == "build")
     if st.session_state.get("ab_coco_connect_hint") and not is_connected():
         st.info("Connect CoCo to build or fix the app.", icon=":material/link:")
-
     render_brief_expander()
     st_coco.copilot_rail(
         session,
@@ -233,4 +232,6 @@ def render_copilot_rail() -> None:
             else "Ask Copilot about this app…"
         ),
         example_questions=EXAMPLE_QUESTIONS,
+        ask=ask,
+        own_window=False,
     )

@@ -48,8 +48,17 @@ cd streamlit-coco
 make install          # uv sync with dev dependencies
 make check            # ruff + unit/smoke (excludes browser e2e)
 make e2e-install      # optional: Playwright + Chromium
-make e2e              # browser UX against the CoCo-free harness
+make e2e              # browser tests of the window, on the scripted agent (no login)
 ```
+
+To run an application kept in another folder (a scratch folder outside the repository, to try the README's examples), use this repository's environment without syncing it:
+
+```bash
+cd /path/to/scratch
+uv run --no-sync --project /path/to/streamlit-coco python -m streamlit run app.py --server.port 8611 --server.headless true
+```
+
+`--project` points `uv` at this checkout's `.venv`; `--no-sync` stops it changing that environment. Pick a free port. A relative `cwd` in the application is the folder you started it from.
 
 See [`doc/testing.md`](doc/testing.md) for the full gate (unit → e2e → audit → manual checklists).
 
@@ -58,12 +67,13 @@ configured in `~/.snowflake/connections.toml`. See the [README](README.md) for d
 
 ```bash
 uv run streamlit run examples/chat_app.py
+# no login: STREAMLIT_COCO_AGENT=mock (PowerShell: $env:STREAMLIT_COCO_AGENT="mock")
 ```
 
 ## Pull requests
 
 - Branch from `main`, one concern per PR.
-- `make check` passes (`make e2e` when touching transcript / upload UX). New behaviour comes with a test.
+- `make check` passes (`make e2e` when touching the window, the conversation or uploads). New behaviour comes with a test.
 - Add a line to the `[Unreleased]` section of [`CHANGELOG.md`](CHANGELOG.md).
 - Explain *why* in the PR description. The diff already says what.
 
@@ -74,8 +84,8 @@ Small and finished beats large and nearly there.
 Do not open a public issue. Email <laurent.letourmy@devoteam.com> with the details and
 we will come back to you within 5 business days.
 
-This library runs an agent that can read files, write files, and execute SQL. Approval
-gates exist for a reason — if you have found a way around one, we want to hear it first.
+This library runs an agent that can read files, write files, and execute SQL. The policy and the gate
+(Allow / Decline) exist for a reason — if you have found a way around one, we want to hear it first.
 
 ## Licence
 

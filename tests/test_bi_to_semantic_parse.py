@@ -123,9 +123,7 @@ def test_powerbi_visuals_compose_not_one_dataframe_each() -> None:
                             {
                                 "singleVisual": {
                                     "visualType": "card",
-                                    "projections": {
-                                        "Values": [{"queryRef": "Fact.Revenue"}]
-                                    },
+                                    "projections": {"Values": [{"queryRef": "Fact.Revenue"}]},
                                 }
                             }
                         )
@@ -135,9 +133,7 @@ def test_powerbi_visuals_compose_not_one_dataframe_each() -> None:
                             {
                                 "singleVisual": {
                                     "visualType": "lineChart",
-                                    "projections": {
-                                        "Values": [{"queryRef": "Fact.Revenue"}]
-                                    },
+                                    "projections": {"Values": [{"queryRef": "Fact.Revenue"}]},
                                 }
                             }
                         )
@@ -147,9 +143,7 @@ def test_powerbi_visuals_compose_not_one_dataframe_each() -> None:
                             {
                                 "singleVisual": {
                                     "visualType": "clusteredBarChart",
-                                    "projections": {
-                                        "Category": [{"queryRef": "State.Region"}]
-                                    },
+                                    "projections": {"Category": [{"queryRef": "State.Region"}]},
                                 }
                             }
                         )
@@ -159,9 +153,7 @@ def test_powerbi_visuals_compose_not_one_dataframe_each() -> None:
                             {
                                 "singleVisual": {
                                     "visualType": "table",
-                                    "projections": {
-                                        "Values": [{"queryRef": "Fact.Detail"}]
-                                    },
+                                    "projections": {"Values": [{"queryRef": "Fact.Detail"}]},
                                 }
                             }
                         )
@@ -182,11 +174,7 @@ def test_powerbi_visuals_compose_not_one_dataframe_each() -> None:
             {
                 "displayName": "Tooltip",
                 "visualContainers": [
-                    {
-                        "config": json.dumps(
-                            {"singleVisual": {"visualType": "card"}}
-                        )
-                    },
+                    {"config": json.dumps({"singleVisual": {"visualType": "card"}})},
                 ],
             },
         ]

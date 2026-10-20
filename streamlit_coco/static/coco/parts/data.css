@@ -1,0 +1,32 @@
+/* Ask CoCo, part "data" (frames 62-69): a table, the wider view, an answer that is data, a code block, Copy. Ported from ui-rebuild/design/coco22.css. */
+.b6 { font-weight: 600; }
+.ag-tbl { align-self: stretch; max-width: 100%; overflow-x: auto; scrollbar-width: thin; border: 1px solid var(--line); border-radius: calc(var(--r) * .5); background: var(--surface); }
+.ag-tbl table { min-width: 100%; border-collapse: collapse; font-size: var(--fz-body); line-height: 1.35; color: var(--ink); }
+.ag-tbl th { position: sticky; top: 0; padding: calc(var(--r) * .4) calc(var(--r) * .55); border: 0; border-bottom: 1px solid var(--line); background: var(--canvas); font-size: var(--fz-cap); font-weight: 500; color: var(--ink-2); text-align: left; white-space: nowrap; }
+.ag-tbl td { padding: calc(var(--r) * .4) calc(var(--r) * .55); border: 0; border-bottom: 1px solid var(--line); vertical-align: top; white-space: nowrap; }
+.ag-tbl td.t { white-space: normal; min-width: calc(var(--r) * 5); }
+.ag-tbl th.n, .ag-tbl td.n { text-align: right; font-variant-numeric: tabular-nums; }
+.ag-tbl tr:last-child td { border-bottom: 0; }
+.ag-det .ag-tbl { max-height: calc(var(--r) * 8.5); overflow: auto; }   /* as evidence, a table scrolls in its own box */
+.msg .ag-tbl, .msg .ag-fx, .msg .ag-code { margin-top: calc(var(--r) * .5); }
+.msg > :first-child.ag-tbl, .msg > .sr + .ag-tbl, .msg > .sr + .ag-code { margin-top: 0; }
+.msg > .cap { margin: calc(var(--r) * .6) 0 0; }
+.msg .ag-fx { margin-top: calc(var(--r) * .3); }
+.ag-tf { display: flex; align-items: center; justify-content: space-between; gap: calc(var(--r) * .5); margin-top: calc(var(--r) * .35); }
+.ag-ta { display: flex; align-items: center; gap: calc(var(--r) * .4); flex: none; }
+
+/* the same window, wider: the data takes the place of the thread; header and field do not change */
+.cc.ag-xl { width: min(calc(var(--r) * 64), calc(100vw - var(--r) * 2)); }
+.ag-tk { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.ag-xv { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: calc(var(--r) * .75); }
+.ag-xh { flex: none; display: flex; align-items: center; gap: calc(var(--r) * .75); }
+.ag-xh .cap { flex: 1; min-width: 0; }
+.ag-xv .ag-tbl { flex: 1; min-height: 0; overflow: auto; }
+.cc.ag-xl .rq { align-self: flex-end; width: calc(var(--r) * 25); max-width: 100%; padding-bottom: var(--r); }   /* a request takes its own row under the table: it covers no figure */
+
+.ag-code { border: 1px solid var(--line); border-radius: calc(var(--r) * .5); background: var(--canvas); overflow: hidden; }
+.md .ag-code { margin: 0 0 calc(var(--r) * .55); } .md > .ag-code:last-child { margin-bottom: 0; }
+.ag-cb { display: flex; align-items: center; justify-content: space-between; padding: 0 calc(var(--r) * .15) 0 calc(var(--r) * .65); border-bottom: 1px solid var(--line); }
+.ag-code pre { margin: 0; padding: calc(var(--r) * .5) calc(var(--r) * .65); overflow-y: auto; overflow-x: hidden; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--surface); font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: var(--fz-cap); line-height: 1.5; color: var(--ink); text-align: left; }
+.ag-code pre, .md .ag-code pre { border: 0; border-radius: 0; max-height: calc(var(--r) * 12); }
+.ag-det > .cap + .ag-tbl, .ag-det > .ag-tbl { margin-top: 0; }

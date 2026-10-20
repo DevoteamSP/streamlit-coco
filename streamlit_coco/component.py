@@ -51,7 +51,7 @@ def _get_component():
     """Register the CCv2 component once (CCv2 skill: never re-register on each mount)."""
     if not hasattr(st.components, "v2"):
         raise RuntimeError(
-            "streamlit-coco requires Streamlit >= 1.53 with Custom Components v2. "
+            "streamlit-coco requires Streamlit >= 1.55 with Custom Components v2. "
             f"Installed version: {st.__version__}"
         )
     # isolate_styles=True (explicit): shadow-root CSS so component styles do not
@@ -86,8 +86,18 @@ def chat(
     on_submit_change: Callable[..., None] | None = None,
     on_approval_change: Callable[..., None] | None = None,
     on_cancel_change: Callable[..., None] | None = None,
-) -> CocoChatResult:
-    """Render the CoCo chat component and return the latest chat result."""
+    mini: bool = False,
+) -> CocoChatResult | Any:
+    """Render the CoCo chat component and return the latest chat result.
+
+    ``mini=False`` (the default) is the 0.1.9 chat. ``mini=True`` mounts the
+    floating Ask CoCo window instead and returns its handle.
+    """
+    if mini:
+        from streamlit_coco.mini import mount_mini
+
+        return mount_mini(session, key=key, options=options)
+
     session = _resolve_session(session=session, options=options, key=key)
 
     if show_transcript_in_component is None:

@@ -1,0 +1,20 @@
+/* Ask CoCo, part "files" (frames 70-74). Ported from ui-rebuild/design/coco22.css (the files rules and .ag-ib), without the .cc prefix:
+   the window is the shadow root's. The control, the lines of the field and the drop target; a sent file is a line of the message. */
+.fld.ag-at { flex-wrap: wrap; padding-left: calc(var(--r) * .35); }
+.fld > .ag-fleft:not([hidden]) { display: flex; }
+.ag-clip { display: grid; place-items: center; flex: none; width: calc(var(--r) * 2); height: calc(var(--r) * 2); padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--ink-2); cursor: pointer; }
+.ag-clip:hover { background: var(--line); color: var(--ink); }
+.fld > .ag-ftop:not([hidden]) { flex: 0 0 100%; }
+.ag-files { display: flex; flex-direction: column; padding: 0 0 calc(var(--r) * .25) calc(var(--r) * .4); }
+.ag-file { display: flex; align-items: flex-start; gap: calc(var(--r) * .5); min-height: calc(var(--r) * 1.9); font-size: var(--fz-body); line-height: 1.4; color: var(--ink); }
+.ag-file .ag-g { margin-top: calc(var(--r) * .3); color: var(--ink-2); }
+.ag-file.bad .ag-g { color: var(--ink); }
+.ag-file .ag-fn { flex: 1; min-width: 0; padding: calc(var(--r) * .3) 0; overflow-wrap: anywhere; }
+.ag-file .ag-fn .ag-n { display: inline; margin-left: calc(var(--r) * .5); }
+.ag-file.bad .ag-fn .ag-n { display: block; margin-left: 0; }
+.ag-att { display: flex; align-items: flex-start; gap: calc(var(--r) * .4); margin-top: calc(var(--r) * .3); font-weight: 500; overflow-wrap: anywhere; }
+.ag-att .i { margin-top: calc(var(--r) * .2); color: var(--ink-2); }
+.fld.ag-drop { justify-content: center; align-items: center; min-height: calc(var(--r) * 4.5); border: 2px dashed var(--ink-3); }
+.fld.ag-drop > .ag-ftop { text-align: center; }
+.fld.ag-drop textarea, .fld.ag-drop .sdw, .fld.ag-drop .ag-fleft { display: none; }
+.ag-dz { margin: 0; font-size: var(--fz-body); font-weight: 500; color: var(--ink); }

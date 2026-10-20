@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Streamlit CoCo — Architecture</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200;0,6..12,300;0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900&display=swap');
+    :root {
+      --red: #F5364B; --red2: #E8001D;
+      --snow: #29B5E8; --gold: #F59B23; --green: #27AE60;
+      --purple: #7B61FF; --teal: #1ABC9C;
+      --dark: #1E2028; --text: #2D2D2D; --muted: #7B7F8E;
+      --border: #E2E4EA; --card: #F4F5F7; --bg: #FAFAFA;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px; line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    .logo-badge { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-circle { width: 38px; height: 38px; background: var(--red); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 15px; flex-shrink: 0; }
+    .logo-text { line-height: 1.2; }
+    .logo-name { font-weight: 700; font-size: 13px; color: var(--text); }
+    .logo-partner { font-size: 10px; color: var(--muted); }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+    .subtitle { font-size: 14px; color: var(--muted); font-weight: 400; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+    .card-top { border-top: 3px solid var(--red); }
+    .card-snow { border-top: 3px solid var(--snow); }
+    .card-gold { border-top: 3px solid var(--gold); }
+    .card-green { border-top: 3px solid var(--green); }
+    .card-purple { border-top: 3px solid var(--purple); }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px;
+      font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .badge-snow { background: rgba(41,181,232,.12); color: var(--snow); border: 1px solid rgba(41,181,232,.3); }
+    .badge-gold { background: rgba(245,155,35,.12); color: var(--gold); border: 1px solid rgba(245,155,35,.3); }
+    .badge-green { background: rgba(39,174,96,.12); color: var(--green); border: 1px solid rgba(39,174,96,.3); }
+    .badge-red { background: rgba(245,54,75,.12); color: var(--red); border: 1px solid rgba(245,54,75,.3); }
+    .badge-purple { background: rgba(123,97,255,.12); color: var(--purple); border: 1px solid rgba(123,97,255,.3); }
+    .badge-dark { background: rgba(30,32,40,.75); color: white; }
+    .topbar { position: sticky; top: 0; z-index: 100; background: white;
+      border-bottom: 1px solid var(--border); padding: 10px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .topnav { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; }
+    .topnav a { color: var(--text); text-decoration: none; font-weight: 600; padding: 4px 2px; }
+    .topnav a:hover { color: var(--red); }
+    .topnav a[aria-current="page"] { color: var(--red); font-weight: 700; border-bottom: 2px solid var(--red); }
+    .layout { max-width: none; margin: 0; padding: 28px 32px 0;
+      display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
+    .content { max-width: none; width: 100%; min-width: 0; background: white; border: 1px solid var(--border);
+      border-radius: 12px; box-shadow: 0 2px 24px rgba(30,32,40,.06); padding: 36px 44px 44px;
+      overflow-wrap: break-word; }
+    .content > *, .content section, .exbody, .exblock, .actmain, .qcard { min-width: 0; }
+    code.inline { overflow-wrap: anywhere; }
+    @media (max-width: 700px) {
+      .content { padding: 24px 18px 30px; }
+      .pagehead { flex-direction: column; }
+      .meta-strip { text-align: left; }
+      .layout { padding: 18px 12px 0; }
+    }
+    .pagehead { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px;
+      flex-wrap: wrap; margin-bottom: 28px; }
+    .pagehead h1 { font-size: 36px; font-weight: 300; color: var(--text); line-height: 1.15; margin-bottom: 8px; }
+    .pagehead h1 strong { font-weight: 800; color: var(--red); }
+    .meta-strip { text-align: right; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+    .meta-strip .dur { display: block; font-weight: 700; color: var(--text); font-size: 13px; margin-bottom: 4px; }
+    .meta-strip a { color: var(--red); font-weight: 700; text-decoration: none; }
+    .meta-strip a:hover { text-decoration: underline; }
+    .toc-side { display: none; }
+    .toc details { border: 1px solid var(--border); border-radius: 10px; background: white; padding: 10px 16px; margin-bottom: 24px; }
+    .toc summary { cursor: pointer; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); }
+    .toc ul { list-style: none; margin: 10px 0 4px; }
+    .toc li { margin: 3px 0; }
+    .toc li.lvl3 { padding-left: 16px; }
+    .toc a { color: var(--muted); text-decoration: none; font-size: 12.5px; }
+    .toc a:hover { color: var(--red); }
+    .toc li.lvl2 > a { color: var(--text); font-weight: 600; }
+    @media (min-width: 1100px) {
+      .layout { grid-template-columns: 260px minmax(0, 1fr); }
+      .toc-side { min-width: 0; display: block; position: sticky; top: 76px;
+        max-height: calc(100vh - 100px); overflow-y: auto; }
+      .toc-side ul { list-style: none; }
+      .toc-inline { display: none; }
+    }
+    .content h2 { font-size: 24px; font-weight: 800; color: var(--text); margin: 34px 0 12px; scroll-margin-top: 80px; }
+    .content h3 { font-size: 17px; font-weight: 700; color: var(--text); margin: 24px 0 8px; scroll-margin-top: 80px; }
+    .content h4 { font-size: 14px; font-weight: 700; color: var(--muted); margin: 18px 0 6px;
+      text-transform: uppercase; letter-spacing: .06em; }
+    .content h2:first-child, .content h3:first-child { margin-top: 0; }
+    .content p { margin: 10px 0; }
+    .content ul, .content ol { margin: 10px 0 10px 22px; }
+    .content li { margin: 5px 0; }
+    .content a { color: var(--red2); text-decoration: none; border-bottom: 1px solid rgba(245,54,75,.35); }
+    .content a:hover { border-bottom-color: var(--red); }
+    .content strong { font-weight: 700; }
+    .anchor { opacity: 0; margin-left: 8px; font-size: .7em; color: var(--muted); text-decoration: none; border: 0; }
+    h2:hover .anchor, h3:hover .anchor { opacity: 1; }
+    code.inline { background: rgba(245,54,75,.07); color: var(--red2); border-radius: 4px;
+      padding: 1px 5px; font-size: .92em; font-family: 'SFMono-Regular', Menlo, Consolas, monospace; }
+    .sep { height: 1px; background: var(--border); border: 0; margin: 32px 0; }
+    .codewrap { position: relative; margin: 16px 0; border-radius: 10px; overflow: hidden; background: var(--dark); }
+    .codebar { display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 14px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .codelang { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.45); }
+    .copybtn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); color: white;
+      font-family: inherit; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 5px; cursor: pointer; }
+    .copybtn:hover { background: rgba(245,54,75,.3); border-color: var(--red); }
+    .copybtn.ok { background: rgba(39,174,96,.25); border-color: var(--green); }
+    .codewrap pre { overflow-x: auto; padding: 14px 16px; }
+    .codewrap code { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 13px;
+      line-height: 1.6; color: rgba(255,255,255,.9); white-space: pre; }
+    .tablewrap { overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 10px; }
+    table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+    thead th { position: sticky; top: 0; background: var(--card); text-align: left;
+      font-weight: 700; padding: 10px 14px; border-bottom: 2px solid var(--border); white-space: nowrap; z-index: 2; }
+    tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tbody tr:nth-child(even) { background: rgba(244,245,247,.55); }
+    tbody tr:last-child td { border-bottom: 0; }
+    .callout { border-left: 3px solid var(--border); background: var(--card); border-radius: 0 10px 10px 0;
+      padding: 12px 18px; margin: 16px 0; }
+    .callout-snow { border-left-color: var(--snow); background: rgba(41,181,232,.06); }
+    .callout-gold { border-left-color: var(--gold); background: rgba(245,155,35,.06); }
+    .callout-red  { border-left-color: var(--red);  background: rgba(245,54,75,.06); }
+    .callout-green{ border-left-color: var(--green);background: rgba(39,174,96,.06); }
+    .callout p:first-child { margin-top: 0; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout-tag { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      display: block; margin-bottom: 4px; }
+    ul.tasklist { list-style: none; margin-left: 0; }
+    ul.tasklist li { display: flex; align-items: flex-start; gap: 10px; padding: 7px 12px; background: white;
+      border: 1px solid var(--border); border-radius: 8px; margin-bottom: 7px; }
+    ul.tasklist input[type=checkbox] { margin-top: 4px; width: 15px; height: 15px; accent-color: var(--green);
+      flex-shrink: 0; cursor: pointer; }
+    ul.tasklist li.done .tasktext { text-decoration: line-through; color: var(--muted); }
+    ul.tasklist li.done { background: rgba(39,174,96,.05); border-color: rgba(39,174,96,.3); }
+    .counter { font-size: 12px; font-weight: 700; color: var(--muted); }
+    .counter .n { color: var(--green); }
+    .pagefoot { max-width: none; margin: 0; padding: 0 32px 48px; }
+    .prevnext { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin: 28px 0 18px; }
+    .prevnext a { display: block; padding: 12px 18px; background: white; border: 1px solid var(--border);
+      border-radius: 10px; text-decoration: none; min-width: 220px; }
+    .prevnext a:hover { border-color: var(--red); }
+    .pn-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .pn-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .slide-footer { height: 36px; display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border); }
+    .footer-brand { font-size: 11px; font-weight: 700; color: var(--red); }
+    .footer-page { font-size: 11px; color: var(--muted); }
+    a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--red); outline-offset: 2px; border-radius: 4px; }
+    @page { size: A4; margin: 14mm; }
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background: white; font-size: 11pt; }
+      .topbar, .toc, .prevnext, .copybtn, .noprint { display: none !important; }
+      .layout { display: block; max-width: none; padding: 0; }
+      .content { max-width: none; border: 0; box-shadow: none; border-radius: 0; padding: 0; }
+      details { display: block !important; }
+      details > summary { list-style: none; }
+      .answer, .hidden-print-reveal { display: block !important; }
+      .codewrap { background: var(--card); border: 1px solid var(--border); }
+      .codewrap code, .codelang { color: var(--text); }
+      .card, .callout, .tablewrap, table, tr, .exercise { page-break-inside: avoid; break-inside: avoid; }
+      h2, h3 { page-break-after: avoid; break-after: avoid; }
+    }
+</style>
+</head>
+<body data-page="technical-guide/sections/architecture.fr">
+<header class="topbar">
+  <a class="logo-badge" href="../../enablement/intro.fr.html"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></a>
+  <nav class="topnav" aria-label="Training pack"><a href="../../enablement/intro.fr.html">Enablement</a><a href="../../training/01-simple.fr.html">Training</a><a href="../../certifications/enablement.fr.html">Certifications</a><a href="../../user-guide/index.fr.html">User Guide</a><a href="../index.fr.html">Technical Guide</a></nav>
+</header>
+<div class="layout">
+  <nav class="toc toc-side" aria-label="Sur cette page"><div class="section-label">Sur cette page</div><ul><li class="lvl2"><a href="#composants">Composants</a></li><li class="lvl2"><a href="#plan-du-d-p-t">Plan du dépôt</a></li><li class="lvl2"><a href="#flux-de-donn-es">Flux de données</a></li><li class="lvl2"><a href="#invariants-ne-pas-rompre">Invariants à ne pas rompre</a></li><li class="lvl2"><a href="#pipeline-derri-re-les-commandes-de-d-mo-du-makefile">Pipeline derrière les commandes de démo du Makefile</a></li><li class="lvl2"><a href="#orchestration-des-applications-d-exemple">Orchestration des applications d'exemple</a></li></ul></nav>
+  <main class="content">
+    <div class="pagehead">
+      <div>
+        <div class="section-label">Pack de formation · Devoteam Snowflake Practice · 2026</div>
+        <h1>Architecture</h1>
+        <div class="subtitle">Guide technique · Comprendre</div>
+      </div>
+      <div class="meta-strip"><span class="dur"></span><a href="../../enablement/intro.fr.html">← Retour au sommaire</a></div>
+    </div>
+    <nav class="toc toc-inline" aria-label="Sur cette page"><details><summary>Sur cette page</summary><ul><li class="lvl2"><a href="#composants">Composants</a></li><li class="lvl2"><a href="#plan-du-d-p-t">Plan du dépôt</a></li><li class="lvl2"><a href="#flux-de-donn-es">Flux de données</a></li><li class="lvl2"><a href="#invariants-ne-pas-rompre">Invariants à ne pas rompre</a></li><li class="lvl2"><a href="#pipeline-derri-re-les-commandes-de-d-mo-du-makefile">Pipeline derrière les commandes de démo du Makefile</a></li><li class="lvl2"><a href="#orchestration-des-applications-d-exemple">Orchestration des applications d'exemple</a></li></ul></details></nav>
+
+<section><h2 id="composants">Composants<a class="anchor" href="#composants" aria-label="Link to this section">#</a></h2>
+<div class="tablewrap"><table><thead><tr><th>Composant</th><th>Fichier</th><th>Rôle</th></tr></thead><tbody><tr><td><code class="inline">CocoOptions</code></td><td><code class="inline">streamlit_coco/options.py</code></td><td>Enveloppe de configuration typée. Se convertit vers le <code class="inline">CortexCodeAgentOptions</code> du SDK via <code class="inline">to_sdk_options()</code> ; calcule <code class="inline">options_hash()</code> afin que le worker en arrière-plan redémarre quand les permissions d'outils changent.</td></tr><tr><td><code class="inline">CocoSession</code></td><td><code class="inline">streamlit_coco/session.py</code></td><td>Session multi-tours. Possède un thread en arrière-plan (<code class="inline">threading.Thread</code>, nommé <code class="inline">coco-session</code>) qui fait tourner une boucle asyncio enveloppant <code class="inline">CortexCodeSDKClient</code>. Expose <code class="inline">send</code>, <code class="inline">run</code>, <code class="inline">stream</code>, <code class="inline">cancel</code>, <code class="inline">reset</code>, <code class="inline">close</code>, <code class="inline">execute_plan</code>, <code class="inline">set_permission_mode</code>.</td></tr><tr><td><code class="inline">PermissionManager</code></td><td><code class="inline">streamlit_coco/permissions.py</code></td><td>Coordonne les callbacks <code class="inline">can_use_tool</code> du SDK avec les approbations de l'UI. Suit les requêtes en attente, l'ensemble <code class="inline">always_allowed_tools</code> par session, et résout via <code class="inline">approve_pending</code> / <code class="inline">deny_pending</code>.</td></tr><tr><td><code class="inline">panel()</code> / <code class="inline">copilot_rail()</code></td><td><code class="inline">streamlit_coco/ui.py</code>, <code class="inline">streamlit_coco/rail.py</code></td><td>UI Streamlit native. <code class="inline">panel()</code> est le primitif transcription/champ/approbations/Stop ; <code class="inline">copilot_rail()</code> le compose en un Copilot en rail latéral (sélecteur de connexion, jobs en file d'attente, configuration d'affichage de la transcription, questions d'exemple).</td></tr><tr><td><code class="inline">app_viewer()</code></td><td><code class="inline">streamlit_coco/viewer.py</code>, <code class="inline">streamlit_coco/app_preview.py</code></td><td>Colonne d'aperçu pour une application Streamlit générée par CoCo : fait naître un processus enfant <code class="inline">streamlit run</code>, l'intègre dans une iframe, et propose <strong>Fix with CoCo</strong> en analysant <code class="inline">.preview.log</code>.</td></tr><tr><td><code class="inline">bootstrap</code></td><td><code class="inline">streamlit_coco/bootstrap.py</code></td><td>Start gate piloté par <code class="inline">check_environment</code> (<code class="inline">render_start_gate</code>), <code class="inline">get_or_create_session</code>, <code class="inline">chat_input_bar</code>, <code class="inline">reset_session</code>, <code class="inline">stop_session</code>, <code class="inline">cwd_uploader</code>.</td></tr><tr><td><code class="inline">diagnostics</code></td><td><code class="inline">streamlit_coco/diagnostics.py</code></td><td><code class="inline">check_environment()</code> / <code class="inline">require_environment()</code> — sonde l'installation du SDK, l'accessibilité du CLI, et la configuration Snowflake sans démarrer d'agent.</td></tr></tbody></table></div>
+<p>Les autres modules sont des détails d'implémentation (pas une API publique stable), mais comptent pour le travail d'extension : <code class="inline">tool_names.py</code> (dispatch outil → <code class="inline">ToolFamily</code>), <code class="inline">tool_cards.py</code> / <code class="inline">tool_extract.py</code> (rendu par famille et extraction diff/SQL), <code class="inline">text_renderer.py</code> (rendu de texte enfichable), <code class="inline">messages.py</code> (normalisation <code class="inline">CocoEvent</code> depuis le NDJSON du SDK), <code class="inline">upload.py</code> (téléversements navigateur → <code class="inline">cwd</code>), <code class="inline">ask_user.py</code> / <code class="inline">sql_tool.py</code> (aides UI par outil).</p></section>
+<section><h2 id="plan-du-d-p-t">Plan du dépôt<a class="anchor" href="#plan-du-d-p-t" aria-label="Link to this section">#</a></h2>
+<div class="codewrap"><div class="codebar"><span class="codelang">text</span><button class="copybtn noprint" type="button">Copy</button></div><pre><code>streamlit_coco/          la bibliothèque (package importable)
+  options.py              CocoOptions
+  session.py              CocoSession, CocoChatResult, CocoRunStatus
+  permissions.py          PermissionManager, approve_pending/deny_pending
+  query.py                query() headless
+  messages.py             CocoEvent, normalisation NDJSON -&gt; événement
+  diagnostics.py          check_environment / require_environment
+  bootstrap.py            start gate, chat_input_bar, aides de session
+  ui.py                   panel(), render_approvals(), render_plan_banner()
+  rail.py                 copilot_rail(), transcript_display_config()
+  viewer.py, app_preview.py   app_viewer() et ses aides de processus
+  display.py              render_transcript, render_output_field, statut
+  upload.py               upload_to_cwd, cwd_uploader
+  tool_names.py, tool_cards.py, tool_extract.py   dispatch par famille d'outil
+  text_renderer.py        rendu de texte enfichable
+  errors.py                hiérarchie typée CocoError
+  component.py, frontend/  composant chat() CCv2 historique
+examples/                 applications de démonstration de première partie (voir ci-dessous)
+tests/                    unitaires + smoke ; tests/e2e/ Playwright
+doc/                      documentation produit, sécurité, déploiement, tests
+doc/training/             ce pack de formation
+.github/workflows/        ci.yml, security.yml, release.yml
+Makefile                  cibles install/test/lint/run/build/publish</code></pre></div></section>
+<section><h2 id="flux-de-donn-es">Flux de données<a class="anchor" href="#flux-de-donn-es" aria-label="Link to this section">#</a></h2>
+<div class="codewrap"><div class="codebar"><span class="codelang">text</span><button class="copybtn noprint" type="button">Copy</button></div><pre><code>Application Streamlit
+  -&gt; streamlit-coco  (CocoOptions, CocoSession, panel()/copilot_rail())
+  -&gt; cortex-code-agent-sdk  (CortexCodeSDKClient, CortexCodeAgentOptions)
+  -&gt; CLI CoCo ("cortex")  -- lancé comme sous-processus local
+  -&gt; Snowflake Cortex  (LLM + outils, en utilisant le rôle Snowflake connecté)</code></pre></div>
+<p>Le thread en arrière-plan de la session pilote le client SDK et reçoit en retour un flux d'événements NDJSON du sous-processus CLI via un transport local (pas de saut réseau dans la cible de déploiement locale). <code class="inline">message_to_events()</code> / <code class="inline">_blocks_to_events()</code> dans <code class="inline">messages.py</code> normalisent chaque message SDK (<code class="inline">AssistantMessage</code>, <code class="inline">ResultMessage</code>, <code class="inline">StreamEvent</code>, blocs tool-use/tool-result) en enregistrements <code class="inline">CocoEvent</code> que l'UI et les appelants headless consomment tous les deux. Quand un appel d'outil a besoin d'une approbation, le SDK invoque <code class="inline">can_use_tool</code> (construit par <code class="inline">build_can_use_tool()</code> dans <code class="inline">permissions.py</code>) ; cet appel **bloque le thread worker** sur <code class="inline">PermissionManager.wait_for_decision()</code> jusqu'à ce que l'UI le résolve (ou que <code class="inline">approval_timeout_seconds</code> s'écoule, levant <code class="inline">ApprovalTimeoutError</code>) — aucun autre outil ne s'exécute sur ce tour tant que la décision n'est pas prise.</p></section>
+<section><h2 id="invariants-ne-pas-rompre">Invariants à ne pas rompre<a class="anchor" href="#invariants-ne-pas-rompre" aria-label="Link to this section">#</a></h2>
+<ul><li><strong>Les imports headless du cœur ne chargent jamais Streamlit.</strong><p><code class="inline">CocoSession</code>, <code class="inline">query</code>, <code class="inline">CocoOptions</code>, les fonctions de permission, et la hiérarchie d'erreurs s'importent proprement sans qu'aucun import <code class="inline">streamlit</code> ne se trouve sur le chemin — c'est ce qui permet à <code class="inline">examples/headless_pipeline.py</code> de s'exécuter depuis un simple terminal. Les exports UI (<code class="inline">panel</code>, <code class="inline">copilot_rail</code>, <code class="inline">chat_input_bar</code>, …) sont résolus paresseusement via <code class="inline">streamlit_coco.__getattr__</code> (<code class="inline">_LAZY_ATTRS</code> dans <code class="inline">streamlit_coco/__init__.py</code>), pas importés avidement au moment de l'import du package.</p></li><li>**Les points d'approbation interceptent avant l'exécution de l'outil, pas<p>après.** <code class="inline">can_use_tool</code> est le hook pré-exécution du SDK ; <code class="inline">PermissionManager</code> crée la requête en attente et bloque le worker à cet endroit. Un outil qui nécessite une approbation ne s'exécute jamais de façon spéculative pour être annulé ensuite — il ne s'exécute simplement pas tant qu'il n'est pas approuvé.</p></li><li><strong>« Always allow » est par session, en mémoire uniquement.</strong> Il vit dans<p><code class="inline">PermissionManager.always_allowed_tools</code>, un simple <code class="inline">set</code> sur l'objet session. Il n'est jamais écrit sur disque et ne survit jamais à <code class="inline">reset()</code>, <code class="inline">close()</code>, ou à un redémarrage de processus.</p></li><li>**<code class="inline">AskUserQuestion</code> et <code class="inline">ExitPlanMode</code> n'utilisent jamais « Always<p>allow ».** <code class="inline">permissions.py</code> traite ces deux familles d'outils comme des cas particuliers, créant toujours une nouvelle requête d'approbation, même si un « always allow » antérieur s'appliquerait autrement.</p></li><li>**Le worker redémarre quand les permissions d'outils changent, pas à<p>chaque modification d'option.** <code class="inline">CocoOptions.options_hash()</code> ne hache que les champs qui affectent ce qu'un outil est autorisé à faire (<code class="inline">allowed_tools</code>, <code class="inline">disallowed_tools</code>, <code class="inline">permission_mode</code>, <code class="inline">require_approval_for</code>, <code class="inline">add_dirs</code>, …) ; <code class="inline">CocoSession</code> compare ce hash et ne redémarre le worker en arrière-plan que lorsqu'il change.</p></li><li><strong><code class="inline">app_viewer()</code> n'importe jamais <code class="inline">copilot_rail()</code>, et vice versa.</strong> Le<p>composant d'aperçu est agnostique de l'hôte : il ne connaît pas les files de jobs. Une application hôte compose les deux et câble <code class="inline">on_fix</code> elle-même.</p></li></ul></section>
+<section><h2 id="pipeline-derri-re-les-commandes-de-d-mo-du-makefile">Pipeline derrière les commandes de démo du Makefile<a class="anchor" href="#pipeline-derri-re-les-commandes-de-d-mo-du-makefile" aria-label="Link to this section">#</a></h2>
+<div class="tablewrap"><table><thead><tr><th>Cible</th><th>Exemple</th><th>Primitifs câblés</th></tr></thead><tbody><tr><td><code class="inline">make chat</code></td><td><code class="inline">examples/chat_app.py</code></td><td><code class="inline">check_environment()</code> → <code class="inline">render_start_gate()</code> → <code class="inline">get_or_create_session()</code> → <code class="inline">panel()</code> + <code class="inline">chat_input_bar()</code>. Le patron préféré.</td></tr><tr><td><code class="inline">make approval</code></td><td><code class="inline">examples/approval_gate.py</code></td><td><code class="inline">chat()</code> CCv2 historique — composant tout-en-un avec sa propre saisie intégrée.</td></tr><tr><td><code class="inline">make structured</code></td><td><code class="inline">examples/structured_output.py</code></td><td><code class="inline">CocoOptions.output_schema</code> + <code class="inline">on_structured_output</code> acheminant le JSON de l'agent vers un widget d'application plutôt que vers le texte du chat.</td></tr><tr><td><code class="inline">make headless</code></td><td><code class="inline">examples/headless_pipeline.py</code></td><td><code class="inline">query()</code> et <code class="inline">CocoSession</code> pilotés depuis du Python <code class="inline">async</code> pur — aucun import Streamlit nulle part dans l'exécution.</td></tr><tr><td><code class="inline">make cwd-upload</code></td><td><code class="inline">examples/cwd_upload_chat.py</code></td><td><code class="inline">chat_input_bar(accept_file=...)</code> / <code class="inline">cwd_uploader()</code> → <code class="inline">upload_to_cwd()</code> vers le <code class="inline">cwd</code> de l'agent.</td></tr><tr><td><code class="inline">make backlog</code></td><td><code class="inline">examples/backlog_desk/</code></td><td>Application multipage (Board / Epic / Ticket / Release) sur du JSON local, Copilot en rail latéral ouvert depuis un bouton d'en-tête, aucun outil SQL.</td></tr><tr><td><code class="inline">make bi-semantic</code> (alias <code class="inline">make tableau-semantic</code>)</td><td><code class="inline">examples/bi_to_semantic/</code></td><td>Analyse déterministe (carte de l'estate, inventaire de KPI) → arbitrage <code class="inline">request_input(schema=...)</code> → écriture protégée par approbation d'une vue sémantique + politique d'accès en ligne + consommateur généré, prévisualisée via <code class="inline">app_viewer()</code>.</td></tr><tr><td><code class="inline">make app-builder</code></td><td><code class="inline">examples/app_builder/</code></td><td>Un catalogue de types (<code class="inline">types/&lt;id&gt;/type.json</code>) pilote un brief ; <code class="inline">add_dirs</code> monte le <code class="inline">SKILL.md</code> du type (+ <code class="inline">types/shared/SKILL.md</code>) afin que CoCo écrive <code class="inline">streamlit_app.py</code> sous approbation ; <code class="inline">copilot_rail()</code> + <code class="inline">app_viewer()</code> pour Build/Preview.</td></tr></tbody></table></div></section>
+<section><h2 id="orchestration-des-applications-d-exemple">Orchestration des applications d'exemple<a class="anchor" href="#orchestration-des-applications-d-exemple" aria-label="Link to this section">#</a></h2>
+<p>Les trois applications d'exemple qui comptent comme surfaces produit distinctes :</p>
+<ul><li><strong><code class="inline">examples/chat_app.py</code></strong> — l'implémentation de référence du patron<p>préféré (<code class="inline">panel()</code> + <code class="inline">chat_input_bar</code>). Le lanceur de prompts de test de la barre latérale lit <code class="inline">examples/testdata/prompts.json</code>.</p></li><li><strong><code class="inline">examples/backlog_desk/</code></strong> — premier exemple basé sur un rail, sans<p>SQL. Le Copilot n'est pas une page de navigation ; il s'ouvre depuis un bouton <strong>Copilot</strong> d'en-tête ou un lien d'action et se ferme avec <strong>Close</strong>. Ses « skills » sont des gabarits d'invite (Summarize sprint, Draft release notes, Propose ticket update, Check definition of done), pas des fichiers <code class="inline">.cortex/skills/</code>.</p></li><li><strong><code class="inline">examples/bi_to_semantic/</code></strong> et <strong><code class="inline">examples/app_builder/</code></strong> — les deux<p>exemples qui composent <code class="inline">copilot_rail()</code> avec <code class="inline">app_viewer()</code> : une écriture CoCo est suivie d'un aperçu en direct de l'application Streamlit générée, avec <strong>Fix with CoCo</strong> câblé à <code class="inline">default_fix_prompt()</code> et un job en file d'attente.</p></li></ul>
+<p>Voir <a href="extending.html">extending</a> pour savoir comment ajouter une quatrième application d'exemple à cette liste, et <a href="data-and-contracts.html">data-and-contracts</a> pour les contrats de fichiers que chacune lit et écrit.</p></section>
+  </main>
+</div>
+<footer class="pagefoot">
+  <div class="prevnext noprint"><a href="../index.fr.html"><span class="pn-label">← Précédent</span><span class="pn-title">Guide technique</span></a><a href="install.fr.html" style="text-align:right"><span class="pn-label">Suivant →</span><span class="pn-title">Installation</span></a></div>
+  <div class="slide-footer">
+    <div class="footer-brand">Creative tech for Better Change</div>
+    <div class="footer-page">Streamlit CoCo · Généré à partir de technical-guide/sections/architecture.fr.md</div>
+  </div>
+</footer>
+<script>
+(function () {
+  var PAGE = document.body.getAttribute('data-page') || 'page';
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  document.querySelectorAll('.copybtn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.closest('.codewrap').querySelector('code').textContent;
+      var done = function () {
+        btn.textContent = 'Copied'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(done, function () {});
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = code; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+  var boxes = document.querySelectorAll('input.chk');
+  boxes.forEach(function (box, idx) {
+    var key = 'dsp-training:' + PAGE + ':chk:' + idx;
+    var saved = load(key);
+    if (saved === '1') box.checked = true;
+    else if (saved === '0') box.checked = false;
+    sync(box);
+    box.addEventListener('change', function () {
+      store(key, box.checked ? '1' : '0');
+      sync(box); counters();
+    });
+  });
+  function sync(box) {
+    var li = box.closest('li');
+    if (li) li.classList.toggle('done', box.checked);
+  }
+  function counters() {
+    document.querySelectorAll('[data-count-scope]').forEach(function (el) {
+      var scope = document.querySelector(el.getAttribute('data-count-scope'));
+      if (!scope) return;
+      var all = scope.querySelectorAll('input.chk');
+      var on = scope.querySelectorAll('input.chk:checked');
+      el.innerHTML = '<span class="n">' + on.length + '</span> of ' + all.length + ' ready';
+    });
+    document.querySelectorAll('[data-progress]').forEach(function (el) {
+      var sel = el.getAttribute('data-progress');
+      var all = document.querySelectorAll(sel);
+      var on = document.querySelectorAll(sel + ':checked');
+      var pct = all.length ? Math.round(on.length / all.length * 100) : 0;
+      var bar = el.querySelector('.bar-fill');
+      var lab = el.querySelector('.bar-label');
+      if (bar) bar.style.width = pct + '%';
+      if (lab) lab.textContent = on.length + ' of ' + all.length + ' exercises complete';
+    });
+  }
+  counters();
+  var links = document.querySelectorAll('.toc-side a');
+  if (links.length && 'IntersectionObserver' in window) {
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var a = map[en.target.id];
+        if (a && en.isIntersecting) {
+          links.forEach(function (x) { x.style.color = ''; x.style.fontWeight = ''; });
+          a.style.color = 'var(--red)'; a.style.fontWeight = '700';
+        }
+      });
+    }, { rootMargin: '-70px 0px -75% 0px' });
+    document.querySelectorAll('.content h2[id], .content h3[id]').forEach(function (h) { obs.observe(h); });
+  }
+})();
+</script>
+</body>
+</html>

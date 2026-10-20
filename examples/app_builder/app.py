@@ -18,12 +18,15 @@ if str(APP_ROOT) not in sys.path:
 
 from engine import state  # noqa: E402
 from engine.brief import slug_dir  # noqa: E402
+from engine.coco_window import mount_window  # noqa: E402
 from engine.copilot_panel import (  # noqa: E402
     render_coco_cooking_indicator,
     render_copilot_rail,
 )
 from engine.jobs import (  # noqa: E402
+    connection_name,
     get_job,
+    is_connected,
     is_copilot_open,
     is_preview_full,
     is_preview_open,
@@ -34,11 +37,18 @@ from engine.jobs import (  # noqa: E402
 from engine.paths import WORKSPACE_DIR  # noqa: E402
 from engine.preview_panel import render_preview_rail  # noqa: E402
 
+from streamlit_coco.rail import (  # noqa: E402
+    ask_coco_switch,
+    ask_restore,
+    present_ask,
+    rail_minimized,
+)
+
 st.set_page_config(
     page_title="App Builder",
     page_icon=":material/web:",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 state.ensure_defaults()
@@ -66,7 +76,7 @@ _ON_WELCOME = page.title == "Welcome"
 _ON_ADMIN = page.title == "Admin"
 
 
-def _chrome() -> None:
+def _chrome() -> bool:
     copilot_on = is_copilot_open()
     preview_on = is_preview_open()
     app_type = state.selected_type()
@@ -96,6 +106,8 @@ def _chrome() -> None:
             toggle_preview()
             st.rerun()
 
+    show_ask = ask_coco_switch("ab_ask_coco")
+
     if _ON_WELCOME:
         st.caption(
             "App Builder · pick a type, fill its brief, CoCo writes the app. "
@@ -109,16 +121,28 @@ def _chrome() -> None:
             "Screens queue jobs; they do not open a new agent."
         )
     render_coco_cooking_indicator()
+    return show_ask
 
 
-_chrome()
+show_ask = _chrome()
 
 if get_job() and not is_copilot_open():
     set_copilot_open(True)
 
-_preview_ok = not _ON_WELCOME and not _ON_ADMIN
+present_ask(
+    show_ask,
+    "ab_coco",
+    lambda: mount_window(
+        connection=connection_name() if is_connected() else None,
+        on_rail=ask_restore("ab_coco"),
+    ),
+)
 
-if is_copilot_open() and _preview_ok and is_preview_open():
+_preview_ok = not _ON_WELCOME and not _ON_ADMIN
+_minimized = show_ask and rail_minimized("ab_coco")
+_layout_copilot = is_copilot_open() and not _minimized
+
+if _layout_copilot and _preview_ok and is_preview_open():
     preview_col, rail = resizable_columns(
         [1.15, 1],
         min_width=280,
@@ -129,11 +153,11 @@ if is_copilot_open() and _preview_ok and is_preview_open():
             render_preview_rail()
     with rail:
         with st.container(border=True):
-            render_copilot_rail()
-elif _preview_ok and is_preview_open() and is_preview_full():
+            render_copilot_rail(ask=show_ask)
+elif _preview_ok and is_preview_open() and (is_preview_full() or _minimized):
     with st.container(border=True):
         render_preview_rail()
-elif is_copilot_open() or (_preview_ok and is_preview_open()):
+elif _layout_copilot or (_preview_ok and is_preview_open()):
     main, rail = resizable_columns(
         [1.15, 1],
         min_width=280,
@@ -141,8 +165,8 @@ elif is_copilot_open() or (_preview_ok and is_preview_open()):
     )
     with rail:
         with st.container(border=True):
-            if is_copilot_open():
-                render_copilot_rail()
+            if _layout_copilot:
+                render_copilot_rail(ask=show_ask)
             else:
                 render_preview_rail()
     with main:

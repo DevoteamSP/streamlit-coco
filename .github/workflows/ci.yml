@@ -31,7 +31,7 @@ jobs:
         run: uv run ruff check .
 
       - name: Test
-        run: uv run pytest tests/ --ignore=tests/e2e -v
+        run: uv run pytest tests/ --ignore=tests/e2e --ignore=tests/e2e_classic -v
 
       - name: Security audit
         run: uv run pip-audit --skip-editable
@@ -57,4 +57,4 @@ jobs:
         run: uv run --extra e2e playwright install --with-deps chromium
 
       - name: Playwright UX e2e
-        run: uv run --extra e2e pytest tests/e2e -m e2e -v
+        run: uv run --extra e2e pytest tests/e2e tests/e2e_classic -m e2e -v

@@ -319,6 +319,64 @@ def render_session_status(
 
 
 def render_output_field(
+    session: CocoSession | Any,
+    container: Any | None = None,
+    *,
+    label: str = "CoCo output",
+    show_tool_details: bool = False,
+    text_renderer: TextRenderer = None,
+    show_copy: bool = True,
+) -> None:
+    """Latest answer on the page.
+
+    A ``CocoSession`` (``chat`` / ``panel``) keeps the 0.1.9 field: status line,
+    copy button, tool cards. A window handle (``ask_coco`` / ``mini=True``) shows
+    the text only and refreshes itself. The first argument keeps its 0.1.9 name,
+    ``session``, for both.
+    """
+    if hasattr(session, "latest_answer"):
+        _render_window_output_field(
+            session,
+            container,
+            label=label,
+            text_renderer=text_renderer,
+        )
+        return
+    _render_session_output_field(
+        session,
+        container,
+        label=label,
+        show_tool_details=show_tool_details,
+        text_renderer=text_renderer,
+        show_copy=show_copy,
+    )
+
+
+def _render_window_output_field(
+    coco: Any,
+    container: Any | None = None,
+    *,
+    label: str = "CoCo output",
+    text_renderer: TextRenderer = None,
+) -> None:
+    """The window's latest answer. The page does not rerun while CoCo answers,
+    so this fragment looks again every second."""
+    render = resolve_text_renderer(text_renderer)
+
+    @st.fragment(run_every=1.0)
+    def _field() -> None:
+        text = coco.latest_answer
+        with container if container is not None else st.container():
+            st.subheader(label)
+            if text:
+                render(text)
+            else:
+                st.caption("The latest answer shows here.")
+
+    _field()
+
+
+def _render_session_output_field(
     session: CocoSession,
     container: Any | None = None,
     *,
@@ -327,7 +385,7 @@ def render_output_field(
     text_renderer: TextRenderer = None,
     show_copy: bool = True,
 ) -> None:
-    """Render a focused output panel with the latest assistant response."""
+    """Focused output panel for a ``CocoSession``."""
     text = get_latest_assistant_text(session)
     is_streaming = session.status == CocoRunStatus.RUNNING and session.needs_polling
     suffix = " ▍" if is_streaming and text else ""

@@ -2,7 +2,7 @@
 
 Each cut gets `doc/releases/X.Y.Z/` for **ship hygiene** (docs, QA, screenshots).
 
-Current cut: [`0.1.9/`](0.1.9/). Previous: [`0.1.8.1/`](0.1.8.1/).
+Current cut: [`0.2.0/`](0.2.0/). Previous cut: [`0.1.9/`](0.1.9/).
 
 **Community posts and articles** live under **`doc-dev/releases/X.Y.Z/`** (never synced to public `streamlit-coco`).
 

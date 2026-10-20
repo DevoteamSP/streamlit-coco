@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>streamlit-coco — Enablement</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200;0,6..12,300;0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900&display=swap');
+    :root {
+      --red: #F5364B; --red2: #E8001D;
+      --snow: #29B5E8; --gold: #F59B23; --green: #27AE60;
+      --purple: #7B61FF; --teal: #1ABC9C;
+      --dark: #1E2028; --text: #2D2D2D; --muted: #7B7F8E;
+      --border: #E2E4EA; --card: #F4F5F7; --bg: #FAFAFA;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 32px; display: flex; flex-direction: column; gap: 32px; }
+
+    nav { position: sticky; top: 0; background: white; border-bottom: 1px solid var(--border); padding: 10px 20px; display: flex; gap: 12px; z-index: 100; font-size: 11px; flex-wrap: wrap; }
+    nav a { color: var(--text); text-decoration: none; font-weight: 600; }
+    nav a:hover { color: var(--red); }
+
+    .slide { width: 1280px; min-height: 720px; background: white; border-radius: 12px; box-shadow: 0 2px 24px rgba(0,0,0,.08); display: flex; flex-direction: column; position: relative; overflow: hidden; padding: 40px 52px 56px; font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; box-sizing: border-box; }
+    .slide-dark { background: #1E2028; color: white; }
+
+    .slide-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; }
+    .slide-header-left { display: flex; flex-direction: column; }
+
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+    h1 { font-size: 32px; font-weight: 300; color: var(--text); line-height: 1.15; margin-bottom: 6px; }
+    h1 strong { font-weight: 800; color: var(--red); }
+    .subtitle { font-size: 13px; color: var(--muted); font-weight: 400; }
+
+    .logo-badge { display: flex; align-items: center; gap: 10px; }
+    .logo-circle { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; background: var(--red); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .logo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .logo-text { line-height: 1.2; }
+    .logo-name { font-weight: 700; font-size: 12px; color: var(--text); }
+    .logo-partner { font-size: 10px; color: var(--muted); }
+    .slide-dark .logo-name { color: white; }
+    .slide-dark .logo-partner { color: rgba(255,255,255,.5); }
+
+    .slide-footer { position: absolute; bottom: 0; left: 0; right: 0; height: 34px; padding: 0 52px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); }
+    .slide-dark .slide-footer { border-top-color: rgba(255,255,255,.08); }
+    .footer-brand { font-size: 10px; font-weight: 700; color: var(--red); }
+    .footer-page { font-size: 10px; color: var(--muted); }
+    .slide-dark .footer-page { color: rgba(255,255,255,.4); }
+
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; }
+    .card-top { border-top: 3px solid var(--color, var(--red)); }
+
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 6px; font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+    .badge-snow { background: rgba(41,181,232,.12); color: var(--snow); border: 1px solid rgba(41,181,232,.3); }
+    .badge-gold { background: rgba(245,155,35,.12); color: var(--gold); border: 1px solid rgba(245,155,35,.3); }
+    .badge-green { background: rgba(39,174,96,.12); color: var(--green); border: 1px solid rgba(39,174,96,.3); }
+    .badge-red { background: rgba(245,54,75,.12); color: var(--red); border: 1px solid rgba(245,54,75,.3); }
+    .badge-purple { background: rgba(123,97,255,.12); color: var(--purple); border: 1px solid rgba(123,97,255,.3); }
+    .badge-teal { background: rgba(26,188,156,.12); color: var(--teal); border: 1px solid rgba(26,188,156,.3); }
+    .badge-dark { background: rgba(0,0,0,.7); color: white; }
+
+    .bullet { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; background: var(--red); margin-top: 6px; }
+    .bullet-snow { background: var(--snow); } .bullet-gold { background: var(--gold); } .bullet-green { background: var(--green); } .bullet-purple { background: var(--purple); } .bullet-teal { background: var(--teal); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; flex: 1; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; flex: 1; }
+    .item-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; background: white; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; }
+    .item-label { font-size: 12px; font-weight: 700; color: var(--text); }
+    .item-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+    code.inline { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-family: 'Courier New', monospace; font-size: 11px; color: var(--text); }
+  </style>
+</head>
+<body>
+<nav id="nav">
+  <a href="#cover">Cover</a><a href="#s1">What is it</a><a href="#s2">Problem</a><a href="#s3">Who / prereqs</a>
+  <a href="#s4">You'll be able to</a><a href="#s5">Install</a><a href="#s6">Verify</a>
+  <a href="#s7">Tour: chat</a><a href="#s8">Tour: rail</a><a href="#s9">Hands-on</a>
+  <a href="#s10">Demo 1-2</a><a href="#s11">Demo 3 + close</a><a href="#s12">FAQ prep</a>
+  <a href="#s13">Resources</a><a href="#closing">Closing</a>
+</nav>
+
+<!-- 1. COVER -->
+<div class="slide slide-dark" id="cover">
+  <div style="position:absolute;top:-80px;left:-80px;width:280px;height:280px;border-radius:50%;background:rgba(180,20,40,.35)"></div>
+  <div style="position:absolute;bottom:-60px;right:-40px;width:220px;height:220px;border-radius:50%;background:rgba(41,181,232,.15)"></div>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:36px;position:relative;z-index:1">
+    <div class="logo-badge">
+      <div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div>
+      <div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div>
+    </div>
+    <div class="badge badge-snow">N0 · alpha 0.1.9</div>
+  </div>
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div class="section-label" style="margin-bottom:12px">ENABLEMENT · streamlit-coco · 2026-09</div>
+    <h1 style="color:white;font-size:44px;margin-bottom:8px">streamlit-coco</h1>
+    <h1 style="color:white;font-size:44px;margin-bottom:28px">Enablement <strong>pack.</strong></h1>
+    <div style="font-size:14px;color:rgba(255,255,255,.55);max-width:680px;margin-bottom:36px">
+      Go through this deck, then the hands-on exercises. By the end you can build a
+      Streamlit app with a CoCo Copilot, human-in-the-loop approval gates, and run
+      every bundled example unaided.
+    </div>
+    <div style="display:flex;gap:12px">
+      <div style="background:rgba(41,181,232,.15);border:1px solid rgba(41,181,232,.35);border-radius:8px;padding:8px 16px">
+        <div style="font-size:10px;font-weight:700;color:var(--snow);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">TIME BUDGET</div>
+        <div style="font-size:13px;font-weight:700;color:white">~3.5–4.5 hours total</div>
+      </div>
+      <div style="background:rgba(245,155,35,.15);border:1px solid rgba(245,155,35,.35);border-radius:8px;padding:8px 16px">
+        <div style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">CERTIFICATION</div>
+        <div style="font-size:13px;font-weight:700;color:white">Enablement quiz · 8/10 to pass</div>
+      </div>
+      <div style="background:rgba(245,54,75,.15);border:1px solid rgba(245,54,75,.35);border-radius:8px;padding:8px 16px">
+        <div style="font-size:10px;font-weight:700;color:var(--red);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">OWNER</div>
+        <div style="font-size:13px;font-weight:700;color:white">Laurent Letourmy</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <div class="footer-brand">Creative tech for Better Change</div>
+    <div class="footer-page" style="color:rgba(255,255,255,.35)">DSP INTERNAL · 2026-09</div>
+  </div>
+</div>
+
+<!-- 2. WHAT IS IT -->
+<div class="slide" id="s1">
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <div class="section-label">INTRODUCTION · 1 OF 3</div>
+      <h1>What is <strong>streamlit-coco</strong>?</h1>
+      <div class="subtitle">A Python/Streamlit library, not a hosted service</div>
+    </div>
+    <div class="logo-badge"><div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1">
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-size:12px;color:var(--text);line-height:1.7">
+        A PyPI package that embeds Snowflake's <strong>Cortex Code Agent SDK ("CoCo")</strong>
+        into a Streamlit app: a right-rail or full-panel Copilot, human-in-the-loop
+        approval gates for destructive tools, a live preview of an app CoCo just wrote,
+        structured output into your own widgets, and a headless <code class="inline">query()</code> /
+        <code class="inline">CocoSession</code> API for scripts and CI.
+      </div>
+    </div>
+    <div class="three-col">
+      <div class="card card-top" style="--color:var(--snow)"><div style="font-size:10px;font-weight:700;color:var(--snow);text-transform:uppercase;margin-bottom:4px">PACKAGE</div><div style="font-size:13px;font-weight:700">streamlit-coco</div></div>
+      <div class="card card-top" style="--color:var(--gold)"><div style="font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;margin-bottom:4px">VERSION</div><div style="font-size:13px;font-weight:700">0.1.9 · alpha</div></div>
+      <div class="card card-top" style="--color:var(--green)"><div style="font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;margin-bottom:4px">REQUIRES</div><div style="font-size:13px;font-weight:700">Python 3.10+ · Streamlit 1.53+</div></div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page">1.1</div></div>
+</div>
+
+<!-- 3. THE PROBLEM -->
+<div class="slide" id="s2">
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <div class="section-label">INTRODUCTION · 2 OF 3</div>
+      <h1>The problem it <strong>solves</strong></h1>
+      <div class="subtitle">Everything you would otherwise build by hand</div>
+    </div>
+    <div class="logo-badge"><div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div class="two-col">
+    <div class="card card-top" style="--color:var(--red)">
+      <div class="badge badge-red" style="margin-bottom:8px">WITHOUT streamlit-coco</div>
+      <div style="font-size:12px;color:var(--text);line-height:1.7">Session state that survives Streamlit reruns, streaming render of the agent transcript, readable tool cards instead of raw JSON dumps, and an approval flow for anything the agent could write, edit, or execute — all built from scratch.</div>
+    </div>
+    <div class="card card-top" style="--color:var(--green)">
+      <div class="badge badge-green" style="margin-bottom:8px">WITH streamlit-coco</div>
+      <div style="font-size:12px;color:var(--text);line-height:1.7">That plumbing as composable functions — <code class="inline">panel()</code>, <code class="inline">chat_input_bar()</code>, <code class="inline">copilot_rail()</code>, <code class="inline">render_approvals()</code> — so an app author writes the page and the options, not the session bridge.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page">1.2</div></div>
+</div>
+
+<!-- 4. WHO / PREREQS -->
+<div class="slide" id="s3">
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <div class="section-label">INTRODUCTION · 3 OF 3</div>
+      <h1>Who it's for, <strong>what you need</strong></h1>
+      <div class="subtitle">No dedicated warehouse required for this track</div>
+    </div>
+    <div class="logo-badge"><div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px">Who this is for</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.7">Consultants and engineers adding a CoCo-based Copilot to a Streamlit app on a Snowflake account with Cortex Code access. Basic Python and enough Streamlit to read <code class="inline">st.container</code> / <code class="inline">st.session_state</code> — deep Streamlit expertise is not required.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px">Prerequisites</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.9">
+        Python 3.10+ and <code class="inline">uv</code><br>
+        Snowflake account with Cortex Code access<br>
+        CoCo CLI (<code class="inline">cortex</code>) on <code class="inline">PATH</code><br>
+        Git access to <code class="inline">streamlit-coco-dev</code> (or just <code class="inline">pip install</code>)
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page">1.3</div></div>
+</div>
+
+<!-- 5. WHAT YOU'LL BE ABLE TO DO -->
+<div class="slide" id="s4">
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <div class="section-label">WHAT YOU'LL BE ABLE TO DO</div>
+      <h1>After this training, <strong>you can...</strong></h1>
+      <div class="subtitle">5 learning objectives — the Enablement certification checks all five</div>
+    </div>
+    <div class="logo-badge"><div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;flex:1">
+    <div class="card" style="border-top:3px solid var(--red);display:flex;gap:14px">
+      <div style="font-size:22px;font-weight:800;color:var(--red);min-width:36px">01</div>
+      <div><div style="font-size:13px;font-weight:700;margin-bottom:6px">Explain it, and when it applies</div><div style="font-size:11px;color:var(--muted);line-height:1.5">Versus the bare CoCo CLI or SDK — see the README's "When not to use" section.</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--snow);display:flex;gap:14px">
+      <div style="font-size:22px;font-weight:800;color:var(--snow);min-width:36px">02</div>
+      <div><div style="font-size:13px;font-weight:700;margin-bottom:6px">Install and run every example</div><div style="font-size:11px;color:var(--muted);line-height:1.5"><code class="inline">make chat</code>, <code class="inline">make backlog</code>, <code class="inline">make bi-semantic</code>, <code class="inline">make headless</code>, connected to a real Snowflake account.</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--gold);display:flex;gap:14px">
+      <div style="font-size:22px;font-weight:800;color:var(--gold);min-width:36px">03</div>
+      <div><div style="font-size:13px;font-weight:700;margin-bottom:6px">Build the preferred pattern</div><div style="font-size:11px;color:var(--muted);line-height:1.5"><code class="inline">panel()</code> + <code class="inline">chat_input_bar()</code>, with <code class="inline">require_approval_for</code> configured.</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--purple);display:flex;gap:14px">
+      <div style="font-size:22px;font-weight:800;color:var(--purple);min-width:36px">04</div>
+      <div><div style="font-size:13px;font-weight:700;margin-bottom:6px">Wire a Copilot rail into a real app</div><div style="font-size:11px;color:var(--muted);line-height:1.5">Configure <code class="inline">CocoOptions</code> for a real workflow, embed <code class="inline">copilot_rail()</code> in an existing multipage app.</div></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--green);display:flex;gap:14px;grid-column:1/-1">
+      <div style="font-size:22px;font-weight:800;color:var(--green);min-width:36px">05</div>
+      <div><div style="font-size:13px;font-weight:700;margin-bottom:6px">Diagnose a broken session</div><div style="font-size:11px;color:var(--muted);line-height:1.5">Using <code class="inline">check_environment()</code>, <code class="inline">STREAMLIT_COCO_DEBUG</code>, and the Technical Guide's help reference.</div></div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page">2.1</div></div>
+</div>
+
+<!-- 6. GETTING STARTED 1 -->
+<div class="slide" id="s5">
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <div class="section-label">GETTING STARTED · 1 OF 2</div>
+      <h1>Install &amp; <strong>connect</strong></h1>
+      <div class="subtitle">Full reference → doc/deployment/local.md; condensed path here</div>
+    </div>
+    <div class="logo-badge"><div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div class="two-col">
+    <div class="card card-top" style="--color:var(--snow)">
+      <div class="badge badge-snow" style="margin-bottom:8px">1 · CLONE &amp; INSTALL</div>
+      <div style="font-size:11px;color:var(--text);line-height:1.7">
+        <code class="inline">git clone .../streamlit-coco-dev.git</code><br>
+        <code class="inline">make install</code> — <code class="inline">uv sync --extra dev</code>
+      </div>
+    </div>
+    <div class="card card-top" style="--color:var(--gold)">
+      <div class="badge badge-gold" style="margin-bottom:8px">2 · COCO CLI</div>
+      <div style="font-size:11px;color:var(--text);line-height:1.7">
+        <code class="inline">cortex --version</code><br>
+        Not on PATH? <code class="inline">export CORTEX_CODE_CLI_PATH=/path/to/cortex</code>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px">3 · SNOWFLAKE CONNECTION</div>
+    <div style="font-size:11px;color:var(--text)">Create <code class="inline">~/.snowflake/connections.toml</code> with a <code class="inline">[connections.analytics]</code> entry (account, user, authenticator). Legacy <code class="inline">config.toml</code> also detected. No <code class="inline">connection=</code> set → the Snowflake CLI's default connection is used.</div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page">3.1</div></div>
+</div>
+
+<!-- 7. GETTING STARTED 2 -->
+<div class="slide" id="s6">
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <div class="section-label">GETTING STARTED · 2 OF 2</div>
+      <h1>You're ready <strong>when...</strong></h1>
+      <div class="subtitle">Every box checked before the guided tour</div>
+    </div>
+    <div class="logo-badge"><div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px">
+    <div class="item-row"><div class="bullet bullet-snow"></div><div class="item-desc"><code class="inline">python -c "import streamlit_coco as c; print(c.__version__)"</code> prints <code class="inline">0.1.9</code></div></div>
+    <div class="item-row"><div class="bullet bullet-gold"></div><div class="item-desc"><code class="inline">cortex --version</code> succeeds</div></div>
+    <div class="item-row"><div class="bullet bullet-green"></div><div class="item-desc"><code class="inline">check_environment(...).ready</code> is <code class="inline">True</code></div></div>
+    <div class="item-row"><div class="bullet bullet-purple"></div><div class="item-desc"><code class="inline">make check</code> passes — ruff + unit/smoke pytest, no failures</div></div>
+    <div class="item-row"><div class="bullet"></div><div class="item-desc"><code class="inline">make chat</code> opens a working app and streams a response with at least one tool card</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page">3.2</div></div>
+</div>
+
+<!-- 8. GUIDED TOUR: make chat -->
+<div class="slide" id="s7">
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <div class="section-label">GUIDED TOUR · 1 OF 2</div>
+      <h1><code class="inline" style="font-size:26px">make chat</code> — <strong>the preferred pattern</strong></h1>
+      <div class="subtitle">You own the page, CoCo owns the session</div>
+    </div>
+    <div class="logo-badge"><div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div class="two-col">
+    <div class="item-row"><div class="bullet bullet-snow"></div><div><div class="item-label">Start gate first</div><div class="item-desc"><code class="inline">check_environment()</code> rendered by <code class="inline">render_start_gate()</code> — no agent starts until you click Start.</div></div></div>
+    <div class="item-row"><div class="bullet bullet-gold"></div><div><div class="item-label">Streaming transcript</div><div class="item-desc">The <code class="inline">@st.fragment</code> poll loop (<code class="inline">run_every=0.25</code>) renders progressively — the rest of the page never reruns.</div></div></div>
+    <div class="item-row"><div class="bullet bullet-green"></div><div><div class="item-label">Tool cards, not JSON</div><div class="item-desc">A Glob/SQL card appears — the readable card the library builds instead of a raw dump.</div></div></div>
+    <div class="item-row"><div class="bullet bullet-red"></div><div><div class="item-label">Approval banner</div><div class="item-desc">Ask it to write something — <strong>Approve once · Always allow · Deny</strong> fires via <code class="inline">render_approvals()</code>.</div></div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page">4.1</div></div>
+</div>
+
+<!-- 9. GUIDED TOUR: rail -->
+<div class="slide" id="s8">
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <div class="section-label">GUIDED TOUR · 2 OF 2</div>
+      <h1>The rail — <strong>a column, not a page</strong></h1>
+      <div class="subtitle">make backlog and make bi-semantic</div>
+    </div>
+    <div class="logo-badge"><div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div class="two-col">
+    <div class="card card-top" style="--color:var(--snow)">
+      <div class="badge badge-snow" style="margin-bottom:8px"><code class="inline" style="background:transparent;border:none;padding:0;color:inherit">make backlog</code></div>
+      <div style="font-size:11px;color:var(--text);line-height:1.6">Product Backlog Desk — Board / Epic / Ticket / Release. Copilot is <strong>not</strong> a nav page: it opens from the header <strong>Copilot</strong> button or an action link, closes with <strong>Close</strong>.</div>
+    </div>
+    <div class="card card-top" style="--color:var(--gold)">
+      <div class="badge badge-gold" style="margin-bottom:8px"><code class="inline" style="background:transparent;border:none;padding:0;color:inherit">make bi-semantic</code></div>
+      <div style="font-size:11px;color:var(--text);line-height:1.6">The fullest use of <code class="inline">copilot_rail()</code>. Title row: Copilot, Connection popover, icon-only <strong>Display config</strong> — two sliders, Last messages (default 8) and First n characters (default 200).</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px;background:var(--dark);color:white">
+    <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:6px">WHAT TO NOTICE ACROSS ALL THREE APPS</div>
+    <div style="font-size:12px;color:white">The agent always runs server-side. Approval gates are the same primitive everywhere. <code class="inline" style="background:rgba(255,255,255,.1);color:white;border-color:rgba(255,255,255,.2)">panel()</code> is the common core; <code class="inline" style="background:rgba(255,255,255,.1);color:white;border-color:rgba(255,255,255,.2)">copilot_rail()</code> adds connection chrome, job queuing, and transcript-compactness controls.</div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page">4.2</div></div>
+</div>
+
+<!-- 10. HANDS-ON HIGHLIGHTS -->
+<div class="slide" id="s9">
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <div class="section-label">HANDS-ON · 6 EXERCISES</div>
+      <h1>Build it, <strong>break it, fix it</strong></h1>
+      <div class="subtitle">~120–150 min — the real test is Exercise 5</div>
+    </div>
+    <div class="logo-badge"><div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div class="three-col" style="grid-template-columns:1fr 1fr 1fr">
+    <div class="card card-top" style="--color:var(--snow)"><div class="badge badge-snow" style="margin-bottom:8px">EX 1</div><div style="font-size:12px;font-weight:700;margin-bottom:4px">Preferred pattern</div><div style="font-size:10px;color:var(--muted)"><code class="inline">panel()</code> + <code class="inline">chat_input_bar()</code> end to end</div></div>
+    <div class="card card-top" style="--color:var(--gold)"><div class="badge badge-gold" style="margin-bottom:8px">EX 2</div><div style="font-size:12px;font-weight:700;margin-bottom:4px">Approval gate</div><div style="font-size:10px;color:var(--muted)">Approve once, then Deny with a reason</div></div>
+    <div class="card card-top" style="--color:var(--green)"><div class="badge badge-green" style="margin-bottom:8px">EX 3</div><div style="font-size:12px;font-weight:700;margin-bottom:4px">Structured output</div><div style="font-size:10px;color:var(--muted)"><code class="inline">output_schema</code> into a widget</div></div>
+    <div class="card card-top" style="--color:var(--purple)"><div class="badge badge-purple" style="margin-bottom:8px">EX 4</div><div style="font-size:12px;font-weight:700;margin-bottom:4px">Headless</div><div style="font-size:10px;color:var(--muted)">Same library, zero Streamlit import</div></div>
+    <div class="card card-top" style="--color:var(--red)"><div class="badge badge-red" style="margin-bottom:8px">EX 5 · REAL SITUATION</div><div style="font-size:12px;font-weight:700;margin-bottom:4px">Build from scratch</div><div style="font-size:10px;color:var(--muted)">README only — the real test of "trained"</div></div>
+    <div class="card card-top" style="--color:var(--teal)"><div class="badge badge-teal" style="margin-bottom:8px">EX 6</div><div style="font-size:12px;font-weight:700;margin-bottom:4px">Copilot rail</div><div style="font-size:10px;color:var(--muted)">Display config sliders in a real product app</div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page">5.1</div></div>
+</div>
+
+<!-- 11. DEMO 1-2 -->
+<div class="slide" id="s10">
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <div class="section-label">DEMO SCRIPT · 1 OF 2</div>
+      <h1>Your 10-min demo — <strong>hook &amp; approvals</strong></h1>
+      <div class="subtitle">Full script → enablement/demo-guide.md — dry-run once, timed, before presenting</div>
+    </div>
+    <div class="logo-badge"><div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div class="two-col">
+    <div class="card card-top" style="--color:var(--red)">
+      <div class="badge badge-red" style="margin-bottom:8px">0:00–0:30 · HOOK</div>
+      <div style="font-size:11px;color:var(--text);line-height:1.6">"Wiring a CoCo agent into a Streamlit app yourself means building session management, streaming render, tool cards, and safety gates from scratch. streamlit-coco gives you that in a few lines of Python."</div>
+    </div>
+    <div class="card card-top" style="--color:var(--snow)">
+      <div class="badge badge-snow" style="margin-bottom:8px">0:30–2:30 · STEP 1 — FIRST IMPRESSION</div>
+      <div style="font-size:11px;color:var(--text);line-height:1.6">Show <code class="inline">examples/chat_app.py</code> — four calls. Run <code class="inline">make chat</code>. Type a sample-data question. Point at the streaming transcript and the tool card.</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="badge badge-gold" style="margin-bottom:8px">2:30–5:30 · STEP 2 — APPROVAL GATES</div>
+    <div style="font-size:11px;color:var(--text)">Ask it to write SQL → <strong>Approve once</strong>, results appear. Ask it to create a table → <strong>Deny</strong> with a reason. "Every destructive action requires explicit human approval, configured per tool."</div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page">6.1</div></div>
+</div>
+
+<!-- 12. DEMO 3 + CLOSE -->
+<div class="slide" id="s11">
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <div class="section-label">DEMO SCRIPT · 2 OF 2</div>
+      <h1>Structured output — <strong>and the close</strong></h1>
+      <div class="subtitle">Land the CTA — do not let the demo end without an ask</div>
+    </div>
+    <div class="logo-badge"><div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div class="two-col">
+    <div class="card card-top" style="--color:var(--green)">
+      <div class="badge badge-green" style="margin-bottom:8px">5:30–7:00 · STEP 3 — STRUCTURED OUTPUT</div>
+      <div style="font-size:11px;color:var(--text);line-height:1.6">Switch to <code class="inline">make structured</code>. Show <code class="inline">output_schema</code>. Ask for a breakdown → renders as a chart, not raw text. "No manual JSON parsing."</div>
+    </div>
+    <div class="card card-top" style="--color:var(--purple)">
+      <div class="badge badge-purple" style="margin-bottom:8px">7:00–9:30 · CLOSING</div>
+      <div style="font-size:11px;color:var(--text);line-height:1.6"><code class="inline">pip install "streamlit-coco[sdk]"</code>. Approval gates on by default. One library: panel, structured, headless. Apache-2.0.</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px;background:var(--dark);color:white">
+    <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:6px">CALL TO ACTION</div>
+    <div style="font-size:12px;color:white">"Try it against your own Snowflake account this week — the README quickstart gets you to a working app quickly." Buffer after 9:30 for <code class="inline" style="background:rgba(255,255,255,.1);color:white;border-color:rgba(255,255,255,.2)">make headless</code> or the rail, if the room has time.</div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page">6.2</div></div>
+</div>
+
+<!-- 13. FAQ PREP -->
+<div class="slide" id="s12">
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <div class="section-label">DEMO SCRIPT · IF THEY ASK</div>
+      <h1>Questions you'll <strong>definitely get</strong></h1>
+      <div class="subtitle">Have these answers ready before you present</div>
+    </div>
+    <div class="logo-badge"><div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div class="two-col">
+    <div class="item-row"><div class="bullet bullet-red"></div><div><div class="item-label">"Does it work with Streamlit in Snowflake?"</div><div class="item-desc">Not shipped today — local (CLI + Streamlit + Snowflake config on one host) is the only shipped topology; SiS/SPCS are threat-model scope only.</div></div></div>
+    <div class="item-row"><div class="bullet bullet-snow"></div><div><div class="item-label">"Is it production-ready?"</div><div class="item-desc">Alpha (0.1.9) — the API may still move.</div></div></div>
+    <div class="item-row"><div class="bullet bullet-gold"></div><div><div class="item-label">"Can I customize which tools need approval?"</div><div class="item-desc">Yes — <code class="inline">allowed_tools</code> / <code class="inline">require_approval_for</code> in <code class="inline">CocoOptions</code>, per tool.</div></div></div>
+    <div class="item-row"><div class="bullet bullet-purple"></div><div><div class="item-label">"Is there an audit log of approvals?"</div><div class="item-desc">Not persisted today — "Always allow" is session-scoped only and clears on reset (tracked as SEC-01).</div></div></div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page">7.1</div></div>
+</div>
+
+<!-- 14. RESOURCES -->
+<div class="slide" id="s13">
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <div class="section-label">RESOURCES &amp; NEXT STEPS</div>
+      <h1>Everything you'll <strong>need again</strong></h1>
+      <div class="subtitle">Bookmark this slide</div>
+    </div>
+    <div class="logo-badge"><div class="logo-circle"><img src="dsp_logo.png" alt="Devoteam"></div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px">Training pack</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.9">
+        <code class="inline">doc/training/enablement/</code> — this track<br>
+        <code class="inline">doc/training/training/</code> — 3 use cases<br>
+        <code class="inline">doc/training/user-guide/</code> · <code class="inline">technical-guide/</code><br>
+        <code class="inline">doc/training/certifications/enablement.md</code> ← <strong style="color:var(--red)">take this next, score 8/10</strong>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px">Repo docs</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.9">
+        <code class="inline">README.md</code> · <code class="inline">doc/api.md</code><br>
+        <code class="inline">doc/deployment/local.md</code><br>
+        <code class="inline">doc/features/</code> — per-feature reference<br>
+        Contact: <strong>Laurent Letourmy</strong> — laurent.letourmy@devoteam.com
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px;background:rgba(39,174,96,.06);border-color:rgba(39,174,96,.25)">
+    <div style="font-size:12px;font-weight:700;color:var(--green)">You're certified on Enablement when: hands-on exercises complete + demo runnable unaided + quiz ≥ 8/10.</div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">Creative tech for Better Change</div><div class="footer-page">7.2</div></div>
+</div>
+
+<!-- 15. CLOSING -->
+<div class="slide slide-dark" id="closing">
+  <div style="position:absolute;top:-80px;left:-80px;width:280px;height:280px;border-radius:50%;background:rgba(180,20,40,.35)"></div>
+  <div style="position:absolute;bottom:-60px;right:-40px;width:220px;height:220px;border-radius:50%;background:rgba(41,181,232,.15)"></div>
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+    <div class="logo-badge" style="justify-content:center;margin-bottom:28px">
+      <div class="logo-circle" style="width:50px;height:50px"><img src="dsp_logo.png" alt="Devoteam"></div>
+      <div class="logo-text"><div class="logo-name" style="font-size:17px">devoteam</div><div class="logo-partner">Snowflake Partner</div></div>
+    </div>
+    <h1 style="color:white;font-size:34px;margin-bottom:10px">Go run <strong style="color:var(--red)">make chat.</strong></h1>
+    <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:32px;max-width:620px">Then the hands-on exercises. Then the Enablement certification. Then build your own app.</div>
+    <div style="display:flex;gap:20px">
+      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 24px">
+        <div style="font-size:14px;font-weight:800;color:white;margin-bottom:4px">Laurent Letourmy</div>
+        <div style="font-size:11px;color:var(--red);font-weight:700">Asset Owner</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:4px">laurent.letourmy@devoteam.com</div>
+      </div>
+      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 24px">
+        <div style="font-size:14px;font-weight:800;color:white;margin-bottom:4px">streamlit-coco-dev</div>
+        <div style="font-size:11px;color:var(--snow);font-weight:700">github.com/DevoteamSP</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:4px">issues, PR reviews, questions</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <div class="footer-brand">Creative tech for Better Change</div>
+    <div class="footer-page" style="color:rgba(255,255,255,.35)">DSP INTERNAL · 2026-09</div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -89,7 +89,7 @@ export default function ({ data, parentElement }) {
 def _get_copy_component() -> Any:
     if not hasattr(st.components, "v2"):
         raise RuntimeError(
-            "Copy button requires Streamlit >= 1.53 with Custom Components v2. "
+            "Copy button requires Streamlit >= 1.55 with Custom Components v2. "
             f"Installed version: {st.__version__}"
         )
     return st.components.v2.component(

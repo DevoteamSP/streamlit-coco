@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Streamlit CoCo — Extending</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200;0,6..12,300;0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900&display=swap');
+    :root {
+      --red: #F5364B; --red2: #E8001D;
+      --snow: #29B5E8; --gold: #F59B23; --green: #27AE60;
+      --purple: #7B61FF; --teal: #1ABC9C;
+      --dark: #1E2028; --text: #2D2D2D; --muted: #7B7F8E;
+      --border: #E2E4EA; --card: #F4F5F7; --bg: #FAFAFA;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px; line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    .logo-badge { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-circle { width: 38px; height: 38px; background: var(--red); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 15px; flex-shrink: 0; }
+    .logo-text { line-height: 1.2; }
+    .logo-name { font-weight: 700; font-size: 13px; color: var(--text); }
+    .logo-partner { font-size: 10px; color: var(--muted); }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+    .subtitle { font-size: 14px; color: var(--muted); font-weight: 400; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+    .card-top { border-top: 3px solid var(--red); }
+    .card-snow { border-top: 3px solid var(--snow); }
+    .card-gold { border-top: 3px solid var(--gold); }
+    .card-green { border-top: 3px solid var(--green); }
+    .card-purple { border-top: 3px solid var(--purple); }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px;
+      font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .badge-snow { background: rgba(41,181,232,.12); color: var(--snow); border: 1px solid rgba(41,181,232,.3); }
+    .badge-gold { background: rgba(245,155,35,.12); color: var(--gold); border: 1px solid rgba(245,155,35,.3); }
+    .badge-green { background: rgba(39,174,96,.12); color: var(--green); border: 1px solid rgba(39,174,96,.3); }
+    .badge-red { background: rgba(245,54,75,.12); color: var(--red); border: 1px solid rgba(245,54,75,.3); }
+    .badge-purple { background: rgba(123,97,255,.12); color: var(--purple); border: 1px solid rgba(123,97,255,.3); }
+    .badge-dark { background: rgba(30,32,40,.75); color: white; }
+    .topbar { position: sticky; top: 0; z-index: 100; background: white;
+      border-bottom: 1px solid var(--border); padding: 10px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .topnav { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; }
+    .topnav a { color: var(--text); text-decoration: none; font-weight: 600; padding: 4px 2px; }
+    .topnav a:hover { color: var(--red); }
+    .topnav a[aria-current="page"] { color: var(--red); font-weight: 700; border-bottom: 2px solid var(--red); }
+    .layout { max-width: none; margin: 0; padding: 28px 32px 0;
+      display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
+    .content { max-width: none; width: 100%; min-width: 0; background: white; border: 1px solid var(--border);
+      border-radius: 12px; box-shadow: 0 2px 24px rgba(30,32,40,.06); padding: 36px 44px 44px;
+      overflow-wrap: break-word; }
+    .content > *, .content section, .exbody, .exblock, .actmain, .qcard { min-width: 0; }
+    code.inline { overflow-wrap: anywhere; }
+    @media (max-width: 700px) {
+      .content { padding: 24px 18px 30px; }
+      .pagehead { flex-direction: column; }
+      .meta-strip { text-align: left; }
+      .layout { padding: 18px 12px 0; }
+    }
+    .pagehead { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px;
+      flex-wrap: wrap; margin-bottom: 28px; }
+    .pagehead h1 { font-size: 36px; font-weight: 300; color: var(--text); line-height: 1.15; margin-bottom: 8px; }
+    .pagehead h1 strong { font-weight: 800; color: var(--red); }
+    .meta-strip { text-align: right; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+    .meta-strip .dur { display: block; font-weight: 700; color: var(--text); font-size: 13px; margin-bottom: 4px; }
+    .meta-strip a { color: var(--red); font-weight: 700; text-decoration: none; }
+    .meta-strip a:hover { text-decoration: underline; }
+    .toc-side { display: none; }
+    .toc details { border: 1px solid var(--border); border-radius: 10px; background: white; padding: 10px 16px; margin-bottom: 24px; }
+    .toc summary { cursor: pointer; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); }
+    .toc ul { list-style: none; margin: 10px 0 4px; }
+    .toc li { margin: 3px 0; }
+    .toc li.lvl3 { padding-left: 16px; }
+    .toc a { color: var(--muted); text-decoration: none; font-size: 12.5px; }
+    .toc a:hover { color: var(--red); }
+    .toc li.lvl2 > a { color: var(--text); font-weight: 600; }
+    @media (min-width: 1100px) {
+      .layout { grid-template-columns: 260px minmax(0, 1fr); }
+      .toc-side { min-width: 0; display: block; position: sticky; top: 76px;
+        max-height: calc(100vh - 100px); overflow-y: auto; }
+      .toc-side ul { list-style: none; }
+      .toc-inline { display: none; }
+    }
+    .content h2 { font-size: 24px; font-weight: 800; color: var(--text); margin: 34px 0 12px; scroll-margin-top: 80px; }
+    .content h3 { font-size: 17px; font-weight: 700; color: var(--text); margin: 24px 0 8px; scroll-margin-top: 80px; }
+    .content h4 { font-size: 14px; font-weight: 700; color: var(--muted); margin: 18px 0 6px;
+      text-transform: uppercase; letter-spacing: .06em; }
+    .content h2:first-child, .content h3:first-child { margin-top: 0; }
+    .content p { margin: 10px 0; }
+    .content ul, .content ol { margin: 10px 0 10px 22px; }
+    .content li { margin: 5px 0; }
+    .content a { color: var(--red2); text-decoration: none; border-bottom: 1px solid rgba(245,54,75,.35); }
+    .content a:hover { border-bottom-color: var(--red); }
+    .content strong { font-weight: 700; }
+    .anchor { opacity: 0; margin-left: 8px; font-size: .7em; color: var(--muted); text-decoration: none; border: 0; }
+    h2:hover .anchor, h3:hover .anchor { opacity: 1; }
+    code.inline { background: rgba(245,54,75,.07); color: var(--red2); border-radius: 4px;
+      padding: 1px 5px; font-size: .92em; font-family: 'SFMono-Regular', Menlo, Consolas, monospace; }
+    .sep { height: 1px; background: var(--border); border: 0; margin: 32px 0; }
+    .codewrap { position: relative; margin: 16px 0; border-radius: 10px; overflow: hidden; background: var(--dark); }
+    .codebar { display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 14px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .codelang { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.45); }
+    .copybtn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); color: white;
+      font-family: inherit; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 5px; cursor: pointer; }
+    .copybtn:hover { background: rgba(245,54,75,.3); border-color: var(--red); }
+    .copybtn.ok { background: rgba(39,174,96,.25); border-color: var(--green); }
+    .codewrap pre { overflow-x: auto; padding: 14px 16px; }
+    .codewrap code { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 13px;
+      line-height: 1.6; color: rgba(255,255,255,.9); white-space: pre; }
+    .tablewrap { overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 10px; }
+    table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+    thead th { position: sticky; top: 0; background: var(--card); text-align: left;
+      font-weight: 700; padding: 10px 14px; border-bottom: 2px solid var(--border); white-space: nowrap; z-index: 2; }
+    tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tbody tr:nth-child(even) { background: rgba(244,245,247,.55); }
+    tbody tr:last-child td { border-bottom: 0; }
+    .callout { border-left: 3px solid var(--border); background: var(--card); border-radius: 0 10px 10px 0;
+      padding: 12px 18px; margin: 16px 0; }
+    .callout-snow { border-left-color: var(--snow); background: rgba(41,181,232,.06); }
+    .callout-gold { border-left-color: var(--gold); background: rgba(245,155,35,.06); }
+    .callout-red  { border-left-color: var(--red);  background: rgba(245,54,75,.06); }
+    .callout-green{ border-left-color: var(--green);background: rgba(39,174,96,.06); }
+    .callout p:first-child { margin-top: 0; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout-tag { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      display: block; margin-bottom: 4px; }
+    ul.tasklist { list-style: none; margin-left: 0; }
+    ul.tasklist li { display: flex; align-items: flex-start; gap: 10px; padding: 7px 12px; background: white;
+      border: 1px solid var(--border); border-radius: 8px; margin-bottom: 7px; }
+    ul.tasklist input[type=checkbox] { margin-top: 4px; width: 15px; height: 15px; accent-color: var(--green);
+      flex-shrink: 0; cursor: pointer; }
+    ul.tasklist li.done .tasktext { text-decoration: line-through; color: var(--muted); }
+    ul.tasklist li.done { background: rgba(39,174,96,.05); border-color: rgba(39,174,96,.3); }
+    .counter { font-size: 12px; font-weight: 700; color: var(--muted); }
+    .counter .n { color: var(--green); }
+    .pagefoot { max-width: none; margin: 0; padding: 0 32px 48px; }
+    .prevnext { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin: 28px 0 18px; }
+    .prevnext a { display: block; padding: 12px 18px; background: white; border: 1px solid var(--border);
+      border-radius: 10px; text-decoration: none; min-width: 220px; }
+    .prevnext a:hover { border-color: var(--red); }
+    .pn-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .pn-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .slide-footer { height: 36px; display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border); }
+    .footer-brand { font-size: 11px; font-weight: 700; color: var(--red); }
+    .footer-page { font-size: 11px; color: var(--muted); }
+    a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--red); outline-offset: 2px; border-radius: 4px; }
+    @page { size: A4; margin: 14mm; }
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background: white; font-size: 11pt; }
+      .topbar, .toc, .prevnext, .copybtn, .noprint { display: none !important; }
+      .layout { display: block; max-width: none; padding: 0; }
+      .content { max-width: none; border: 0; box-shadow: none; border-radius: 0; padding: 0; }
+      details { display: block !important; }
+      details > summary { list-style: none; }
+      .answer, .hidden-print-reveal { display: block !important; }
+      .codewrap { background: var(--card); border: 1px solid var(--border); }
+      .codewrap code, .codelang { color: var(--text); }
+      .card, .callout, .tablewrap, table, tr, .exercise { page-break-inside: avoid; break-inside: avoid; }
+      h2, h3 { page-break-after: avoid; break-after: avoid; }
+    }
+</style>
+</head>
+<body data-page="technical-guide/sections/extending">
+<header class="topbar">
+  <a class="logo-badge" href="../../enablement/intro.html"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></a>
+  <nav class="topnav" aria-label="Training pack"><a href="../../enablement/intro.html">Enablement</a><a href="../../training/01-simple.html">Training</a><a href="../../certifications/enablement.html">Certifications</a><a href="../../user-guide/index.html">User Guide</a><a href="../index.html">Technical Guide</a></nav>
+</header>
+<div class="layout">
+  <nav class="toc toc-side" aria-label="On this page"><div class="section-label">On this page</div><ul><li class="lvl2"><a href="#pluggable-text-renderer-textrenderer">Pluggable text renderer (text_renderer=)</a></li><li class="lvl2"><a href="#tool-family-tool-name-dispatch">Tool family / tool name dispatch</a></li><li class="lvl2"><a href="#app-builder-types-catalog-and-skill-packs">App Builder types/&lt;id&gt;/ catalog and skill packs</a></li><li class="lvl2"><a href="#adding-a-new-example-app">Adding a new example app</a></li></ul></nav>
+  <main class="content">
+    <div class="pagehead">
+      <div>
+        <div class="section-label">Training pack · Devoteam Snowflake Practice · 2026</div>
+        <h1>Extending</h1>
+        <div class="subtitle">Technical Guide · Build on it</div>
+      </div>
+      <div class="meta-strip"><span class="dur"></span><a href="../../enablement/intro.html">← Back to overview</a></div>
+    </div>
+    <nav class="toc toc-inline" aria-label="On this page"><details><summary>On this page</summary><ul><li class="lvl2"><a href="#pluggable-text-renderer-textrenderer">Pluggable text renderer (text_renderer=)</a></li><li class="lvl2"><a href="#tool-family-tool-name-dispatch">Tool family / tool name dispatch</a></li><li class="lvl2"><a href="#app-builder-types-catalog-and-skill-packs">App Builder types/&lt;id&gt;/ catalog and skill packs</a></li><li class="lvl2"><a href="#adding-a-new-example-app">Adding a new example app</a></li></ul></details></nav>
+<p>One section per extension point the repo actually exposes.</p>
+<section><h2 id="pluggable-text-renderer-textrenderer">Pluggable text renderer (<code class="inline">text_renderer=</code>)<a class="anchor" href="#pluggable-text-renderer-textrenderer" aria-label="Link to this section">#</a></h2>
+<p><code class="inline">panel()</code>, <code class="inline">render_transcript()</code>, and <code class="inline">render_output_field()</code> (<code class="inline">streamlit_coco/ui.py</code>, <code class="inline">streamlit_coco/display.py</code>) accept <code class="inline">text_renderer=</code> so an app can render assistant/user text with any Streamlit text API, or a custom callable, instead of the hardcoded <code class="inline">st.markdown</code> default.</p>
+<p><strong>Named values:</strong> <code class="inline">"markdown"</code> (default), <code class="inline">"write"</code>, <code class="inline">"text"</code>, <code class="inline">"caption"</code>, <code class="inline">"code"</code> (also accepts <code class="inline">st.*</code>-prefixed names). Passing an unknown name raises a <code class="inline">ValueError</code> listing the known names.</p>
+<p><strong>Callable form:</strong> pass any <code class="inline">Callable[[str], None]</code>-shaped function — it is invoked with the message text.</p>
+<p><strong>Files to touch:</strong></p>
+<ul><li><code class="inline">streamlit_coco/text_renderer.py</code> — the name → callable resolution table.<p>Add a new named value here if extending the built-in set.</p></li><li>Call sites in <code class="inline">streamlit_coco/ui.py</code> (<code class="inline">panel</code>) and <code class="inline">streamlit_coco/display.py</code><p>(<code class="inline">render_transcript</code>, <code class="inline">render_output_field</code>) already thread <code class="inline">text_renderer</code> through; a new renderer only needs to be registered once.</p></li></ul>
+<p><strong>Regenerate / verify step:</strong> run <code class="inline">examples/chat_app.py</code> (<code class="inline">make chat</code>) with the new renderer passed explicitly and confirm assistant/user text renders as expected; no build step is needed since this is pure Python.</p>
+<p><strong>Tests to add:</strong> extend <code class="inline">doc/features/text-renderer/test-checklist.md</code> with the new named value, and add a case to the relevant unit test file covering renderer resolution (there is no dedicated <code class="inline">test_text_renderer.py</code> in the current tree — check <code class="inline">tests/</code> for the closest existing coverage before adding a new file).</p></section>
+<section><h2 id="tool-family-tool-name-dispatch">Tool family / tool name dispatch<a class="anchor" href="#tool-family-tool-name-dispatch" aria-label="Link to this section">#</a></h2>
+<p><code class="inline">streamlit_coco/tool_names.py</code> maps a raw tool name to a <code class="inline">ToolFamily</code> enum (<code class="inline">ASK_USER</code>, <code class="inline">SQL</code>, <code class="inline">READ</code>, <code class="inline">WRITE</code>, <code class="inline">EDIT</code>, <code class="inline">BASH</code>, <code class="inline">GLOB</code>, <code class="inline">GREP</code>, <code class="inline">EXIT_PLAN</code>, <code class="inline">GENERIC</code>) via <code class="inline">tool_family(name)</code>, using a normalized (lowercased, separator-stripped) lookup table. Any tool name that does not match a known family — including MCP tools — falls through to <code class="inline">GENERIC</code> and gets a generic tool card instead of a family-specific one.</p>
+<p><strong>Files to touch:</strong></p>
+<ul><li><code class="inline">streamlit_coco/tool_names.py</code> — add the tool's normalized name(s) to<p><code class="inline">_FAMILY_BY_NORMALIZED</code>, and add a case to <code class="inline">family_label()</code> if it needs a dedicated header label instead of the raw tool name.</p></li><li><code class="inline">streamlit_coco/tool_cards.py</code> / <code class="inline">streamlit_coco/tool_extract.py</code> — add<p>the family-specific card rendering and any input/diff/SQL extraction the new family needs. A family left unregistered here still renders (via the <code class="inline">GENERIC</code> fallback); registering it only changes how it is displayed.</p></li></ul>
+<p><strong>Regenerate / verify step:</strong> run a chat demo (<code class="inline">make chat</code>) with a prompt that exercises the new tool and confirm the tool card renders with the expected family label and preview instead of the generic fallback.</p>
+<p><strong>Tests to add:</strong> a case in the unit tests covering <code class="inline">tool_family()</code> / <code class="inline">family_label()</code> for the new tool name (see the existing tool-family coverage pattern in <code class="inline">tests/</code>), and an NDJSON fixture under <code class="inline">tests/fixtures/ndjson/</code> if the new family needs event-normalization coverage in <code class="inline">test_ndjson_fixtures.py</code>.</p></section>
+<section><h2 id="app-builder-types-catalog-and-skill-packs">App Builder <code class="inline">types/&lt;id&gt;/</code> catalog and skill packs<a class="anchor" href="#app-builder-types-catalog-and-skill-packs" aria-label="Link to this section">#</a></h2>
+<p>Each App Builder app type is a folder under <code class="inline">examples/app_builder/types/</code>:</p>
+<div class="codewrap"><div class="codebar"><span class="codelang">text</span><button class="copybtn noprint" type="button">Copy</button></div><pre><code>types/&lt;id&gt;/
+  type.json          catalog card: id, name, icon, users, needs,
+                      needs_snowflake, topics, grounding_kind, brief
+                      (context, enables, does_not, questions)
+  SKILL.md            optional — type-specific layout + data rules,
+                      read by CoCo via add_dirs when generating the app
+  reference/           optional — supporting reference material for SKILL.md
+  CHECKLIST.md          optional — self-check list the generate prompt
+                      runs against once after a Write, before stopping
+types/shared/SKILL.md   generation rules for every type (no type.json —
+                      not a catalog card); every Build/regenerate prompt
+                      tells CoCo to read this file plus the type's own
+                      SKILL.md (both mounted via add_dirs)</code></pre></div>
+<p>This is a content-level extension point: adding a type does not require a Python code change, only a new <code class="inline">types/&lt;id&gt;/</code> folder (or using the Admin screen's type editor, which writes the same files).</p>
+<p><strong>Files to touch:</strong></p>
+<ul><li><code class="inline">examples/app_builder/types/&lt;id&gt;/type.json</code> — required; follow the shape<p>of an existing type (e.g. <code class="inline">types/call-transcription/type.json</code>) for the <code class="inline">brief.questions</code> structure and the <code class="inline">grounding_kind</code> values (<code class="inline">tabular</code> / <code class="inline">semantic_view</code> / <code class="inline">documents</code> / <code class="inline">urls</code>) that decide whether the profile step is a deterministic pandas parser (<code class="inline">examples/app_builder/engine/profile.py</code>) or a CoCo job.</p></li><li><code class="inline">examples/app_builder/types/&lt;id&gt;/SKILL.md</code> — optional but expected for a<p>real type; without it, CoCo generates only against the shared rules.</p></li><li><code class="inline">examples/app_builder/engine/paths.py</code> — no change needed; <code class="inline">TYPES_DIR</code><p>already points at <code class="inline">types/</code>, so a new folder is picked up automatically.</p></li></ul>
+<p><strong>Regenerate / verify step:</strong> <code class="inline">make app-builder</code>, open Library, confirm the new type card appears (filtered correctly by its <code class="inline">topics</code>), fill a brief, and Build — confirm the generated <code class="inline">streamlit_app.py</code> follows the new <code class="inline">SKILL.md</code>'s rules and (if a <code class="inline">CHECKLIST.md</code> is present) that the generate prompt self-checks against it once.</p>
+<p><strong>Tests to add:</strong> a case in <code class="inline">test_app_builder_catalog.py</code> covering the new <code class="inline">type.json</code> parses and validates against the catalog card fields the Library/Brief/Admin pages read; a case in <code class="inline">test_app_builder_profile.py</code> if <code class="inline">grounding_kind</code> triggers a new deterministic profile path.</p></section>
+<section><h2 id="adding-a-new-example-app">Adding a new example app<a class="anchor" href="#adding-a-new-example-app" aria-label="Link to this section">#</a></h2>
+<p>The established pattern for a rail-based example (as in <code class="inline">examples/bi_to_semantic/</code> and <code class="inline">examples/app_builder/</code>) composes <code class="inline">copilot_rail()</code> for the Copilot and <code class="inline">app_viewer()</code> for a live preview of whatever CoCo writes, wired together through <code class="inline">on_fix</code> / job queueing — see <a href="architecture.html#example-app-orchestration">architecture</a>.</p>
+<p><strong>Files to touch:</strong></p>
+<ul><li><code class="inline">examples/&lt;name&gt;/</code> — new folder with its own <code class="inline">app.py</code> (or multipage<p><code class="inline">app_pages/</code>), following the composition pattern of an existing example closest to the new one's shape (<code class="inline">backlog_desk/</code> for a no-SQL rail example; <code class="inline">bi_to_semantic/</code> or <code class="inline">app_builder/</code> for a rail + preview example).</p></li><li><code class="inline">Makefile</code> — add a <code class="inline">&lt;name&gt;:</code> target that runs the new example (mirror an<p>existing target, e.g. <code class="inline">bi-semantic:</code>), add it to <code class="inline">.PHONY</code>, and add a line to <code class="inline">help</code>.</p></li><li><code class="inline">doc/deployment/local.md</code> §5 and <code class="inline">doc/testing.md</code> — add the new <code class="inline">make</code><p>target to the examples table so it is discoverable from the docs that already list them.</p></li></ul>
+<p><strong>Regenerate / verify step:</strong> <code class="inline">make &lt;name&gt;</code> runs and reaches a usable screen; if the example uses <code class="inline">app_viewer()</code>, confirm the preview port does not collide with an existing example's fixed port (chat/backlog examples do not use <code class="inline">app_viewer</code>; <code class="inline">bi_to_semantic</code> uses <code class="inline">:8511</code>/<code class="inline">:8512</code>; <code class="inline">app_builder</code> uses <code class="inline">:8513</code>).</p>
+<p><strong>Tests to add:</strong> at minimum a smoke test parallel to <code class="inline">test_smoke.py</code>'s coverage of the existing examples, and a feature-doc checklist under <code class="inline">doc/features/&lt;feature&gt;/test-checklist.md</code> if the example exercises new UI behavior rather than only recomposing existing primitives.</p></section>
+  </main>
+</div>
+<footer class="pagefoot">
+  <div class="prevnext noprint"><a href="testing-and-ci.html"><span class="pn-label">← Previous</span><span class="pn-title">Testing and CI</span></a><a href="limits.html" style="text-align:right"><span class="pn-label">Next →</span><span class="pn-title">Limits</span></a></div>
+  <div class="slide-footer">
+    <div class="footer-brand">Creative tech for Better Change</div>
+    <div class="footer-page">Streamlit CoCo · Generated from technical-guide/sections/extending.md</div>
+  </div>
+</footer>
+<script>
+(function () {
+  var PAGE = document.body.getAttribute('data-page') || 'page';
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  document.querySelectorAll('.copybtn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.closest('.codewrap').querySelector('code').textContent;
+      var done = function () {
+        btn.textContent = 'Copied'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(done, function () {});
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = code; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+  var boxes = document.querySelectorAll('input.chk');
+  boxes.forEach(function (box, idx) {
+    var key = 'dsp-training:' + PAGE + ':chk:' + idx;
+    var saved = load(key);
+    if (saved === '1') box.checked = true;
+    else if (saved === '0') box.checked = false;
+    sync(box);
+    box.addEventListener('change', function () {
+      store(key, box.checked ? '1' : '0');
+      sync(box); counters();
+    });
+  });
+  function sync(box) {
+    var li = box.closest('li');
+    if (li) li.classList.toggle('done', box.checked);
+  }
+  function counters() {
+    document.querySelectorAll('[data-count-scope]').forEach(function (el) {
+      var scope = document.querySelector(el.getAttribute('data-count-scope'));
+      if (!scope) return;
+      var all = scope.querySelectorAll('input.chk');
+      var on = scope.querySelectorAll('input.chk:checked');
+      el.innerHTML = '<span class="n">' + on.length + '</span> of ' + all.length + ' ready';
+    });
+    document.querySelectorAll('[data-progress]').forEach(function (el) {
+      var sel = el.getAttribute('data-progress');
+      var all = document.querySelectorAll(sel);
+      var on = document.querySelectorAll(sel + ':checked');
+      var pct = all.length ? Math.round(on.length / all.length * 100) : 0;
+      var bar = el.querySelector('.bar-fill');
+      var lab = el.querySelector('.bar-label');
+      if (bar) bar.style.width = pct + '%';
+      if (lab) lab.textContent = on.length + ' of ' + all.length + ' exercises complete';
+    });
+  }
+  counters();
+  var links = document.querySelectorAll('.toc-side a');
+  if (links.length && 'IntersectionObserver' in window) {
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var a = map[en.target.id];
+        if (a && en.isIntersecting) {
+          links.forEach(function (x) { x.style.color = ''; x.style.fontWeight = ''; });
+          a.style.color = 'var(--red)'; a.style.fontWeight = '700';
+        }
+      });
+    }, { rootMargin: '-70px 0px -75% 0px' });
+    document.querySelectorAll('.content h2[id], .content h3[id]').forEach(function (h) { obs.observe(h); });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,43 +1,32 @@
 # streamlit-coco
 
-**Built (with love) by Devoteam Snowflake Partner** — Snowflake CoCo in *your* Streamlit app: a right-rail Copilot, a live preview of the app it writes, tool cards you can read, and approval gates that fit governed data apps.
+**Built by Devoteam Snowflake Partner.** Ask CoCo for Streamlit: a floating chat window, in front of a Cortex Code agent, that you add to your own application with one call. You say what the agent may do alone and what it must ask first. The window shows each request in plain words, with the exact command, file text or SQL statement one click away.
 
 [![CI](https://github.com/lletourmy/streamlit-coco/actions/workflows/ci.yml/badge.svg)](https://github.com/lletourmy/streamlit-coco/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-You own the page. CoCo owns the session. `copilot_rail()` sits in the product and takes jobs from your screens; `app_viewer()` runs the Streamlit app the agent just wrote, next to the rail. `panel()` streams the transcript. Approvals pause Write / Edit / Bash / SQL until someone clicks **Approve once**, **Always allow**, or **Deny**.
+> `0.2.0` (alpha). The API may still move. The default interface is still the 0.1.9 chat family (`chat`, `panel`, `copilot_rail`). The floating window is opt-in: `mini=True` on those calls, or `ask_coco(cwd)`. See [`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask-coco.md).
 
-![BI → Semantic — Preview of the generated Streamlit app beside the Copilot rail](doc/screenshot.png)
-
-> Alpha `0.1.9` — API may still move. Star / watch the repo if you plan to ship on it.
-
-**Repo:** [github.com/lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco) *(temporary PyPI source)* · **Dev:** [streamlit-coco-dev](https://github.com/DevoteamSP/streamlit-coco-dev)  
+**Repo:** [github.com/lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco) *(temporary PyPI source)* · **Dev:** [streamlit-coco-dev](https://github.com/DevoteamSP/streamlit-coco-dev)
 **SDK docs:** [Cortex Code Agent SDK](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
 
 ---
 
-## Why this package
+## What you get
 
-| Without streamlit-coco | With streamlit-coco |
-| --- | --- |
-| Wire CoCo yourself across Streamlit reruns | Session + fragment polling that keeps streaming |
-| Raw JSON tool dumps | Meaningful cards (Glob, Grep, Read, Write, SQL, AskUser…) |
-| Hope the agent behaves | `require_approval_for` + HITL UI |
-| Chat-only demos | Structured callbacks, a Copilot rail, and a live app preview |
-
-Also: headless `query()` for scripts and CI, plus a legacy all-in-one `chat()` if you want built-in input.
-
----
+- A launcher at the bottom right of the page, and a window that opens from it. The window is the whole interface: connect, ask, watch the steps, answer requests.
+- Rights written as code, in one object (a `Policy`). The default is the safest: reading inside the working folder is free, everything else asks, each time.
+- Every request names what it is about and shows the exact text of what would run.
+- Buttons of your own page can ask CoCo something in the user's name, and read the answer back.
+- A scripted agent (`STREAMLIT_COCO_AGENT=mock`) so you can build and test with no Snowflake login.
+- Headless `query()` and `CocoSession` for scripts and CI.
 
 ## When not to use
 
-- **You want CoCo Desktop, the CLI, or an IDE extension.** This is an embed in *your* Streamlit app — no file tree, multi-tab workspace, or full IDE.
-- **The Streamlit host cannot run CoCo.** The agent is server-side (CLI on the host today; remote API is still on the roadmap). Typical Streamlit Community Cloud without that setup will not work.
-- **You are not building in Python / Streamlit.** There is no TypeScript package; use the [Cortex Code Agent SDK](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk) directly.
-- **You need Slack, a hosted CoCo SaaS, or a product MCP server.** Out of scope. MCP *passthrough* via `mcp_servers` already works.
-- **You would not type the SQL yourself on this role.** The agent uses the Snowflake role in the connection — do not wire `ACCOUNTADMIN` into a web UI.
-
-Alpha `0.1.9` — APIs may still move. Prefer `panel()` + your own input; `chat()` is the legacy all-in-one.
+- **You want CoCo Desktop, the CLI, or an IDE extension.** This is an embed in your Streamlit application. It has no file tree and no editor.
+- **The Streamlit host cannot run CoCo.** The agent runs on the server (the Cortex Code program on the host). Streamlit Community Cloud without that setup will not work.
+- **You are not building in Python and Streamlit.** There is no TypeScript package. Use the [Cortex Code Agent SDK](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk) directly.
+- **You would not type the SQL yourself on this role.** The agent uses the Snowflake role of the connection. Do not wire `ACCOUNTADMIN` into a web page.
 
 ---
 
@@ -48,96 +37,212 @@ uv add "streamlit-coco[sdk]"
 # or: pip install "streamlit-coco[sdk]"
 ```
 
-From a clone (editable + tests):
+From a clone (editable, with the tests): `make install`.
 
-```bash
-make install
-```
+Needs:
 
-### Prerequisites
+1. Python 3.10 or later, Streamlit 1.55 or later.
+2. For a real agent: the Cortex Code program on the `PATH` (`cortex --version`), a Snowflake connection (`~/.snowflake/connections.toml` or `config.toml`), and `cortex-code-agent-sdk` (the `sdk` extra). The window says what is missing and how to fix it.
+3. For a scripted agent: nothing more. See below.
 
-1. Python **3.10+** · Streamlit **≥ 1.53**
-2. CoCo CLI on `PATH` (`cortex --version`)
-3. Authenticated Snowflake connection (`~/.snowflake/connections.toml` or equivalent)
-4. `cortex-code-agent-sdk` (pulled in by the `sdk` / `dev` extras)
-
-**Full local setup:** [`doc/deployment/local.md`](doc/deployment/local.md) (CLI install, Snowflake `connections.toml`, running examples, troubleshooting).  
-**API:** [`doc/api.md`](doc/api.md).
+Full local setup: [`doc/deployment/local.md`](doc/deployment/local.md). Every public name: [`doc/api.md`](doc/api.md).
 
 ---
 
-## Quickstart
+## First application: show the window
 
-Preferred pattern — **you own the input**; CoCo owns the session and output:
+Save this as `app.py`.
 
 ```python
 import streamlit as st
+
 import streamlit_coco as st_coco
 
-opts = st_coco.CocoOptions(
-    connection="analytics",
-    cwd=".",
-    allowed_tools=["Read", "Glob", "Grep"],
-    require_approval_for=["Edit", "Write", "Bash"],
-)
+st.set_page_config(page_title="My app")
+st.title("My app")
+st.write("Open Ask CoCo with the launcher at the bottom right of the page.")
 
-env = st_coco.check_environment(connection=opts.connection)
-if not st_coco.render_start_gate(opts, session_key="copilot", env=env):
-    st.stop()
-
-session = st_coco.get_or_create_session(opts, key="copilot")
-st_coco.panel(session=session, warm_up=True, show_status=True, run_every=0.25)
-st_coco.chat_input_bar(session, placeholder="Ask CoCo…")
+# One call: the launcher and the window. CoCo works in this folder.
+st_coco.ask_coco(".")
 ```
 
-- `allowed_tools` — may auto-run (enforced in Python when approvals are configured)
-- `require_approval_for` — pause for Approve once · Always allow · Deny
+Run it without a Snowflake login, on the scripted agent:
 
-Legacy all-in-one component (built-in input):
+```bash
+STREAMLIT_COCO_AGENT=mock streamlit run app.py        # PowerShell: $env:STREAMLIT_COCO_AGENT="mock"
+```
+
+What happens: click **Ask CoCo** (bottom right), then **Connect mock**. Type a message and press Enter. The scripted agent answers: "This is a scripted answer. You wrote: ..." This was run in Edge on Streamlit 1.65.0.
+
+Without the variable, the same file talks to a real Cortex Code agent. The window offers your Snowflake connections and connects when the user presses **Connect**. Nothing starts before that.
+
+`ask_coco(cwd)` is the only call a first application needs. The argument is the agent's working folder. A relative path (like `"."`) is taken from the folder the Streamlit server was started in, not from the folder of the script. The package checks that the working folder exists and is a directory before connecting, and raises `CocoError` otherwise. It does not create the folder: create it first. It returns a handle; see [Talk to the window](#talk-to-the-window).
+
+---
+
+## Second application: your own rights
+
+The agent may list one command, change Markdown files, and run SQL. Each of those still asks first, unless it is a read. Save this as `app_rights.py`.
 
 ```python
-st_coco.chat(session=session, key="coco_chat", height=560)
+import streamlit as st
+
+import streamlit_coco as st_coco
+from streamlit_coco import policy
+
+st.set_page_config(page_title="My app with rights")
+st.title("My app with rights")
+st.write("Reading in this folder is free. Everything else asks first.")
+
+# One command, written exactly as the agent must type it. It is shown as a read.
+status = policy.Command(
+    name="Look at what has changed",
+    argv=("git", "status", "--short"),
+    reads="The list of changed files",
+)
+
+rights = policy.FolderPolicy(
+    ".",
+    commands=[status],  # this exact line is a read, under its plain name
+    changes="*.md",  # changing a Markdown file is ordinary; any other file is flagged
+    sql=True,  # a SQL call shows its exact statement
+)
+
+st_coco.ask_coco(".", policy=rights)
 ```
+
+Run it the same way, from a folder that holds a `README.md`:
+
+```bash
+STREAMLIT_COCO_AGENT=mock streamlit run app_rights.py
+```
+
+Connect, then type these words. The scripted agent picks its script from a keyword:
+
+| Type | What the window shows |
+| --- | --- |
+| `status` | A request to look at what has changed: **Allow CoCo to look at what has changed?** It is a read. **Show command** opens the exact line, `git status --short`. |
+| `edit` | A request to change a file: **Allow CoCo to change a file?** It says `README.md`, one line. **Show change** opens the text. |
+| `snowflake drop` | A request to run a statement that can change Snowflake. It says `DROP`. **Show statement** opens `drop table DEMO.PUBLIC.OLD_CALLS`. |
+
+If you type while a request waits, the message is queued behind it ("Queued", with **Take back**) and is sent after Allow or Decline.
+
+To see a file that `changes` does not call ordinary, give the policy a narrower rule, for example `changes="docs/*.md"`. The `edit` request on `README.md` is then flagged: it reads "Allow CoCo to change a file outside what it usually changes? It cannot be undone.", it names the full path of the file instead of `README.md`, and its note says "1 line, outside what it usually changes". **Show change** still opens the text. With `changes="*.md"` it is the ordinary request shown above.
+
+The scripted agent only ever makes its own fixed calls, so it cannot exercise every rule you write:
+
+- The one command it asks for is `git status --short`. Another command you list in `commands` cannot be tried with it.
+- `edit` changes the first Markdown file of the folder, and `write` creates `coco_note.md`. A rule about other file types shows only as "not ordinary", on those two files.
+
+In each case nothing runs until the user presses **Allow**. **Decline** ends the call. The scripted agent never runs the command or reaches Snowflake: it only shows and asks. With a real agent the same policy decides, and **Allow** runs the call.
+
+What each argument did:
+
+- `commands=[status]`: a call whose command is exactly this line is a read, named "Look at what has changed". Any other command asks as a change, with its whole line.
+- `changes="*.md"`: a change to a Markdown file is ordinary. A change to any other file asks too, and says it is unusual.
+- `sql=True`: a SQL call shows its exact statement. A statement that surely only reads is a query. Anything else is a statement that can change Snowflake.
+
+More switches (`standing`, `lookups`, `also_read`, `git_readonly`) are in [`doc/api.md`](doc/api.md). A runnable version with a standing permission is `examples/approval_gate.py`.
+
+---
+
+## Talk to the window
+
+`ask_coco` returns the window's handle. `st_coco.get_window()` returns the same handle anywhere else on the page.
+
+```python
+import streamlit as st
+
+import streamlit_coco as st_coco
+
+coco = st_coco.ask_coco(".", prompts=["List the files here"])
+
+if st.button("Summarise this folder"):  # ask() reruns the page: keep it behind a button
+    coco.ask("Summarise this folder", "Read the files here and say what they are for.", key="sum")
+
+done = coco.result("sum")  # None until finished, then {"text", "data"}, once
+if done:
+    st.write(done["text"])
+```
+
+| Call | What it does |
+| --- | --- |
+| `coco.ask(label, text, key=...)` | A button of your page asks CoCo in the user's name. The thread shows `label`. |
+| `coco.result(key)` | The finished answer of that request: `{"text", "data"}`, handed over once. |
+| `coco.form(title, fields, key=...)` | A form your application asks, answered in the window. No agent needed. |
+| `coco.notice(text)` | One line in the thread, in your words. |
+| `coco.open()`, `coco.new()`, `coco.disconnect()` | Open the window, end the conversation, end the session. |
+| `coco.latest_answer` | The text of the latest answer, for a page that shows it elsewhere. |
+
+Other arguments of `ask_coco`: `features` (what the window offers), `context` (what your page knows when a message is sent), `labels` (every sentence, to translate), `theme` (colours, font), `options` (model, connection, structured output), `on_files_changed`. All of them are in [`doc/api.md`](doc/api.md).
 
 ---
 
 ## Try the demos
 
 ```bash
-make chat          # panel + chat input + tool cards + approvals
-make cwd-upload    # upload files into agent cwd + chat
-make approval      # legacy CCv2 chat
-make structured    # custom structured-output panel
-make headless      # asyncio query() pipeline
-make backlog       # Product Backlog Desk (multipage business demo)
-make bi-semantic      # Tableau / Power BI → semantic view + RAP (screens 1–6)
-make app-builder      # App Builder (type library → brief → Copilot / Preview)
-# make tableau-semantic is an alias for bi-semantic
+make simple-chat   # panel, a test-prompt picker, rights as pills
+make modern-chat   # Copilot rail, floating window, or both
+make approval      # a listed command, a file rule, SQL, a standing permission
+make structured    # a result handed to the page as data
+make cwd-upload    # files attached in chat, and an uploader on the page
+make headless      # asyncio query() and a Conversation answered in code
+make backlog       # Product Backlog Desk: a multipage application
+make bi-semantic   # Tableau / Power BI to semantic view
+make app-builder   # App Builder: type library, brief, Preview
 ```
 
-Exploratory prompts: [`examples/testdata/prompts.json`](examples/testdata/prompts.json).  
-Backlog desk: [`examples/backlog_desk/README.md`](examples/backlog_desk/README.md).
-BI → Semantic: [`examples/bi_to_semantic/README.md`](examples/bi_to_semantic/README.md).
-App Builder: [`examples/app_builder/README.md`](examples/app_builder/README.md).
-File upload: [`doc/features/file-upload/file-upload.md`](doc/features/file-upload/file-upload.md).
+Each Streamlit demo has an **Ask CoCo** control (Off / On) in the sidebar. Off keeps that page's chat, panel, or Copilot rail. On leaves Ask CoCo minimized until **Minimize** on that CoCo, which hides it and opens the window. **Restore** in the window closes it and brings the rail or chat back.
+
+To run any of them with no login: `STREAMLIT_COCO_AGENT=mock make simple-chat` (PowerShell: set `$env:STREAMLIT_COCO_AGENT` first). `make chat` still launches the simple demo.
+
+Exploratory prompts: [`examples/testdata/prompts.json`](examples/testdata/prompts.json).
+Backlog Desk: [`examples/backlog_desk/README.md`](examples/backlog_desk/README.md) · BI to Semantic: [`examples/bi_to_semantic/README.md`](examples/bi_to_semantic/README.md) · App Builder: [`examples/app_builder/README.md`](examples/app_builder/README.md).
 
 ---
 
-## Patterns you’ll use often
+## Architecture
 
-### Structured output → your widgets
+The agent is on the server. The browser sees one Streamlit component.
 
-```python
-output = st.container()
-
-def render(data: dict, result: st_coco.CocoChatResult) -> None:
-    with output:
-        st.dataframe(data.get("selected_features", []))
-
-st_coco.panel(session=session, on_structured_output=render)
+```text
+Browser  ──►  Ask CoCo window (one component, in a fragment)
+                  │  one action at a time; the page does not rerun
+                  ▼
+             Conversation   (thread, steps, requests, queue: plain data)
+                  │  every tool call reaches the Gate
+                  ▼
+             Gate + Policy  (free, asks, or refused; waits for Allow / Decline)
+                  ▼
+             Cortex adapter ──►  Cortex Code Agent SDK ──►  Cortex Code ──►  Snowflake
 ```
 
-### Headless (no Streamlit UI)
+The scripted agent (`streamlit_coco.testing`) goes through the same Conversation, Policy and Gate. Only the model and the programs are replaced.
+
+```text
+streamlit_coco/
+├── window.py        # ask_coco(), get_window(), the handle
+├── conversation.py  # the contract between the window and the agent (read its docstring)
+├── policy.py        # Policy, FolderPolicy, Command, git_readonly, request, inside
+├── gate.py          # the decision that waits for Allow / Decline
+├── features.py      # Features, Attachments
+├── labels.py        # every sentence of the window, by key
+├── cortex.py        # the Cortex Code adapter
+├── testing/         # scripted agent, fixtures, harness
+├── static/          # the window's script, styles and font
+├── session.py       # CocoSession (headless)
+├── query.py         # query() (headless)
+├── viewer.py        # app_viewer()
+└── uploader.py      # cwd_uploader()
+examples/            # demos
+doc/                 # API, feature files, checklists
+```
+
+Notes: [`doc/prd.md`](doc/prd.md) · threat model: [`doc/security/threat-model.md`](doc/security/threat-model.md) · feature files: [`doc/features/README.md`](doc/features/README.md).
+
+---
+
+## Headless
 
 ```python
 import asyncio
@@ -153,71 +258,24 @@ asyncio.run(run())
 
 ---
 
-## Architecture
-
-The agent is **server-side**. The browser only sees Streamlit widgets. `panel()` (or `copilot_rail()` around it) polls a `CocoSession` worker via `@st.fragment`; `app_viewer()` is a separate child `streamlit run` in an iframe. The session talks to the Cortex Code Agent SDK, which runs the `cortex` CLI against your Snowflake account. Destructive tools pause in Python (`can_use_tool`) until someone clicks Approve / Deny. Headless `query()` skips the UI and uses the same session/SDK path.
-
-```
-Browser  ──►  panel() / copilot_rail() / app_viewer() / chat_input_bar()
-                  │  @st.fragment poll (app page does not rerun)
-                  ▼
-             CocoSession  (thread + asyncio, transcript + pending approval)
-                  │  can_use_tool → render_approvals()
-                  ▼
-             cortex-code-agent-sdk  ──►  cortex CLI  ──►  Snowflake CoCo + RBAC
-```
-
-Legacy `chat()` is the same session, with a CCv2 frontend instead of native widgets.
-
-| Capability | Entry points |
-| --- | --- |
-| Native panel + approvals | `panel()`, `chat_input_bar()`, `render_approvals()` |
-| Copilot rail (right-column Copilot) | `copilot_rail()`, `transcript_display_config()`, `example_questions=` / `deferred=` / `toml_file=` — [`doc/features/copilot-rail/`](doc/features/copilot-rail/) |
-| App viewer (child Streamlit iframe) | `app_viewer()`, `default_fix_prompt()` — [`doc/features/app-viewer/`](doc/features/app-viewer/) |
-| Tool cards & AskUser / plan UI | see [`doc/features/tools-display/`](doc/features/tools-display/) |
-| Session & options | `CocoSession`, `CocoOptions`, `get_or_create_session` |
-| Headless events | `query()` |
-| Legacy CCv2 | `chat()` |
-
-```
-streamlit_coco/
-├── ui.py            # panel(), send_prompt(), render_approvals()
-├── rail.py          # copilot_rail(), transcript_display_config()
-├── viewer.py        # app_viewer()
-├── app_preview.py   # child Streamlit process helpers
-├── session.py       # CocoSession worker + transcript
-├── permissions.py   # HITL can_use_tool gates
-├── query.py         # headless query()
-├── component.py     # legacy chat() CCv2 mount
-└── frontend/        # static CCv2 assets
-examples/            # chat, backlog desk, BI → Semantic, App Builder, …
-doc/                 # PRD, roadmap, feature specs
-```
-
-Full diagram and runtime notes: [`doc/prd.md`](doc/prd.md) §5 · threat-model topology: [`doc/security/threat-model.md`](doc/security/threat-model.md).  
-API: [`doc/api.md`](doc/api.md). Feature checklists: [`doc/features/README.md`](doc/features/README.md).
-
----
-
 ## Development
 
 ```bash
 make install       # uv sync --extra dev
-make check         # ruff + unit/smoke (ignores tests/e2e)
-make e2e-install   # Playwright + Chromium (once)
-make e2e           # UX e2e vs examples/e2e_ux_harness.py
-make test-all      # check + e2e + audit
-make audit         # pip-audit
-make format        # ruff format + fix
-make build         # sdist + wheel
-make sync-release  # copy tree → public clones (see doc/deployment/publish.md)
-make help          # all targets
+make check         # ruff and the unit tests (not the browser tests)
+make e2e-install   # Playwright and Chromium, once
+make e2e           # browser tests of the window, on the scripted agent
+make test-all      # check, e2e and the dependency audit
+make format        # ruff format and fix
+make build         # sdist and wheel
+make help          # every target
 ```
 
-CI runs lint, tests, and pip-audit on every PR to `main`. Full local gate: `make test-all` ([`doc/testing.md`](doc/testing.md)).  
-**Releases:** develop here (`streamlit-coco-dev`), sync + tag on [`lletourmy/streamlit-coco`](https://github.com/lletourmy/streamlit-coco) → PyPI ([guide](doc/deployment/publish.md)).
+`make e2e` uses the installed Edge when Playwright's Chromium is not installed. No test calls a live agent. Process: [`doc/testing.md`](doc/testing.md). Live checks before a release: [`doc/features/ask-coco/test-checklist.md`](doc/features/ask-coco/test-checklist.md).
 
-**Docs:** [PRD](doc/prd.md) · [API](doc/api.md) · [Roadmap](doc/roadmap.md) · [Training](doc/training/training-overview.md) · [Deployment](doc/deployment/) · [Changelog](CHANGELOG.md) · [AGENTS.md](AGENTS.md)
+Releases: develop here, sync and tag on [`lletourmy/streamlit-coco`](https://github.com/lletourmy/streamlit-coco) for PyPI ([guide](doc/deployment/publish.md)).
+
+**Docs:** [API](doc/api.md) · [Ask CoCo feature file](doc/features/ask-coco/ask-coco.md) · [PRD](doc/prd.md) · [Roadmap](doc/roadmap.md) · [Deployment](doc/deployment/) · [Changelog](CHANGELOG.md) · [AGENTS.md](AGENTS.md)
 
 ---
 

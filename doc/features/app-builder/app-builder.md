@@ -4,7 +4,7 @@ Guided Streamlit app generation for **business users**, with CoCo **guidelines s
 and a form that already knows the answer before it asks.
 
 **Status:** Shipped in **`0.1.8`**. Example: `examples/app_builder` (`make app-builder`).
-**Surfaces:** `examples/app_builder` composing `copilot_rail()` + `app_viewer()`; per-type
+**Surfaces:** `examples/app_builder` composing the Ask CoCo window (`ask_coco`) + `app_viewer()`; per-type
 skills under `types/` (rules + a reference app + a self-check checklist; shared pack in `types/shared/`).
 **Users / use cases / flows:** [`UX.md`](UX.md).
 **Design rationale / build order:** [`../../../doc-dev/briefs/app-builder-v2.md`](../../../doc-dev/briefs/app-builder-v2.md) (dev-only).
@@ -19,8 +19,7 @@ needs, and reviews **what CoCo found** before anything is written — instead
 of typing column names and metric lists into a blank form. CoCo scaffolds the
 app under approval gates, following packaged **guidelines skills** (layout,
 theming, Snowflake patterns, a reference app to imitate) instead of
-unconstrained generation. Preview and **Fix with CoCo** reuse the `0.1.6` /
-`0.1.7` primitives; a self-check now runs once automatically before the
+unconstrained generation. Preview and **Fix with CoCo** reuse `app_viewer()` and `coco.ask`; a self-check now runs once automatically before the
 human ever sees a red Preview.
 
 Some types need no Snowflake account at all: a folder of documents to
@@ -32,7 +31,7 @@ and BI → Semantic (`0.1.6` / `0.1.7`).
 
 ## Why
 
-- Copilot rail + App Viewer already let a *developer* generate and preview an
+- The Ask CoCo window + App Viewer already let a *developer* generate and preview an
   app (BI → Semantic). Business users still start from a blank file or a
   specialist.
 - A blank form asking someone to type what's already in their file is the
@@ -50,7 +49,7 @@ and BI → Semantic (`0.1.6` / `0.1.7`).
 ## How (intent)
 
 Five pages in the menu: **Welcome · Library · Brief · Studio · Admin**.
-Studio opens **Open Preview** \| **Open Copilot**. Admin is catalog CRUD.
+Studio has **Open Preview**; CoCo is the window opened from the launcher at the bottom right. Admin is catalog CRUD.
 
 The product is a **catalog of app types**. A Library card is **icon + name +
 users + grounding kind + screenshot** (if any). Opening a type shows its
@@ -80,7 +79,7 @@ on the type.
 - Pixel-perfect clones of Tableau / Power BI (that is BI → Semantic)
 - Live network access from inside a CoCo session (host fetches; agent Reads local files only)
 - **Replacing the confirm-the-profile step with a full agent-run interview** — deliberately deferred, not rejected. It becomes the right shape once `documents`/`urls` types are live and users want to correct a proposed schema by talking instead of through the form. See [`UX.md`](UX.md) §11 for what has to be true first.
-- `ships_copilot` (a generated app carrying its own Copilot rail) — designed in [`UX.md`](UX.md) §5.5, scoped to one type once the base catalogue is solid, not part of this slice's critical path
+- `ships_copilot` (a generated app carrying its own Ask CoCo window) — designed in [`UX.md`](UX.md) §5.5, scoped to one type once the base catalogue is solid, not part of this slice's critical path
 
 ## Open questions (implementation)
 
@@ -99,4 +98,4 @@ tracked in [`UX.md`](UX.md) §10:
 - Design brief this doc was rewritten from: [`../../../doc-dev/briefs/app-builder-v2.md`](../../../doc-dev/briefs/app-builder-v2.md)
 - Checklist: [`test-checklist.md`](test-checklist.md)
 - Roadmap: [`../../roadmap.md`](../../roadmap.md) (`0.1.8`)
-- Primitives: [`../copilot-rail/`](../copilot-rail/) · [`../app-viewer/`](../app-viewer/)
+- Primitives: [`../ask-coco/`](../ask-coco/ask-coco.md) · [`../app-viewer/`](../app-viewer/)

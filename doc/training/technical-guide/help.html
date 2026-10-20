@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Streamlit CoCo — Help</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200;0,6..12,300;0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900&display=swap');
+    :root {
+      --red: #F5364B; --red2: #E8001D;
+      --snow: #29B5E8; --gold: #F59B23; --green: #27AE60;
+      --purple: #7B61FF; --teal: #1ABC9C;
+      --dark: #1E2028; --text: #2D2D2D; --muted: #7B7F8E;
+      --border: #E2E4EA; --card: #F4F5F7; --bg: #FAFAFA;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px; line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    .logo-badge { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-circle { width: 38px; height: 38px; background: var(--red); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 15px; flex-shrink: 0; }
+    .logo-text { line-height: 1.2; }
+    .logo-name { font-weight: 700; font-size: 13px; color: var(--text); }
+    .logo-partner { font-size: 10px; color: var(--muted); }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+    .subtitle { font-size: 14px; color: var(--muted); font-weight: 400; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+    .card-top { border-top: 3px solid var(--red); }
+    .card-snow { border-top: 3px solid var(--snow); }
+    .card-gold { border-top: 3px solid var(--gold); }
+    .card-green { border-top: 3px solid var(--green); }
+    .card-purple { border-top: 3px solid var(--purple); }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px;
+      font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .badge-snow { background: rgba(41,181,232,.12); color: var(--snow); border: 1px solid rgba(41,181,232,.3); }
+    .badge-gold { background: rgba(245,155,35,.12); color: var(--gold); border: 1px solid rgba(245,155,35,.3); }
+    .badge-green { background: rgba(39,174,96,.12); color: var(--green); border: 1px solid rgba(39,174,96,.3); }
+    .badge-red { background: rgba(245,54,75,.12); color: var(--red); border: 1px solid rgba(245,54,75,.3); }
+    .badge-purple { background: rgba(123,97,255,.12); color: var(--purple); border: 1px solid rgba(123,97,255,.3); }
+    .badge-dark { background: rgba(30,32,40,.75); color: white; }
+    .topbar { position: sticky; top: 0; z-index: 100; background: white;
+      border-bottom: 1px solid var(--border); padding: 10px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .topnav { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; }
+    .topnav a { color: var(--text); text-decoration: none; font-weight: 600; padding: 4px 2px; }
+    .topnav a:hover { color: var(--red); }
+    .topnav a[aria-current="page"] { color: var(--red); font-weight: 700; border-bottom: 2px solid var(--red); }
+    .layout { max-width: none; margin: 0; padding: 28px 32px 0;
+      display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
+    .content { max-width: none; width: 100%; min-width: 0; background: white; border: 1px solid var(--border);
+      border-radius: 12px; box-shadow: 0 2px 24px rgba(30,32,40,.06); padding: 36px 44px 44px;
+      overflow-wrap: break-word; }
+    .content > *, .content section, .exbody, .exblock, .actmain, .qcard { min-width: 0; }
+    code.inline { overflow-wrap: anywhere; }
+    @media (max-width: 700px) {
+      .content { padding: 24px 18px 30px; }
+      .pagehead { flex-direction: column; }
+      .meta-strip { text-align: left; }
+      .layout { padding: 18px 12px 0; }
+    }
+    .pagehead { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px;
+      flex-wrap: wrap; margin-bottom: 28px; }
+    .pagehead h1 { font-size: 36px; font-weight: 300; color: var(--text); line-height: 1.15; margin-bottom: 8px; }
+    .pagehead h1 strong { font-weight: 800; color: var(--red); }
+    .meta-strip { text-align: right; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+    .meta-strip .dur { display: block; font-weight: 700; color: var(--text); font-size: 13px; margin-bottom: 4px; }
+    .meta-strip a { color: var(--red); font-weight: 700; text-decoration: none; }
+    .meta-strip a:hover { text-decoration: underline; }
+    .toc-side { display: none; }
+    .toc details { border: 1px solid var(--border); border-radius: 10px; background: white; padding: 10px 16px; margin-bottom: 24px; }
+    .toc summary { cursor: pointer; font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); }
+    .toc ul { list-style: none; margin: 10px 0 4px; }
+    .toc li { margin: 3px 0; }
+    .toc li.lvl3 { padding-left: 16px; }
+    .toc a { color: var(--muted); text-decoration: none; font-size: 12.5px; }
+    .toc a:hover { color: var(--red); }
+    .toc li.lvl2 > a { color: var(--text); font-weight: 600; }
+    @media (min-width: 1100px) {
+      .layout { grid-template-columns: 260px minmax(0, 1fr); }
+      .toc-side { min-width: 0; display: block; position: sticky; top: 76px;
+        max-height: calc(100vh - 100px); overflow-y: auto; }
+      .toc-side ul { list-style: none; }
+      .toc-inline { display: none; }
+    }
+    .content h2 { font-size: 24px; font-weight: 800; color: var(--text); margin: 34px 0 12px; scroll-margin-top: 80px; }
+    .content h3 { font-size: 17px; font-weight: 700; color: var(--text); margin: 24px 0 8px; scroll-margin-top: 80px; }
+    .content h4 { font-size: 14px; font-weight: 700; color: var(--muted); margin: 18px 0 6px;
+      text-transform: uppercase; letter-spacing: .06em; }
+    .content h2:first-child, .content h3:first-child { margin-top: 0; }
+    .content p { margin: 10px 0; }
+    .content ul, .content ol { margin: 10px 0 10px 22px; }
+    .content li { margin: 5px 0; }
+    .content a { color: var(--red2); text-decoration: none; border-bottom: 1px solid rgba(245,54,75,.35); }
+    .content a:hover { border-bottom-color: var(--red); }
+    .content strong { font-weight: 700; }
+    .anchor { opacity: 0; margin-left: 8px; font-size: .7em; color: var(--muted); text-decoration: none; border: 0; }
+    h2:hover .anchor, h3:hover .anchor { opacity: 1; }
+    code.inline { background: rgba(245,54,75,.07); color: var(--red2); border-radius: 4px;
+      padding: 1px 5px; font-size: .92em; font-family: 'SFMono-Regular', Menlo, Consolas, monospace; }
+    .sep { height: 1px; background: var(--border); border: 0; margin: 32px 0; }
+    .codewrap { position: relative; margin: 16px 0; border-radius: 10px; overflow: hidden; background: var(--dark); }
+    .codebar { display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 14px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .codelang { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.45); }
+    .copybtn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); color: white;
+      font-family: inherit; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 5px; cursor: pointer; }
+    .copybtn:hover { background: rgba(245,54,75,.3); border-color: var(--red); }
+    .copybtn.ok { background: rgba(39,174,96,.25); border-color: var(--green); }
+    .codewrap pre { overflow-x: auto; padding: 14px 16px; }
+    .codewrap code { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 13px;
+      line-height: 1.6; color: rgba(255,255,255,.9); white-space: pre; }
+    .tablewrap { overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 10px; }
+    table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+    thead th { position: sticky; top: 0; background: var(--card); text-align: left;
+      font-weight: 700; padding: 10px 14px; border-bottom: 2px solid var(--border); white-space: nowrap; z-index: 2; }
+    tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tbody tr:nth-child(even) { background: rgba(244,245,247,.55); }
+    tbody tr:last-child td { border-bottom: 0; }
+    .callout { border-left: 3px solid var(--border); background: var(--card); border-radius: 0 10px 10px 0;
+      padding: 12px 18px; margin: 16px 0; }
+    .callout-snow { border-left-color: var(--snow); background: rgba(41,181,232,.06); }
+    .callout-gold { border-left-color: var(--gold); background: rgba(245,155,35,.06); }
+    .callout-red  { border-left-color: var(--red);  background: rgba(245,54,75,.06); }
+    .callout-green{ border-left-color: var(--green);background: rgba(39,174,96,.06); }
+    .callout p:first-child { margin-top: 0; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout-tag { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      display: block; margin-bottom: 4px; }
+    ul.tasklist { list-style: none; margin-left: 0; }
+    ul.tasklist li { display: flex; align-items: flex-start; gap: 10px; padding: 7px 12px; background: white;
+      border: 1px solid var(--border); border-radius: 8px; margin-bottom: 7px; }
+    ul.tasklist input[type=checkbox] { margin-top: 4px; width: 15px; height: 15px; accent-color: var(--green);
+      flex-shrink: 0; cursor: pointer; }
+    ul.tasklist li.done .tasktext { text-decoration: line-through; color: var(--muted); }
+    ul.tasklist li.done { background: rgba(39,174,96,.05); border-color: rgba(39,174,96,.3); }
+    .counter { font-size: 12px; font-weight: 700; color: var(--muted); }
+    .counter .n { color: var(--green); }
+    .pagefoot { max-width: none; margin: 0; padding: 0 32px 48px; }
+    .prevnext { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin: 28px 0 18px; }
+    .prevnext a { display: block; padding: 12px 18px; background: white; border: 1px solid var(--border);
+      border-radius: 10px; text-decoration: none; min-width: 220px; }
+    .prevnext a:hover { border-color: var(--red); }
+    .pn-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .pn-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .slide-footer { height: 36px; display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border); }
+    .footer-brand { font-size: 11px; font-weight: 700; color: var(--red); }
+    .footer-page { font-size: 11px; color: var(--muted); }
+    a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--red); outline-offset: 2px; border-radius: 4px; }
+    @page { size: A4; margin: 14mm; }
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background: white; font-size: 11pt; }
+      .topbar, .toc, .prevnext, .copybtn, .noprint { display: none !important; }
+      .layout { display: block; max-width: none; padding: 0; }
+      .content { max-width: none; border: 0; box-shadow: none; border-radius: 0; padding: 0; }
+      details { display: block !important; }
+      details > summary { list-style: none; }
+      .answer, .hidden-print-reveal { display: block !important; }
+      .codewrap { background: var(--card); border: 1px solid var(--border); }
+      .codewrap code, .codelang { color: var(--text); }
+      .card, .callout, .tablewrap, table, tr, .exercise { page-break-inside: avoid; break-inside: avoid; }
+      h2, h3 { page-break-after: avoid; break-after: avoid; }
+    }
+</style>
+</head>
+<body data-page="technical-guide/help">
+<header class="topbar">
+  <a class="logo-badge" href="../enablement/intro.html"><div class="logo-circle">d+</div><div class="logo-text"><div class="logo-name">devoteam</div><div class="logo-partner">Snowflake Partner</div></div></a>
+  <nav class="topnav" aria-label="Training pack"><a href="../enablement/intro.html">Enablement</a><a href="../training/01-simple.html">Training</a><a href="../certifications/enablement.html">Certifications</a><a href="../user-guide/index.html">User Guide</a><a href="index.html">Technical Guide</a></nav>
+</header>
+<div class="layout">
+  <nav class="toc toc-side" aria-label="On this page"><div class="section-label">On this page</div><ul><li class="lvl2"><a href="#environment-and-connection">Environment and connection</a></li><li class="lvl3"><a href="#sdk-not-installed">SDK not installed</a></li><li class="lvl3"><a href="#cli-not-found">CoCo CLI not found</a></li><li class="lvl3"><a href="#cli-probe-failed">CLI probe failed</a></li><li class="lvl3"><a href="#snowflake-config-not-found">Snowflake config not found</a></li><li class="lvl3"><a href="#coco-connection-error">CoCo connection error</a></li><li class="lvl2"><a href="#session-lifecycle">Session lifecycle</a></li><li class="lvl3"><a href="#session-stuck-connecting">Session stuck on "Starting CoCo…"</a></li><li class="lvl3"><a href="#session-not-ready">Session not ready</a></li><li class="lvl3"><a href="#input-disabled-after-boot">Input disabled after boot</a></li><li class="lvl2"><a href="#approvals">Approvals</a></li><li class="lvl3"><a href="#approval-timeout">Approval timed out</a></li><li class="lvl3"><a href="#always-allow-scope">"Always allow" does not persist</a></li><li class="lvl2"><a href="#file-uploads">File uploads</a></li><li class="lvl3"><a href="#upload-rejected-extension">Upload rejected: extension</a></li><li class="lvl3"><a href="#upload-rejected-size">Upload rejected: size</a></li><li class="lvl3"><a href="#upload-name-conflict">Upload name conflict</a></li><li class="lvl2"><a href="#app-preview">App preview</a></li><li class="lvl3"><a href="#preview-wont-start">Preview won't start</a></li><li class="lvl3"><a href="#fix-with-coco-not-wired">"Fix with CoCo" is not wired</a></li><li class="lvl3"><a href="#preview-log-parse-miss">Preview log parse miss</a></li><li class="lvl2"><a href="#structured-output">Structured output</a></li><li class="lvl3"><a href="#structured-output-not-rendering">Structured output not rendering</a></li><li class="lvl3"><a href="#schema-dollar-schema-rejected">$schema / $id rejected</a></li><li class="lvl2"><a href="#release-and-ci">Release and CI</a></li><li class="lvl3"><a href="#pip-audit-editable-false-positive">pip-audit false positive on the editable package</a></li><li class="lvl2"><a href="#debug-mode">Debug mode</a></li><li class="lvl3"><a href="#debug-mode-not-showing-payloads">Debug mode not showing payloads</a></li><li class="lvl2"><a href="#app-builder">App Builder</a></li><li class="lvl3"><a href="#app-builder-brief-overwrite-race">App Builder brief overwrite race</a></li></ul></nav>
+  <main class="content">
+    <div class="pagehead">
+      <div>
+        <div class="section-label">Training pack · Devoteam Snowflake Practice · 2026</div>
+        <h1>Help</h1>
+        <div class="subtitle">Technical Guide · Answers</div>
+      </div>
+      <div class="meta-strip"><span class="dur">As needed</span><a href="../enablement/intro.html">← Back to overview</a></div>
+    </div>
+    <nav class="toc toc-inline" aria-label="On this page"><details><summary>On this page</summary><ul><li class="lvl2"><a href="#environment-and-connection">Environment and connection</a></li><li class="lvl3"><a href="#sdk-not-installed">SDK not installed</a></li><li class="lvl3"><a href="#cli-not-found">CoCo CLI not found</a></li><li class="lvl3"><a href="#cli-probe-failed">CLI probe failed</a></li><li class="lvl3"><a href="#snowflake-config-not-found">Snowflake config not found</a></li><li class="lvl3"><a href="#coco-connection-error">CoCo connection error</a></li><li class="lvl2"><a href="#session-lifecycle">Session lifecycle</a></li><li class="lvl3"><a href="#session-stuck-connecting">Session stuck on "Starting CoCo…"</a></li><li class="lvl3"><a href="#session-not-ready">Session not ready</a></li><li class="lvl3"><a href="#input-disabled-after-boot">Input disabled after boot</a></li><li class="lvl2"><a href="#approvals">Approvals</a></li><li class="lvl3"><a href="#approval-timeout">Approval timed out</a></li><li class="lvl3"><a href="#always-allow-scope">"Always allow" does not persist</a></li><li class="lvl2"><a href="#file-uploads">File uploads</a></li><li class="lvl3"><a href="#upload-rejected-extension">Upload rejected: extension</a></li><li class="lvl3"><a href="#upload-rejected-size">Upload rejected: size</a></li><li class="lvl3"><a href="#upload-name-conflict">Upload name conflict</a></li><li class="lvl2"><a href="#app-preview">App preview</a></li><li class="lvl3"><a href="#preview-wont-start">Preview won't start</a></li><li class="lvl3"><a href="#fix-with-coco-not-wired">"Fix with CoCo" is not wired</a></li><li class="lvl3"><a href="#preview-log-parse-miss">Preview log parse miss</a></li><li class="lvl2"><a href="#structured-output">Structured output</a></li><li class="lvl3"><a href="#structured-output-not-rendering">Structured output not rendering</a></li><li class="lvl3"><a href="#schema-dollar-schema-rejected">$schema / $id rejected</a></li><li class="lvl2"><a href="#release-and-ci">Release and CI</a></li><li class="lvl3"><a href="#pip-audit-editable-false-positive">pip-audit false positive on the editable package</a></li><li class="lvl2"><a href="#debug-mode">Debug mode</a></li><li class="lvl3"><a href="#debug-mode-not-showing-payloads">Debug mode not showing payloads</a></li><li class="lvl2"><a href="#app-builder">App Builder</a></li><li class="lvl3"><a href="#app-builder-brief-overwrite-race">App Builder brief overwrite race</a></li></ul></details></nav>
+<p>By area and symptom. Every heading below carries a stable <code class="inline">{#anchor}</code> that other pages link to as <code class="inline">help.html#&lt;anchor&gt;</code>.</p>
+<section><h2 id="environment-and-connection">Environment and connection<a class="anchor" href="#environment-and-connection" aria-label="Link to this section">#</a></h2>
+<h3 id="sdk-not-installed">SDK not installed<a class="anchor" href="#sdk-not-installed" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> <code class="inline">cortex-code-agent-sdk is required. Install with: pip install streamlit-coco[sdk]</code> <strong>Likely cause:</strong> <code class="inline">streamlit-coco</code> was installed without the <code class="inline">[sdk]</code> extra, so <code class="inline">cortex_code_agent_sdk</code> is not importable. <strong>Diagnose:</strong> <code class="inline">python -c "import cortex_code_agent_sdk"</code> <strong>Fix:</strong> <code class="inline">pip install "streamlit-coco[sdk]"</code> (or <code class="inline">make install</code>, which runs <code class="inline">uv sync --extra dev</code>). <strong>If that fails:</strong> confirm the active Python environment is the one Streamlit is actually run from (<code class="inline">which python</code>, <code class="inline">which streamlit</code>); a second virtualenv with the SDK installed does not help if the app runs in a different one.</p>
+<h3 id="cli-not-found">CoCo CLI not found<a class="anchor" href="#cli-not-found" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> <code class="inline">CoCo CLI not found on PATH. Install the cortex CLI and ensure </code>cortex --version<code class="inline"> works, or set CORTEX_CODE_CLI_PATH.</code> (or, when <code class="inline">cli_path</code> was passed explicitly, <code class="inline">CoCo CLI not found at '&lt;path&gt;'</code>) <strong>Likely cause:</strong> the <code class="inline">cortex</code> binary is not installed, or is installed somewhere not on <code class="inline">PATH</code>. <strong>Diagnose:</strong> <code class="inline">cortex --version</code>; <code class="inline">echo $CORTEX_CODE_CLI_PATH</code>. <strong>Fix:</strong> install the CoCo CLI, or set <code class="inline">export CORTEX_CODE_CLI_PATH=/path/to/cortex</code>, or pass <code class="inline">cli_path=</code> on <code class="inline">CocoOptions</code> (see <a href="sections/configuration.html">configuration</a>). <strong>If that fails:</strong> check the CLI installation location matches what the shell that launches Streamlit actually sees — a CLI installed under a different user profile or shell will not be on <code class="inline">PATH</code> for the Streamlit process.</p>
+<h3 id="cli-probe-failed">CLI probe failed<a class="anchor" href="#cli-probe-failed" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> <code class="inline">CoCo CLI at '&lt;path&gt;' did not respond to --version</code> <strong>Likely cause:</strong> a binary exists at the resolved path but is not a working <code class="inline">cortex</code> CLI (wrong file, broken install, or permissions). <strong>Diagnose:</strong> run <code class="inline">cortex --version</code> manually and check both the exit code and the output; <code class="inline">ls -l "$(which cortex)"</code> to check permissions. <strong>Fix:</strong> reinstall the CLI; fix executable permissions (<code class="inline">chmod +x</code>) if needed. <strong>If that fails:</strong> ask the CLI's maintainer/owner for a known-good binary and compare checksums.</p>
+<h3 id="snowflake-config-not-found">Snowflake config not found<a class="anchor" href="#snowflake-config-not-found" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> <code class="inline">No Snowflake config found. Create ~/.snowflake/connections.toml (or legacy config.toml) with an authenticated connection.</code> <strong>Likely cause:</strong> no <code class="inline">*.toml</code> file exists under <code class="inline">~/.snowflake/</code>. <strong>Diagnose:</strong> <code class="inline">ls ~/.snowflake/*.toml</code>, or <code class="inline">st_coco.list_snowflake_toml_files()</code>. <strong>Fix:</strong> create <code class="inline">~/.snowflake/connections.toml</code> with at least one <code class="inline">[connections.&lt;name&gt;]</code> entry — see <a href="sections/configuration.html">configuration</a> for the shape. <strong>If that fails:</strong> confirm <code class="inline">HOME</code> resolves to the expected directory in the environment running Streamlit (containers and service accounts sometimes have a different <code class="inline">HOME</code>).</p>
+<h3 id="coco-connection-error">CoCo connection error<a class="anchor" href="#coco-connection-error" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> a <code class="inline">CocoConnectionError</code> message — the underlying text names the connection or an auth failure (e.g. "connection not found," "unknown connection," or another auth/connection failure). <strong>Likely cause:</strong> the connection name passed to <code class="inline">CocoOptions(connection=...)</code> does not match any profile in the resolved TOML file, or the profile's credentials are stale/invalid. <strong>Diagnose:</strong> <code class="inline">st_coco.list_snowflake_connections(toml_file=...)</code> to list known profile names; test the same connection with the Snowflake CLI directly. <strong>Fix:</strong> correct the connection name, or fix the profile's <code class="inline">account</code>/<code class="inline">user</code>/<code class="inline">authenticator</code> fields in <code class="inline">connections.toml</code>. <strong>If that fails:</strong> confirm the account identifier and authenticator match what your Snowflake admin issued; re-run the external-browser or key-pair auth flow outside streamlit-coco first to isolate whether the problem is the connection file or the credential itself.</p></section>
+<section><h2 id="session-lifecycle">Session lifecycle<a class="anchor" href="#session-lifecycle" aria-label="Link to this section">#</a></h2>
+<h3 id="session-stuck-connecting">Session stuck on "Starting CoCo…"<a class="anchor" href="#session-stuck-connecting" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> the panel/rail status stays on "Starting CoCo…" and never reaches ready. <strong>Likely cause:</strong> a CLI or network issue during connect (the CLI subprocess never returns a ready signal). <strong>Diagnose:</strong> check the terminal running Streamlit for CLI errors; enable debug output with <code class="inline">STREAMLIT_COCO_DEBUG=1</code> (see <a href="#debug-mode-not-showing-payloads">debug-mode-not-showing-payloads</a>). <strong>Fix:</strong> fix the underlying environment problem (CLI/connection — see the Environment and connection entries above), then reset the session. <strong>If that fails:</strong> capture the terminal output and file it against the CLI/SDK, since the failure is happening below the library's own error mapping.</p>
+<h3 id="session-not-ready">Session not ready<a class="anchor" href="#session-not-ready" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> a <code class="inline">SessionNotReadyError</code>, or the session status shows <code class="inline">error</code>. <strong>Likely cause:</strong> connect timeout or boot failure — <code class="inline">ensure_ready(timeout=120)</code> gave up, or the worker reported a boot failure. <strong>Diagnose:</strong> check <code class="inline">session.last_error</code> and <code class="inline">session.init_info</code>; check <code class="inline">render_session_status()</code> output in the UI. <strong>Fix:</strong> fix the environment issue <code class="inline">last_error</code> points at, then call <code class="inline">reset_session(...)</code> (or use the sidebar/start-gate reset action) to restart the session. <strong>If that fails:</strong> re-run <code class="inline">check_environment()</code> standalone to confirm SDK/CLI/Snowflake status outside of a live session before retrying.</p>
+<h3 id="input-disabled-after-boot">Input disabled after boot<a class="anchor" href="#input-disabled-after-boot" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> the chat input stays disabled even after the start gate says the session started. <strong>Likely cause:</strong> the session ended up in <code class="inline">SessionNotReadyError</code> / <code class="inline">ERROR</code> status right after boot (same underlying cause as <a href="#session-not-ready">session-not-ready</a>). <strong>Diagnose:</strong> check the session status badge / <code class="inline">render_session_status()</code>. <strong>Fix:</strong> fix the environment, then reset the session from the sidebar (<code class="inline">stop_session()</code> followed by restarting the start gate). <strong>If that fails:</strong> see <a href="#session-not-ready">session-not-ready</a>'s escalation step.</p></section>
+<section><h2 id="approvals">Approvals<a class="anchor" href="#approvals" aria-label="Link to this section">#</a></h2>
+<h3 id="approval-timeout">Approval timed out<a class="anchor" href="#approval-timeout" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> <code class="inline">Approval timed out for tool &lt;tool_name&gt;</code> (<code class="inline">ApprovalTimeoutError</code>). <strong>Likely cause:</strong> no one resolved the pending approval within <code class="inline">CocoOptions.approval_timeout_seconds</code> (default <code class="inline">600.0</code>, 10 minutes). <strong>Diagnose:</strong> confirm <code class="inline">show_approvals=True</code> was passed to <code class="inline">panel()</code>/<code class="inline">copilot_rail()</code> so the approval UI was actually rendered; check whether the approval buttons were reachable (not covered by another dialog). <strong>Fix:</strong> respond within the window next time, or raise <code class="inline">approval_timeout_seconds</code> for sessions that expect longer human review, then resend the prompt. <strong>If that fails:</strong> call <code class="inline">approve_pending()</code> / <code class="inline">deny_pending()</code> directly against the session for a custom approval UI that does not rely on <code class="inline">render_approvals()</code>'s default timing.</p>
+<h3 id="always-allow-scope">"Always allow" does not persist<a class="anchor" href="#always-allow-scope" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> a tool that was "Always allowed" earlier prompts for approval again after a session reset or app restart. <strong>Likely cause:</strong> this is expected. <code class="inline">PermissionManager.always_allowed_tools</code> is an in-memory set on the live <code class="inline">CocoSession</code>; it is never written to disk and is cleared by <code class="inline">session.reset()</code>, <code class="inline">session.close()</code>, and process restart. <strong>Diagnose:</strong> check whether a reset/restart happened between the two approvals (sidebar reset, <code class="inline">stop_session()</code>, or a page reload that created a new session). <strong>Fix:</strong> click <strong>Always allow</strong> again in the new session; there is no way to make "Always allow" survive a reset, by design (see <a href="sections/security.html">security</a>). <strong>If that fails:</strong> if durable per-tool policy across sessions is required, that is not implemented today — track it against SEC-01 in <a href="sections/limits.html">limits</a> rather than looking for a hidden setting.</p></section>
+<section><h2 id="file-uploads">File uploads<a class="anchor" href="#file-uploads" aria-label="Link to this section">#</a></h2>
+<h3 id="upload-rejected-extension">Upload rejected: extension<a class="anchor" href="#upload-rejected-extension" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> <code class="inline">Disallowed file extension for '&lt;name&gt;' (allowed: &lt;list&gt;)</code> (<code class="inline">CwdUploadError</code>). <strong>Likely cause:</strong> the uploaded file's suffix is not in <code class="inline">DEFAULT_ALLOWED_EXTENSIONS</code> (or a caller-supplied <code class="inline">allowed_extensions</code>). <strong>Diagnose:</strong> compare the file's extension against the allowlist constant in <code class="inline">streamlit_coco/upload.py</code>. <strong>Fix:</strong> convert/rename the file to an allowed type, or call <code class="inline">upload_to_cwd(..., allowed_extensions={...})</code> with a wider allowlist for that app. <strong>If that fails:</strong> confirm the file actually needs to reach the agent's <code class="inline">cwd</code> at all — some workflows only need the agent to be told the content, not the raw file.</p>
+<h3 id="upload-rejected-size">Upload rejected: size<a class="anchor" href="#upload-rejected-size" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> <code class="inline">File '&lt;name&gt;' is &lt;n&gt; bytes; max allowed is &lt;max_bytes&gt;</code> (<code class="inline">CwdUploadError</code>). <strong>Likely cause:</strong> the file exceeds <code class="inline">DEFAULT_MAX_BYTES</code> (10 MiB) or a caller-supplied <code class="inline">max_bytes</code>. <strong>Diagnose:</strong> check the file's actual size against the configured limit. <strong>Fix:</strong> split or compress the file, or call <code class="inline">upload_to_cwd(..., max_bytes=...)</code> with a higher limit for that app. <strong>If that fails:</strong> consider whether the file belongs in a Snowflake stage instead of the local <code class="inline">cwd</code> quarantine — large datasets are explicitly out of scope for this upload path (see <code class="inline">doc/features/file-upload/file-upload.md</code>).</p>
+<h3 id="upload-name-conflict">Upload name conflict<a class="anchor" href="#upload-name-conflict" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> <code class="inline">File already exists: &lt;relative path&gt; (pass overwrite='replace' or 'skip')</code> (<code class="inline">CwdUploadError</code>). <strong>Likely cause:</strong> <code class="inline">overwrite="error"</code> (the <code class="inline">upload_to_cwd</code> default) and a file with the same sanitized name already exists under the upload subdirectory. <strong>Diagnose:</strong> list the upload directory (<code class="inline">list_cwd_uploads(target)</code>) to see the existing file. <strong>Fix:</strong> pass <code class="inline">overwrite="replace"</code> or <code class="inline">overwrite="skip"</code> to <code class="inline">upload_to_cwd()</code> / <code class="inline">cwd_uploader()</code>, or rename the file before uploading. Note <code class="inline">chat_input_bar(accept_file=...)</code> already defaults <code class="inline">upload_overwrite="replace"</code>, so this mainly surfaces through direct <code class="inline">upload_to_cwd()</code> calls or a <code class="inline">cwd_uploader()</code> configured with <code class="inline">overwrite="error"</code>. <strong>If that fails:</strong> if collisions are expected and should always win, switch the caller's default overwrite mode rather than handling each conflict manually.</p></section>
+<section><h2 id="app-preview">App preview<a class="anchor" href="#app-preview" aria-label="Link to this section">#</a></h2>
+<h3 id="preview-wont-start">Preview won't start<a class="anchor" href="#preview-wont-start" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> clicking <strong>Run</strong> in <code class="inline">app_viewer()</code> produces no iframe and no reachable URL. <strong>Likely cause:</strong> the free-port range (<code class="inline">8511</code>–<code class="inline">8520</code>) is exhausted, <code class="inline">app_dir</code> has no <code class="inline">streamlit_app.py</code> (or a different <code class="inline">script_name</code>), or a stale preview process for the same <code class="inline">app_dir</code> is already holding the port. <strong>Diagnose:</strong> check <code class="inline">preview_running(app_dir)</code> / <code class="inline">preview_url(app_dir)</code>; check <code class="inline">.preview.log</code>, <code class="inline">.preview.pid</code>, <code class="inline">.preview.port</code> inside <code class="inline">app_dir</code>; check <code class="inline">last_preview_exception(app_dir)</code>. <strong>Fix:</strong> call <code class="inline">stop_app_preview(app_dir)</code> to clear a stale process, confirm <code class="inline">app_dir</code> actually contains <code class="inline">streamlit_app.py</code>, then <strong>Run</strong> again. <strong>If that fails:</strong> free up the <code class="inline">8511</code>–<code class="inline">8520</code> port range on the host (another preview or unrelated process may be holding it), and confirm only one <code class="inline">app_viewer()</code> targets this <code class="inline">app_dir</code> (see <a href="sections/limits.html">limits</a>).</p>
+<h3 id="fix-with-coco-not-wired">"Fix with CoCo" is not wired<a class="anchor" href="#fix-with-coco-not-wired" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> clicking <strong>Fix with CoCo</strong> does nothing, or shows a toast asking to "wire <code class="inline">on_fix=</code>". <strong>Likely cause:</strong> the host app called <code class="inline">app_viewer()</code> without an <code class="inline">on_fix=</code> callback. <code class="inline">app_viewer()</code> does not queue a job on its own — it only builds the prompt via <code class="inline">default_fix_prompt()</code>. <strong>Diagnose:</strong> check the <code class="inline">app_viewer(...)</code> call for <code class="inline">on_fix=</code>. <strong>Fix:</strong> pass <code class="inline">on_fix=&lt;callback&gt;</code> that queues <code class="inline">default_fix_prompt(traceback, app_dir)</code> as a job on the host's own Copilot session and opens the Copilot rail — see <code class="inline">doc/features/app-viewer/app-viewer.md</code> for the reference pattern. <strong>If that fails:</strong> confirm the host actually composes <code class="inline">copilot_rail()</code> alongside <code class="inline">app_viewer()</code> — <code class="inline">app_viewer()</code> deliberately does not import or know about <code class="inline">copilot_rail()</code> (see <a href="sections/architecture.html">architecture</a>).</p>
+<h3 id="preview-log-parse-miss">Preview log parse miss<a class="anchor" href="#preview-log-parse-miss" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> the child app is visibly broken, but the <strong>Preview exception</strong> expander does not show a traceback. <strong>Likely cause:</strong> log-format drift. The parser looks for the literal markers <code class="inline">Uncaught app exception</code> and <code class="inline">Traceback (most recent call last):</code> in <code class="inline">.preview.log</code>, and treats any later timestamped line as "error cleared" — a log that does not match those markers, or that logs a later unrelated line, reads as cleared even though the app is still broken. <strong>Diagnose:</strong> read <code class="inline">.preview.log</code> directly (or <code class="inline">preview_log_tail(app_dir)</code>) rather than relying on the expander. <strong>Fix:</strong> click <strong>Fix with CoCo</strong> anyway — it still sends the log tail as part of the prompt even when the parser did not detect a live exception. <strong>If that fails:</strong> copy the relevant log lines into a manual prompt to CoCo, since the automatic markers do not cover this log shape.</p></section>
+<section><h2 id="structured-output">Structured output<a class="anchor" href="#structured-output" aria-label="Link to this section">#</a></h2>
+<h3 id="structured-output-not-rendering">Structured output not rendering<a class="anchor" href="#structured-output-not-rendering" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> the agent's reply is JSON-shaped, but no structured panel or callback-driven widget appears. <strong>Likely cause:</strong> one of two things — either <code class="inline">on_structured_output</code> / <code class="inline">structured_output_container</code> was set, which intentionally skips the default inline structured panel (mutual exclusivity), or <code class="inline">CocoOptions.output_schema</code> was never set, so the agent was not actually constrained to produce a schema-conformant <code class="inline">structured_output</code> payload even if the reply text looks like JSON. <strong>Diagnose:</strong> check <code class="inline">session.chat_result().structured_output</code> after the turn; check whether <code class="inline">on_structured_output=</code> or <code class="inline">structured_output_container=</code> was passed to <code class="inline">panel()</code> / <code class="inline">copilot_rail()</code>. <strong>Fix:</strong> set <code class="inline">CocoOptions.output_schema={...}</code> so the SDK enforces <code class="inline">output_format</code>, and either rely on the default inline panel (no callback/container set) or read <code class="inline">structured_output</code> from the callback. <strong>If that fails:</strong> confirm the reply is coming from a turn that actually ran with the schema-carrying <code class="inline">CocoOptions</code> — a session created before the schema was added keeps its original worker until <code class="inline">options_hash()</code> changes (see <a href="sections/architecture.html">architecture</a>).</p>
+<h3 id="schema-dollar-schema-rejected"><code class="inline">$schema</code> / <code class="inline">$id</code> rejected<a class="anchor" href="#schema-dollar-schema-rejected" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> <code class="inline">no schema with key or ref "https://json-schema.org/draft/2020-12/schema"</code>. <strong>Likely cause:</strong> a JSON Schema contract file (such as the ones under <code class="inline">examples/bi_to_semantic/contracts/</code>) includes a <code class="inline">$schema</code> (or <code class="inline">$id</code>) key, and this was passed straight through to the SDK without stripping it — the SDK's schema resolver tries to fetch that URI and fails. <strong>Diagnose:</strong> check the version of <code class="inline">streamlit-coco</code> in use; check whether <code class="inline">output_schema</code> is built by hand-merging a contract file after construction (which could re-add <code class="inline">$schema</code>). <strong>Fix:</strong> upgrade to <code class="inline">&gt;=0.1.6</code> — <code class="inline">CocoOptions.to_sdk_options()</code> now strips <code class="inline">$schema</code>/<code class="inline">$id</code> automatically (<code class="inline">_schema_for_sdk()</code> in <code class="inline">streamlit_coco/options.py</code>) before forwarding the schema to the SDK. <strong>If that fails:</strong> if still on <code class="inline">&gt;=0.1.6</code> and the error persists, confirm nothing downstream re-inserts <code class="inline">$schema</code> into the dict passed as <code class="inline">output_schema</code> after <code class="inline">CocoOptions</code> construction.</p></section>
+<section><h2 id="release-and-ci">Release and CI<a class="anchor" href="#release-and-ci" aria-label="Link to this section">#</a></h2>
+<h3 id="pip-audit-editable-false-positive"><code class="inline">pip-audit</code> false positive on the editable package<a class="anchor" href="#pip-audit-editable-false-positive" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> <code class="inline">pip-audit</code> reports <code class="inline">streamlit-coco … Dependency not found on PyPI and could not be audited (&lt;version&gt;)</code>. <strong>Likely cause:</strong> running plain <code class="inline">pip-audit</code> against a pre-tag or editable install of <code class="inline">streamlit-coco</code> itself, which is not yet published at that version. <strong>Diagnose:</strong> check which command was run — <code class="inline">pip-audit</code> alone will surface this; <code class="inline">make audit</code> / <code class="inline">pip-audit --skip-editable</code> will not. <strong>Fix:</strong> use <code class="inline">make audit</code> (or <code class="inline">pip-audit --skip-editable</code> directly) — this was fixed in <code class="inline">0.1.7</code> for both the Makefile target and CI so a pre-tag version bump is not reported as a false-positive audit failure. <strong>If that fails:</strong> if the same message appears with <code class="inline">--skip-editable</code> already set, treat it as a real audit gap and file it rather than assuming it is this known false positive.</p></section>
+<section><h2 id="debug-mode">Debug mode<a class="anchor" href="#debug-mode" aria-label="Link to this section">#</a></h2>
+<h3 id="debug-mode-not-showing-payloads">Debug mode not showing payloads<a class="anchor" href="#debug-mode-not-showing-payloads" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> <code class="inline">STREAMLIT_COCO_DEBUG</code> (or <code class="inline">COCO_DEBUG</code>) was set, but no "Raw tool payload" section appears in the transcript. <strong>Likely cause:</strong> the value is not one of the recognized truthy strings (<code class="inline">"1"</code>, <code class="inline">"true"</code>, <code class="inline">"yes"</code>, <code class="inline">"on"</code>, case-insensitive), or the variable was exported in a different shell/process than the one running Streamlit. <strong>Diagnose:</strong> <code class="inline">echo $STREAMLIT_COCO_DEBUG</code> in the exact shell that launches <code class="inline">streamlit run</code>; confirm <code class="inline">is_debug_mode()</code>'s truthy set matches the value used. <strong>Fix:</strong> <code class="inline">export STREAMLIT_COCO_DEBUG=1</code> (or <code class="inline">COCO_DEBUG=1</code>) before starting Streamlit in that same shell, or set <code class="inline">st.session_state["coco_debug"] = True</code> inside the app for a UI-driven toggle. <strong>If that fails:</strong> confirm the Streamlit process was actually restarted after setting the variable — env vars are read at call time by <code class="inline">is_debug_mode()</code>, but a process started before the export was set in its own shell will not see it.</p></section>
+<section><h2 id="app-builder">App Builder<a class="anchor" href="#app-builder" aria-label="Link to this section">#</a></h2>
+<h3 id="app-builder-brief-overwrite-race">App Builder brief overwrite race<a class="anchor" href="#app-builder-brief-overwrite-race" aria-label="Link to this section">#</a></h3>
+<p><strong>You see:</strong> edits made in the Studio <strong>App brief</strong> expander appear to be lost, or a <strong>Save &amp; regenerate</strong> run uses a stale brief. <strong>Likely cause:</strong> before <code class="inline">0.1.8</code>, <strong>Save &amp; regenerate</strong> could queue CoCo before <code class="inline">BRIEF.md</code> was written from the expander's current field values, and the Brief page could overwrite <code class="inline">BRIEF.md</code> again on the same turn — a race between the two writes. <strong>Diagnose:</strong> check the installed version (<code class="inline">streamlit_coco.__version__</code>). <strong>Fix:</strong> upgrade to <code class="inline">&gt;=0.1.8</code> — <strong>Save &amp; regenerate</strong> now writes <code class="inline">BRIEF.md</code> from the expander widgets before queuing CoCo, and the Brief page no longer overwrites that file on the same turn. <strong>If that fails:</strong> if still seeing this on <code class="inline">&gt;=0.1.8</code>, capture the exact sequence of clicks (which page, which button, in what order) and file it — the ordering fix targeted the specific Save &amp; regenerate path, not every possible concurrent-edit sequence.</p></section>
+  </main>
+</div>
+<footer class="pagefoot">
+  <div class="prevnext noprint"><a href="sections/limits.html"><span class="pn-label">← Previous</span><span class="pn-title">Limits</span></a><span></span></div>
+  <div class="slide-footer">
+    <div class="footer-brand">Creative tech for Better Change</div>
+    <div class="footer-page">Streamlit CoCo · Generated from technical-guide/help.md</div>
+  </div>
+</footer>
+<script>
+(function () {
+  var PAGE = document.body.getAttribute('data-page') || 'page';
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  document.querySelectorAll('.copybtn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.closest('.codewrap').querySelector('code').textContent;
+      var done = function () {
+        btn.textContent = 'Copied'; btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(done, function () {});
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = code; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+  var boxes = document.querySelectorAll('input.chk');
+  boxes.forEach(function (box, idx) {
+    var key = 'dsp-training:' + PAGE + ':chk:' + idx;
+    var saved = load(key);
+    if (saved === '1') box.checked = true;
+    else if (saved === '0') box.checked = false;
+    sync(box);
+    box.addEventListener('change', function () {
+      store(key, box.checked ? '1' : '0');
+      sync(box); counters();
+    });
+  });
+  function sync(box) {
+    var li = box.closest('li');
+    if (li) li.classList.toggle('done', box.checked);
+  }
+  function counters() {
+    document.querySelectorAll('[data-count-scope]').forEach(function (el) {
+      var scope = document.querySelector(el.getAttribute('data-count-scope'));
+      if (!scope) return;
+      var all = scope.querySelectorAll('input.chk');
+      var on = scope.querySelectorAll('input.chk:checked');
+      el.innerHTML = '<span class="n">' + on.length + '</span> of ' + all.length + ' ready';
+    });
+    document.querySelectorAll('[data-progress]').forEach(function (el) {
+      var sel = el.getAttribute('data-progress');
+      var all = document.querySelectorAll(sel);
+      var on = document.querySelectorAll(sel + ':checked');
+      var pct = all.length ? Math.round(on.length / all.length * 100) : 0;
+      var bar = el.querySelector('.bar-fill');
+      var lab = el.querySelector('.bar-label');
+      if (bar) bar.style.width = pct + '%';
+      if (lab) lab.textContent = on.length + ' of ' + all.length + ' exercises complete';
+    });
+  }
+  counters();
+  var links = document.querySelectorAll('.toc-side a');
+  if (links.length && 'IntersectionObserver' in window) {
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var a = map[en.target.id];
+        if (a && en.isIntersecting) {
+          links.forEach(function (x) { x.style.color = ''; x.style.fontWeight = ''; });
+          a.style.color = 'var(--red)'; a.style.fontWeight = '700';
+        }
+      });
+    }, { rootMargin: '-70px 0px -75% 0px' });
+    document.querySelectorAll('.content h2[id], .content h3[id]').forEach(function (h) { obs.observe(h); });
+  }
+})();
+</script>
+</body>
+</html>
