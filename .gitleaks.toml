@@ -1,0 +1,14 @@
+# Gitleaks: the default rules, and one allowlist for the tests that use fake credentials on purpose
+# (tests/test_audit.py checks that the audit log redacts them, tests/test_skills_hub.py that a skill
+# folder holding one is refused). No real secret is in either file.
+title = "streamlit-coco"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fake credentials used as test data"
+paths = [
+  '''tests/test_audit\.py''',
+  '''tests/test_skills_hub\.py''',
+]

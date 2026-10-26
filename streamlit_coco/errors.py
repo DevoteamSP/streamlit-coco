@@ -10,12 +10,13 @@ class CocoError(Exception):
 
 
 class SDKNotInstalledError(CocoError, ImportError):
-    """``cortex-code-agent-sdk`` is not installed."""
+    """``snowflake-cortex-agent-sdk`` is not installed."""
 
     def __init__(self, message: str | None = None) -> None:
         super().__init__(
             message
-            or "cortex-code-agent-sdk is required. Install with: pip install streamlit-coco[sdk]"
+            or "snowflake-cortex-agent-sdk is required. "
+            "Install with: pip install streamlit-coco[sdk]"
         )
 
 
@@ -91,7 +92,7 @@ def wrap_exception(
     lowered = message.lower()
 
     if isinstance(exc, ImportError):
-        if "cortex" in lowered or "cortex_code_agent_sdk" in lowered:
+        if "cortex" in lowered or "cortex_agent_sdk" in lowered:
             return SDKNotInstalledError(message)
         return SDKNotInstalledError(message)
 

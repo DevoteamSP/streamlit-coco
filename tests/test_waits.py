@@ -491,6 +491,14 @@ class StandingTest(WaitCase):
             kinds.index("system"), kinds.index("steps")
         )  # the line comes before the step that runs
 
+    def test_the_line_that_says_what_was_granted_ends_with_one_full_stop(self) -> None:
+        self.send()
+        self.tell(
+            {"t": "granted", "id": "p1", "text": "Any command, in a sandbox.", "family": "commands"}
+        )
+        line = next(i for i in self.view()["thread"] if i["kind"] == "system")
+        self.assertEqual(line["text"], "CoCo no longer asks before it any command, in a sandbox.")
+
     def test_the_tick_counts_only_when_the_request_offered_it(self) -> None:
         self.send()
         self.tell(self.bash_call("t1"), self.standing_request(offer=False))

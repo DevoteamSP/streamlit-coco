@@ -1,0 +1,26 @@
+# Snowflake Native App manifest: Skills shop (a Streamlit shop of skills + a chat with one skill).
+manifest_version: 2
+
+version:
+  name: skills_shop
+  label: "Skills shop"
+  comment: "Browse the skills of this application and chat with one of them (managed coding agent)."
+
+artifacts:
+  setup_script: scripts/setup_script.sql
+  readme: readme.md
+  container_services:
+    images:
+      - /my_db/my_schema/my_repo/coco-skills-shop:dev
+  default_web_endpoint:
+    service: services.shop_service
+    endpoint: streamlit
+
+privileges:
+  - CREATE COMPUTE POOL:
+      description: "Create the compute pool of the Streamlit service."
+  - BIND SERVICE ENDPOINT:
+      description: "Expose the web endpoint of the shop."
+
+lifecycle_callbacks:
+  version_initializer: app_schema.version_init

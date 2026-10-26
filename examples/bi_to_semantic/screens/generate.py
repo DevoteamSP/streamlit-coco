@@ -8,8 +8,6 @@ import streamlit as st
 from engine import state
 from engine.bi_sources import list_bi_files
 from engine.coco_jobs import (
-    is_connected,
-    open_copilot_for_job,
     queue_generate,
     queue_streamlit_app,
     set_preview_open,
@@ -37,7 +35,6 @@ from engine.streamlit_app_gen import (
 )
 
 BRIEF_REFRESH_KEY = "tts_refresh_coco_brief"
-CONNECT_HINT_KEY = "tts_coco_connect_hint"
 MD_PILL_KEY = "tts_coco_md_file"
 PREVIEW_VARIANT_KEY = "tts_preview_variant"
 STEP_KEY = "tts_generate_step"
@@ -52,7 +49,7 @@ def _store_key(base: str) -> str:
 def _seed_widget(base: str, default):
     """Restore a stable widget key from persist (source of truth).
 
-    Opening Copilot remounts Generate inside columns. persist_state keeps the
+    Opening Preview remounts Generate inside columns. persist_state keeps the
     widget, and persist wins if a remount still drops the value.
     """
     store = _store_key(base)
@@ -158,14 +155,12 @@ def _render_objects(artifacts: dict[str, str]) -> None:
     with tab_rap:
         st.code(artifacts["row_access_policy.sql"], language="sql")
 
-    disabled = not is_connected()
     with st.container(horizontal=True):
         if st.button(
-            "Write with Copilot",
+            "Write with Ask CoCo",
             type="primary",
             icon=":material/approval:",
             key="tts_queue_generate",
-            disabled=disabled,
         ):
             drafts = OUT_DIR / "_drafts"
             drafts.mkdir(parents=True, exist_ok=True)
@@ -179,9 +174,6 @@ def _render_objects(artifacts: dict[str, str]) -> None:
             key="tts_to_streamlit",
         ):
             _go_streamlit()
-    if disabled:
-        st.caption("Open Copilot → Connection → Connect, then write.")
-
     written = sorted(OUT_DIR.glob("*.sql")) + sorted(OUT_DIR.glob("*.yaml"))
     if written:
         st.caption("On disk · " + ", ".join(f"`{p.name}`" for p in written))
@@ -293,10 +285,6 @@ def _render_coco_builder(
         disabled=coco_disabled,
         width="stretch",
     ):
-        open_copilot_for_job()
-        if not is_connected():
-            st.session_state[CONNECT_HINT_KEY] = True
-            st.rerun()
         prepare_coco_app(OUT_DIR, spec=spec, yaml_body=yaml_body)
         if selected == "BRIEF.md":
             save_coco_markdown(OUT_DIR, "BRIEF.md", editor)
@@ -304,18 +292,10 @@ def _render_coco_builder(
         else:
             queued = load_brief(OUT_DIR) or prompt
         queue_streamlit_app(queued)
-        st.session_state.pop(CONNECT_HINT_KEY, None)
         st.session_state[PREVIEW_VARIANT_KEY] = "coco"
-        st.toast(f"Queued · `{APP_DIRNAME_COCO}/`")
+        st.toast(f"Sent to Ask CoCo · `{APP_DIRNAME_COCO}/`")
         st.rerun()
-    if st.session_state.get(CONNECT_HINT_KEY) and not is_connected():
-        st.warning(
-            "Connect Copilot in the right rail, then click **Generate with CoCo** again.",
-            icon=":material/link:",
-        )
-    elif not is_connected():
-        st.caption("Generate opens Copilot — connect there to run the job.")
-    elif not brief_saved:
+    if not brief_saved:
         st.caption("Save BRIEF.md to enable Generate with CoCo.")
     else:
         st.caption(f"Saved · `{APP_DIRNAME_COCO}/{selected}`")

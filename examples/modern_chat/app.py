@@ -110,6 +110,15 @@ def _on_clear() -> None:
     st.toast("Chat cleared")
 
 
+SPLIT_KEY = "modern_split"
+PLACE_KEY = "modern_place"
+
+
+def _on_layout(place: str) -> None:
+    """The window changed place: the page reruns once and shows it."""
+    st.session_state[PLACE_KEY] = place
+
+
 def _mount_window(*, on_rail=None):
     return st_coco.ask_coco(
         REPO,
@@ -122,6 +131,8 @@ def _mount_window(*, on_rail=None):
         },
         theme=WINDOW_THEME,
         on_rail=on_rail,
+        on_layout=_on_layout,
+        split=st.session_state.get(SPLIT_KEY) == "Split",
     )
 
 
@@ -154,22 +165,25 @@ def _header() -> str:
     surface = (
         st.segmented_control(
             "Surface",
-            options=["Rail", "Window", "Both"],
-            default="Rail",
+            options=["Ask CoCo", "Rail", "Both"],
+            default="Ask CoCo",
             key="modern_surface",
             label_visibility="collapsed",
             width="content",
         )
-        or "Rail"
+        or "Ask CoCo"
     )
     captions = {
+        "Ask CoCo": (
+            "Ask CoCo floats over the page. Attach it to an edge or fill the page "
+            "from its title bar."
+        ),
         "Rail": "Copilot stays in a column on the page.",
-        "Window": "Ask CoCo floats over the page.",
         "Both": (
             "The column and Ask CoCo together. Minimize hides the column. Restore brings it back."
         ),
     }
-    st.caption(captions.get(surface, captions["Rail"]))
+    st.caption(captions[surface])
     return surface
 
 
@@ -184,11 +198,13 @@ def _studio(surface: str, coco, *, minimized: bool = False) -> None:
         elif surface == "Rail" and session is not None:
             color = "green" if ready else "orange"
             st.badge(session.status.value, color=color)
-        elif surface == "Window":
+        elif surface == "Ask CoCo":
             st.badge("Floating", icon=":material/open_in_new:", color="violet")
     st.caption(f"Working folder · `{REPO.name}`")
 
-    read, ask, split = st.columns(3)
+    # Docked, the page has half the screen: the cards stack (the page reacts to `on_layout`).
+    docked = st.session_state.get(PLACE_KEY) in ("left", "right")
+    read, ask, split = [st.container() for _ in range(3)] if docked else st.columns(3)
     with read:
         with st.container(border=True):
             st.markdown(":material/folder_open: **Read**")
@@ -203,7 +219,7 @@ def _studio(surface: str, coco, *, minimized: bool = False) -> None:
             st.caption("The rail and the window do not share a transcript.")
 
     st.markdown("**Try one**")
-    if coco is not None and (surface == "Window" or minimized):
+    if coco is not None and (surface == "Ask CoCo" or minimized):
         with st.container(horizontal=True):
             for item in STARTERS:
                 if st.button(item["title"], key=f"modern_win_{item['title']}"):
@@ -227,7 +243,22 @@ with st.sidebar:
     if LOGO.is_file():
         st.logo(str(LOGO), size="large")
     st.markdown("**Surfaces**")
-    st.caption("Rail is the column. Window floats. Both shows them together.")
+    st.caption("Ask CoCo floats. Rail is the column. Both shows them together.")
+    st.markdown("**Split screen**")
+    st.segmented_control(
+        "Split screen",
+        options=["Overlay", "Split"],
+        default="Overlay",
+        key=SPLIT_KEY,
+        label_visibility="collapsed",
+        width="content",
+    )
+    st.caption(
+        "Attach Ask CoCo to the left or right edge from its title bar. "
+        "Overlay: it covers the page. Split: the page takes the rest of the screen "
+        "(`ask_coco(split=True)`)."
+    )
+    st.caption(f"Window place · `{st.session_state.get(PLACE_KEY, 'closed')}` (`on_layout`)")
     if env.ready:
         st.badge("Environment ready", icon=":material/check:", color="green")
     else:
@@ -246,10 +277,10 @@ if surface == "Both":
     minimized = rail_minimized(RAIL_KEY)
 else:
     present_ask(False, RAIL_KEY, lambda: None)
-    if surface == "Window":
+    if surface == "Ask CoCo":
         coco = _mount_window()
 
-if surface == "Window" or minimized:
+if surface == "Ask CoCo" or minimized:
     _studio(surface, coco, minimized=minimized)
 else:
     main, rail = st.columns([1.15, 1])

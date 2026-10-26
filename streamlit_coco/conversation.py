@@ -160,9 +160,12 @@ import itertools
 import logging
 import os
 import queue
+import threading
 import time
+import uuid
 from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 from streamlit_coco import extras, waits
 from streamlit_coco.features import Features
@@ -219,8 +222,11 @@ class Conversation:
         agent: Callable | None = None,
         on_files_changed: Callable | None = None,
         connect: str | None = None,
+        audit: Callable[[dict], Any] | None = None,
     ) -> None:
         self.cwd = Path(cwd)
+        self._audit_lock = threading.Lock()
+        self.audit = audit  # audit.AuditLog or a function of a record: every decision of the gate
         self.policy, self.features = policy, features or Features()
         self.prompts = list(prompts or [])
         self.set_labels(labels)
@@ -234,6 +240,40 @@ class Conversation:
         self.folder: Path | None = None  # the folder the session works in; None while there is none
         self._reset()
         self._fresh_agent(connect or None)
+
+    def _record(self, record: dict) -> None:
+        """A decision of the gate, to the host's audit log with what only the conversation knows."""
+        if self.audit is not None:
+            if record.get("decision") in ("allowed", "standing") and record.get("tool_id"):
+                with self._audit_lock:
+                    self._audit_open[str(record["tool_id"])] = str(record.get("tool") or "")
+            self.audit(
+                {
+                    "conversation": self._audit_id,
+                    "agent": type(self.agent).__name__,
+                    "profile": self.profile,
+                    **record,
+                }
+            )
+
+    def _outcome(self, tool_id, outcome: str, detail: str = "") -> None:
+        """What became of an allowed call: its own line in the audit log, joined by `tool_id`."""
+        with self._audit_lock:
+            tool = self._audit_open.pop(str(tool_id), None)
+        if tool is None or self.audit is None:
+            return
+        self.audit(
+            {
+                "conversation": self._audit_id,
+                "agent": type(self.agent).__name__,
+                "profile": self.profile,
+                "decision": "outcome",
+                "tool": tool or None,
+                "tool_id": str(tool_id),
+                "outcome": outcome,
+                "detail": detail[:300] or None,
+            }
+        )
 
     def set_labels(self, labels: dict | None) -> None:
         """The host's texts, which it may change from one run to the next (another language): every
@@ -297,6 +337,10 @@ class Conversation:
             queue.SimpleQueue()
         )  # an old agent writes to a queue nobody reads
         self.agent = self._factory(self.inbox.put)
+        self._audit_id = uuid.uuid4().hex[:8]
+        self._audit_open: dict[str, str] = {}  # allowed calls whose result is not known yet
+        if getattr(self.agent, "gate", None) is not None:
+            self.agent.gate.audit = self._record
         if self.features.reasoning and hasattr(self.agent, "set_reasoning"):
             self.agent.set_reasoning(True)
         self.setup = self.agent.setup()
@@ -639,6 +683,7 @@ class Conversation:
         if step is None:
             return False
         content = str(event.get("content") or "")
+        self._outcome(event["id"], *self._outcome_of(event, content))
         step["result"] = content[:_RESULT_LIMIT] + (_CUT if len(content) > _RESULT_LIMIT else "")
         for part in _PARTS:
             part.on_step(self, run, step, event)
@@ -656,6 +701,15 @@ class Conversation:
         if event.get("error"):
             return False  # a failed step shows its mark only
         return self._written(step)
+
+    @staticmethod
+    def _outcome_of(event: dict, content: str) -> tuple[str, str]:
+        """(outcome, detail) of an allowed call, from its result."""
+        if content.startswith("Tool denied"):  # the program's own refusal, reported as a success
+            return "not_run", content
+        if event.get("error"):
+            return "failed", content
+        return "succeeded", ""
 
     def _written(self, step: dict) -> bool:
         """A change that succeeded in the working folder: remember the file for
@@ -677,6 +731,10 @@ class Conversation:
         """The run is over: done, failed, lost or stopped. Settles its steps, its requests and the
         queue."""
         run, requests, self.requests = self.run, self.requests, []
+        with self._audit_lock:
+            unfinished = list(self._audit_open)
+        for tool_id in unfinished:  # allowed, and the run ended before a result came
+            self._outcome(tool_id, "no_result", f"The run ended: {kind}.")
         waits.end(self, kind, run)
         if run:
             for request in requests:

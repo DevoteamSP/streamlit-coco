@@ -28,8 +28,8 @@ uv run streamlit run app.py
 ```
 
 `make bi-semantic` uses the repo checkout of `streamlit-coco` (so it tracks this
-tree) and pulls in `streamlit-extras` (`resizable_columns` for the Copilot / Preview split).
-From **`0.1.6`**, `copilot_rail()` / `preview_chars=` ship on PyPI. From **`0.1.7`**, so does `app_viewer()`.
+tree) and pulls in `streamlit-extras` (`resizable_columns` for the page / Preview split).
+The agent is Ask CoCo (`ask_coco()`), the window at the bottom right, with the suggested questions of each screen.
 
 ## Screens (Welcome + slice 1–6)
 
@@ -39,12 +39,12 @@ From **`0.1.6`**, `copilot_rail()` / `preview_chars=` ship on PyPI. From **`0.1.
 | 1 | Load | `cwd_uploader` / fixture copy | nothing |
 | 2 | Estate map | Deterministic Tableau `.twb` XML and/or Power BI `.pbix` → Graphviz | nothing |
 | 3 | KPI inventory | Deterministic calculated fields / DAX measures | nothing |
-| 4 | Access-rule comparator | Power BI table contracts (or RLS) parsed locally; Tableau User Filters via Copilot | CoCo for Tableau |
+| 4 | Access-rule comparator | Power BI table contracts (or RLS) parsed locally; Tableau User Filters via Ask CoCo | CoCo for Tableau |
 | 5 | Arbitration | `request_input(schema=…)` | CoCo env optional |
 | 6 | Generate | Write approval (SV + RAP) · Streamlit **Build with python** or **Build with CoCo** (save brief, then generate) · disconnected preview | CoCo for Write / CoCo generator; nothing for disconnected run |
 
-Screens **2–3** are deterministic parse — no Copilot job.
-Screens **4 / 6** share **one** Copilot session on the right; buttons only **queue a job**.
+Screens **2–3** are deterministic parse — no CoCo job.
+Screens **4 / 6** share **one** Ask CoCo conversation (the window at the bottom right); buttons only **send a job** to it.
 
 Screens **7–8** (question set + headless evaluation) are deferred.
 
@@ -76,8 +76,8 @@ Artifacts: `examples/bi_to_semantic/out/` (gitignored) — step JSON
 generated SQL/YAML, and `out/streamlit_dash/` (deterministic) plus
 `out/streamlit_dash_coco/` (CoCo-authored).
 **Preview** (header) runs the selected tree in disconnected mode: Python at
-`http://127.0.0.1:8511`, CoCo at `http://127.0.0.1:8512`. Copilot and Preview
-can open together; Preview is `st_coco.app_viewer()` and **Fix with CoCo** queues a job.
+`http://127.0.0.1:8511`, CoCo at `http://127.0.0.1:8512`. Ask CoCo and Preview
+can sit side by side; Preview is `st_coco.app_viewer()` and **Fix with CoCo** sends a job to Ask CoCo.
 
 ## Layout
 

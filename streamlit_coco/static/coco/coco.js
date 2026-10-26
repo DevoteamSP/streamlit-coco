@@ -54,7 +54,12 @@
 //   (a menu line, Show all) gets the focus back when another with the same data-a, data-id, data-i, data-opt is found.
 
 const ICONS = {
-  min: '<path d="M5 12h14"/>', rail: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/>',
+  min: '<path d="M5 12h14"/>',
+  left: '<rect x="3" y="4" width="18" height="16" rx="2"/><path fill="currentColor" d="M5 4h4v16H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>',
+  right: '<rect x="3" y="4" width="18" height="16" rx="2"/><path fill="currentColor" d="M19 4h-4v16h4a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>',
+  full: '<path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/>',
+  unfull: '<path d="M3 8h3a2 2 0 0 0 2-2V3M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M21 16h-3a2 2 0 0 0-2 2v3"/>',
+  rail: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/>',
   dots: '<circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>',
   plus: '<path d="M12 5v14M5 12h14"/>', out: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>',
   chev: '<path d="m6 9 6 6 6-6"/>', arr: '<path d="M5 12h14M13 6l6 6-6 6"/>', send: '<path d="M12 19V5M5 12l7-7 7 7"/>',
@@ -299,7 +304,7 @@ function patchList(parent, items, applyOpen) {
 }
 
 // ---------------------------------------------------------------- the component
-const store = () => (globalThis.__cocoUI ||= { open: false, draft: '', folds: {}, scroll: 0, seq: 0, out: [], inflight: null, stale: false, sess: '', token: 0, ack: 0, pend: {}, answered: {}, restored: '', announced: '', menu: false, confirm: '', panel: '', parts: {}, follow: { id: '', away: false } });
+const store = () => (globalThis.__cocoUI ||= { open: false, layout: '', reported: 'closed', draft: '', folds: {}, scroll: 0, seq: 0, out: [], inflight: null, stale: false, sess: '', token: 0, ack: 0, pend: {}, answered: {}, restored: '', announced: '', menu: false, confirm: '', panel: '', parts: {}, follow: { id: '', away: false } });
 const hide = (n, h) => { if (n.hidden !== h) n.hidden = h; };
 const attr = (n, k, v) => { if (n.getAttribute(k) !== v) n.setAttribute(k, v); };
 const guard = (fn) => { try { return fn(); } catch { return undefined; } };
@@ -312,6 +317,9 @@ function build(root, shadow, spark) {
     <button type="button" class="cl" data-a="open"><span class="lb" aria-hidden="true">${E('launcher.label')}</span><svg viewBox="1 1 30 30" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#16181D"/><path transform="translate(8 8)" fill="#5498FF" d="${spark}"/></svg></button>
     <section class="cc" role="dialog" aria-label="${E('dialog.label')}" tabindex="-1" hidden>
       <div class="hd">${sparkSvg('sk')}<div class="tt"><h2>${E('header.title')}</h2></div>
+        <button type="button" class="ib lay" data-a="layout" data-l="left" aria-pressed="false" aria-label="${E('header.dock_left')}" data-tip="${E('header.dock_left')}">${ic('left')}</button>
+        <button type="button" class="ib lay" data-a="layout" data-l="right" aria-pressed="false" aria-label="${E('header.dock_right')}" data-tip="${E('header.dock_right')}">${ic('right')}</button>
+        <button type="button" class="ib lay" data-a="layout" data-l="full" aria-pressed="false" aria-label="${E('header.full')}" data-tip="${E('header.full')}">${ic('full')}</button>
         <button type="button" class="ib" data-a="min" aria-label="${E('header.minimise')}">${ic('min')}</button>
         <button type="button" class="ib" data-a="menu" id="mb" aria-label="${E('header.menu')}" aria-haspopup="menu" aria-expanded="false">${ic('dots')}</button></div>
       <div class="ag-top" hidden></div>
@@ -407,6 +415,32 @@ function build(root, shadow, spark) {
     const name = pill ? (pill.name ? L('launcher.pill_named', { label: pill.label, name: pill.name }) : pill.label) : v.status === 'working' ? L('launcher.working') : L('launcher.label');
     attr(el.cl, 'aria-label', name);
     if (pill && pill.name) el.cl.title = name; else el.cl.removeAttribute('title');
+  };
+
+  // ------ the place of the window: floating, attached to the left or the right edge, or the whole page (this browser only, kept while the page lives)
+  const layoutNow = () => (root.classList.contains(S.layout === 'full' ? 'nofull' : 'nodock') ? '' : S.layout);   // a place the host switched off is not used
+  // Over the page's own header, menu bar and sidebar, whatever layer this Streamlit gives them (the CSS value is the floor)
+  const layerZ = () => {
+    const doc = root.ownerDocument, top = ['stHeader', 'stToolbar', 'stSidebar', 'stSidebarHeader'].map((t) => parseInt(guard(() => getComputedStyle(doc.querySelector(`[data-testid="${t}"]`)).zIndex), 10) || 0);
+    return Math.max(1000000, ...top.map((z) => z + 1));
+  };
+  const paintLayout = () => {
+    const l = layoutNow();
+    if ((el.cc.dataset.l || '') !== l) { if (l) el.cc.dataset.l = l; else delete el.cc.dataset.l; el.ta._v = null; sizeField(); }
+    const z = l ? String(layerZ()) : '';
+    if (el.cc.style.zIndex !== z) el.cc.style.zIndex = z;
+    el.hd.querySelectorAll('[data-a=layout]').forEach((b) => {
+      const here = b.dataset.l === l, key = here ? 'header.float' : { left: 'header.dock_left', right: 'header.dock_right', full: 'header.full' }[b.dataset.l];
+      attr(b, 'aria-pressed', String(here)); attr(b, 'aria-label', L(key)); attr(b, 'data-tip', L(key));
+      if (b.dataset.l === 'full' && b._i !== here) { b._i = here; b.innerHTML = ic(here ? 'unfull' : 'full'); }
+    });
+  };
+  // Where the window is, told to the page: on <html> (data-coco-place, --coco-dock-w, for the page's own CSS or ask_coco(split=True)) and to the application (an action, once per change)
+  const reportPlace = () => {
+    const place = !S.open ? 'closed' : layoutNow() || 'float', de = root.ownerDocument.documentElement;
+    if (de.dataset.cocoPlace !== place) de.dataset.cocoPlace = place;
+    de.style.setProperty('--coco-dock-w', 'min(30rem, 100vw)');
+    if (place !== S.reported) { S.reported = place; send({ a: 'layout', place }); }
   };
 
   // ------ the window
@@ -559,8 +593,10 @@ function build(root, shadow, spark) {
     if (back) { el.cl.className = el.cl.className.replace(/ (aw|dn|er|ex)/g, ''); void el.cl.offsetWidth; requestAnimationFrame(() => paintLauncher(I.view)); }   // coming back from the window: a pill grows from the disc, it does not appear open
     const opening = el.cc.hidden && S.open;
     hide(el.cc, !S.open);
+    reportPlace();
     if (!S.open) return;
     const was = shadow.activeElement, wasSig = sig(was);
+    paintLayout();
     paintMenu(v); paintConfirm(v); paintStrip(v);
     const tk = paintTakeover(v);
     paintBody(v, opening, !!tk); paintRequest(v, !!(tk && tk.claims)); paintPanel(v); paintFooter(v); paintOff();
@@ -574,6 +610,7 @@ function build(root, shadow, spark) {
   // The texts build() wrote once follow the host's labels: an application may change them between two runs (another language).
   const shell = () => {
     [[el.cc, 'dialog.label'], [q('[data-a=min]'), 'header.minimise'], [q('[data-a=rail]'), 'header.rail'], [el.mb, 'header.menu'], [el.menu, 'header.menu'], [el.thr, 'thread.label'], [el.ta, 'field.label']].forEach(([n, k]) => { if (n) attr(n, 'aria-label', L(k)); });
+    el.hd.querySelectorAll('.ib:not(.lay)').forEach((b) => attr(b, 'data-tip', b.getAttribute('aria-label')));   // the hint under a header icon (the layout icons set their own)
     [[q('.hd h2'), 'header.title'], [el.off, 'offline']].forEach(([n, k]) => { if (n.textContent !== L(k)) n.textContent = L(k); });
   };
   const placeRail = (on) => {
@@ -591,7 +628,7 @@ function build(root, shadow, spark) {
       const lost = S.out.filter((a) => a.a === 'send').map((a) => a.text);
       if (S.sess && lost.length) { S.draft = [...lost, S.draft].filter(Boolean).join('\n'); el.ta.value = S.draft; }
       if (S.sess) { S.out = []; S.inflight = null; }
-      S.sess = data.sess;
+      S.sess = data.sess; S.reported = 'closed';   // the application's window starts closed, floating
     }
     if (S.inflight && Number(data.ack) >= S.inflight.a.seq) { S.out.shift(); S.inflight = null; }
     S.ack = Math.max(S.ack, Number(data.ack) || 0);
@@ -670,6 +707,7 @@ function build(root, shadow, spark) {
     const sum = e.target.closest('summary');
     if (sum && sum.parentElement.dataset.k) { const d = sum.parentElement; S.folds[d.dataset.k] = { v: !d.open, base: d.dataset.d === '1' }; return; }
     const t = e.target.closest('[data-a]');
+    if (!t && e.target.closest('.hd')) { setOpen(false); return; }   // a click on the title bar (not on one of its buttons) minimises the window
     if (!t || t.disabled) return;
     const v = I.view || {}, a = t.dataset.a;
     if (S.menu && a !== 'menu' && a !== 'set') { S.menu = false; }   // a switch keeps the menu open
@@ -683,6 +721,7 @@ function build(root, shadow, spark) {
     }
     else if (a === 'rail') { setOpen(false); send({ a: 'rail' }); }
     else if (a === 'min') { setOpen(false); }
+    else if (a === 'layout') { S.layout = S.layout === t.dataset.l ? '' : t.dataset.l; paint(); t.focus({ preventScroll: true }); }
     else if (a === 'menu') { S.menu = !S.menu; paintMenu(v); if (S.menu) requestAnimationFrame(() => el.menu.querySelector('.it')?.focus()); }
     else if (a === 'new' || a === 'disc') {
       const has = (v.thread || []).length || (v.queue || []).length || v.status === 'working';
@@ -764,7 +803,7 @@ export default function ({ data, parentElement, setTriggerValue }) {
   fonts(root.ownerDocument, (data.theme || {}).font);
   const I = root._coco || (root._coco = build(root, parentElement, data.spark));
   theme(root, I, data.theme);
-  ['calm', 'nocopy', 'nosteps'].forEach((c, i) => root.classList.toggle(c, [(data.features || {}).motion, (data.features || {}).copy, (data.features || {}).steps][i] === false));   // Features(motion, copy, steps) off
+  ['calm', 'nocopy', 'nosteps', 'nodock', 'nofull'].forEach((c, i) => root.classList.toggle(c, [(data.features || {}).motion, (data.features || {}).copy, (data.features || {}).steps, (data.features || {}).dock, (data.features || {}).full_page][i] === false));   // Features(motion, copy, steps, dock, full_page) off
   I.set = setTriggerValue;
   I.update(data);
 }

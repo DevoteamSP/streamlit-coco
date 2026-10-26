@@ -1,4 +1,4 @@
-"""Screen 4 — Access-rule comparator (queue job → shared Copilot → grid)."""
+"""Screen 4 — Access-rule comparator (queue job → Ask CoCo → grid)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import streamlit as st
 from engine import state
 from engine.access_parse import build_powerbi_access
 from engine.bi_sources import partition_sources
-from engine.coco_jobs import is_connected, queue_access_rules
+from engine.coco_jobs import queue_access_rules
 from engine.extract import load_schema, validate_payload
 from engine.persist import render_step_actions
 from engine.ui_common import require_cwd_files
@@ -117,13 +117,11 @@ def run() -> None:
     tableau_files, pbi_files = partition_sources(files)
     payload = state.get_access()
     need_coco = bool(tableau_files)
-    disabled = need_coco and not is_connected()
     run_clicked = render_step_actions(
         run_label="Compare access rules",
         run_key="tts_queue_access",
         step="access",
         payload=payload,
-        run_disabled=disabled,
     )
     if pbi_files and not tableau_files:
         st.markdown(
@@ -136,21 +134,22 @@ def run() -> None:
         st.markdown(
             "Two dashboards. Two different answers to *who can see this row* — "
             "`ts_content` keeps the project-leader branch; `ts_users` dropped it. "
-            "CoCo streams in the Copilot rail; this pane shows the comparator."
+            "CoCo streams in Ask CoCo; this pane shows the comparator."
         )
     else:
         st.markdown(
-            "Tableau User Filters go through Copilot. Power BI compares table "
+            "Tableau User Filters go through Ask CoCo. Power BI compares table "
             "contracts (and RLS if present) locally — public Microsoft samples "
             "have no roles."
         )
 
-    if disabled:
+    if need_coco:
         st.caption(
-            "Open **Copilot** → **Connection** → **Connect**, then compare Tableau User Filters."
+            "Tableau User Filters go to **Ask CoCo** (bottom right). Connect there if it is not "
+            "connected yet; the request waits for the connection."
         )
-    elif pbi_files and not tableau_files:
-        st.caption("Power BI table contracts are parsed from the .pbix — Copilot is optional.")
+    elif pbi_files:
+        st.caption("Power BI table contracts are parsed from the .pbix — Ask CoCo is optional.")
 
     if run_clicked:
         if pbi_files:
@@ -163,10 +162,7 @@ def run() -> None:
             else:
                 state.set_access(pbi_payload)
         if tableau_files:
-            if is_connected():
-                queue_access_rules()
-            elif not pbi_files:
-                st.warning("Connect Copilot to compare Tableau User Filters.")
+            queue_access_rules()
         st.rerun()
 
     payload = state.get_access()

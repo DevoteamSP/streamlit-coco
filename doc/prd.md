@@ -3,7 +3,7 @@
 **Product:** `streamlit-coco` — a Streamlit component and Python library for embedding [Snowflake CoCo](https://www.snowflake.com/en/product/snowflake-coco/) (formerly Cortex Code) in Streamlit applications.
 
 **Author:** —  
-**Status:** `0.2.1` published on 2026-10-20 (`0.2.0` with the asset contributor named in the README). The 0.1.9 chat family stays the default; Ask CoCo is opt-in. Next on the [roadmap](roadmap.md): API mode (no CLI) as `0.3.0`, then `0.3.5` / `0.4.0`.
+**Status:** `0.3.0` published on 2026-10-26 (the managed agent, an audit log and managed file upload, experimental). `0.2.2` was published on 2026-10-25. The 0.1.9 chat family stays the default; Ask CoCo is opt-in. Next on the [roadmap](roadmap.md): `0.3.5` (Streamlit in Snowflake), then `0.4.0`.
 **Last updated:** 2026-10-14
 
 ---
@@ -68,7 +68,7 @@ Designed for Snowflake-native workflows: SQL generation, semantic view design, d
 | NG3 | Full IDE features (file tree, diff editor, multi-tab workspace) | CoCo Desktop / VS Code extension territory. |
 | NG4 | TypeScript SDK parity | Python-first; TS consumers can use CoCo SDK directly. |
 | NG5 | Slack / MCP server implementations | May come later; v1 focuses on Streamlit embedding. |
-| NG6 | Remote agent proxy / sidecar HTTP service | Explicitly out of scope; CoCo CLI must run on the Streamlit server host. |
+| NG6 | Remote agent proxy / sidecar HTTP service | Explicitly out of scope. The CLI runs on the Streamlit server host; the managed agent (`0.3.0`) is Snowflake's own service, called by the Cortex Agent SDK, not a proxy of ours. |
 | NG7 | File upload into `cwd` from the browser | **`0.1.5`** — see [`features/ask-coco/ask-coco.md`](features/ask-coco/ask-coco.md) (`upload_to_cwd` / chat attachments). |
 
 ---
@@ -83,7 +83,7 @@ Designed for Snowflake-native workflows: SQL generation, semantic view design, d
 
 ### 4.2 Primary use cases
 
-| UC | Description | API mode |
+| UC | Description | Python entry point |
 | --- | --- | --- |
 | UC1 | **Embedded data copilot** — chat in a semantic view or dbt project explorer | `ask_coco()` |
 | UC2 | **Guided pipeline builder** — agent proposes DDL/dbt models; user confirms each Write/Edit | `ask_coco(policy=...)` |
@@ -348,7 +348,7 @@ When `CocoOptions(output_schema=...)` is set, the turn's answer is data. The win
 | Category | Requirement |
 | --- | --- |
 | **Performance** | First token visible ≤ 2s after prompt submit on warm session (network-dependent). UI rerender ≤ 100ms for incremental deltas batched at 50–100ms. |
-| **Compatibility** | Python 3.10+; Streamlit ≥ 1.55 (Custom Components v2 + `@st.fragment`); `cortex-code-agent-sdk` version pinned in extras. |
+| **Compatibility** | Python 3.10+; Streamlit ≥ 1.55 (Custom Components v2 + `@st.fragment`); `snowflake-cortex-agent-sdk` (a public preview, `0.0.x`) in the `sdk` extra. |
 | **Rerun scope** | Chat interactions and stream polling do not rerun the page: the window is one component in a fragment. |
 | **Security** | No Snowflake credentials in frontend `data`; tool inputs sanitized in markdown; CSP-safe component (no inline eval). |
 | **Accessibility** | Keyboard submit (⌘/Ctrl+Enter); focus trap in approval modal; ARIA labels on actions. |
@@ -363,19 +363,19 @@ When `CocoOptions(output_schema=...)` is set, the turn's answer is data. The win
 
 Document prominently in README:
 
-1. **CoCo CLI** installed and on `PATH` (`cortex --version`).
-2. **Authenticated Snowflake connection** in connections.toml or env vars.
-3. Streamlit app runs on a host **allowed to spawn subprocesses** (local, VM, SPCS container — not typical browser-only Streamlit Cloud unless CLI pre-installed).
-4. **`cortex-code-agent-sdk`** Python package.
+1. **CoCo CLI** installed and on `PATH` (`cortex --version`). Not needed with the managed agent.
+2. **Authenticated Snowflake connection** in connections.toml or env vars; for the managed agent, a role with the least rights that work, and the Cortex roles (`SNOWFLAKE.CORTEX_USER`, `SNOWFLAKE.CORTEX_AGENT_USER`).
+3. Streamlit app runs on a host **allowed to spawn subprocesses** for the CLI (local, VM, SPCS container; not typical browser-only Streamlit Cloud unless the CLI is pre-installed). The managed agent spawns nothing: it needs outbound HTTPS to the account.
+4. **`snowflake-cortex-agent-sdk`** Python package (the `sdk` extra); it replaced `cortex-code-agent-sdk` in `0.3.0`.
 
 ### 8.2 Deployment topologies
 
 | Topology | Support | Notes |
 | --- | --- | --- |
 | Local CLI (`streamlit run` + `cortex`) | ✅ Primary today | CLI on same machine |
-| Local API (`streamlit run`, no CLI) | ⏳ Next | `mode="api"` + Snowflake Sandbox |
-| Streamlit in Snowflake | ⏳ `0.3.5` | API mode; current-user session (no CLI) |
-| Native App | ⏳ `0.4.0` | API mode inside a Snowflake Native App |
+| Local, managed agent (`streamlit run`, no CLI) | 🧪 `0.3.0`, experimental | `managed_agent(ManagedOptions)` + Snowflake sandbox; the same window, policy and gate |
+| Streamlit in Snowflake | ⏳ `0.3.5` | The managed agent; current-user session (no CLI) |
+| Native App | 🧪 example only | The managed agent inside a Snowflake Native App on SPCS (`examples/skills_hub_native`, a development install); a versioned package is `0.4.0` |
 | Snowpark Container Services | ⏳ Later | Agent on staged files — [roadmap](roadmap.md) |
 | Streamlit Community Cloud | ⚠️ Limited | Only if CLI + secrets available on the host; no remote-proxy workaround planned |
 
@@ -485,13 +485,15 @@ A launcher at the bottom right of the page. It opens a window: a header (title, 
 
 | # | Question | Decision |
 | --- | --- | --- |
-| 14.1 | Remote agent proxy (sidecar HTTP service for Streamlit Cloud)? | **No.** CoCo CLI runs on the Streamlit server host only; no proxy layer. |
+| 14.1 | Remote agent proxy (sidecar HTTP service for Streamlit Cloud)? | **No.** The CLI runs on the Streamlit server host only; no proxy layer of ours. |
 | 14.2 | Structured output UX? | **A data block in the window.** The page reads it with `coco.result(key)` (see §6.6). |
 | 14.3 | File upload into `cwd`? | **`0.1.5`** — [`features/ask-coco/ask-coco.md`](features/ask-coco/ask-coco.md). |
 | 14.4 | Branding? | **“CoCo”** in all user-facing UI copy. |
 | 14.5 | Async Streamlit / fragments? | **Yes.** The window is one component in a fragment. |
 | 14.6 | Primary Streamlit UX? | **The 0.1.9 chat family stays the default.** Ask CoCo is opt-in (`ask_coco` or `mini=True`). |
 | 14.7 | Frontend build? | **Static** js/css under `streamlit_coco/static/` (no build step); Vite/`asset_dir` packaging is **Later** on the roadmap (optional). |
+| 14.8 | How is Snowflake's managed coding agent (no `cortex` program) offered: a `mode="api"` on `CocoOptions`, or something else? | **A backend of its own, not a mode.** `ManagedOptions`, `managed_agent(...)` and `options_from_connection(...)` give `ask_coco(agent=...)` an agent that runs in a Snowflake sandbox; `AgentBackend` names what any agent must do. The window, the policy and the gate (Allow / Decline) are the same for the Cortex Code program, the managed agent and the scripted agent. Reason: the Cortex Agent SDK has a single local interface (`mode` is `cli` only), so a `mode` option would pick between two unrelated stacks. One SDK, `snowflake-cortex-agent-sdk` (a public preview, pinned `>=0.0.3,<0.1`), serves both paths. Experimental in `0.3.0`; see [`features/ask-coco/ask-coco.md`](features/ask-coco/ask-coco.md) section 8. |
+| 14.9 | Do approval decisions leave a durable record? | **Yes, when the host asks for it.** `AuditLog` (`ask_coco(audit=AuditLog(path, who=...))`) is off by default and writes one JSON line per call that asked the user, was covered by a standing permission or was refused: when, who (given by the host: the library cannot know), which agent and conversation, the tool, the decision, and the exact command, SQL or path the user was shown. A second line says what became of an allowed call (`succeeded`, `failed`, `not_run`, `no_result`). What looks like a credential is redacted before the write (overridable); a secret that looks like nothing is not caught, and the docs say so. It works with every agent, a failing write is logged and never stops the session, and the file is readable by its owner only. SEC-01, `0.3.0`; [`api.md`](api.md#the-audit-log). |
 
 ---
 

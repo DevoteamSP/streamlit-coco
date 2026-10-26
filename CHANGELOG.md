@@ -12,6 +12,67 @@ Living plan (what’s next): [`doc/roadmap.md`](doc/roadmap.md).
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-10-26
+
+Snowflake's managed coding agent runs in the same window, with no `cortex` program, and every decision can be written to an audit log. The SDK is now `snowflake-cortex-agent-sdk` for both. Upgrading from 0.2.x: nothing to change for an application that uses the Cortex Code program (`pip install streamlit-coco[sdk]` installs the new package; replace a pinned `cortex-code-agent-sdk` in your own requirements). Everything new is opt-in, and every new parameter is keyword-only with a default that keeps today's behaviour. The managed agent and the Native App example are experimental (the SDK is a public preview, `0.0.x`).
+
+### Added
+
+- **Approval audit log:** `AuditLog(path, who=...)` and `ask_coco(audit=)` write one JSON line per call that asked the user, was covered by a standing permission or was refused: who, when, the agent, the tool, the decision (`allowed`, `declined`, `expired`, `refused`, `standing`, `revoked`) and the exact command, SQL or path the user was shown. Works with every agent. Off by default; the file is readable by its owner only; a failing write is logged and never stops CoCo (SEC-01 of the threat model). Credentials in what the user was shown are redacted before the write (`redact_secrets`, overridable with `AuditLog(redact=)`, `None` to write as shown; what it does not protect is documented), and an allowed call gets a second `outcome` line (`succeeded`, `failed`, `not_run`, `no_result`) joined by `tool_id`.
+- **Files attached in the managed window:** `ManagedOptions(upload_stage="DB.SCHEMA.STAGE", connection=...)` puts each attached file in a folder of this conversation on a stage mounted at `/uploads` in the sandbox; the agent is told the sandbox path (never the local one), no copy stays in the working folder, and the folder is removed from the stage when the conversation ends. Files go in **before the first message**: the sandbox reads the stage once (checked live), so a later one is refused with a sentence that says to start a new conversation. Without `upload_stage` an attached file is refused and the window says why. An agent opts in with an optional `carry(paths)` (`backend.py`).
+- `check_environment(managed=True)` and `require_environment(managed=True)`: the managed agent runs in Snowflake, so the `cortex` program is not looked for and `ready` needs only the SDK. `CocoEnvironment.managed`.
+- `FolderPolicy(where=)` and `SANDBOX_WHERE`: the request's "Where" line names the Snowflake sandbox, not a local folder the managed agent does not have. An agent can bring its own window words (`labels`); the managed agent's first screen says it works in a sandbox and no longer says it reads project files.
+- Least-privilege role documentation (SEC-02, `doc/security/threat-model.md` section 8) and the threat model for the managed agent and the Native App.
+- Tests: `tests/test_audit.py`, `tests/test_managed_files.py`, the probe tests, and `tests/e2e/test_managed_window.py` on `examples/e2e_managed_harness.py` (the window on the managed agent over a scripted stream of Snowflake's client: first screen, a command that asks in the sandbox, Allow, Decline, the audit lines, an attached file).
+- **Managed agent (experimental):** `ManagedOptions` and `managed_agent` run Snowflake's managed coding agent (Cortex Agent SDK) in the same window, with no `cortex` program: `ask_coco(".", agent=st_coco.managed_agent(ManagedOptions(account=..., token=...)))`. Every approval still goes through the policy and the gate; the run is always created with `permission_policy="always_ask"` and only the user's Allow is sent, as the server's one-call "Allow this command" (never its "Allow all ... for this session"). The server asks only about calls it rates risky; the policy sees those. `options_from_connection(profile, role=...)` builds the options from a `~/.snowflake` profile (session token, least-privilege role) and `SANDBOX_WORDS` tells the request that a command runs in the Snowflake sandbox; `make managed` runs `examples/managed_chat.py`. `streamlit_coco.backend.AgentBackend` names the surface an agent keeps (the Cortex Code agent, the managed agent and the scripted agent). Tested on a scripted stream (`testing/managed_fake.py`) and run live on a Snowflake account (a read-free answer, a declined and an allowed write, with a session token and the `PUBLIC` role).
+
+- **Skills shop example (experimental):** `make skills-hub` runs `examples/skills_hub/`: skills (a `SKILL.md` folder) kept on a Snowflake stage, a shop to browse them and a chat with one chosen skill on the managed agent (`stage_skills`); `make publish-skill` validates and publishes a skill folder (versions never change). Before a chat the app checks that the folder on the stage is the one that was published, an added file included. Run live on a scratch stage. See [`examples/skills_hub/README.md`](examples/skills_hub/README.md).
+
+- **Skills shop as a Native App (experimental):** `examples/skills_hub_native/` packages the shop and the one-skill chat as a Snowflake Native App that runs as a Snowpark Container Services service (`make native-shop-image`, `make native-shop-deploy`, see its `DEPLOY.md`). The service logs in with its own token, publishes the skills baked into the image to the application's stage when it starts (a version already there is never replaced; the stage is in a schema that is not versioned, so skills survive upgrades) and the managed agent runs as the application. Needs two grants to the application for Cortex, in `scripts/grant_privileges.sql`, that you run yourself. Run live on a Snowflake account: the Agent API answered a skill from inside the service. `examples/skills_hub_native/COCO_PROMPT.md` is a prompt for Cortex Code that asks a new user for the parameters (profile, role, warehouse, image repository), checks the account and builds, installs and starts the application, asking before every step that creates, costs credits or grants a right.
+
+- `make release-check` (`scripts/release_check.py`): before a release, the version is free on PyPI and the public tags, the public CHANGELOG has no release this one lacks, every lock is audited, open Dependabot alerts are listed by manifest, and the sync dry run is summarised (deletions, generated `out/` files, dev-only leaks). `make audit` now also audits every `examples/*/uv.lock` (`scripts/audit_locks.py`), which the root audit could not see.
+
+### Changed
+
+- There is no `mode="api"` on `CocoOptions`: the Cortex Agent SDK has one local interface (`mode` is `cli` only) and the managed agent is a separate backend (`managed_agent`, `AgentBackend`), so one library covers both with the same window, policy and gate. The development lock holds `snowflake-cortex-agent-sdk` 0.0.3 (a public preview: pin and re-check before a release).
+- The managed agent no longer reuses the Cortex Code prompt: it has its own instructions (it runs in Snowflake's sandbox, with no question or plan tool) and is told nothing of this computer. Found live: it had answered with the developer's local working folder.
+- The `sdk` and `dev` extras now install `snowflake-cortex-agent-sdk>=0.0.3,<0.1` (a public preview, so capped below `0.1`; the Cortex Agent SDK, `cortex_agent_sdk.cortexcode`) in place of `cortex-code-agent-sdk`. It drives the same local `cortex` program with the same options, messages, `can_use_tool` and hooks; nothing changes for an application (`pip install streamlit-coco[sdk]` stays). The window, the approval gate and `query()` were run against a live Cortex Code 1.2.18. The environment probe and the "SDK missing" messages name the new package. Replace a pinned `cortex-code-agent-sdk` in your own requirements.
+
+### Security
+
+- The development locks (`uv.lock`, `examples/app_builder/uv.lock`) cover Python 3.11 and later (`[tool.uv] environments`). A Python 3.10 branch kept `pillow` 12.3.0 in them (Pillow 13, which fixes its advisories, needs 3.11), and Dependabot reports every version in a lock. The package still declares `requires-python >=3.10` and does not pin Pillow; only `uv sync` and `uv lock` in this repository need Python 3.11. CI and the release workflow already run on 3.11.
+
+### Fixed
+
+- The line that says what a standing permission covers ("CoCo no longer asks before it ...") ended with two full stops.
+- The public CI failed on a fresh `uv sync` (the public tree has no `uv.lock`): with `[tool.uv] environments`, uv 0.13 also resolves for Pyodide (emscripten), where `playwright` has no wheel. The environments now leave emscripten out (both `pyproject.toml` files; locks relocked, no package version changed). Gitleaks flagged the fake credentials the audit and skills-shop tests use on purpose: `.gitleaks.toml` allowlists those two test files and keeps the default rules.
+
+## [0.2.2] — 2026-10-25
+
+Ask CoCo can leave the corner: attached to an edge on the full height of the page, or on the whole page. The page can be told where the window is, and take the rest of the screen. Upgrading from 0.2.0 or 0.2.1: nothing to change; every new parameter is keyword-only with a default that keeps today's behaviour.
+
+### Added
+
+- Three icons in the window's title bar: attach to the left edge, attach to the right edge (full height, `min(30rem, 100vw)` wide), or fill the page. The pressed icon puts the window back. `Features(dock=False)` and `Features(full_page=False)` remove them (both on by default). Each icon shows a hint after 750 ms.
+- A click on the title bar (not on one of its buttons) minimises the window.
+- `ask_coco(on_layout=fn)`: `fn(place)` is called when the window changes place (`closed`, `float`, `left`, `right`, `full`), then the page reruns once. `get_window(key).place` reads it on any run; the browser also writes `data-coco-place` and `--coco-dock-w` on `<html>` for the page's own CSS.
+- `ask_coco(split=True)`: while the window is attached to an edge, the page takes the rest of the screen instead of being covered.
+- Docked and full-page windows sit above the page's header, menu bar and sidebar; the floating window no longer reaches up under them on a short screen.
+- Tests: `tests/e2e/test_window_layout.py` (the places, the switches, the callback and split, the hint, the title bar over the header).
+
+### Changed
+
+- `examples/app_builder` and `examples/bi_to_semantic`: Ask CoCo is the only agent surface, on every screen. The sidebar Off/On switch and the Copilot rail are gone; Build, Fix with CoCo and the BI jobs are sent to the window. App Builder suggests its own questions on each screen, BI → Semantic too. Both use `split=True`.
+- `examples/modern_chat` starts with Ask CoCo (then Rail, then Both) and has a Split screen selector in the sidebar.
+
+### Security
+
+- Development lock: `pip-audit` found 41 advisories in `pillow`, `filelock` and `certifi`. Locked `streamlit` 1.66.1 (it capped `pillow<13`), `pillow` 13.0.0, `certifi` 2026.10.23 and `filelock` 4.2.4 (a `[tool.uv]` override on Python 3.11+, because the Snowflake connector still says `filelock<4`). The package floor is still Streamlit 1.55; the browser tests pass on 1.66.1.
+
+### Fixed
+
+- The Ask CoCo window no longer blinks, and the page's own layers no longer show on top of it, while it waits for an answer. Each poll reruns the window's fragment; when a run was slow, Streamlit faded the stale component (opacity below 1), which made it a stacking context for the fixed window. The host container now keeps opacity 1.
+
 ## [0.2.1] — 2026-10-20
 
 The README names the asset contributor. No code change: `0.2.1` is `0.2.0` with the README that PyPI shows (a published file cannot be changed).

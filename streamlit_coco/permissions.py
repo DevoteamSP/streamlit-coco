@@ -13,7 +13,7 @@ from streamlit_coco.messages import permission_request_event
 from streamlit_coco.tool_names import is_ask_user_question, is_exit_plan_mode
 
 try:
-    from cortex_code_agent_sdk import PermissionResultAllow, PermissionResultDeny
+    from cortex_agent_sdk.cortexcode import PermissionResultAllow, PermissionResultDeny
 except ImportError:  # pragma: no cover
 
     @dataclass

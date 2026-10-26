@@ -502,7 +502,7 @@ class Agent:
         self._init, self._session_id, self._program, self._cfg = {}, None, None, None
 
     def setup(self) -> dict | None:
-        if not importlib.util.find_spec("cortex_code_agent_sdk"):
+        if not importlib.util.find_spec("cortex_agent_sdk"):
             return {"missing": "package", "command": _PACKAGE}
         return None if cortex_cli() else {"missing": "program", "command": _INSTALL}
 
@@ -562,7 +562,11 @@ class Agent:
                 }
             )
             return
-        from cortex_code_agent_sdk import HookMatcher, PermissionResultAllow, PermissionResultDeny
+        from cortex_agent_sdk.cortexcode import (
+            HookMatcher,
+            PermissionResultAllow,
+            PermissionResultDeny,
+        )
 
         self._close_session(
             self.session

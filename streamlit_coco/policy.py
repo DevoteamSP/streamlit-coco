@@ -470,6 +470,8 @@ class FolderPolicy:
                 only what `changes` calls ordinary, and never a place a read asks for (.git, a
                 secret name, what `flag` marks): those are asked each time
     words       the host's words, over the defaults: {key of WORDS: text}
+    where       what the request's "Where" line says (default: the name of the scope's folder);
+                the managed agent has no folder here: `where=SANDBOX_WHERE`
 
     A host with rules of its own subclasses it: `flag` (one more reason a place is not read
     freely), `commands` (commands that depend on the request) and `words`.
@@ -490,13 +492,14 @@ class FolderPolicy:
         lookups: bool = False,
         standing: bool = False,
         words: dict | None = None,
+        where: str | None = None,
     ) -> None:
         self.base = Path(folder)  # the agent's working folder
         self.scope = Path(scope or folder).resolve()
         if isinstance(also_read, (str, os.PathLike)):
             also_read = (also_read,)
         self.also = [(self.base / place).resolve() for place in also_read]
-        self.where = Path(scope or folder).name or self.scope.name
+        self.where = where or Path(scope or folder).name or self.scope.name
         if words:
             self.words = {**self.words, **words}
         if scope is not None:

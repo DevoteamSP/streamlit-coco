@@ -30,6 +30,8 @@ class Gate:
 
     def __init__(self, emit, expiry: float = EXPIRY) -> None:
         self.emit, self.expiry, self.policy = emit, expiry, None
+        # audit(record): a function that persists a decision (audit.AuditLog); None keeps none
+        self.audit = None
         # Cortex Code's folder of long outputs for this session (see FolderPolicy.spill)
         self.spill = None
         self._slots: dict[str, dict] = {}
@@ -58,6 +60,24 @@ class Gate:
             gone = self._granted.pop(permission_id, None)
         if gone is not None:
             self.emit({"t": "revoked", "id": permission_id})
+            self._log("revoked", "", None, covers=gone)
+
+    def _log(self, decision: str, tool: str, facts, tool_id: str | None = None, **fields) -> None:
+        if self.audit is None:
+            return
+        facts = facts or {}
+        self.audit(
+            {
+                "tool": tool or None,
+                "tool_id": tool_id,
+                "decision": decision,
+                "kind": facts.get("kind"),
+                "question": facts.get("question"),
+                "where": facts.get("where"),
+                "evidence": [dict(item) for item in facts.get("evidence") or ()] or None,
+                **fields,
+            }
+        )
 
     @staticmethod
     def _key(tool: str, tool_input) -> str:
@@ -77,6 +97,7 @@ class Gate:
         offer = (facts or {}).get("standing")
         if not reason and facts and offer and self._covered(offer["id"]):
             self._agreed.add(self._key(tool, tool_input))
+            self._log("standing", tool, facts, tool_id, standing=offer["id"])
             self.emit({"t": "standing", "tool_id": tool_id})  # it ran, and the user was not asked
             return None
         if not reason and facts:
@@ -84,6 +105,7 @@ class Gate:
             slot = {"event": threading.Event(), "allow": False, "standing": False}
             with self._lock:
                 if self._stopped:  # the user stopped meanwhile: nobody is left to answer
+                    self._log("declined", tool, facts, tool_id, reason="Stopped before an answer.")
                     return "Declined by the user."
                 self._slots[request_id] = slot
             self.emit({"t": "request", "id": request_id, "tool_id": tool_id, "facts": facts})
@@ -91,8 +113,10 @@ class Gate:
             self._slots.pop(request_id, None)
             if not answered:
                 self.emit({"t": "expired", "id": request_id, "tool_id": tool_id})
+                self._log("expired", tool, facts, tool_id)
                 return "No answer after 10 minutes."
             if not slot["allow"]:
+                self._log("declined", tool, facts, tool_id)
                 return "Declined by the user."
             # An Allow never widens the policy: what the user was shown must still be what would
             # be shown (a file may have changed)
@@ -101,10 +125,19 @@ class Gate:
                 reason = "The call is no longer what you were shown, so it did not run."
             if not reason:
                 self._agreed.add(self._key(tool, tool_input))
-                if slot["standing"] and offer:
+                granted = bool(slot["standing"] and offer)
+                if granted:
                     self._grant(offer)
+                self._log(
+                    "allowed",
+                    tool,
+                    facts,
+                    tool_id,
+                    standing_granted=offer["id"] if granted else None,
+                )
         if reason:
             self.emit({"t": "refused", "tool_id": tool_id, "reason": reason})
+            self._log("refused", tool, facts, tool_id, reason=reason)
         return reason
 
     def _grant(self, offer: dict) -> None:

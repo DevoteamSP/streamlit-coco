@@ -64,16 +64,17 @@ def run() -> None:
     st.subheader("How to use it")
     h1, h2 = st.columns(2, gap="medium")
     with h1.container(border=True, height="stretch"):
-        st.markdown("**Open Copilot**")
+        st.markdown("**Ask CoCo**")
         st.caption(
-            "Connect once from the header. **Build this app** queues a Write. "
-            "Approve the files in plain language; expand the diff if you want."
+            "The window at the bottom right. Connect once. **Build this app** sends "
+            "the brief to it and asks before it writes. Approve the files in plain "
+            "language; expand the diff if you want. Each screen suggests its own questions."
         )
     with h2.container(border=True, height="stretch"):
         st.markdown("**Open Preview**")
         st.caption(
             "Runs the generated app beside you. After a Write it starts on its own. "
-            "**Fix with CoCo** sends the traceback back as a job. "
+            "**Fix with CoCo** sends the traceback to Ask CoCo. "
             "Demo packs work with no warehouse."
         )
 

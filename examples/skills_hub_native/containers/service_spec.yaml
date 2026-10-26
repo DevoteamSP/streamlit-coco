@@ -1,0 +1,27 @@
+spec:
+  containers:
+    - name: streamlit
+      image: /my_db/my_schema/my_repo/coco-skills-shop:dev
+      env:
+        SKILLS_HUB_NATIVE: "1"
+        SKILLS_STAGE_SCHEMA: DATA
+        SKILLS_STAGE: SKILLS_STAGE
+        SKILLS_HUB_PROBE: "0"  # "1": one agent turn at start, result in the logs
+      resources:
+        requests:
+          memory: 1Gi
+          cpu: "1"
+        limits:
+          memory: 2Gi
+          cpu: "2"
+      readinessProbe:
+        port: 8501
+        path: /_stcore/health
+  endpoints:
+    - name: streamlit
+      port: 8501
+      public: true
+serviceRoles:
+  - name: streamlit_role
+    endpoints:
+      - streamlit

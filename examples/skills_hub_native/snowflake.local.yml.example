@@ -1,0 +1,18 @@
+# Local overrides for `snow app run`: copy to snowflake.local.yml and edit (it is gitignored).
+# The connection profile is chosen on the command line: snow app run -c <profile>.
+definition_version: 2
+entities:
+  pkg:
+    type: application package
+    identifier:
+      name: coco_skills_shop_pkg
+    meta:
+      role: ACCOUNTADMIN
+      warehouse: MY_WAREHOUSE
+  app:
+    type: application
+    identifier:
+      name: coco_skills_shop
+    meta:
+      role: ACCOUNTADMIN
+      warehouse: MY_WAREHOUSE

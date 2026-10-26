@@ -1,11 +1,11 @@
-"""Studio — summary, regenerate, then Copilot | Preview in the chrome."""
+"""Studio — summary, regenerate, then Ask CoCo and Preview."""
 
 from __future__ import annotations
 
 import streamlit as st
 from engine.actions import missing_required, start_coco_build, start_demo_scaffold
 from engine.brief import app_exists
-from engine.jobs import set_copilot_open, set_preview_open
+from engine.jobs import set_preview_open
 from engine.state import answers, app_name, go, selected_type, slug
 
 
@@ -38,7 +38,7 @@ def run() -> None:
 
     exists = app_exists(current)
     st.caption(
-        "Ready to preview" if exists else "Not written yet — build from the brief, or Open Copilot."
+        "Ready to preview" if exists else "Not written yet — build from the brief, or ask CoCo."
     )
 
     with st.container(horizontal=True, vertical_alignment="center"):
@@ -57,9 +57,6 @@ def run() -> None:
             start_demo_scaffold()
         if st.button("Edit brief", icon=":material/edit_note:", key="ab_studio_brief"):
             go("Brief")
-        if st.button("Open Copilot", icon=":material/psychology:", key="ab_studio_copilot"):
-            set_copilot_open(True)
-            st.rerun()
         if exists and st.button("Open Preview", icon=":material/preview:", key="ab_studio_preview"):
             set_preview_open(True)
             st.rerun()

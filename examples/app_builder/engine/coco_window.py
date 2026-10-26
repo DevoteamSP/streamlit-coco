@@ -1,4 +1,5 @@
-"""Ask CoCo for App Builder: the window, its rights, and the App brief form beside the preview."""
+"""Ask CoCo for App Builder: the window, its rights and suggested questions, and the App brief form
+beside the preview."""
 
 from __future__ import annotations
 
@@ -11,6 +12,7 @@ from engine.brief import app_exists
 from engine.brief_form import RAIL_NS, collect_form_answers, render_answers_form
 from engine.jobs import skill_dirs
 from engine.paths import TYPES_DIR, WORKSPACE_DIR
+from engine.skills import SHARED_SKILL_ID, skill_md_path
 from engine.state import (
     RAIL_BRIEF_OPEN_KEY,
     answers,
@@ -22,29 +24,138 @@ from streamlit_coco import CocoOptions, policy
 from streamlit_coco.features import Features
 from streamlit_coco.window import ask_coco
 
-EXAMPLE_QUESTIONS = [
-    {
-        "title": "List the files",
-        "text": (
-            "List the files in this folder and say what each one is for. "
-            "Do not write or edit files."
-        ),
-    },
-    {
-        "title": "Explain the brief",
-        "text": (
-            "Read BRIEF.md if it exists and summarize what this app should do, "
-            "what it allows, and what it must not do. Do not write or edit files."
-        ),
-    },
-    {
-        "title": "Suggest a change",
-        "text": (
-            "If streamlit_app.py exists, read it and suggest one concrete UX "
-            "improvement. Do not write or edit files unless I ask."
-        ),
-    },
-]
+
+def _no_edit(text: str) -> str:
+    return f"{text} Do not write or edit files."
+
+
+def page_prompts(page: str) -> list[dict[str, str]]:
+    """The suggested questions of a screen (the window shows them in an empty conversation)."""
+    app_type = selected_type()
+    types = TYPES_DIR
+    skill = (
+        skill_md_path(app_type.guidelines_skill or SHARED_SKILL_ID) if app_type else None
+    )
+    if page == "Welcome":
+        return [
+            {
+                "title": "What can I build?",
+                "text": _no_edit(
+                    f"Read the type.json of every folder under {types} and list each app "
+                    "type: what it is for, who uses it, and whether it needs Snowflake."
+                ),
+            },
+            {
+                "title": "Which type fits me?",
+                "text": _no_edit(
+                    f"Ask me two or three questions about what I want to build, then pick "
+                    f"the best of the app types under {types} and say why."
+                ),
+            },
+            {
+                "title": "How does a build work?",
+                "text": _no_edit(
+                    f"Read {types}/shared/SKILL.md and explain, in a few sentences, the "
+                    "rules every generated app follows."
+                ),
+            },
+        ]
+    if page == "Library":
+        return [
+            {
+                "title": "Compare the types",
+                "text": _no_edit(
+                    f"Read the type.json of every folder under {types} and compare the "
+                    "types in a table: users, grounding, needs Snowflake, what it does not do."
+                ),
+            },
+            {
+                "title": "Works without Snowflake?",
+                "text": _no_edit(
+                    f"From the type.json files under {types}, which app types work with no "
+                    "Snowflake account, and which demo data does each one ship?"
+                ),
+            },
+            {
+                "title": "What will I be asked?",
+                "text": _no_edit(
+                    f"For each app type under {types}, list the questions its brief asks, "
+                    "so I can prepare my answers."
+                ),
+            },
+        ]
+    if page == "Brief":
+        return [
+            {
+                "title": "Review my brief",
+                "text": _no_edit(
+                    "Read BRIEF.md if it exists. Say what is missing, vague or "
+                    "contradictory before this app is built."
+                ),
+            },
+            {
+                "title": "Suggest answers",
+                "text": _no_edit(
+                    "Read BRIEF.md if it exists and propose an answer for each question "
+                    "that is still empty, with a short reason."
+                ),
+            },
+            {
+                "title": "What it will not do",
+                "text": _no_edit(
+                    "Read BRIEF.md if it exists and list what this app allows and what "
+                    "it must not do, in plain words."
+                ),
+            },
+        ]
+    if page == "Studio":
+        guide = f" and {skill}" if skill else ""
+        return [
+            {
+                "title": "Explain the app",
+                "text": _no_edit(
+                    "If streamlit_app.py exists, read it and explain what the app shows "
+                    "and how a user moves through it."
+                ),
+            },
+            {
+                "title": "Suggest a change",
+                "text": _no_edit(
+                    "If streamlit_app.py exists, read it and suggest one concrete UX "
+                    "improvement."
+                ),
+            },
+            {
+                "title": "Check the guidelines",
+                "text": _no_edit(
+                    f"Read streamlit_app.py{guide}, then list where the app departs from "
+                    "the guidelines."
+                ),
+            },
+        ]
+    return [  # Admin
+        {
+            "title": "Review the types",
+            "text": _no_edit(
+                f"Read the type.json of every folder under {types} and flag unclear "
+                "questions or missing allows and does-not rules."
+            ),
+        },
+        {
+            "title": "Check the guidelines",
+            "text": _no_edit(
+                f"Read {types}/shared/SKILL.md and say what is contradictory, missing or "
+                "too vague for a generated app."
+            ),
+        },
+        {
+            "title": "Draft a new type",
+            "text": _no_edit(
+                f"Ask me what the new app type is for, then outline its type.json like "
+                f"the ones under {types} (name, users, questions, does not)."
+            ),
+        },
+    ]
 
 
 def _rail_answers():
@@ -54,8 +165,9 @@ def _rail_answers():
     return collect_form_answers(app_type, answers(), key_ns=RAIL_NS)
 
 
-def mount_window(connection: str | None = None, on_rail=None):
-    """The floating window, on the current app folder (the workspace before one is picked)."""
+def mount_window(page: str, *, split: bool = False):
+    """Ask CoCo, on the current app folder (the workspace before one is picked), with the
+    suggested questions of the screen `page`."""
     cwd = st.session_state.get("ab_slug_path") or WORKSPACE_DIR
     cwd = Path(cwd)
     cwd.mkdir(parents=True, exist_ok=True)
@@ -69,11 +181,10 @@ def mount_window(connection: str | None = None, on_rail=None):
         cwd,
         policy=policy.FolderPolicy(cwd, also_read=[TYPES_DIR]),
         features=Features(copy=False, display=("latest", "shorten")),
-        prompts=EXAMPLE_QUESTIONS,
+        prompts=page_prompts(page),
         labels={"window.field.placeholder": "Ask CoCo about this app…"},
         options=options,
-        connection=connection,
-        on_rail=on_rail,
+        split=split,
     )
 
 

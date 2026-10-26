@@ -87,7 +87,7 @@ worth arguing about.
 
 ## Verified
 
-Loaded and checked on Snowflake (account `XMB91291`, warehouse `LAURENT_WH`):
+Loaded and checked on Snowflake (a Snowflake test account):
 
 | Check | Result |
 |---|---|

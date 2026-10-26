@@ -66,7 +66,7 @@ def test_require_environment_raises_without_sdk(monkeypatch: pytest.MonkeyPatch)
     real_import = builtins.__import__
 
     def fake_import(name: str, *args: object, **kwargs: object) -> object:
-        if name == "cortex_code_agent_sdk":
+        if name == "cortex_agent_sdk":
             raise ImportError("no sdk")
         return real_import(name, *args, **kwargs)
 

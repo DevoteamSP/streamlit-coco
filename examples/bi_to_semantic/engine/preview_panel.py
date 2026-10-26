@@ -1,4 +1,4 @@
-"""Right-rail preview of the generated Streamlit consumer app."""
+"""Preview column of the generated Streamlit consumer app."""
 
 from __future__ import annotations
 
@@ -6,9 +6,6 @@ import streamlit as st
 
 from engine.coco_jobs import (
     PREVIEW_FULL_KEY,
-    is_connected,
-    is_copilot_open,
-    open_copilot_for_job,
     queue_fix_streamlit,
     set_preview_full,
     set_preview_open,
@@ -75,17 +72,11 @@ def render_preview_rail() -> None:
         st.session_state[_store_key(LAUNCH_KEY)] = launch_mode
 
     iframe_h = 860 if st.session_state.get(PREVIEW_FULL_KEY) else 520
-    if is_copilot_open():
-        iframe_h = 480
 
     def _on_fix(trace: str) -> None:
-        open_copilot_for_job()
         set_preview_open(True)
-        if not is_connected():
-            st.session_state["tts_coco_connect_hint"] = True
-            st.rerun()
         queue_fix_streamlit(trace, dest)
-        st.toast("Queued · fix the preview")
+        st.toast("Sent to Ask CoCo · fix the preview")
 
     def _on_close() -> None:
         set_preview_open(False)

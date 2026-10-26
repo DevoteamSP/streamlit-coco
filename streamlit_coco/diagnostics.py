@@ -145,6 +145,7 @@ class CocoEnvironment:
     snowflake_config_file: str | None
     connection_hint: str | None
     toml_file: str | None = None
+    managed: bool = False  # the managed agent runs in Snowflake: no CLI is needed
 
     @property
     def snowflake_config_found(self) -> bool:
@@ -156,8 +157,8 @@ class CocoEnvironment:
 
     @property
     def ready(self) -> bool:
-        """True when the Python SDK and Cortex CLI look available."""
-        return self.sdk_installed and self.cli_ok
+        """True when the Python SDK looks available, and the Cortex CLI unless `managed`."""
+        return self.sdk_installed and (self.managed or self.cli_ok)
 
     @property
     def snowflake_config_display(self) -> str | None:
@@ -176,22 +177,27 @@ def check_environment(
     connection: str | None = None,
     cli_path: str | None = None,
     toml_file: str | os.PathLike[str] | None = None,
+    managed: bool = False,
 ) -> CocoEnvironment:
-    """Probe SDK, CLI, and Snowflake config without starting CoCo."""
+    """Probe SDK, CLI, and Snowflake config without starting CoCo. `managed=True` is for the
+    managed agent (`managed_agent`): it runs in Snowflake, so the CLI is not looked for and a
+    missing one is not a problem (the config file is for `options_from_connection`)."""
     sdk_installed = False
     sdk_version: str | None = None
     try:
-        import cortex_code_agent_sdk as sdk
+        import cortex_agent_sdk as sdk
 
         sdk_installed = True
         try:
-            sdk_version = importlib.metadata.version("cortex-code-agent-sdk")
+            sdk_version = importlib.metadata.version("snowflake-cortex-agent-sdk")
         except importlib.metadata.PackageNotFoundError:
             sdk_version = getattr(sdk, "__version__", None)
     except ImportError:
         pass
 
-    resolved_cli = cli_path or os.environ.get("CORTEX_CODE_CLI_PATH") or shutil.which("cortex")
+    resolved_cli = None
+    if not managed:
+        resolved_cli = cli_path or os.environ.get("CORTEX_CODE_CLI_PATH") or shutil.which("cortex")
     cli_version: str | None = None
     if resolved_cli:
         try:
@@ -219,6 +225,7 @@ def check_environment(
         snowflake_config_file=snowflake_config_file,
         connection_hint=connection or "default",
         toml_file=requested,
+        managed=managed,
     )
 
 
@@ -228,15 +235,19 @@ def require_environment(
     cli_path: str | None = None,
     toml_file: str | os.PathLike[str] | None = None,
     require_snowflake_config: bool = False,
+    managed: bool = False,
 ) -> CocoEnvironment:
     """Like :func:`check_environment`, but raise typed errors when prerequisites fail."""
-    env = check_environment(connection=connection, cli_path=cli_path, toml_file=toml_file)
+    env = check_environment(
+        connection=connection, cli_path=cli_path, toml_file=toml_file, managed=managed
+    )
     if not env.sdk_installed:
         raise SDKNotInstalledError()
-    if not env.cli_path:
-        raise CLINotFoundError()
-    if not env.cli_ok:
-        raise CLIProbeError(env.cli_path)
+    if not managed:  # the managed agent runs in Snowflake: no program to find
+        if not env.cli_path:
+            raise CLINotFoundError()
+        if not env.cli_ok:
+            raise CLIProbeError(env.cli_path)
     if require_snowflake_config and not env.snowflake_config_found:
         raise SnowflakeConfigNotFoundError()
     return env

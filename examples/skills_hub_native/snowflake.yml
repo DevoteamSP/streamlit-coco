@@ -1,0 +1,23 @@
+definition_version: 2
+entities:
+  pkg:
+    type: application package
+    identifier:
+      name: coco_skills_shop_pkg
+    manifest: manifest.yml
+    artifacts:
+      - src: manifest.yml
+        dest: manifest.yml
+      - src: scripts/setup_script.sql
+        dest: scripts/setup_script.sql
+      - src: containers/service_spec.yaml
+        dest: containers/service_spec.yaml
+      - src: readme.md
+        dest: readme.md
+    distribution: internal
+  app:
+    type: application
+    identifier:
+      name: coco_skills_shop
+    from:
+      target: pkg

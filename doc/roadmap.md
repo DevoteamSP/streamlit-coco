@@ -2,31 +2,44 @@
 
 Living plan. Product detail: [doc/prd.md](prd.md). Shipped history: [CHANGELOG.md](../CHANGELOG.md).
 
-**Status:** `0.2.1` published on 2026-10-20 (the README of `0.2.0` with the asset contributor named; no code change). `0.2.0` was published the same day. The 0.1.9 chat family stays the default; Ask CoCo is opt-in ([feature file](features/ask-coco/ask-coco.md)). The last public release is `0.2.1` ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)). Next: API mode, as `0.3.0`.
-**Publisher:** temporary Trusted Publisher on [lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco); public tree also synced to [DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco). Used for this cut (`0.2.0`).
-**Last updated:** 2026-10-20
-**Last cut:** [releases/0.2.1/](releases/0.2.1/) (feature cut: [releases/0.2.0/](releases/0.2.0/))
-**Next cuts:** `0.3.0` API mode (no CLI), branch `0.3.0-remote-api` → `0.3.5` Streamlit in Snowflake → `0.4.0` Native App
+**Status:** `0.3.0` published on 2026-10-26 (tag `v0.3.0` on lletourmy/streamlit-coco; the managed agent, an audit log with redaction and outcomes, managed file upload; experimental). `0.2.2` was published on 2026-10-25. The 0.1.9 chat family stays the default; Ask CoCo is opt-in ([feature file](features/ask-coco/ask-coco.md)). The last public release is `0.3.0` ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)). Next: Streamlit in Snowflake as `0.3.5`.
+**Publisher:** temporary Trusted Publisher on [lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco); public tree also synced to [DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco). Used for the last cut (`0.3.0`).
+**Last updated:** 2026-10-26
+**Last cut:** [releases/0.3.0/](releases/0.3.0/) (previous: [releases/0.2.2/](releases/0.2.2/))
+**Next cuts:** `0.3.5` Streamlit in Snowflake → `0.4.0` Native App
 
 > **Before every release:** complete [releases/X.Y.Z/CHECKLIST.md](releases/README.md) (CHANGELOG, this roadmap, PRD, screenshots, [public issues](https://github.com/DevoteamSP/streamlit-coco/issues)) and outreach under `doc-dev/releases/` in the development repository, then [deployment/publish.md](deployment/publish.md).
 
-**Regularly check version of sdk:** at [CoCo Python SDK](https://pypi.org/project/cortex-code-agent-sdk/) (`1.0.7`, 2026-07-31; its docs say new applications should use the Cortex Agent SDK) and the [Cortex Agent SDK](https://pypi.org/project/snowflake-cortex-agent-sdk/) (`snowflake-cortex-agent-sdk`, public preview since 2026-10-13, `0.0.2`; [docs](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agent-sdk/cortex-agent-sdk))
+**Regularly check version of sdk:** at [CoCo Python SDK](https://pypi.org/project/cortex-code-agent-sdk/) (`1.0.7`, 2026-07-31; no longer a dependency: its docs say new applications should use the Cortex Agent SDK) and the [Cortex Agent SDK](https://pypi.org/project/snowflake-cortex-agent-sdk/) (`snowflake-cortex-agent-sdk`, public preview since 2026-10-13, locked at `0.0.3`; it also drives the local `cortex` program through `cortex_agent_sdk.cortexcode`; [docs](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agent-sdk/cortex-agent-sdk))
 
 ---
 
 
 
-## Now — API mode
+## Now — closing `0.3.0`
 
 
 | Priority | Item | Ref |
 | -------- | ---- | --- |
-| P0 | **API mode** — `CocoOptions.mode="api"` + Snowflake Sandbox; CLI optional | [#4](https://github.com/DevoteamSP/streamlit-coco-dev/issues/4) · API mode specification to be written |
+| P0 | **After `0.3.0`**: post the issue comments (drafts in `doc-dev/releases/0.3.0/ISSUES.md`), the LinkedIn visual and posts; then plan `0.3.5` (Streamlit in Snowflake) | [releases/0.3.0/CHECKLIST.md](releases/0.3.0/CHECKLIST.md) · [#4](https://github.com/DevoteamSP/streamlit-coco-dev/issues/4) |
+| P1 | **Skills shop** — what the experimental example left open (two skills in a chat, the Playwright test, the page behind the Native App ingress, caller's rights) | [brief](../doc-dev/briefs/skills-hub-managed.md) · [#12](https://github.com/DevoteamSP/streamlit-coco/issues/12) |
 
 
 Manual checklists: [doc/features/README.md](features/README.md) — re-run before the next tag.
 
 ---
+
+## v0.2.2 — Window places and the page callback
+
+Published `2026-10-25` (`v0.2.2` on lletourmy/streamlit-coco).
+
+| Item | Status | Ref |
+| ---- | ------ | --- |
+| Header icons: attach the window to the left or the right edge, or fill the page; `Features(dock=, full_page=)` switch them off | ✅ | [features/ask-coco/ask-coco.md](features/ask-coco/ask-coco.md) |
+| `ask_coco(on_layout=, split=)` and `get_window(key).place`: the page learns where the window is and can take the rest of the screen | ✅ | `make modern-chat` (Split screen selector) |
+| A click on the title bar minimises; hints on the title-bar icons after 750 ms | ✅ | |
+| Fix: the window no longer blinks while it waits (Streamlit faded the stale component) | ✅ | |
+| App Builder and BI → Semantic: Ask CoCo only, on every screen, with the questions of each screen | ✅ | `make app-builder` · `make bi-semantic` |
 
 ## v0.2.0 — Ask CoCo window
 
@@ -136,23 +149,49 @@ Product-shaped ideas (examples, RFCs, later catalogue types) live in this table.
 
 
 
-## Next — v0.3.0 — API mode, local Streamlit (no CoCo CLI)
+## v0.3.0 — Managed agent, local Streamlit (no CoCo CLI)
 
-`streamlit run` on a laptop or VM. The SDK talks to the Snowflake Agent API (`mode="api"`). Bash / Read / Write run in **Snowflake Sandbox**, not on the host. The `cortex` CLI is not required.
+`streamlit run` on a laptop or VM. The Cortex Agent SDK runs Snowflake's managed coding agent; Bash / Read / Write run in the **Snowflake sandbox**, not on the host. The `cortex` CLI is not required. Development branch: `dev/0.3.0-remote-api`. Published `2026-10-26`; the managed agent stays experimental (the SDK is a public preview).
 
+**Shipped in `0.3.0`**
 
-| Item                                                                             | Ref                                                                                                      |
-| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| Decide the transport: `cortex-code-agent-sdk` `mode="api"` (what the branch uses) or the Cortex Agent SDK managed coding agent (`agent={"type": "coding"}`: durable runs, reconnect, `always_ask` approvals) | [Cortex Agent SDK](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agent-sdk/cortex-agent-sdk) |
-| Wire `CocoOptions.mode="api"` + `snowflake_sandbox` through session / start gate | [#4](https://github.com/DevoteamSP/streamlit-coco-dev/issues/4)                                          |
-| Env probe: CLI optional when API mode is set                                     | [check_environment](../streamlit_coco/diagnostics.py)                                                  |
-| Feature doc + checklist                                                          | API mode specification to be written                                                          |
-| Map `cwd` / uploads onto the sandbox workspace (`/workspace`, V-stage)           | [file-upload](features/ask-coco/ask-coco.md)                                                       |
-| Least-privilege role documentation (SEC-02)                                      | [threat-model](security/threat-model.md)                                                                 |
-| Approval audit log persistence (SEC-01)                                          | [threat-model](security/threat-model.md) · [#15](https://github.com/DevoteamSP/streamlit-coco/issues/15) |
+| Item | Status | Ref |
+| ---- | ------ | --- |
+| Transport decided: one SDK, `snowflake-cortex-agent-sdk`, for the local CLI (`cortex_agent_sdk.cortexcode`, same API as `cortex-code-agent-sdk`) and for the managed agent. `CocoOptions.mode="api"` is not built: there is no second mode to switch | ✅ | [CHANGELOG](../CHANGELOG.md) · [feature file §8](features/ask-coco/ask-coco.md) |
+| `ManagedOptions` + `managed_agent` in the same window, policy and gate; the run is always `always_ask`, only the one-call "Allow this command" is sent | ✅ | [api.md](api.md) · `make managed` |
+| `options_from_connection(profile, role=)`, `SANDBOX_WORDS`, `SANDBOX_WHERE` | ✅ | [api.md](api.md) |
+| `AgentBackend`: the surface of an agent (Cortex Code, managed, scripted) | ✅ | `streamlit_coco/backend.py` |
+| Its own prompt: nothing of the local computer reaches the managed agent | ✅ | `streamlit_coco/managed.py` |
+| Window wording for the managed agent: the first screen says sandbox, the "Where" line names it (`FolderPolicy(where=)`, agent `labels`) | ✅ | [e2e](../tests/e2e/test_managed_window.py) |
+| Files attached in the window go to a stage mounted in the sandbox (`upload_stage`), before the first message; `cwd` is not mapped (decided: nothing local is visible to the sandbox) | ✅ | [api.md](api.md) · [feature file §8](features/ask-coco/ask-coco.md) |
+| `check_environment(managed=True)`: ready with the SDK alone | ✅ | [diagnostics](../streamlit_coco/diagnostics.py) |
+| Approval audit log: `AuditLog`, `ask_coco(audit=)`, credentials redacted, the outcome of an allowed call (SEC-01) | ✅ | [api.md](api.md) · [threat-model](security/threat-model.md) |
+| Least-privilege role documentation (SEC-02) | ✅ | [threat-model §8](security/threat-model.md) |
+| Browser test of the managed window on a scripted stream | ✅ | `make e2e` · `examples/e2e_managed_harness.py` |
+| Feature doc + live checklist rows 21 to 33; PRD; release kit | ✅ | [test-checklist](features/ask-coco/test-checklist.md) · [releases/0.3.0](releases/0.3.0/CHECKLIST.md) |
+| Live run on a Cortex Code CLI (rows 2 to 5), on the managed agent (rows 21 to 31) and `make managed` in a browser on a real account (2026-10-26) | ✅ partial | [test-checklist](features/ask-coco/test-checklist.md) |
+| Skills shop example and Native App (experimental): skills on a stage, a chat with one skill, packaged as an SPCS Native App; run live | ✅ | `make skills-hub` · `make native-shop-deploy` |
 
+**Left after the tag**
+
+| Item | Status | Ref |
+| ---- | ------ | --- |
+| SDK pin: `snowflake-cortex-agent-sdk>=0.0.3,<0.1` in the `sdk` and `dev` extras (a preview: re-check each `0.0.x` before the next tag) | ✅ shipped | [CHECKLIST](releases/0.3.0/CHECKLIST.md) |
+| Public GitHub issues: close public #15 and dev #4, comment on #12, #8, #14 (drafts written, nothing posted) | ⏳ | [CHECKLIST](releases/0.3.0/CHECKLIST.md) |
+| LinkedIn visual, `one-pager` refresh | ⏳ | [CHECKLIST](releases/0.3.0/CHECKLIST.md) |
+
+**Not proven (stated in the feature file):** a conversation of many hours (token renewal), sandbox SQL under caller's rights, `workspace_mounts` (the library only passes the field), a stage the role cannot write (the window says the upload failed; the account's own wording varies).
 
 CLI mode stays supported for local installs that already have `cortex` on `PATH`.
+
+**Skills shop (experimental, an example only, not part of the library's API)**
+
+| Item | Status | Ref |
+| ---- | ------ | --- |
+| Two skills in one conversation, and the cost of a skill in context | ⏳ | [brief §10](../doc-dev/briefs/skills-hub-managed.md) |
+| Sandbox SQL under caller's rights (the old hub needed `GRANT CALLER`) | ⏳ | [brief §13](../doc-dev/briefs/skills-hub-managed.md) |
+| A Playwright test of the shop page (only `AppTest` today) | ⏳ | `tests/test_skills_hub.py` |
+| The Native App page behind the ingress, tried by a logged-in user | ⏳ | [DEPLOY.md](../examples/skills_hub_native/DEPLOY.md) |
 
 ---
 
@@ -182,8 +221,8 @@ Packaged Snowflake Native App: the consumer runs the Streamlit UI in their accou
 
 | Item                                                                | Ref             |
 | ------------------------------------------------------------------- | --------------- |
-| Application package + Streamlit UI that starts CoCo in `mode="api"` | —               |
-| Provider / consumer privilege model for Agent API + sandbox         | —               |
+| Application package + Streamlit UI that starts the managed agent    | Experimental SPCS example (`examples/skills_hub_native`, a development install); a versioned, published package is not done |
+| Provider / consumer privilege model for Agent API + sandbox         | Started: the agent runs as the application (two Cortex grants); caller's rights and consumer-owned skills are open |
 | Skills marketplace / skills distribution inside the Native App      | Use cases above |
 
 

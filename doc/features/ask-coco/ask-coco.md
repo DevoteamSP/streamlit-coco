@@ -1,6 +1,6 @@
 # Ask CoCo: the window becomes the package's interface (0.2.0)
 
-Status: released in `0.2.0` (2026-10-20); the window is opt-in. The 0.1.9 chat family
+Status: released in `0.2.0` (2026-10-20); the window is opt-in. `0.2.2` adds the window's places (left, right, full page), the page callback `on_layout` and `split`. `0.3.0` (in development) adds the managed agent behind the same window (section 8), the approval audit log and the managed file upload. The 0.1.9 chat family
 (`chat`, `panel`, `copilot_rail`) is the default again. Pass `mini=True` to one of those, or call
 `ask_coco(cwd)`, to mount the floating window. The sheet below is the other developer's record of
 the window; where it says the chat family is removed, the code on this branch keeps it.
@@ -158,6 +158,8 @@ st_coco.Features(
     session_details=False,  # the menu offers Session details
     reasoning=False,        # CoCo's reasoning as a fold among the steps
     download_csv=False,     # Download CSV in the wider table view
+    dock=True,              # header icons: attach the window to the left or the right edge
+    full_page=True,         # header icon: the window fills the page
 )
 st_coco.Features.all()      # everything on: the playground
 ```
@@ -305,7 +307,7 @@ alone is code that shows the feature; no test runs it. Nothing here was proved a
 |---|---|---|---|
 | Python | 3.10 | 3.12 | pip refuses the install |
 | Streamlit | 1.55, written in `pyproject.toml` **[changed]** | the window: a five-line app on 1.53.0 and 1.65.0; the package: the browser tests on 1.55.0 and 1.60.0, the unit tests on 1.60.0 (on 1.55.0 all but three `AppTest` mounts of the window pass; those need 1.59). `copilot_rail` needs `st.popover(key=)`, new in 1.55, so 1.53 and 1.54 are below the floor | pip refuses the install. If an older Streamlit is forced, `ask_coco` raises one `CocoError` naming the version needed, before drawing anything |
-| Cortex Code Agent SDK | 1.0.7, an optional extra: `streamlit-coco[sdk]` **[changed]** | 1.0.7 | Not installed: the window says so and shows the command; the scripted agent still works |
+| Cortex Agent SDK | `snowflake-cortex-agent-sdk` `>=0.0.3,<0.1` (a public preview), an optional extra: `streamlit-coco[sdk]`; it replaced `cortex-code-agent-sdk` 1.0.7 in `0.3.0` | 0.0.3 (the CLI path against Cortex Code 1.2.18; the managed agent against a Snowflake test account) | Not installed: the window says so and shows the command; the scripted agent still works |
 | Cortex Code program | none enforced | read from 1.1.104 | A program cannot be pinned from a Python package. The rights fail safe: a tool or an input the policy does not know asks, as a change, with its whole input. Session details show the program's version; the documentation says which one was read |
 
 *Reason for finding the Streamlit floor by a run and not by reading release notes:* the window uses the new component
@@ -333,7 +335,7 @@ Cockpit (the two would drift, which is what this migration ends).
   English.
 - **Moving or resizing the window, a conversation that survives a browser reload, a list of past conversations.**
   Out of scope in the Cockpit's feature file, unchanged here.
-- **A second agent or provider.** `agent=` is the seam; only the Cortex adapter and the scripted agent exist.
+- **A second provider.** `agent=` is the seam; the Cortex adapter, the managed agent (`0.3.0`) and the scripted agent exist (`backend.py` names what an agent is).
 - **MCP servers stay off unless `options.mcp_servers` is given.** Their calls then ask like any unknown tool. Not
   verified live.
 - **The design sheet does not change**, and no frame is added for the package's own examples.
@@ -353,12 +355,49 @@ Found when this file was checked against the code (the code stands; the text abo
 - `cwd_uploader` was listed without its module (`uploader.py`); `Gate`, `CocoRunStatus`, `CocoChatResult` and
   `get_session` were missing from the public lists; `render_output_field` was not said to show text only.
 
+## 8. The managed agent (0.3.0, experimental)
+
+Snowflake's managed coding agent behind the same window (`ManagedOptions`, `managed_agent`,
+`options_from_connection`; the names are in [`doc/api.md`](../../api.md)). It runs in a Snowflake
+sandbox: no `cortex` program, no working folder. What does not change: the window, the thread, the
+steps, the stop, the policy and the gate, Allow and Decline, standing permissions.
+
+Decisions (Laurent unless noted):
+
+| Decision | Reason |
+|---|---|
+| **No `CocoOptions.mode="api"`.** The managed agent is a separate backend, chosen by `agent=managed_agent(...)`. | The Cortex Agent SDK has one local interface (`mode` is `cli` only); a second value of an option would pick between two unrelated stacks. `AgentBackend` (`backend.py`) is the seam; the CLI agent, the managed agent and the scripted agent keep it. |
+| **One SDK, `snowflake-cortex-agent-sdk`**, for the CLI path (`cortex_agent_sdk.cortexcode`, same API as `cortex-code-agent-sdk` 1.0.7) and for the managed agent. | One dependency, one version to watch; an application changes nothing (`pip install streamlit-coco[sdk]`). |
+| **The run is always created with `permission_policy="always_ask"`** (not a field), and only "Allow this command" (one call) is ever sent as an allow; "Allow all bash for this session" is never chosen. | Snowflake's own "always allow" would skip the gate. The standing permission is the user's to give, through the gate. Fail closed when the request offers no one-call allow. |
+| **The server decides what it asks about** (`risk_level`). The policy sees those calls, not every call. | A fact of the service, found live: `echo hello` runs without a request, a write asks. The docs say so. |
+| **Its own prompt: nothing of this computer.** No working folder, no rights text, `scope` reduced to its name. | Found live: the agent had answered with the developer's folder. |
+| **The request's "Where" line names the sandbox** (`FolderPolicy(where=SANDBOX_WHERE)`), and the first screen says it works in a sandbox (`ManagedAgent.labels`). | Both said "your project files" or a local folder name, which the managed agent never has. |
+| **`cwd` is not mapped onto the sandbox.** Work comes from `workspace_mounts`, `stage_mounts` and the attached files. | There is nothing to map: a local folder is invisible to a sandbox. Mapping it would mean uploading the folder behind the user's back. |
+| **Attached files go to a stage** (`ManagedOptions(upload_stage=)`) mounted at `/uploads`, in a folder of this conversation; no copy stays in the working folder; the folder is removed with the conversation. **Only before the first message.** | Checked live on a Snowflake test account: a regular stage mounts as a snapshot, read when the first message is sent; a file put after it is not seen, with or without a per-turn `agent=`. So a later attach is refused, with a sentence that says to start a new conversation, rather than accepted and invisible. |
+| **`AuditLog`** (`ask_coco(audit=)`), one JSON line per decision, for every agent, then an `outcome` line for an allowed call, with credentials redacted before the write. | SEC-01: a transcript in session state is not a record of who allowed what. Redaction is a net (it names what it does not catch), and it runs before the cut so a secret is never cut in half and left readable. |
+| **`check_environment(managed=True)`** does not look for the program. | An application that only uses the managed agent is ready with the SDK alone. |
+
+What was run, and how (full rows: [`test-checklist.md`](test-checklist.md) 21 to 33):
+
+- On the scripted stream of the SDK (`testing/managed_fake.py`, no login): `tests/test_managed.py`,
+  `tests/test_managed_files.py`, `tests/test_audit.py`; in a browser, `tests/e2e/test_managed_window.py`
+  on `examples/e2e_managed_harness.py` (the first screen, a command that asks in the sandbox, Allow,
+  Decline, the audit lines, an attached file that goes to the stage).
+- Live, on a Snowflake account: the approvals, the session token from a profile, stage skills
+  (`examples/skills_hub`), a Native App on SPCS (`examples/skills_hub_native`), the stage mount.
+
+Not proven: a long-running managed conversation (token renewal over hours), sandbox SQL under
+caller's rights, two skills in one conversation, a file attached to a stage that the session role
+cannot write (the window says why; the exact text of the account's error is not fixed), the
+`workspace_mounts` path (a Snowflake workspace; the library only passes the field).
+
 ## Limitations
 
-- Verified on the scripted agent only. The live run needs a Snowflake login and is listed in
+- The window, the conversation, the gate and the policy are verified on the scripted agent; the managed agent also on a scripted stream of Snowflake's client. The live run needs a Snowflake login and is listed in
   [`test-checklist.md`](test-checklist.md).
 - One window per page: two `ask_coco` calls with different keys draw two launchers at the same place.
 - The window ignores the system's reduced-motion setting **(client)**; `Features(motion=False)` restores it.
+- The window has three places **(client)**: floating (default), attached to the left or the right edge on the full height of the page (30 rem wide), or the full page (one rem around, the conversation 52 rem wide in the middle). Three icons in the header, the pressed one goes back to floating; `Features(dock=False)` removes the two attach icons and `Features(full_page=False)` the full page one; both are on by default. A click on the title bar (not on one of its buttons) minimises the window. The window then covers Streamlit's header and sidebar (z-index 1000000, under its dialogs and popovers). The page is not pushed aside unless `ask_coco(split=True)`: then the app container takes the rest of the screen while the window is attached. `ask_coco(on_layout=fn)` calls `fn(place)` on each change (`closed`, `float`, `left`, `right`, `full`) and reruns the page once; `get_window(key).place` reads it on any run; the browser writes `data-coco-place` and `--coco-dock-w` on `<html>`. Each icon of the title bar shows its hint after 750 ms (no native tooltip).
 - With the keyboard, Allow and Decline are reached with Shift+Tab from the field; a request that arrives under a
   Streamlit dialog cannot be clicked until the dialog is closed.
 

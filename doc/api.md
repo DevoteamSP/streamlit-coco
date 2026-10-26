@@ -1,6 +1,6 @@
 # API reference: streamlit-coco
 
-Public surface of `import streamlit_coco as st_coco`, and of `streamlit_coco.policy` and `streamlit_coco.testing`. `0.2.1`: signatures may still move. Every signature below was read from the code.
+Public surface of `import streamlit_coco as st_coco`, and of `streamlit_coco.policy` and `streamlit_coco.testing`. `0.3.0`: signatures may still move. Every signature below was read from the code.
 
 **Related:** [README](../README.md) · [Ask CoCo feature file](features/ask-coco/ask-coco.md) (the decisions and their reasons) · [Local deployment](deployment/local.md) · [SDK docs](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
 
@@ -13,6 +13,8 @@ Anything not named on this page is private, including the other modules of the p
 | Section | Names |
 | --- | --- |
 | [The window](#the-window) | `ask_coco`, `get_window`, the handle |
+| [The managed agent](#the-managed-agent-experimental) | `ManagedOptions`, `managed_agent`, `options_from_connection`, `SANDBOX_WORDS`, `SANDBOX_WHERE` |
+| [The audit log](#the-audit-log) | `AuditLog` |
 | [Rights](#rights-streamlit_cocopolicy) | `policy`, `Policy`, `FolderPolicy`, `Command`, `git_readonly`, `request`, `inside`, `is_secret_name`, `Gate` |
 | [Features](#features) | `Features`, `Attachments` |
 | [Context](#context) | the keys of `context()` |
@@ -25,6 +27,43 @@ Anything not named on this page is private, including the other modules of the p
 | [Environment and errors](#environment-and-errors) | `check_environment`, `require_environment`, `CocoEnvironment`, the Snowflake file helpers, the exceptions |
 | [Tool helpers](#tool-helpers) | `tool_family`, `is_sql_tool`, `is_ask_user_question`, `is_exit_plan_mode` |
 | [Testing](#testing) | `STREAMLIT_COCO_AGENT=mock`, `ScriptedAgent`, `VIEWS`, `harness`, `domdiff` |
+
+---
+
+## The managed agent (experimental)
+
+Snowflake's managed coding agent, through the Cortex Agent SDK: it runs in Snowflake (a sandbox with workspace and stage mounts), with no `cortex` program and no working folder. It takes the same window, the same policy and the same Allow and Decline.
+
+```python
+import streamlit_coco as st_coco
+
+managed = st_coco.ManagedOptions(
+    account="myorg-myaccount",
+    token=lambda: read_the_pat(),                     # a string, or a function; or `auth=` (any SDK authenticator, e.g. SnowflakeSessionTokenAuth(lambda: conn.rest.token))
+    workspace_mounts=[{"name": "USER$ME.PUBLIC.DEFAULT$", "mount_path": "/workspace"}],
+)
+st_coco.ask_coco(
+    ".",
+    agent=st_coco.managed_agent(managed),
+    connection="myorg-myaccount",
+    policy=st_coco.policy.FolderPolicy(".", words=st_coco.SANDBOX_WORDS, where=st_coco.SANDBOX_WHERE),
+)
+```
+
+| Name | What it is |
+| --- | --- |
+| `ManagedOptions(account, token, auth, base_url, workspace_mounts, stage_mounts, stage_skills, disabled_skills, models, instructions, label, connection, upload_stage, upload_mount)` | Where it runs and what it reaches. Every field has a default; `account` (or `base_url`) and `token` (or `auth`) are needed to connect. `upload_stage` and `upload_mount` carry the user's attached files: see below. |
+| `managed_agent(options)` | A function `(emit) -> agent`, for `ask_coco(agent=)` and `Conversation(agent=)`. |
+| `options_from_connection(profile, *, role=None, toml_file=None, **fields)` | `ManagedOptions` from a profile of `~/.snowflake`: it logs in with the connector (which reads the secrets; the `private_key_path` of Cortex Code is given to it as `private_key_file`) and hands the SDK that connection's session token. `role`: the session's role (the profile's own when None); a managed agent works with that role's rights, so give it the least that works. The agent closes the connection with itself. |
+| `SANDBOX_WORDS`, `SANDBOX_WHERE` | `FolderPolicy(folder, words=SANDBOX_WORDS, where=SANDBOX_WHERE)`: the request says the command runs in the Snowflake sandbox, not on this computer, and its "Where" line names the sandbox, not a local folder. |
+
+- The run is always created with `permission_policy="always_ask"`; it is not a field. A call the server asks about pauses the run, reaches the policy and waits for Allow or Decline; Allow is sent as the server's "Allow this command" (one call), anything else as "Deny". The server's own "Allow all bash for this session" is never chosen. A request without a one-call option is declined.
+- **The server decides what it asks about.** It rates each command (`risk_level`): a command it rates no risk (`echo hello`) runs without a request; one that writes (`> /tmp/file`) asks. The policy sees what the server shows it, not every call: this is not the Cortex Code agent's "every call reaches the gate". The commands run in Snowflake's sandbox, not on this computer, and the default words of a request say "on this computer": use `FolderPolicy(folder, words=SANDBOX_WORDS, where=SANDBOX_WHERE)`.
+- **No local folder.** `cwd` is only the policy's: it is not mapped onto the sandbox, and the agent is not told it. A call on a path of the sandbox is judged by the policy like any path outside its scope, so it asks. What the agent works on comes from `workspace_mounts` (a Snowflake workspace, writable and kept between turns), `stage_mounts` (read-only snapshots) and the files the user attaches.
+- **Attached files.** Set `Features(attachments=Attachments(...))` and `ManagedOptions(upload_stage="DB.SCHEMA.STAGE", connection=...)` (`options_from_connection` gives the connection; its role needs to write to the stage). Each attached file is put in this conversation's folder of the stage, mounted at `upload_mount` (default `/uploads`); the agent is told the sandbox path, never the local one, and no copy stays in the working folder. Attaching is the consent to read that folder. The sandbox reads the stage when the first message is sent, so **files go in before the first message**; later ones are refused with a sentence that says to start a new conversation (checked live: a file put after the first turn is not seen). The folder is removed from the stage when the conversation ends. Without `upload_stage` an attached file is refused and the window says why.
+- The first screen says it works in a sandbox, not on this computer (`ManagedAgent.labels`; a host's `labels=` still wins).
+- Not available: the agent's own questions and plans, planning only, the program's session facts.
+- Needs `snowflake-cortex-agent-sdk` (the `sdk` extra). The SDK is in public preview (`0.0.x`): the extra pins `>=0.0.3,<0.1`.
 
 ---
 
@@ -48,6 +87,9 @@ def ask_coco(
     agent: Callable | None = None,
     connection: str | None = None,
     on_rail: Callable[[], Any] | None = None,
+    on_layout: Callable[[str], Any] | None = None,
+    split: bool = False,
+    audit: Callable[[dict], Any] | None = None,
 ) -> Window: ...
 ```
 
@@ -68,6 +110,9 @@ Mounts the launcher (bottom right) and the window, and returns the handle. Call 
 | `agent` | A function `(emit) -> agent`, for tests and for another adapter. `None` gives the Cortex adapter, or the scripted agent when `STREAMLIT_COCO_AGENT=mock`. |
 | `connection` | Snowflake profile name. When the window is not connected yet, it connects with this profile. The Copilot rail passes the profile it is already using, so Minimize does not ask you to connect again. |
 | `on_rail` | A function `() -> None`. When set, the window header shows **Restore**. Using it calls the function, then reruns the page. `copilot_rail` uses it to bring its column back after Minimize. |
+| `on_layout` | A function `(place: str) -> None`, called when the window changes place: `"closed"` (minimised), `"float"`, `"left"`, `"right"` (attached to that edge, the whole height of the page, `min(30rem, 100vw)` wide) or `"full"`. The page then reruns once, so it can lay itself out (a column, a narrower grid). Read the same value on any run with `get_window(key).place`. The browser also writes it on the page: `data-coco-place` on `<html>` and the width in `--coco-dock-w`, for the page's own CSS. |
+| `split` | `True`: while the window is attached to the left or the right edge, the page takes the rest of the screen instead of being covered (Streamlit's app container moves over by the dock's width). Off by default. Full page does not split: there is nothing to share. |
+| `audit` | An [`AuditLog`](#auditlog) (or a function of one record): every call that asked the user, was covered by a standing permission or was refused is written there. Off by default. |
 
 Raises `CocoError` before drawing anything when Streamlit is older than 1.55 or `cwd` does not name an existing directory.
 
@@ -168,6 +213,8 @@ class FolderPolicy:
         sql: bool = False,
         lookups: bool = False,
         standing: bool = False,
+        words: dict | None = None,
+        where: str | None = None,
     ): ...
 ```
 
@@ -182,6 +229,8 @@ The default policy: reading inside `scope` (default `folder`) is free, every oth
 | `changes` | Which files a change is ordinary for. Glob patterns (a string or a list, compared with the path from the scope; `*` crosses folders), or a function `(resolved path) -> None \| reason`. Default: any file inside the scope. Other files ask, say what is unusual, and are never offered a standing permission. |
 | `sql` | A SQL call shows its exact statement, and is told apart: a query (surely one reading statement) is a read, anything else is a change. Any other input (a connection, a timeout) shows under "Other inputs". With `sql=False` a SQL call asks as a change with its whole input. |
 | `lookups` | The known read-only tools of Cortex Code (Snowflake object search, table lookup, semantic view and Cortex agent search, Snowflake documentation, connection list, web search, web fetch) are shown as reads, with where the question goes. |
+| `words` | The host's sentences over the defaults (`SANDBOX_WORDS` is one). |
+| `where` | What the request's "Where" line says. Default: the name of the scope's folder. `SANDBOX_WHERE` for the managed agent. |
 | `standing` | Each request offers its family as a standing permission until the conversation ends. The offer reads "Do not ask again for ...": commands; changes in this folder; queries that only read; SQL statements; one tool; reading outside the scope. File changes never include the `.git` folder, a secret-named file, or a place `flag` marks: those ask each time. |
 
 Attributes: `words` (a dict of the few sentences it writes, for a host to replace: `undo`, `scope`, `folder`, `large`, `unusual`, `files`, `elsewhere`, `except`, `ordinary`, `also_asks`), `base`, `scope`, `where`, `spill`, `uploads`.
@@ -255,6 +304,8 @@ class Features:
         session_details: bool = False,
         reasoning: bool = False,
         download_csv: bool = False,
+        dock: bool = True,
+        full_page: bool = True,
     ): ...
 
 # Features.all() builds one with everything on: the playground
@@ -268,6 +319,8 @@ A feature appears only when you switch it on or supply its data. A host that use
 | `steps` | One card per tool call. Off: only failed and refused steps stay, and the sentences CoCo said. |
 | `motion` | The window's animation. It ignores the system's reduced-motion setting. |
 | `copy` | Copy on answers, code and tables. |
+| `dock` | Two icons in the window's header attach it to the left or the right edge, on the whole height of the page. The pressed icon puts the window back. The place is kept in the browser while the page lives. Off: the icons are not there. |
+| `full_page` | An icon in the window's header makes it fill the page. The pressed icon puts the window back. Off: the icon is not there. |
 | `page_text` | Each message carries the text the page shows (more data leaves the browser). |
 | `page_exclude` | CSS selectors left out of that text. |
 | `attachments` | An `Attachments`: the field accepts files. |
@@ -584,25 +637,57 @@ Flattens events for an audit view. Needs pandas.
 
 ---
 
+## The audit log
+
+### `AuditLog`
+
+```python
+class AuditLog:
+    def __init__(self, path, *, who=None, evidence_chars: int = 2000, redact=redact_secrets): ...
+    def __call__(self, record: dict) -> None: ...
+    def read(self) -> list[dict]: ...
+```
+
+Who allowed what, when. One JSON line per call that asked the user, was covered by a standing permission, or was refused; a call that runs without a question (a read inside the working folder) is not logged. Pass it as `ask_coco(audit=...)`; it works with every agent (Cortex Code, managed, scripted).
+
+```python
+audit = st_coco.AuditLog("logs/coco-audit.jsonl", who=lambda: st.user.get("email"))
+st_coco.ask_coco(".", audit=audit)
+```
+
+A line holds `time` (UTC), `who`, `conversation`, `agent`, `profile`, `tool`, `decision` (`allowed`, `declined`, `expired`, `refused`, `standing`, `revoked`), the request's `kind`, `question`, `where` and `evidence` (the exact command, SQL or path the user was shown, cut at `evidence_chars`), and `tool_id`, and `reason`, `standing_granted` or `standing` when there is one. The library cannot know who answers: give `who` (a text or a function) or the field is empty. The file is created readable by its owner only and can hold what a command contains. A failing write is logged and never stops CoCo: the log records decisions, it does not make them. It is not tamper-proof: ship it to storage the app cannot rewrite if that matters.
+
+**What became of an allowed call.** When the result of a call that was allowed (or covered by a standing permission) is known, a second line follows with `decision: "outcome"`, the same `tool_id`, and `outcome`: `succeeded`; `failed` (the tool reported an error: it may or may not have started); `not_run` (the Cortex Code program refused it itself, whatever the user said); `no_result` (the run ended, was stopped or lost before a result came). `detail` says why a call failed or was not run. A declined, expired or refused call has no outcome line.
+
+**Redaction.** Before a line is written, `redact` (default `redact_secrets`, also exported as `streamlit_coco.audit.redact_secrets`) rewrites the text the user was shown (`evidence`), `detail` and `reason`, and only then is the text cut at `evidence_chars`. The default replaces with `[redacted]`: the value of `password`, `passwd`, `pwd`, `secret`, `token`, `api_key`, `access_key`, `private_key` or `credential` names (`name=value`, `name: value`, `--password value`), a SQL `IDENTIFIED BY`, bearer and basic tokens, a private key block, a password inside a URL, and the usual token shapes (AWS keys, GitHub tokens, Slack tokens, JWTs, `sk-` keys). `redact=None` writes the text as it was shown; a function `(text) -> text` of your own replaces the default; a redactor that raises writes `[not logged: the redactor failed]` in place of the text.
+
+**What redaction does not protect.** A secret that looks like nothing: a password given as a plain argument (`mysql -u root -p hunter2`), a secret inside the text of a file the agent writes, an encoded or split secret, personal data in a SQL statement or in a result. It does not touch `question` and `where` (written by your policy), the thread the user sees, the agent's own context, or what Snowflake logs. It is a net, not a guarantee: treat the file as sensitive.
+
+---
+
 ## Environment and errors
 
 ### `check_environment`
 
 ```python
-def check_environment(*, connection=None, cli_path=None, toml_file=None) -> CocoEnvironment: ...
+def check_environment(
+    *, connection=None, cli_path=None, toml_file=None, managed=False
+) -> CocoEnvironment: ...
 ```
 
-Probes without starting an agent. Does not raise. The window does this itself and says what is missing; use it for a page of your own.
+Probes without starting an agent. Does not raise. The window does this itself and says what is missing; use it for a page of your own. `managed=True` is for an application that only uses the [managed agent](#the-managed-agent-experimental): the `cortex` program is not looked for, and `ready` is true with the SDK alone.
 
-`CocoEnvironment` fields: `sdk_installed`, `sdk_version`, `cli_path`, `cli_version`, `snowflake_config_file`, `connection_hint`, `toml_file`. Properties: `ready`, `cli_ok`, `snowflake_config_found`, `snowflake_config_display`, `snowflake_config_missing_label`.
+`CocoEnvironment` fields: `sdk_installed`, `sdk_version`, `cli_path`, `cli_version`, `snowflake_config_file`, `connection_hint`, `toml_file`, `managed`. Properties: `ready`, `cli_ok`, `snowflake_config_found`, `snowflake_config_display`, `snowflake_config_missing_label`.
 
 ### `require_environment`
 
 ```python
-def require_environment(*, connection=None, cli_path=None, toml_file=None, require_snowflake_config=False) -> CocoEnvironment: ...
+def require_environment(
+    *, connection=None, cli_path=None, toml_file=None, require_snowflake_config=False, managed=False
+) -> CocoEnvironment: ...
 ```
 
-Like `check_environment`, but raises a typed error when the SDK or the program (and, if asked, the Snowflake file) is missing.
+Like `check_environment`, but raises a typed error when the SDK or the program (and, if asked, the Snowflake file) is missing. With `managed=True` only the SDK (and the file, if asked) is required.
 
 ### Snowflake file helpers
 
@@ -716,5 +801,5 @@ python -m streamlit_coco.testing.domdiff [--ref HEAD] [--only REGEX]
 ## Package metadata
 
 ```python
-st_coco.__version__  # "0.2.1"
+st_coco.__version__  # "0.3.0"
 ```

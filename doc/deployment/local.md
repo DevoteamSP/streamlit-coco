@@ -17,7 +17,7 @@ uv add "streamlit-coco[sdk]"
 # or: pip install "streamlit-coco[sdk]"
 ```
 
-The `[sdk]` extra pulls in `cortex-code-agent-sdk`.
+The `[sdk]` extra pulls in `snowflake-cortex-agent-sdk`.
 
 ### Install from a clone (editable + dev tools)
 

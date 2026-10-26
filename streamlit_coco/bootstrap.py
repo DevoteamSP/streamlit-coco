@@ -49,7 +49,7 @@ def render_environment_status(
         if status.sdk_installed:
             st.success(f"SDK installed · `{status.sdk_version or 'unknown'}`")
         else:
-            st.error("SDK missing — `pip install cortex-code-agent-sdk`")
+            st.error("SDK missing — `pip install snowflake-cortex-agent-sdk`")
 
     def _cli_block() -> None:
         if status.cli_ok:

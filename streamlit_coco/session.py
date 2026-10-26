@@ -27,7 +27,7 @@ from streamlit_coco.permissions import PermissionManager, build_can_use_tool
 from streamlit_coco.tool_names import is_exit_plan_mode
 
 try:
-    from cortex_code_agent_sdk import CortexCodeSDKClient
+    from cortex_agent_sdk.cortexcode import CortexCodeSDKClient
 except ImportError:  # pragma: no cover
     CortexCodeSDKClient = None  # type: ignore[misc, assignment]
 

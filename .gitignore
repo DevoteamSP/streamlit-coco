@@ -34,3 +34,9 @@ examples/app_builder/out/
 # Optional Power BI samples (~17 MB) — fetch with examples/bi_samples/powerbi/fetch.sh
 examples/bi_samples/powerbi/Human Resources Sample PBIX.pbix
 examples/bi_samples/powerbi/Employee Hiring and History.pbix
+
+# Skills shop Native App: per-user overrides
+examples/skills_hub_native/snowflake.local.yml
+
+# snow app run output
+examples/skills_hub_native/output/

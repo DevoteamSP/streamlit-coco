@@ -7,6 +7,11 @@ package against it, so a change that would break code written for 0.1.9 fails a 
 Regenerate a snapshot of another release from its source tree::
 
     python tests/api_snapshot.py <folder holding streamlit_coco/> > tests/fixtures/api_X.Y.Z.json
+
+Take it with the SDK that release used installed (0.2.2: ``cortex-code-agent-sdk`` 1.0.7), in a
+throwaway environment: without it the release falls back to stub ``PermissionResult*`` classes and
+the comparison reports differences that are not real. ``tests/fixtures/api_0.2.2.json`` was taken
+that way from the ``v0.2.2`` tag.
 """
 
 from __future__ import annotations
@@ -26,6 +31,8 @@ _PRIMITIVES = (type(None), bool, int, float, str)
 def _default(value: Any) -> str:
     if value is inspect.Parameter.empty:
         return "<required>"
+    if value == sys.platform:  # `Command(platform=sys.platform)`: the machine's, not the API's
+        return "<object>"
     if isinstance(value, _PRIMITIVES):
         return repr(value)
     return "<object>"

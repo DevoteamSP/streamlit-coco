@@ -8,7 +8,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Any
 
 try:
-    from cortex_code_agent_sdk import (
+    from cortex_agent_sdk.cortexcode import (
         AssistantMessage,
         ResultMessage,
         StreamEvent,
@@ -19,7 +19,7 @@ try:
         ToolUseBlock,
         UserMessage,
     )
-    from cortex_code_agent_sdk.types import Message
+    from cortex_agent_sdk.cortexcode.types import Message
 except ImportError:  # pragma: no cover - optional sdk extra
     AssistantMessage = ResultMessage = StreamEvent = SystemMessage = object  # type: ignore[misc, assignment]
     TextBlock = ThinkingBlock = ToolResultBlock = ToolUseBlock = UserMessage = object  # type: ignore[misc, assignment]

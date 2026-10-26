@@ -284,7 +284,9 @@ def _said(wait: dict, answers) -> str:
 
 
 def _low(text: str) -> str:
-    return text[:1].lower() + text[1:]
+    """The sentence of a family inside another ("... asks before it {what}."): its first letter low
+    and no full stop of its own."""
+    return text[:1].lower() + text[1:].rstrip(". ")
 
 
 def _revoke(conv, pid, *, tell: bool = True) -> None:

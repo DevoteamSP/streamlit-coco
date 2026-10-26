@@ -4,16 +4,10 @@ from __future__ import annotations
 
 import streamlit as st
 
+from engine.actions import start_fix
 from engine.brief import APP_FILE, app_exists, slug_dir
-from engine.jobs import (
-    is_connected,
-    is_copilot_open,
-    preview_port,
-    queue_fix,
-    set_copilot_open,
-    set_preview_full,
-    set_preview_open,
-)
+from engine.coco_window import render_brief_expander
+from engine.jobs import preview_port, set_preview_full, set_preview_open
 from engine.state import slug
 from streamlit_coco.app_preview import preview_running, start_app_preview
 from streamlit_coco.viewer import app_viewer
@@ -26,9 +20,8 @@ def render_preview_rail() -> None:
         st.caption("Pick a type and build an app to preview it.")
         return
 
+    render_brief_expander()
     iframe_h = 860 if st.session_state.get("ab_preview_full") else 520
-    if is_copilot_open():
-        iframe_h = 480
 
     script = dest / APP_FILE
     if (
@@ -51,13 +44,7 @@ def render_preview_rail() -> None:
         st.session_state["ab_preview_auto_run"] = False
 
     def _on_fix(trace: str) -> None:
-        set_copilot_open(True)
-        set_preview_open(True)
-        if not is_connected():
-            st.session_state["ab_coco_connect_hint"] = True
-            st.rerun()
-        queue_fix(trace, dest)
-        st.toast("Queued · fix the preview")
+        start_fix(trace, dest)
 
     def _title_extra() -> None:
         if "ab_preview_full_pill" not in st.session_state:

@@ -10,7 +10,7 @@ _STEPS = (
         ":material/upload_file:",
         "1 · Load",
         "Upload Tableau or Power BI files, or copy an MIT demo pack into the agent workspace.",
-        "No Copilot",
+        "No CoCo",
         "blue",
     ),
     (
@@ -30,8 +30,8 @@ _STEPS = (
     (
         ":material/policy:",
         "4 · Access rules",
-        "Compare Tableau User Filters (via Copilot) or Power BI table contracts (local).",
-        "Copilot for Tableau",
+        "Compare Tableau User Filters (via Ask CoCo) or Power BI table contracts (local).",
+        "CoCo for Tableau",
         "orange",
     ),
     (
@@ -120,7 +120,7 @@ def run() -> None:
     st.subheader("What happens")
     st.caption(
         "Six screens, in order. Early steps are local parse. Later steps queue work "
-        "on the shared Copilot session — they do not open a new agent."
+        "in Ask CoCo, the window at the bottom right — one conversation, no new agent."
     )
     for start in range(0, len(_STEPS), 3):
         cols = st.columns(3, gap="medium")
@@ -139,15 +139,15 @@ def run() -> None:
             "`.pbix` / `.pbit`. Files land in the agent working directory. Packs are "
             "MIT © Tableau and MIT © Microsoft."
         )
-        st.markdown("**2. Open Copilot once**")
+        st.markdown("**2. Connect Ask CoCo once**")
         st.caption(
-            "Use **Copilot** in the header to connect. Later screens reuse that streamed "
-            "session. Buttons only queue a job."
+            "Open **Ask CoCo** (bottom right) and connect. Later screens reuse that "
+            "conversation. Buttons send the job to it."
         )
     with h2.container(border=True, height="stretch"):
         st.markdown("**3. Walk the screens**")
         st.caption(
-            "Estate map and KPIs need no account. Access rules need Copilot for Tableau "
+            "Estate map and KPIs need no account. Access rules need CoCo for Tableau "
             "(Power BI contracts are local). Arbitration is you. Generate writes SQL "
             "under approval."
         )

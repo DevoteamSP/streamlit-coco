@@ -35,6 +35,8 @@ class Features:
     session_details: bool = False  # the menu offers Session details
     reasoning: bool = False  # CoCo's reasoning as a fold among the steps
     download_csv: bool = False  # Download CSV in the wider table view
+    dock: bool = True  # header icons: attach the window to the left or the right edge
+    full_page: bool = True  # header icon: the window fills the page
 
     def __post_init__(self) -> None:
         unknown = [name for name in self.display if name not in DISPLAY]

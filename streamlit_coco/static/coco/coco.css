@@ -63,18 +63,37 @@ button, textarea, select { font: inherit; color: inherit; }
 @keyframes cl-spin { to { transform: rotate(1turn); } }
 
 /* ====================================================================== window */
-.cc { position: fixed; right: calc(var(--r) * 1.5); bottom: var(--bottom); z-index: 8; display: flex; flex-direction: column; width: min(calc(var(--r) * 27), calc(100vw - var(--r) * 2)); height: var(--wh); min-height: 0;
+.cc { position: fixed; right: calc(var(--r) * 1.5); bottom: var(--bottom); z-index: 8; display: flex; flex-direction: column; width: min(calc(var(--r) * 27), calc(100vw - var(--r) * 2)); height: var(--wh); min-height: 0; max-height: calc(100dvh - var(--bottom) - var(--r) * 4.5);   /* never up under the page's header or menu bar */
   border: 1px solid var(--line); border-radius: var(--coco-radius); background: var(--canvas); box-shadow: var(--shadow); overflow: hidden; transform-origin: 100% 100%; animation: cc-in 160ms ease-out; }
 @keyframes cc-in { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
+/* Other places for the window (header icons; Features(dock=False) and Features(full_page=False) remove them). --wh is the window's height everywhere
+   (the confirm and panel heights read it), so it follows the place. The dock is the whole height of the page and square on the
+   edge it touches; the full page leaves one rem around, and its conversation keeps a readable width in the middle. */
+.cc[data-l] { z-index: 1000000; max-height: none; }   /* over Streamlit's header, menu bar and sidebar (999990-999995; coco.js raises it if this Streamlit uses more), under its dialogs and popovers (1000061 and up) */
+.cc[data-l=left], .cc[data-l=right] { --wh: 100dvh; top: 0; bottom: 0; width: min(calc(var(--r) * 30), 100vw); }
+.cc[data-l=left] { left: 0; right: auto; border-width: 0 1px 0 0; border-radius: 0 var(--coco-radius) var(--coco-radius) 0; transform-origin: 0 50%; }
+.cc[data-l=right] { right: 0; border-width: 0 0 0 1px; border-radius: var(--coco-radius) 0 0 var(--coco-radius); transform-origin: 100% 50%; }
+.cc[data-l=full] { --wh: calc(100dvh - var(--r) * 2); --lane: max(var(--r), calc((100% - var(--r) * 52) / 2)); top: var(--r); left: var(--r); right: var(--r); bottom: var(--r); width: auto; transform-origin: 50% 50%; }
+.cc[data-l=full] :is(.bd, .ft, .rq, .ag-off) { padding-inline: var(--lane); }
+.cc[data-l=full] :is(.ag-cf, .ag-pan) { left: 50%; right: auto; width: min(calc(var(--r) * 40), calc(100% - var(--r) * 1.5)); transform: translateX(-50%); }
+.ib[aria-pressed=true] { background: rgba(255, 255, 255, .22); }
+.coco-root.nodock .ib.lay:not([data-l=full]), .coco-root.nofull .ib.lay[data-l=full] { display: none; }
 .cc :focus-visible { outline: 2px solid var(--coco); outline-offset: 2px; }
 .cc :focus-visible:is(.b, .pp, summary) { outline-offset: 1px; }
 .fld textarea:focus-visible { outline: 0; }   /* the field answers with its border, not a ring */
 
-.hd { position: relative; z-index: 2; transition: box-shadow 160ms ease-out; flex: none; display: flex; align-items: center; gap: calc(var(--r) * .75); height: calc(var(--r) * 3.75); padding: 0 calc(var(--r) * .75) 0 var(--r); background: var(--disc); color: var(--surface); }
+.hd { cursor: pointer; position: relative; z-index: 2; transition: box-shadow 160ms ease-out; flex: none; display: flex; align-items: center; gap: calc(var(--r) * .75); height: calc(var(--r) * 3.75); padding: 0 calc(var(--r) * .75) 0 var(--r); background: var(--disc); color: var(--surface); }
 .hd .sk { display: block; width: calc(var(--r) * 1.5); height: calc(var(--r) * 1.5); flex: none; }
 .hd .tt { flex: 1; min-width: 0; }
 .hd h2 { font-size: var(--fz-mod); font-weight: 600; color: var(--surface); }
 .ib { display: grid; place-items: center; flex: none; width: calc(var(--r) * 2.25); height: calc(var(--r) * 2.25); padding: 0; border: 0; border-radius: var(--rad-c); background: transparent; color: var(--surface); cursor: pointer; }
+.ib { position: relative; }
+.ib[data-tip]::after { content: attr(data-tip); position: absolute; top: calc(100% + var(--r) * .35); right: 0; z-index: 5; width: max-content; max-width: calc(var(--r) * 14); padding: calc(var(--r) * .3) calc(var(--r) * .55);
+  border: 1px solid var(--line); border-radius: calc(var(--r) * .4); background: var(--surface); color: var(--ink); box-shadow: var(--shadow); font-size: var(--fz-cap); font-weight: 500; line-height: 1.3; white-space: nowrap;
+  pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 120ms ease-out, visibility 0s linear 120ms; }
+.ib[data-tip]:hover::after, .ib[data-tip]:focus-visible::after { opacity: 1; visibility: visible; transition: opacity 120ms ease-out 750ms, visibility 0s linear 750ms; }   /* the hint shows after 750 ms on the icon */
+.ib[aria-expanded=true]::after { display: none; }
+.coco-root.calm .ib[data-tip]:hover::after, .coco-root.calm .ib[data-tip]:focus-visible::after { transition: opacity 0s linear 750ms, visibility 0s linear 750ms !important; }   /* no fade, the delay stays */
 .ib:hover, .ib[aria-expanded=true] { background: rgba(255, 255, 255, .14); }
 .cc.scr .hd { box-shadow: 0 1px 0 var(--line), 0 calc(var(--r) * .5) calc(var(--r) * .5) rgba(44, 44, 42, .16); }
 

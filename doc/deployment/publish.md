@@ -56,8 +56,11 @@ cp -R doc-dev/releases/_template/. "doc-dev/releases/${VER}/"
 
 ```bash
 make test-all
+make release-check   # version free on PyPI and the public tags, public CHANGELOG known, every lock audited, Dependabot alerts, sync dry run
 # Manual UI checklists under doc/features/ before 0.x / 1.0 cuts
 ```
+
+`make release-check` fails when the version is already on PyPI or tagged on the public repository, when the public CHANGELOG has a release this one lacks (the sync would overwrite it), when any `uv.lock` (the root one and `examples/*/uv.lock`) has a known vulnerability, or when the sync dry run would publish generated `out/` files or dev-only paths. It warns on open Dependabot alerts (GitHub rescans after a push) and on deletions in the public tree. After the tag, the version check fails by design: it is a pre-release check.
 
 **Required before tagging (do not skip):**
 

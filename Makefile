@@ -1,6 +1,6 @@
 # streamlit-coco — local development
 UV       ?= uv
-# Always include [dev] so cortex-code-agent-sdk is available for demos/tests.
+# Always include [dev] so snowflake-cortex-agent-sdk is available for demos/tests.
 PYTHON   ?= $(UV) run --extra dev
 E2E_PYTHON ?= $(UV) run --extra e2e
 STREAMLIT = $(PYTHON) python -m streamlit run
@@ -8,9 +8,9 @@ EXAMPLE  ?= examples/chat_app.py
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install sync test lint format check audit e2e-install e2e test-all \
-	run chat simple-chat modern-chat approval structured headless backlog cwd-upload e2e-harness \
-	bi-semantic tableau-semantic app-builder \
+.PHONY: help install sync test lint format check audit release-check e2e-install e2e test-all \
+	run chat simple-chat modern-chat approval managed structured headless backlog cwd-upload e2e-harness \
+	skills-hub publish-skill native-shop-image native-shop-deploy native-shop-restart native-shop-status native-shop-logs native-shop-teardown bi-semantic tableau-semantic app-builder \
 	build publish sync-release clean adoption-stats adoption-chart \
 	training training-html training-pdf training-check
 
@@ -42,8 +42,12 @@ format: ## Format with ruff
 	$(PYTHON) ruff format .
 	$(PYTHON) ruff check --fix .
 
-audit: ## Dependency vulnerability scan (pip-audit)
+audit: ## Dependency vulnerability scan (pip-audit) of the root lock and every examples/*/uv.lock
 	$(PYTHON) pip-audit --skip-editable
+	$(PYTHON) python scripts/audit_locks.py
+
+release-check: ## Before sync-release and the tag: version free on PyPI/tags, public changelog, audits, alerts, sync dry run
+	$(PYTHON) python scripts/release_check.py
 
 check: lint test ## Lint then unit tests
 
@@ -70,6 +74,37 @@ modern-chat: ## Copilot rail or Ask CoCo window (examples/modern_chat)
 
 approval: ## Run examples/approval_gate.py
 	$(STREAMLIT) examples/approval_gate.py
+
+managed: ## Run examples/managed_chat.py (Snowflake's managed coding agent, no cortex program)
+	$(STREAMLIT) examples/managed_chat.py
+
+skills-hub: ## Run the skills shop (browse stage skills, chat with one; sample skills need no Snowflake)
+	$(STREAMLIT) examples/skills_hub/app.py
+
+publish-skill: ## Validate and publish a skill folder: make publish-skill SKILL=examples/skills_hub/samples/csv-profile ARGS="--stage DB.SCHEMA.STAGE --profile P --role R"
+	$(PYTHON) python examples/skills_hub/publish.py $(SKILL) $(ARGS)
+
+SNOW_CONNECTION ?= snowflake
+NATIVE_SHOP = examples/skills_hub_native
+
+native-shop-image: ## Build and push the Skills shop image (Docker running)
+	$(NATIVE_SHOP)/containers/build_and_push.sh $(SNOW_CONNECTION)
+
+native-shop-deploy: ## Package and install/upgrade the Skills shop Native App (snow app run)
+	cd $(NATIVE_SHOP) && snow app run --connection $(SNOW_CONNECTION)
+
+native-shop-restart: ## Restart the Skills shop service (suspend, resume)
+	snow sql -q "CALL coco_skills_shop.app_schema.suspend_service()" --connection $(SNOW_CONNECTION)
+	snow sql -q "CALL coco_skills_shop.app_schema.resume_service()" --connection $(SNOW_CONNECTION)
+
+native-shop-status: ## Status of the Skills shop service
+	snow sql -q "CALL coco_skills_shop.app_schema.get_service_status()" --connection $(SNOW_CONNECTION)
+
+native-shop-logs: ## Logs of the Skills shop container
+	snow sql -q "CALL coco_skills_shop.app_schema.get_service_logs('0', 'streamlit')" --connection $(SNOW_CONNECTION)
+
+native-shop-teardown: ## Drop the Skills shop application, its service, pool and package
+	cd $(NATIVE_SHOP) && snow app teardown --connection $(SNOW_CONNECTION) --force --cascade
 
 structured: ## Run examples/structured_output.py
 	$(STREAMLIT) examples/structured_output.py

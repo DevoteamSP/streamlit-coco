@@ -9,7 +9,7 @@ from typing import Any
 from streamlit_coco.errors import SDKNotInstalledError
 
 try:
-    from cortex_code_agent_sdk import CortexCodeAgentOptions
+    from cortex_agent_sdk.cortexcode import CortexCodeAgentOptions
 except ImportError:  # pragma: no cover
     CortexCodeAgentOptions = None  # type: ignore[misc, assignment]
 

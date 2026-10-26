@@ -13,6 +13,7 @@ from importlib import import_module, reload
 from typing import Any
 
 from streamlit_coco import policy
+from streamlit_coco.audit import AuditLog
 from streamlit_coco.diagnostics import (
     CocoEnvironment,
     check_environment,
@@ -37,6 +38,13 @@ from streamlit_coco.errors import (
 )
 from streamlit_coco.features import Attachments, Features
 from streamlit_coco.gate import Gate
+from streamlit_coco.managed import (
+    SANDBOX_WHERE,
+    SANDBOX_WORDS,
+    ManagedOptions,
+    managed_agent,
+    options_from_connection,
+)
 from streamlit_coco.messages import CocoEvent, events_to_dataframe
 from streamlit_coco.options import CocoOptions
 from streamlit_coco.permissions import approve_pending, deny_pending
@@ -59,7 +67,7 @@ from streamlit_coco.upload import (
     upload_to_cwd,
 )
 
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 
 # UI / Streamlit-backed exports — loaded on first attribute access.
 _LAZY_ATTRS: dict[str, tuple[str, str]] = {
@@ -99,6 +107,7 @@ _LAZY_ATTRS: dict[str, tuple[str, str]] = {
 __all__ = [
     "ApprovalTimeoutError",
     "Attachments",
+    "AuditLog",
     "CLIProbeError",
     "CLINotFoundError",
     "CocoChatResult",
@@ -115,6 +124,9 @@ __all__ = [
     "DEFAULT_UPLOAD_SUBDIR",
     "Features",
     "Gate",
+    "ManagedOptions",
+    "SANDBOX_WHERE",
+    "SANDBOX_WORDS",
     "QueryError",
     "SDKNotInstalledError",
     "SessionNotReadyError",
@@ -138,6 +150,8 @@ __all__ = [
     "get_or_create_session",
     "get_session",
     "get_window",
+    "managed_agent",
+    "options_from_connection",
     "is_ask_user_question",
     "is_debug_mode",
     "is_exit_plan_mode",

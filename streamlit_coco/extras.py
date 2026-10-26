@@ -319,13 +319,43 @@ def _free(folder: Path, name: str, raw: bytes) -> Path:
             n += 1
 
 
+def _carry(conv, carry, paths: list[str], refused: list) -> tuple[list[str], Path]:
+    """The paths the agent reads, and the folder they are in. The copies saved here are removed
+    (the files live where the agent works); a refusal also lets the same file be attached again."""
+    from streamlit_coco.backend import CarryError
+
+    uploads = Path(conv.cwd) / "_coco_uploads"
+    try:
+        carried = carry([Path(p) for p in paths])
+        root = getattr(conv.agent, "upload_root", None)
+        uploads = Path(root) if root else uploads
+    except CarryError as error:
+        why = conv.t(error.key, **error.values)
+        refused.extend((Path(p).name, why) for p in paths)
+        for p in paths:
+            conv.ex["saved"].pop(Path(p).name, None)
+        carried = []
+    for p in paths:
+        Path(p).unlink(missing_ok=True)
+    for folder in {Path(p).parent for p in paths}:
+        try:
+            folder.rmdir()
+        except OSError:
+            pass
+    return carried, uploads
+
+
 def on_message(conv, action: dict, message: dict) -> None:
     if not action.get("files"):
         return
     paths, message["ex_refused"] = _save(conv, action["files"])
+    uploads = Path(conv.cwd) / "_coco_uploads"
+    carry = getattr(conv.agent, "carry", None)
+    if paths and carry is not None:  # an agent that works elsewhere: the files go to it
+        paths, uploads = _carry(conv, carry, paths, message["ex_refused"])
     if paths:
         if hasattr(message["policy"], "uploads"):  # attaching a file is the consent to read it
-            message["policy"].uploads = Path(conv.cwd) / "_coco_uploads"
+            message["policy"].uploads = uploads
         message.setdefault("show", {})["files"] = [Path(p).name for p in paths]
         message["prompt"] = (
             (message["text"] or conv.t("attach_prompt"))

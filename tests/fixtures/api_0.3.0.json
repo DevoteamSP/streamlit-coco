@@ -1,0 +1,9237 @@
+{
+ "modules": {
+  "streamlit_coco.app_preview": {
+   "DEFAULT_PORT_HI": {
+    "kind": "value"
+   },
+   "DEFAULT_PORT_LO": {
+    "kind": "value"
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "default_fix_prompt": {
+    "kind": "function",
+    "params": [
+     [
+      "traceback",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "app_dir",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "last_preview_exception": {
+    "kind": "function",
+    "params": [
+     [
+      "app_dir",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "log_file": {
+    "kind": "function",
+    "params": [
+     [
+      "app_dir",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "pick_free_port": {
+    "kind": "function",
+    "params": [
+     [
+      "lo",
+      "KEYWORD_ONLY",
+      "8511"
+     ],
+     [
+      "hi",
+      "KEYWORD_ONLY",
+      "8520"
+     ],
+     [
+      "preferred",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "address",
+      "KEYWORD_ONLY",
+      "'127.0.0.1'"
+     ]
+    ]
+   },
+   "pid_file": {
+    "kind": "function",
+    "params": [
+     [
+      "app_dir",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "port_file": {
+    "kind": "function",
+    "params": [
+     [
+      "app_dir",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "preview_log_tail": {
+    "kind": "function",
+    "params": [
+     [
+      "app_dir",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "n",
+      "KEYWORD_ONLY",
+      "40"
+     ]
+    ]
+   },
+   "preview_running": {
+    "kind": "function",
+    "params": [
+     [
+      "app_dir",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "preview_url": {
+    "kind": "function",
+    "params": [
+     [
+      "app_dir",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "address",
+      "KEYWORD_ONLY",
+      "'127.0.0.1'"
+     ]
+    ]
+   },
+   "start_app_preview": {
+    "kind": "function",
+    "params": [
+     [
+      "app_dir",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "port",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "address",
+      "KEYWORD_ONLY",
+      "'127.0.0.1'"
+     ],
+     [
+      "env",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "script_name",
+      "KEYWORD_ONLY",
+      "'streamlit_app.py'"
+     ]
+    ]
+   },
+   "stop_app_preview": {
+    "kind": "function",
+    "params": [
+     [
+      "app_dir",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.ask_user": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "OTHER_OPTION_LABEL": {
+    "kind": "value"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "build_answers_payload": {
+    "kind": "function",
+    "params": [
+     [
+      "questions",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "answers",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "choice_labels_with_other": {
+    "kind": "function",
+    "params": [
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "extract_questions": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "format_option_label": {
+    "kind": "function",
+    "params": [
+     [
+      "option",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "is_ask_user_question": {
+    "kind": "reexport"
+   },
+   "is_other_choice": {
+    "kind": "function",
+    "params": [
+     [
+      "value",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "normalize_tool_name": {
+    "kind": "reexport"
+   },
+   "option_is_free_form": {
+    "kind": "function",
+    "params": [
+     [
+      "option",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "options_already_include_other": {
+    "kind": "function",
+    "params": [
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "resolve_selected_labels": {
+    "kind": "function",
+    "params": [
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "selected",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.assets": {
+   "DIR": {
+    "kind": "value"
+   },
+   "FONTS": {
+    "kind": "value"
+   },
+   "GROUPS": {
+    "kind": "value"
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "STATIC": {
+    "kind": "value"
+   },
+   "WEIGHTS": {
+    "kind": "value"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "css": {
+    "kind": "function",
+    "params": []
+   },
+   "fonts_js": {
+    "kind": "function",
+    "params": []
+   },
+   "js": {
+    "kind": "function",
+    "params": [
+     [
+      "with_fonts",
+      "POSITIONAL_OR_KEYWORD",
+      "True"
+     ]
+    ]
+   },
+   "lru_cache": {
+    "kind": "reexport"
+   },
+   "spark": {
+    "kind": "function",
+    "params": []
+   }
+  },
+  "streamlit_coco.audit": {
+   "AuditLog": {
+    "init": [
+     [
+      "path",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "who",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "evidence_chars",
+      "KEYWORD_ONLY",
+      "2000"
+     ],
+     [
+      "redact",
+      "KEYWORD_ONLY",
+      "<object>"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "read"
+    ]
+   },
+   "Callable": {
+    "kind": "reexport"
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "datetime": {
+    "kind": "reexport"
+   },
+   "redact_secrets": {
+    "kind": "function",
+    "params": [
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "timezone": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.backend": {
+   "AgentBackend": {
+    "init": [
+     [
+      "args",
+      "VAR_POSITIONAL",
+      "<required>"
+     ],
+     [
+      "kwargs",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "answer",
+     "approve_plan",
+     "close",
+     "connect",
+     "connection_files",
+     "decide",
+     "decline_plan",
+     "profiles",
+     "revoke",
+     "send",
+     "session_facts",
+     "set_planning",
+     "set_raw",
+     "set_reasoning",
+     "setup",
+     "skip",
+     "stop"
+    ]
+   },
+   "Any": {
+    "kind": "reexport"
+   },
+   "BACKENDS": {
+    "kind": "value"
+   },
+   "CarryError": {
+    "init": [
+     [
+      "key",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "values",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ],
+    "kind": "class",
+    "members": []
+   },
+   "Protocol": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "runtime_checkable": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.bootstrap": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "CocoEnvironment": {
+    "kind": "reexport"
+   },
+   "CocoError": {
+    "kind": "reexport"
+   },
+   "CocoOptions": {
+    "kind": "reexport"
+   },
+   "CocoRunStatus": {
+    "kind": "reexport"
+   },
+   "CocoSession": {
+    "kind": "reexport"
+   },
+   "CwdUploadError": {
+    "kind": "reexport"
+   },
+   "DEFAULT_ALLOWED_EXTENSIONS": {
+    "kind": "value"
+   },
+   "DEFAULT_MAX_BYTES": {
+    "kind": "value"
+   },
+   "DEFAULT_UPLOAD_SUBDIR": {
+    "kind": "value"
+   },
+   "Literal": {
+    "kind": "function",
+    "params": [
+     [
+      "args",
+      "VAR_POSITIONAL",
+      "<required>"
+     ],
+     [
+      "kwds",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "OverwriteMode": {
+    "kind": "function",
+    "params": [
+     [
+      "args",
+      "VAR_POSITIONAL",
+      "<required>"
+     ],
+     [
+      "kwargs",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "Sequence": {
+    "kind": "reexport"
+   },
+   "UploadedPath": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "chat_input_bar": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "placeholder",
+      "KEYWORD_ONLY",
+      "'Ask CoCo\u2026'"
+     ],
+     [
+      "connecting_placeholder",
+      "KEYWORD_ONLY",
+      "'Starting CoCo\u2026'"
+     ],
+     [
+      "key",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "accept_file",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "file_type",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "max_upload_size",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "upload_subdir",
+      "KEYWORD_ONLY",
+      "'_uploads'"
+     ],
+     [
+      "upload_overwrite",
+      "KEYWORD_ONLY",
+      "'replace'"
+     ],
+     [
+      "inject_upload_paths",
+      "KEYWORD_ONLY",
+      "True"
+     ]
+    ]
+   },
+   "check_environment": {
+    "kind": "reexport"
+   },
+   "cwd_uploader": {
+    "kind": "function",
+    "params": [
+     [
+      "target",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "label",
+      "KEYWORD_ONLY",
+      "'Upload into agent workspace'"
+     ],
+     [
+      "subdir",
+      "KEYWORD_ONLY",
+      "'_uploads'"
+     ],
+     [
+      "overwrite",
+      "KEYWORD_ONLY",
+      "'error'"
+     ],
+     [
+      "accept_multiple_files",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "file_type",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "max_bytes",
+      "KEYWORD_ONLY",
+      "10485760"
+     ],
+     [
+      "key",
+      "KEYWORD_ONLY",
+      "'coco_cwd_uploader'"
+     ],
+     [
+      "show_inventory",
+      "KEYWORD_ONLY",
+      "True"
+     ]
+    ]
+   },
+   "format_upload_prompt": {
+    "kind": "reexport"
+   },
+   "get_or_create_session": {
+    "kind": "function",
+    "params": [
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key",
+      "KEYWORD_ONLY",
+      "'coco'"
+     ],
+     [
+      "sync_options",
+      "KEYWORD_ONLY",
+      "True"
+     ]
+    ]
+   },
+   "list_cwd_uploads": {
+    "kind": "reexport"
+   },
+   "render_environment_status": {
+    "kind": "function",
+    "params": [
+     [
+      "env",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "connection",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "toml_file",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "stacked",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "show_title",
+      "KEYWORD_ONLY",
+      "True"
+     ]
+    ]
+   },
+   "render_start_gate": {
+    "kind": "function",
+    "params": [
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "session_key",
+      "KEYWORD_ONLY",
+      "'coco'"
+     ],
+     [
+      "gate_key",
+      "KEYWORD_ONLY",
+      "'coco_started'"
+     ],
+     [
+      "title",
+      "KEYWORD_ONLY",
+      "'CoCo demo is ready to be instantiated'"
+     ],
+     [
+      "button_label",
+      "KEYWORD_ONLY",
+      "'Start CoCo Chat'"
+     ],
+     [
+      "body",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "warm_up",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "env",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "reset_session": {
+    "kind": "function",
+    "params": [
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "session_key",
+      "KEYWORD_ONLY",
+      "'coco'"
+     ],
+     [
+      "warm_up",
+      "KEYWORD_ONLY",
+      "False"
+     ]
+    ]
+   },
+   "send_prompt": {
+    "kind": "reexport"
+   },
+   "stop_session": {
+    "kind": "function",
+    "params": [
+     [
+      "session_key",
+      "KEYWORD_ONLY",
+      "'coco'"
+     ],
+     [
+      "gate_key",
+      "KEYWORD_ONLY",
+      "'coco_started'"
+     ]
+    ]
+   },
+   "upload_to_cwd": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.bridge": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "CocoSession": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "build_component_data": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "placeholder",
+      "KEYWORD_ONLY",
+      "<required>"
+     ],
+     [
+      "show_tool_details",
+      "KEYWORD_ONLY",
+      "<required>"
+     ],
+     [
+      "show_thinking",
+      "KEYWORD_ONLY",
+      "<required>"
+     ],
+     [
+      "show_structured_inline",
+      "KEYWORD_ONLY",
+      "<required>"
+     ],
+     [
+      "height",
+      "KEYWORD_ONLY",
+      "<required>"
+     ],
+     [
+      "include_transcript",
+      "KEYWORD_ONLY",
+      "True"
+     ]
+    ]
+   },
+   "is_debug_mode": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.clipboard": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "lru_cache": {
+    "kind": "reexport"
+   },
+   "render_copy_button": {
+    "kind": "function",
+    "params": [
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key",
+      "KEYWORD_ONLY",
+      "<required>"
+     ],
+     [
+      "label",
+      "KEYWORD_ONLY",
+      "'Copy to clipboard'"
+     ],
+     [
+      "height",
+      "KEYWORD_ONLY",
+      "32"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.component": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "Callable": {
+    "kind": "reexport"
+   },
+   "CocoChatResult": {
+    "kind": "reexport"
+   },
+   "CocoError": {
+    "kind": "reexport"
+   },
+   "CocoOptions": {
+    "kind": "reexport"
+   },
+   "CocoSession": {
+    "kind": "reexport"
+   },
+   "StructuredOutputCallback": {
+    "kind": "function",
+    "params": [
+     [
+      "args",
+      "VAR_POSITIONAL",
+      "<required>"
+     ],
+     [
+      "kwargs",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "approve_pending": {
+    "kind": "reexport"
+   },
+   "build_component_data": {
+    "kind": "reexport"
+   },
+   "chat": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "options",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "key",
+      "KEYWORD_ONLY",
+      "'coco_chat'"
+     ],
+     [
+      "height",
+      "KEYWORD_ONLY",
+      "600"
+     ],
+     [
+      "show_tool_details",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "show_thinking",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "placeholder",
+      "KEYWORD_ONLY",
+      "'Ask CoCo about your data\u2026'"
+     ],
+     [
+      "use_fragment",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "run_every",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "output_container",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "output_label",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "output_mode",
+      "KEYWORD_ONLY",
+      "'transcript'"
+     ],
+     [
+      "show_transcript_in_component",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_structured_output",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "structured_output_container",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_event",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_submit_change",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_approval_change",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_cancel_change",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "mini",
+      "KEYWORD_ONLY",
+      "False"
+     ]
+    ]
+   },
+   "deny_pending": {
+    "kind": "reexport"
+   },
+   "lru_cache": {
+    "kind": "reexport"
+   },
+   "render_output_field": {
+    "kind": "reexport"
+   },
+   "render_transcript": {
+    "kind": "reexport"
+   },
+   "request_input": {
+    "kind": "reexport"
+   },
+   "timedelta": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.conversation": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "Callable": {
+    "kind": "reexport"
+   },
+   "Conversation": {
+    "init": [
+     [
+      "cwd",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "policy",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "features",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "prompts",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "labels",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "agent",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_files_changed",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "connect",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "audit",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "act",
+     "add_drafts",
+     "ask_form",
+     "busy",
+     "close",
+     "drain",
+     "form_result",
+     "freeze",
+     "notice",
+     "request_from_page",
+     "result_for",
+     "set_cwd",
+     "set_labels",
+     "t",
+     "thread",
+     "view"
+    ]
+   },
+   "DEFAULT": {
+    "kind": "value"
+   },
+   "Features": {
+    "kind": "reexport"
+   },
+   "LABELS": {
+    "kind": "value"
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "agent_factory": {
+    "kind": "function",
+    "params": [
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   },
+   "annotations": {
+    "kind": "value"
+   }
+  },
+  "streamlit_coco.cortex": {
+   "Agent": {
+    "init": [
+     [
+      "emit",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "answer",
+     "approve_plan",
+     "close",
+     "connect",
+     "connection_files",
+     "decide",
+     "decline_plan",
+     "profiles",
+     "revoke",
+     "send",
+     "session_facts",
+     "set_planning",
+     "set_raw",
+     "set_reasoning",
+     "setup",
+     "skip",
+     "stop"
+    ]
+   },
+   "EXPIRY": {
+    "kind": "value"
+   },
+   "Gate": {
+    "kind": "reexport"
+   },
+   "HOOK_TIMEOUT": {
+    "kind": "value"
+   },
+   "PLAN": {
+    "kind": "value"
+   },
+   "PLANNING": {
+    "kind": "value"
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "QUESTION": {
+    "kind": "value"
+   },
+   "Translator": {
+    "init": [
+     [
+      "raw",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ],
+     [
+      "reasoning",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "failure",
+     "feed"
+    ]
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "build_prompt": {
+    "kind": "function",
+    "params": [
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "ctx",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "classify_error": {
+    "kind": "function",
+    "params": [
+     [
+      "message",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "cortex_cli": {
+    "kind": "function",
+    "params": []
+   },
+   "data_block": {
+    "kind": "function",
+    "params": [
+     [
+      "id",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "data",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "grid",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "hook_output": {
+    "kind": "function",
+    "params": [
+     [
+      "reason",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "is_sql": {
+    "kind": "reexport"
+   },
+   "normal": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.cortex_tools": {
+   "PLAN": {
+    "kind": "value"
+   },
+   "PLANNING": {
+    "kind": "value"
+   },
+   "QUESTION": {
+    "kind": "value"
+   },
+   "TOOLS": {
+    "kind": "value"
+   },
+   "is_sql": {
+    "kind": "function",
+    "params": [
+     [
+      "name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "normal": {
+    "kind": "function",
+    "params": [
+     [
+      "name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.debug": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "is_debug_mode": {
+    "kind": "function",
+    "params": [
+     [
+      "session_state",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.diagnostics": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "CLINotFoundError": {
+    "kind": "reexport"
+   },
+   "CLIProbeError": {
+    "kind": "reexport"
+   },
+   "CocoEnvironment": {
+    "fields": [
+     "sdk_installed",
+     "sdk_version",
+     "cli_path",
+     "cli_version",
+     "snowflake_config_file",
+     "connection_hint",
+     "toml_file",
+     "managed"
+    ],
+    "init": [
+     [
+      "sdk_installed",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "sdk_version",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "cli_path",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "cli_version",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "snowflake_config_file",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "connection_hint",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "toml_file",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "managed",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "cli_ok",
+     "managed",
+     "ready",
+     "snowflake_config_display",
+     "snowflake_config_found",
+     "snowflake_config_missing_label",
+     "toml_file"
+    ]
+   },
+   "DEFAULT_CONNECTIONS_TOML": {
+    "kind": "value"
+   },
+   "LEGACY_CONFIG_TOML": {
+    "kind": "value"
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "SDKNotInstalledError": {
+    "kind": "reexport"
+   },
+   "SnowflakeConfigNotFoundError": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "check_environment": {
+    "kind": "function",
+    "params": [
+     [
+      "connection",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "cli_path",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "toml_file",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "managed",
+      "KEYWORD_ONLY",
+      "False"
+     ]
+    ]
+   },
+   "dataclass": {
+    "kind": "reexport"
+   },
+   "default_snowflake_connection_name": {
+    "kind": "function",
+    "params": [
+     [
+      "toml_file",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   },
+   "list_snowflake_connections": {
+    "kind": "function",
+    "params": [
+     [
+      "toml_file",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   },
+   "list_snowflake_toml_files": {
+    "kind": "function",
+    "params": []
+   },
+   "require_environment": {
+    "kind": "function",
+    "params": [
+     [
+      "connection",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "cli_path",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "toml_file",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "require_snowflake_config",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "managed",
+      "KEYWORD_ONLY",
+      "False"
+     ]
+    ]
+   },
+   "resolve_snowflake_config_path": {
+    "kind": "function",
+    "params": [
+     [
+      "toml_file",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "must_exist",
+      "KEYWORD_ONLY",
+      "True"
+     ]
+    ]
+   },
+   "snowflake_config_missing_message": {
+    "kind": "function",
+    "params": [
+     [
+      "toml_file",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.display": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "CocoRunStatus": {
+    "kind": "reexport"
+   },
+   "CocoSession": {
+    "kind": "reexport"
+   },
+   "TextRenderer": {
+    "kind": "value"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "get_latest_assistant_text": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "preview_text": {
+    "kind": "reexport"
+   },
+   "render_copy_button": {
+    "kind": "reexport"
+   },
+   "render_message_body": {
+    "kind": "function",
+    "params": [
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "text_renderer",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "streaming_suffix",
+      "KEYWORD_ONLY",
+      "''"
+     ]
+    ]
+   },
+   "render_output_field": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "container",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "label",
+      "KEYWORD_ONLY",
+      "'CoCo output'"
+     ],
+     [
+      "show_tool_details",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "text_renderer",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "show_copy",
+      "KEYWORD_ONLY",
+      "True"
+     ]
+    ]
+   },
+   "render_progress_badge": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "render_session_status": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "expanded",
+      "KEYWORD_ONLY",
+      "'auto'"
+     ]
+    ]
+   },
+   "render_tool_card": {
+    "kind": "reexport"
+   },
+   "render_transcript": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "container",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "show_tool_details",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "show_thinking",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "show_streaming_cursor",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "hide_active_approval",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "text_renderer",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "show_copy",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "max_messages",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "preview_chars",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "resolve_text_renderer": {
+    "kind": "reexport"
+   },
+   "session_progress_text": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "split_markdown_fences": {
+    "kind": "reexport"
+   },
+   "window_transcript": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.errors": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "ApprovalTimeoutError": {
+    "init": [
+     [
+      "tool_name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ],
+    "kind": "class",
+    "members": []
+   },
+   "CLINotFoundError": {
+    "init": [
+     [
+      "cli_path",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ],
+    "kind": "class",
+    "members": []
+   },
+   "CLIProbeError": {
+    "init": [
+     [
+      "cli_path",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ],
+    "kind": "class",
+    "members": []
+   },
+   "CocoConnectionError": {
+    "init": null,
+    "kind": "class",
+    "members": []
+   },
+   "CocoError": {
+    "init": null,
+    "kind": "class",
+    "members": []
+   },
+   "CwdUploadError": {
+    "init": null,
+    "kind": "class",
+    "members": []
+   },
+   "QueryError": {
+    "init": null,
+    "kind": "class",
+    "members": []
+   },
+   "SDKNotInstalledError": {
+    "init": [
+     [
+      "message",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ],
+    "kind": "class",
+    "members": []
+   },
+   "SessionNotReadyError": {
+    "init": null,
+    "kind": "class",
+    "members": []
+   },
+   "SessionStartError": {
+    "init": null,
+    "kind": "class",
+    "members": []
+   },
+   "SnowflakeConfigNotFoundError": {
+    "init": [],
+    "kind": "class",
+    "members": []
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "wrap_exception": {
+    "kind": "function",
+    "params": [
+     [
+      "exc",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "context",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "details",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.extras": {
+   "CUT_ROWS": {
+    "kind": "value"
+   },
+   "FULL_TABLES": {
+    "kind": "value"
+   },
+   "OPTIONS": {
+    "kind": "value"
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "ROWS": {
+    "kind": "value"
+   },
+   "act": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "action",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "context",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "clean_name": {
+    "kind": "function",
+    "params": [
+     [
+      "raw",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "notice": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "label",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "then",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   },
+   "offered": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "on": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "event",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "on_answer": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "item",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "answer",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "on_message": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "action",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "message",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "on_step": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "run",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "step",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "event",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "release": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "request_from_page": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "label",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "context",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "hint",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   },
+   "reset": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "result_for": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "take",
+      "POSITIONAL_OR_KEYWORD",
+      "True"
+     ]
+    ]
+   },
+   "sent": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "message",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "view": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.features": {
+   "ACCEPT": {
+    "kind": "value"
+   },
+   "Attachments": {
+    "fields": [
+     "multi",
+     "accept",
+     "max_mb"
+    ],
+    "init": [
+     [
+      "multi",
+      "POSITIONAL_OR_KEYWORD",
+      "True"
+     ],
+     [
+      "accept",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "max_mb",
+      "POSITIONAL_OR_KEYWORD",
+      "10"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "accept",
+     "max_mb",
+     "multi"
+    ]
+   },
+   "DISPLAY": {
+    "kind": "value"
+   },
+   "Features": {
+    "fields": [
+     "queue",
+     "steps",
+     "motion",
+     "copy",
+     "page_text",
+     "page_exclude",
+     "attachments",
+     "planning",
+     "display",
+     "session_details",
+     "reasoning",
+     "download_csv",
+     "dock",
+     "full_page"
+    ],
+    "init": [
+     [
+      "queue",
+      "POSITIONAL_OR_KEYWORD",
+      "True"
+     ],
+     [
+      "steps",
+      "POSITIONAL_OR_KEYWORD",
+      "True"
+     ],
+     [
+      "motion",
+      "POSITIONAL_OR_KEYWORD",
+      "True"
+     ],
+     [
+      "copy",
+      "POSITIONAL_OR_KEYWORD",
+      "True"
+     ],
+     [
+      "page_text",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ],
+     [
+      "page_exclude",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "attachments",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "planning",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ],
+     [
+      "display",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "session_details",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ],
+     [
+      "reasoning",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ],
+     [
+      "download_csv",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ],
+     [
+      "dock",
+      "POSITIONAL_OR_KEYWORD",
+      "True"
+     ],
+     [
+      "full_page",
+      "POSITIONAL_OR_KEYWORD",
+      "True"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "all",
+     "attachments",
+     "copy",
+     "display",
+     "dock",
+     "download_csv",
+     "full_page",
+     "motion",
+     "page_exclude",
+     "page_text",
+     "planning",
+     "queue",
+     "reasoning",
+     "session_details",
+     "steps"
+    ]
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "dataclass": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.frontend": {},
+  "streamlit_coco.gate": {
+   "EXPIRY": {
+    "kind": "value"
+   },
+   "Gate": {
+    "init": [
+     [
+      "emit",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "expiry",
+      "POSITIONAL_OR_KEYWORD",
+      "600"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "agreed",
+     "answer",
+     "begin",
+     "cancel_all",
+     "decide",
+     "granted",
+     "revoke"
+    ]
+   },
+   "annotations": {
+    "kind": "value"
+   }
+  },
+  "streamlit_coco.labels": {
+   "DEFAULT": {
+    "kind": "value"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "table": {
+    "kind": "function",
+    "params": [
+     [
+      "overrides",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.managed": {
+   "ALLOW": {
+    "kind": "value"
+   },
+   "Any": {
+    "kind": "reexport"
+   },
+   "Callable": {
+    "kind": "reexport"
+   },
+   "CarryError": {
+    "kind": "reexport"
+   },
+   "EXPIRY": {
+    "kind": "value"
+   },
+   "Gate": {
+    "kind": "reexport"
+   },
+   "LABELS": {
+    "kind": "value"
+   },
+   "ManagedAgent": {
+    "init": [
+     [
+      "emit",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "client_factory",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "answer",
+     "approve_plan",
+     "carry",
+     "close",
+     "connect",
+     "connection_files",
+     "decide",
+     "decline_plan",
+     "labels",
+     "profiles",
+     "revoke",
+     "send",
+     "session_facts",
+     "set_planning",
+     "set_raw",
+     "set_reasoning",
+     "setup",
+     "skip",
+     "stop",
+     "upload_root"
+    ]
+   },
+   "ManagedOptions": {
+    "fields": [
+     "account",
+     "token",
+     "auth",
+     "base_url",
+     "workspace_mounts",
+     "stage_mounts",
+     "stage_skills",
+     "disabled_skills",
+     "models",
+     "instructions",
+     "label",
+     "connection",
+     "upload_stage",
+     "upload_mount"
+    ],
+    "init": [
+     [
+      "account",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "token",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "auth",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "base_url",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "workspace_mounts",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "stage_mounts",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "stage_skills",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "disabled_skills",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "models",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "instructions",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "label",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "connection",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "upload_stage",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "upload_mount",
+      "POSITIONAL_OR_KEYWORD",
+      "'/uploads'"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "account",
+     "auth",
+     "base_url",
+     "client",
+     "connection",
+     "instructions",
+     "label",
+     "models",
+     "spec",
+     "token",
+     "upload_mount",
+     "upload_stage"
+    ]
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "SANDBOX_WHERE": {
+    "kind": "value"
+   },
+   "SANDBOX_WORDS": {
+    "kind": "value"
+   },
+   "SimpleNamespace": {
+    "kind": "reexport"
+   },
+   "Translator": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "build_prompt": {
+    "kind": "function",
+    "params": [
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "ctx",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "choose_option": {
+    "kind": "function",
+    "params": [
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "allow",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "dataclass": {
+    "kind": "reexport"
+   },
+   "field": {
+    "kind": "reexport"
+   },
+   "managed_agent": {
+    "kind": "function",
+    "params": [
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "options_from_connection": {
+    "kind": "function",
+    "params": [
+     [
+      "profile",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "role",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "toml_file",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "options",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "permission_of": {
+    "kind": "function",
+    "params": [
+     [
+      "event",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.messages": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "AssistantMessage": {
+    "kind": "reexport"
+   },
+   "CocoEvent": {
+    "fields": [
+     "type",
+     "id",
+     "text",
+     "delta",
+     "name",
+     "tool_use_id",
+     "input",
+     "content",
+     "is_error",
+     "request_id",
+     "tool_name",
+     "tool_input",
+     "subtype",
+     "duration_ms",
+     "structured_output",
+     "cost_usd",
+     "message",
+     "code",
+     "metadata"
+    ],
+    "init": [
+     [
+      "type",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "id",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "delta",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "name",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "tool_use_id",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "input",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "content",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "is_error",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "request_id",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "tool_name",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "subtype",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "duration_ms",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "structured_output",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "cost_usd",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "message",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "code",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "metadata",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "code",
+     "content",
+     "cost_usd",
+     "delta",
+     "duration_ms",
+     "from_dict",
+     "input",
+     "is_error",
+     "message",
+     "name",
+     "request_id",
+     "structured_output",
+     "subtype",
+     "text",
+     "to_dict",
+     "tool_input",
+     "tool_name",
+     "tool_use_id"
+    ]
+   },
+   "Message": {
+    "kind": "value"
+   },
+   "ResultMessage": {
+    "kind": "reexport"
+   },
+   "StreamEvent": {
+    "kind": "reexport"
+   },
+   "SystemMessage": {
+    "kind": "reexport"
+   },
+   "TextBlock": {
+    "kind": "reexport"
+   },
+   "ThinkingBlock": {
+    "kind": "reexport"
+   },
+   "ToolResultBlock": {
+    "kind": "reexport"
+   },
+   "ToolUseBlock": {
+    "kind": "reexport"
+   },
+   "UserMessage": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "append_events_to_transcript": {
+    "kind": "function",
+    "params": [
+     [
+      "transcript",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "events",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "show_thinking",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "show_structured_inline",
+      "KEYWORD_ONLY",
+      "True"
+     ]
+    ]
+   },
+   "asdict": {
+    "kind": "reexport"
+   },
+   "dataclass": {
+    "kind": "reexport"
+   },
+   "events_to_dataframe": {
+    "kind": "function",
+    "params": [
+     [
+      "events",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "field": {
+    "kind": "reexport"
+   },
+   "message_to_events": {
+    "kind": "function",
+    "params": [
+     [
+      "message",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "parse_ndjson_line": {
+    "kind": "function",
+    "params": [
+     [
+      "line",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "parse_ndjson_stream": {
+    "kind": "function",
+    "params": [
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "permission_request_event": {
+    "kind": "function",
+    "params": [
+     [
+      "request_id",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "tool_name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.mini": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "CocoOptions": {
+    "kind": "reexport"
+   },
+   "Mapping": {
+    "kind": "reexport"
+   },
+   "Sequence": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "mount_mini": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "key",
+      "KEYWORD_ONLY",
+      "'coco'"
+     ],
+     [
+      "options",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "prompts",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "features",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "labels",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_rail",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "options_for_window": {
+    "kind": "function",
+    "params": [
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "prompts_from_questions": {
+    "kind": "function",
+    "params": [
+     [
+      "example_questions",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "deferred",
+      "KEYWORD_ONLY",
+      "False"
+     ]
+    ]
+   },
+   "window_connection": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.options": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "Callable": {
+    "kind": "reexport"
+   },
+   "CocoOptions": {
+    "fields": [
+     "connection",
+     "cwd",
+     "model",
+     "allowed_tools",
+     "disallowed_tools",
+     "permission_mode",
+     "profile",
+     "cli_path",
+     "mcp_servers",
+     "hooks",
+     "require_approval_for",
+     "output_schema",
+     "max_turns",
+     "approval_timeout_seconds",
+     "extra_sdk_options"
+    ],
+    "init": [
+     [
+      "connection",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "cwd",
+      "POSITIONAL_OR_KEYWORD",
+      "'.'"
+     ],
+     [
+      "model",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "allowed_tools",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "disallowed_tools",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "permission_mode",
+      "POSITIONAL_OR_KEYWORD",
+      "'default'"
+     ],
+     [
+      "profile",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "cli_path",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "mcp_servers",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "hooks",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "require_approval_for",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "output_schema",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "max_turns",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "approval_timeout_seconds",
+      "POSITIONAL_OR_KEYWORD",
+      "600.0"
+     ],
+     [
+      "extra_sdk_options",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "approval_timeout_seconds",
+     "auto_allow_tools",
+     "cli_path",
+     "connection",
+     "cwd",
+     "max_turns",
+     "model",
+     "options_hash",
+     "output_schema",
+     "permission_mode",
+     "profile",
+     "to_sdk_options",
+     "tools_requiring_approval"
+    ]
+   },
+   "CortexCodeAgentOptions": {
+    "kind": "reexport"
+   },
+   "Iterable": {
+    "kind": "reexport"
+   },
+   "SDKNotInstalledError": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "dataclass": {
+    "kind": "reexport"
+   },
+   "field": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.permissions": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "ApprovalTimeoutError": {
+    "kind": "reexport"
+   },
+   "CallableHook": {
+    "kind": "reexport"
+   },
+   "PendingApproval": {
+    "fields": [
+     "request_id",
+     "tool_name",
+     "tool_input",
+     "event",
+     "decision",
+     "always",
+     "reason",
+     "updated_input"
+    ],
+    "init": [
+     [
+      "request_id",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "tool_name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "event",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "decision",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "always",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ],
+     [
+      "reason",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "updated_input",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "always",
+     "decision",
+     "reason",
+     "to_dict",
+     "updated_input"
+    ]
+   },
+   "PermissionManager": {
+    "init": [
+     [
+      "approval_timeout_seconds",
+      "KEYWORD_ONLY",
+      "600.0"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "active_pending",
+     "clear_resolved",
+     "create_request",
+     "get_pending",
+     "resolve",
+     "wait_for_decision"
+    ]
+   },
+   "PermissionResultAllow": {
+    "kind": "reexport"
+   },
+   "PermissionResultDeny": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "approve_pending": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "request_id",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "always",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "updated_input",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "build_can_use_tool": {
+    "kind": "function",
+    "params": [
+     [
+      "manager",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "require_approval_for",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "auto_allow_tools",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "dataclass": {
+    "kind": "reexport"
+   },
+   "deny_pending": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "request_id",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "reason",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "field": {
+    "kind": "reexport"
+   },
+   "is_ask_user_question": {
+    "kind": "reexport"
+   },
+   "is_exit_plan_mode": {
+    "kind": "reexport"
+   },
+   "permission_request_event": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.policy": {
+   "Command": {
+    "fields": [
+     "name",
+     "argv",
+     "reads",
+     "platform"
+    ],
+    "init": [
+     [
+      "name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "argv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "reads",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "platform",
+      "POSITIONAL_OR_KEYWORD",
+      "'darwin'"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "line",
+     "platform"
+    ]
+   },
+   "FolderPolicy": {
+    "init": [
+     [
+      "folder",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "scope",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "also_read",
+      "KEYWORD_ONLY",
+      "<object>"
+     ],
+     [
+      "commands",
+      "KEYWORD_ONLY",
+      "<object>"
+     ],
+     [
+      "changes",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "sql",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "lookups",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "standing",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "words",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "where",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "commands",
+     "describe",
+     "flag",
+     "judge",
+     "rights",
+     "words"
+    ]
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "Policy": {
+    "init": [
+     [
+      "args",
+      "VAR_POSITIONAL",
+      "<required>"
+     ],
+     [
+      "kwargs",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "describe",
+     "judge",
+     "rights"
+    ]
+   },
+   "Protocol": {
+    "kind": "reexport"
+   },
+   "WORDS": {
+    "kind": "value"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "dataclass": {
+    "kind": "reexport"
+   },
+   "fnmatch": {
+    "kind": "reexport"
+   },
+   "git_readonly": {
+    "kind": "function",
+    "params": [
+     [
+      "repo",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "words",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   },
+   "inside": {
+    "kind": "function",
+    "params": [
+     [
+      "base",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "scope",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "raw",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "is_secret_name": {
+    "kind": "function",
+    "params": [
+     [
+      "name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "request": {
+    "kind": "function",
+    "params": [
+     [
+      "kind",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "question",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "where",
+      "KEYWORD_ONLY",
+      "<required>"
+     ],
+     [
+      "reads",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "changes",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "evidence",
+      "KEYWORD_ONLY",
+      "<object>"
+     ],
+     [
+      "evidence_label",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "pill",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "standing",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.query": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "AsyncIterator": {
+    "kind": "reexport"
+   },
+   "CocoEvent": {
+    "kind": "reexport"
+   },
+   "CocoOptions": {
+    "kind": "reexport"
+   },
+   "SDKNotInstalledError": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "message_to_events": {
+    "kind": "reexport"
+   },
+   "query": {
+    "kind": "function",
+    "params": [
+     [
+      "prompt",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "options",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "output_schema",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "sdk_query": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.rail": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "Callable": {
+    "kind": "reexport"
+   },
+   "CocoChatResult": {
+    "kind": "reexport"
+   },
+   "CocoRunStatus": {
+    "kind": "reexport"
+   },
+   "CocoSession": {
+    "kind": "reexport"
+   },
+   "DISPLAY_CONFIG_ICON": {
+    "kind": "value"
+   },
+   "EXAMPLE_DRAFT_KEY_SUFFIX": {
+    "kind": "value"
+   },
+   "FILTER_LAST": {
+    "kind": "value"
+   },
+   "FILTER_SHORT": {
+    "kind": "value"
+   },
+   "LAST_MESSAGES_MAX": {
+    "kind": "value"
+   },
+   "LAST_MESSAGES_MIN": {
+    "kind": "value"
+   },
+   "LAST_MESSAGES_N": {
+    "kind": "value"
+   },
+   "Mapping": {
+    "kind": "reexport"
+   },
+   "MutableMapping": {
+    "kind": "reexport"
+   },
+   "PATH_DISPLAY_LIMIT": {
+    "kind": "value"
+   },
+   "PREVIEW_CHARS_MAX": {
+    "kind": "value"
+   },
+   "PREVIEW_CHARS_MIN": {
+    "kind": "value"
+   },
+   "PREVIEW_CHARS_N": {
+    "kind": "value"
+   },
+   "PREVIEW_CHARS_STEP": {
+    "kind": "value"
+   },
+   "Sequence": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "apply_example_question_draft": {
+    "kind": "function",
+    "params": [
+     [
+      "state",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key_prefix",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "input_key",
+      "KEYWORD_ONLY",
+      "<required>"
+     ]
+    ]
+   },
+   "ask_coco_switch": {
+    "kind": "function",
+    "params": [
+     [
+      "key",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "ask_minimize": {
+    "kind": "function",
+    "params": [
+     [
+      "key_prefix",
+      "POSITIONAL_OR_KEYWORD",
+      "'coco_rail'"
+     ]
+    ]
+   },
+   "ask_restore": {
+    "kind": "function",
+    "params": [
+     [
+      "key_prefix",
+      "POSITIONAL_OR_KEYWORD",
+      "'coco_rail'"
+     ]
+    ]
+   },
+   "copilot_rail": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "title",
+      "KEYWORD_ONLY",
+      "'Copilot'"
+     ],
+     [
+      "key_prefix",
+      "KEYWORD_ONLY",
+      "'coco_rail'"
+     ],
+     [
+      "connected",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "connections",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "toml_file",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "connection_name",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_connect",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_disconnect",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "connect_caption",
+      "KEYWORD_ONLY",
+      "''"
+     ],
+     [
+      "on_close",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_clear",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "job",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "job_hint",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_cancel_job",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_job_sent",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_job_finished",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_structured_output",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "show_copy",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "show_transcript_filters",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "last_messages",
+      "KEYWORD_ONLY",
+      "8"
+     ],
+     [
+      "preview_chars",
+      "KEYWORD_ONLY",
+      "200"
+     ],
+     [
+      "show_status",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "show_approvals",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "run_every",
+      "KEYWORD_ONLY",
+      "0.25"
+     ],
+     [
+      "input_placeholder",
+      "KEYWORD_ONLY",
+      "'Ask CoCo\u2026'"
+     ],
+     [
+      "status_caption",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "example_questions",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "deferred",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "render_environment",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "mini",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "ask",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "own_window",
+      "KEYWORD_ONLY",
+      "True"
+     ]
+    ]
+   },
+   "default_snowflake_connection_name": {
+    "kind": "reexport"
+   },
+   "ellipsize_middle": {
+    "kind": "function",
+    "params": [
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "limit",
+      "POSITIONAL_OR_KEYWORD",
+      "100"
+     ]
+    ]
+   },
+   "example_draft_key": {
+    "kind": "function",
+    "params": [
+     [
+      "key_prefix",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "example_questions_visible": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "items",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "connected",
+      "KEYWORD_ONLY",
+      "<required>"
+     ],
+     [
+      "job",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "list_snowflake_connections": {
+    "kind": "reexport"
+   },
+   "list_snowflake_toml_files": {
+    "kind": "reexport"
+   },
+   "normalize_example_questions": {
+    "kind": "function",
+    "params": [
+     [
+      "items",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "deferred",
+      "KEYWORD_ONLY",
+      "False"
+     ]
+    ]
+   },
+   "panel": {
+    "kind": "reexport"
+   },
+   "present_ask": {
+    "kind": "function",
+    "params": [
+     [
+      "show",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key_prefix",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "mount",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "window_key",
+      "KEYWORD_ONLY",
+      "'coco'"
+     ]
+    ]
+   },
+   "rail_minimized": {
+    "kind": "function",
+    "params": [
+     [
+      "key_prefix",
+      "POSITIONAL_OR_KEYWORD",
+      "'coco_rail'"
+     ]
+    ]
+   },
+   "render_progress_badge": {
+    "kind": "reexport"
+   },
+   "resolve_snowflake_config_path": {
+    "kind": "reexport"
+   },
+   "resolve_transcript_view": {
+    "kind": "function",
+    "params": [
+     [
+      "selected",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "last_n",
+      "KEYWORD_ONLY",
+      "<required>"
+     ],
+     [
+      "preview_chars",
+      "KEYWORD_ONLY",
+      "<required>"
+     ]
+    ]
+   },
+   "send_prompt": {
+    "kind": "reexport"
+   },
+   "sent_job_is_complete": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "job",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "saw_running",
+      "KEYWORD_ONLY",
+      "<required>"
+     ]
+    ]
+   },
+   "transcript_display_config": {
+    "kind": "function",
+    "params": [
+     [
+      "key",
+      "KEYWORD_ONLY",
+      "'coco_transcript_display'"
+     ],
+     [
+      "last_n",
+      "KEYWORD_ONLY",
+      "8"
+     ],
+     [
+      "preview_chars",
+      "KEYWORD_ONLY",
+      "200"
+     ],
+     [
+      "default",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "transcript_view_pills": {
+    "kind": "function",
+    "params": [
+     [
+      "key",
+      "KEYWORD_ONLY",
+      "'coco_transcript_view'"
+     ],
+     [
+      "last_n",
+      "KEYWORD_ONLY",
+      "8"
+     ],
+     [
+      "preview_chars",
+      "KEYWORD_ONLY",
+      "200"
+     ],
+     [
+      "default",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "label",
+      "KEYWORD_ONLY",
+      "'Transcript'"
+     ],
+     [
+      "label_visibility",
+      "KEYWORD_ONLY",
+      "'collapsed'"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.rich_text": {
+   "MarkdownSegment": {
+    "fields": [
+     "kind",
+     "text",
+     "language"
+    ],
+    "init": [
+     [
+      "kind",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "language",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "language"
+    ]
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "dataclass": {
+    "kind": "reexport"
+   },
+   "normalize_fence_language": {
+    "kind": "function",
+    "params": [
+     [
+      "raw",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "preview_text": {
+    "kind": "function",
+    "params": [
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "limit",
+      "KEYWORD_ONLY",
+      "<required>"
+     ]
+    ]
+   },
+   "split_markdown_fences": {
+    "kind": "function",
+    "params": [
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "window_transcript": {
+    "kind": "function",
+    "params": [
+     [
+      "transcript",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "max_messages",
+      "KEYWORD_ONLY",
+      "<required>"
+     ],
+     [
+      "extra",
+      "KEYWORD_ONLY",
+      "0"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.session": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "AsyncIterator": {
+    "kind": "reexport"
+   },
+   "Callable": {
+    "kind": "reexport"
+   },
+   "CocoChatResult": {
+    "fields": [
+     "last_prompt",
+     "last_result",
+     "pending_approval",
+     "structured_output",
+     "events",
+     "status"
+    ],
+    "init": [
+     [
+      "last_prompt",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "last_result",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "pending_approval",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "structured_output",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "events",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ],
+     [
+      "status",
+      "POSITIONAL_OR_KEYWORD",
+      "<CocoRunStatus.IDLE: 'idle'>"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "last_prompt",
+     "last_result",
+     "pending_approval",
+     "status",
+     "structured_output"
+    ]
+   },
+   "CocoEvent": {
+    "kind": "reexport"
+   },
+   "CocoOptions": {
+    "kind": "reexport"
+   },
+   "CocoRunStatus": {
+    "kind": "enum",
+    "members": [
+     "AWAITING_USER",
+     "CANCELLED",
+     "COMPLETED",
+     "CONNECTING",
+     "ERROR",
+     "IDLE",
+     "READY",
+     "RUNNING"
+    ]
+   },
+   "CocoSession": {
+    "init": [
+     [
+      "options",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "key",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "add_event_listener",
+     "cancel",
+     "chat_result",
+     "close",
+     "ensure_ready",
+     "execute_plan",
+     "get_revision",
+     "get_transcript_snapshot",
+     "is_connecting",
+     "is_ready",
+     "is_running",
+     "messages",
+     "needs_polling",
+     "reset",
+     "run",
+     "send",
+     "set_permission_mode",
+     "set_show_structured_inline",
+     "start",
+     "stream",
+     "sync_options"
+    ]
+   },
+   "CortexCodeSDKClient": {
+    "kind": "reexport"
+   },
+   "Enum": {
+    "kind": "reexport"
+   },
+   "PermissionManager": {
+    "kind": "reexport"
+   },
+   "SDKNotInstalledError": {
+    "kind": "reexport"
+   },
+   "SessionNotReadyError": {
+    "kind": "reexport"
+   },
+   "SessionStartError": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "append_events_to_transcript": {
+    "kind": "reexport"
+   },
+   "build_can_use_tool": {
+    "kind": "reexport"
+   },
+   "dataclass": {
+    "kind": "reexport"
+   },
+   "field": {
+    "kind": "reexport"
+   },
+   "get_session": {
+    "kind": "function",
+    "params": [
+     [
+      "key",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "is_exit_plan_mode": {
+    "kind": "reexport"
+   },
+   "message_to_events": {
+    "kind": "reexport"
+   },
+   "wrap_exception": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.sql_tool": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "extract_sql_text": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "is_sql_tool": {
+    "kind": "reexport"
+   },
+   "parse_sql_result_table": {
+    "kind": "function",
+    "params": [
+     [
+      "result",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "max_rows",
+      "KEYWORD_ONLY",
+      "200"
+     ]
+    ]
+   },
+   "sql_status_label": {
+    "kind": "function",
+    "params": [
+     [
+      "status",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "status_label": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.testing": {
+   "VIEWS": {
+    "kind": "value"
+   },
+   "annotations": {
+    "kind": "value"
+   }
+  },
+  "streamlit_coco.testing.domdiff": {
+   "ADDED": {
+    "kind": "value"
+   },
+   "BOXES": {
+    "kind": "value"
+   },
+   "COCKPIT_LABELS": {
+    "kind": "value"
+   },
+   "DUMP": {
+    "kind": "value"
+   },
+   "PROPS": {
+    "kind": "value"
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "ROOT": {
+    "kind": "value"
+   },
+   "SLOTS": {
+    "kind": "value"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "compare_with_cockpit": {
+    "kind": "function",
+    "params": [
+     [
+      "args",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "browser",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "compare_with_ref": {
+    "kind": "function",
+    "params": [
+     [
+      "args",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "browser",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "dump": {
+    "kind": "function",
+    "params": [
+     [
+      "page_html",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "browser",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "slots",
+      "POSITIONAL_OR_KEYWORD",
+      "''"
+     ]
+    ]
+   },
+   "first_difference": {
+    "kind": "function",
+    "params": [
+     [
+      "before",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "after",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "main": {
+    "kind": "function",
+    "params": []
+   },
+   "ref_js": {
+    "kind": "function",
+    "params": [
+     [
+      "ref",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "tidy": {
+    "kind": "function",
+    "params": [
+     [
+      "html",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.testing.fixtures": {
+   "ANSWERED": {
+    "kind": "value"
+   },
+   "ANSWER_MD": {
+    "kind": "value"
+   },
+   "CHANGE": {
+    "kind": "value"
+   },
+   "CLOSED": {
+    "kind": "value"
+   },
+   "COLS3": {
+    "kind": "value"
+   },
+   "COLS8": {
+    "kind": "value"
+   },
+   "CUSTOMERS": {
+    "kind": "value"
+   },
+   "FACTS": {
+    "kind": "value"
+   },
+   "FILES_OK": {
+    "kind": "value"
+   },
+   "FIX_PROMPT": {
+    "kind": "value"
+   },
+   "GESTURES": {
+    "kind": "value"
+   },
+   "GIT_ASK55": {
+    "kind": "value"
+   },
+   "GIT_ASK56": {
+    "kind": "value"
+   },
+   "GIT_CMD": {
+    "kind": "value"
+   },
+   "GIT_LABEL": {
+    "kind": "value"
+   },
+   "GIT_OUT": {
+    "kind": "value"
+   },
+   "GIT_Q": {
+    "kind": "value"
+   },
+   "GRANTED": {
+    "kind": "value"
+   },
+   "JSON_STATUS": {
+    "kind": "value"
+   },
+   "LONG_ANSWER": {
+    "kind": "value"
+   },
+   "LONG_CMD": {
+    "kind": "value"
+   },
+   "LONG_FILE": {
+    "kind": "value"
+   },
+   "LONG_PROJECT": {
+    "kind": "value"
+   },
+   "OPTIONS": {
+    "kind": "value"
+   },
+   "PLAN12": {
+    "kind": "value"
+   },
+   "PLAN4": {
+    "kind": "value"
+   },
+   "PLAN_Q": {
+    "kind": "value"
+   },
+   "PROJECT": {
+    "kind": "value"
+   },
+   "PROMPTS": {
+    "kind": "value"
+   },
+   "Q_WEEK": {
+    "kind": "value"
+   },
+   "Q_WHO": {
+    "kind": "value"
+   },
+   "RAW_REQ": {
+    "kind": "value"
+   },
+   "RAW_RES": {
+    "kind": "value"
+   },
+   "REMINDERS": {
+    "kind": "value"
+   },
+   "RM_Q": {
+    "kind": "value"
+   },
+   "RM_READ": {
+    "kind": "value"
+   },
+   "RUN": {
+    "kind": "value"
+   },
+   "S1": {
+    "kind": "value"
+   },
+   "S2": {
+    "kind": "value"
+   },
+   "S3": {
+    "kind": "value"
+   },
+   "SAY": {
+    "kind": "value"
+   },
+   "SCOPE": {
+    "kind": "value"
+   },
+   "SQL": {
+    "kind": "value"
+   },
+   "SQL_ASK": {
+    "kind": "value"
+   },
+   "SQL_Q": {
+    "kind": "value"
+   },
+   "SQL_STEP": {
+    "kind": "value"
+   },
+   "STANDING": {
+    "kind": "value"
+   },
+   "STATUS_DATA": {
+    "kind": "value"
+   },
+   "STATUS_Q": {
+    "kind": "value"
+   },
+   "TYPING": {
+    "kind": "value"
+   },
+   "UI": {
+    "kind": "value"
+   },
+   "VIEWS": {
+    "kind": "value"
+   },
+   "WEEKS": {
+    "kind": "value"
+   },
+   "WHO": {
+    "kind": "value"
+   },
+   "WIDE_ANSWER": {
+    "kind": "value"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "ask": {
+    "kind": "function",
+    "params": [
+     [
+      "kind",
+      "POSITIONAL_OR_KEYWORD",
+      "'read'"
+     ],
+     [
+      "kw",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "assert_same_shape": {
+    "kind": "function",
+    "params": [
+     [
+      "test",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "actual",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "expected",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "path",
+      "POSITIONAL_OR_KEYWORD",
+      "'view'"
+     ]
+    ]
+   },
+   "choice": {
+    "kind": "function",
+    "params": [
+     [
+      "id",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "multi",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ],
+     [
+      "other",
+      "POSITIONAL_OR_KEYWORD",
+      "'Something else'"
+     ]
+    ]
+   },
+   "customers": {
+    "kind": "function",
+    "params": [
+     [
+      "count",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "wide",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ]
+    ]
+   },
+   "data": {
+    "kind": "function",
+    "params": [
+     [
+      "id",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "tables",
+      "KEYWORD_ONLY",
+      "<object>"
+     ],
+     [
+      "title",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "fields",
+      "KEYWORD_ONLY",
+      "<object>"
+     ],
+     [
+      "json",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "form_field": {
+    "kind": "function",
+    "params": [
+     [
+      "id",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "label",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "type",
+      "POSITIONAL_OR_KEYWORD",
+      "'text'"
+     ],
+     [
+      "value",
+      "POSITIONAL_OR_KEYWORD",
+      "''"
+     ],
+     [
+      "required",
+      "POSITIONAL_OR_KEYWORD",
+      "True"
+     ],
+     [
+      "choices",
+      "POSITIONAL_OR_KEYWORD",
+      "<object>"
+     ]
+    ]
+   },
+   "money": {
+    "kind": "function",
+    "params": [
+     [
+      "n",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "plan": {
+    "kind": "function",
+    "params": [
+     [
+      "items",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "more",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   },
+   "plan_text": {
+    "kind": "function",
+    "params": [
+     [
+      "items",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "question": {
+    "kind": "function",
+    "params": [
+     [
+      "questions",
+      "VAR_POSITIONAL",
+      "<required>"
+     ],
+     [
+      "source",
+      "KEYWORD_ONLY",
+      "'coco'"
+     ],
+     [
+      "more",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "request_wait": {
+    "kind": "function",
+    "params": [
+     [
+      "req",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "more",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   },
+   "section": {
+    "kind": "function",
+    "params": [
+     [
+      "id",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "items",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "summary",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "folded",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ]
+    ]
+   },
+   "sql_step": {
+    "kind": "function",
+    "params": [
+     [
+      "id",
+      "POSITIONAL_OR_KEYWORD",
+      "'s1'"
+     ],
+     [
+      "kw",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "step": {
+    "kind": "function",
+    "params": [
+     [
+      "id",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "state",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "label",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "kw",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "table": {
+    "kind": "function",
+    "params": [
+     [
+      "id",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "columns",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "rows",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "total",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "label",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   },
+   "three": {
+    "kind": "function",
+    "params": [
+     [
+      "folded",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "view": {
+    "kind": "function",
+    "params": [
+     [
+      "status",
+      "POSITIONAL_OR_KEYWORD",
+      "'ready'"
+     ],
+     [
+      "thread",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "kw",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "waiting": {
+    "kind": "function",
+    "params": [
+     [
+      "wait",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "thread",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "status",
+      "POSITIONAL_OR_KEYWORD",
+      "'waiting'"
+     ],
+     [
+      "kw",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.testing.harness": {
+   "FRAME_JS": {
+    "kind": "value"
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "UI_GESTURES": {
+    "kind": "value"
+   },
+   "WIDE": {
+    "kind": "value"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "bundle": {
+    "kind": "function",
+    "params": []
+   },
+   "frame_info": {
+    "kind": "function",
+    "params": [
+     [
+      "name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "gestures": {
+    "kind": "function",
+    "params": [
+     [
+      "name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "main": {
+    "kind": "function",
+    "params": [
+     [
+      "argv",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   },
+   "page": {
+    "kind": "function",
+    "params": [
+     [
+      "names",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "width",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "height",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "rem",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "labels_",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ],
+     [
+      "theme",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   },
+   "resolve": {
+    "kind": "function",
+    "params": [
+     [
+      "name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.testing.managed_fake": {
+   "FakeClient": {
+    "init": [
+     [
+      "turns",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "fail",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "close"
+    ]
+   },
+   "FakeConnection": {
+    "init": [
+     [
+      "fail",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "close",
+     "cursor"
+    ]
+   },
+   "FakeConversation": {
+    "init": [
+     [
+      "client",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "send",
+     "send_permission_decisions"
+    ]
+   },
+   "FakeConversations": {
+    "init": [
+     [
+      "client",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "create"
+    ]
+   },
+   "FakeTurn": {
+    "init": [
+     [
+      "events",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "cancelled",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "cancel",
+     "events"
+    ]
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "text": {
+    "kind": "function",
+    "params": [
+     [
+      "words",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "tool_use": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_use_id",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "options",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.testing.scripted": {
+   "EXPIRY": {
+    "kind": "value"
+   },
+   "Gate": {
+    "kind": "reexport"
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "ScriptedAgent": {
+    "init": [
+     [
+      "emit",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "delay",
+      "POSITIONAL_OR_KEYWORD",
+      "0.04"
+     ],
+     [
+      "connect_delay",
+      "POSITIONAL_OR_KEYWORD",
+      "0.5"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "answer",
+     "approve_plan",
+     "close",
+     "connect",
+     "connection_files",
+     "decide",
+     "decline_plan",
+     "profiles",
+     "revoke",
+     "send",
+     "session_facts",
+     "set_planning",
+     "set_raw",
+     "set_reasoning",
+     "setup",
+     "skip",
+     "stop"
+    ]
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "data_block": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.text_renderer": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "Callable": {
+    "kind": "reexport"
+   },
+   "TextRenderer": {
+    "kind": "value"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "resolve_text_renderer": {
+    "kind": "function",
+    "params": [
+     [
+      "text_renderer",
+      "POSITIONAL_OR_KEYWORD",
+      "None"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.tool_cards": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "ToolFamily": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "as_dict": {
+    "kind": "reexport"
+   },
+   "extract_command": {
+    "kind": "reexport"
+   },
+   "extract_content": {
+    "kind": "reexport"
+   },
+   "extract_old_new": {
+    "kind": "reexport"
+   },
+   "extract_path": {
+    "kind": "reexport"
+   },
+   "extract_pattern": {
+    "kind": "reexport"
+   },
+   "extract_plan": {
+    "kind": "reexport"
+   },
+   "extract_questions": {
+    "kind": "reexport"
+   },
+   "extract_sql_text": {
+    "kind": "reexport"
+   },
+   "family_label": {
+    "kind": "reexport"
+   },
+   "is_debug_mode": {
+    "kind": "reexport"
+   },
+   "language_for_path": {
+    "kind": "reexport"
+   },
+   "parse_sql_result_table": {
+    "kind": "reexport"
+   },
+   "render_approval_preview": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "render_copy_button": {
+    "kind": "reexport"
+   },
+   "render_tool_card": {
+    "kind": "function",
+    "params": [
+     [
+      "item",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "show_tool_details",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "show_copy",
+      "KEYWORD_ONLY",
+      "True"
+     ]
+    ]
+   },
+   "result_as_path_list": {
+    "kind": "reexport"
+   },
+   "result_as_text": {
+    "kind": "reexport"
+   },
+   "status_label": {
+    "kind": "reexport"
+   },
+   "summarize_input_fields": {
+    "kind": "reexport"
+   },
+   "tool_family": {
+    "kind": "reexport"
+   },
+   "truncate_text": {
+    "kind": "reexport"
+   },
+   "unified_diff": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.tool_extract": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "as_dict": {
+    "kind": "function",
+    "params": [
+     [
+      "value",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "extract_command": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "extract_content": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "extract_old_new": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "extract_path": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "extract_pattern": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "extract_plan": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "first_str": {
+    "kind": "function",
+    "params": [
+     [
+      "payload",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "keys",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "language_for_path": {
+    "kind": "function",
+    "params": [
+     [
+      "path",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "result_as_path_list": {
+    "kind": "function",
+    "params": [
+     [
+      "result",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "max_items",
+      "KEYWORD_ONLY",
+      "100"
+     ]
+    ]
+   },
+   "result_as_text": {
+    "kind": "function",
+    "params": [
+     [
+      "result",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "summarize_input_fields": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_input",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "max_fields",
+      "KEYWORD_ONLY",
+      "6"
+     ],
+     [
+      "max_value_len",
+      "KEYWORD_ONLY",
+      "120"
+     ]
+    ]
+   },
+   "truncate_text": {
+    "kind": "function",
+    "params": [
+     [
+      "text",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "limit",
+      "POSITIONAL_OR_KEYWORD",
+      "4000"
+     ]
+    ]
+   },
+   "unified_diff": {
+    "kind": "function",
+    "params": [
+     [
+      "old",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "new",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "path",
+      "KEYWORD_ONLY",
+      "''"
+     ],
+     [
+      "n",
+      "KEYWORD_ONLY",
+      "3"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.tool_names": {
+   "Enum": {
+    "kind": "reexport"
+   },
+   "ToolFamily": {
+    "kind": "enum",
+    "members": [
+     "ASK_USER",
+     "BASH",
+     "EDIT",
+     "EXIT_PLAN",
+     "GENERIC",
+     "GLOB",
+     "GREP",
+     "READ",
+     "SQL",
+     "WRITE"
+    ]
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "family_label": {
+    "kind": "function",
+    "params": [
+     [
+      "family",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "tool_name",
+      "POSITIONAL_OR_KEYWORD",
+      "''"
+     ]
+    ]
+   },
+   "is_ask_user_question": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "is_exit_plan_mode": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "is_sql_tool": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "normalize_tool_name": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "status_label": {
+    "kind": "function",
+    "params": [
+     [
+      "status",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "tool_family": {
+    "kind": "function",
+    "params": [
+     [
+      "tool_name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.ui": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "Callable": {
+    "kind": "reexport"
+   },
+   "CocoChatResult": {
+    "kind": "reexport"
+   },
+   "CocoError": {
+    "kind": "reexport"
+   },
+   "CocoRunStatus": {
+    "kind": "reexport"
+   },
+   "CocoSession": {
+    "kind": "reexport"
+   },
+   "PendingApproval": {
+    "kind": "reexport"
+   },
+   "StructuredOutputCallback": {
+    "kind": "function",
+    "params": [
+     [
+      "args",
+      "VAR_POSITIONAL",
+      "<required>"
+     ],
+     [
+      "kwargs",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "TextRenderer": {
+    "kind": "value"
+   },
+   "ToolFamily": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "approve_pending": {
+    "kind": "reexport"
+   },
+   "build_answers_payload": {
+    "kind": "reexport"
+   },
+   "choice_labels_with_other": {
+    "kind": "reexport"
+   },
+   "deny_pending": {
+    "kind": "reexport"
+   },
+   "extract_plan": {
+    "kind": "reexport"
+   },
+   "extract_questions": {
+    "kind": "reexport"
+   },
+   "family_label": {
+    "kind": "reexport"
+   },
+   "is_ask_user_question": {
+    "kind": "reexport"
+   },
+   "is_debug_mode": {
+    "kind": "reexport"
+   },
+   "is_exit_plan_mode": {
+    "kind": "reexport"
+   },
+   "is_other_choice": {
+    "kind": "reexport"
+   },
+   "option_is_free_form": {
+    "kind": "reexport"
+   },
+   "panel": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "output_label",
+      "KEYWORD_ONLY",
+      "'CoCo output'"
+     ],
+     [
+      "output_mode",
+      "KEYWORD_ONLY",
+      "'transcript'"
+     ],
+     [
+      "show_tool_details",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "show_thinking",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "show_approvals",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "show_stop",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "show_status",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "show_plan_banner",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "warm_up",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "status_expanded",
+      "KEYWORD_ONLY",
+      "'auto'"
+     ],
+     [
+      "approval_key_prefix",
+      "KEYWORD_ONLY",
+      "'coco'"
+     ],
+     [
+      "use_fragment",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "run_every",
+      "KEYWORD_ONLY",
+      "0.25"
+     ],
+     [
+      "text_renderer",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "show_copy",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "max_messages",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "preview_chars",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_structured_output",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "structured_output_container",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "mini",
+      "KEYWORD_ONLY",
+      "False"
+     ]
+    ]
+   },
+   "render_approval_preview": {
+    "kind": "reexport"
+   },
+   "render_approvals": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key_prefix",
+      "KEYWORD_ONLY",
+      "'coco'"
+     ],
+     [
+      "show_tool_input",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "render_ask_user_question": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "pending",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key_prefix",
+      "KEYWORD_ONLY",
+      "'coco'"
+     ]
+    ]
+   },
+   "render_exit_plan": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "pending",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key_prefix",
+      "KEYWORD_ONLY",
+      "'coco'"
+     ]
+    ]
+   },
+   "render_output_field": {
+    "kind": "reexport"
+   },
+   "render_plan_banner": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key_prefix",
+      "KEYWORD_ONLY",
+      "'coco'"
+     ],
+     [
+      "execute_prompt",
+      "KEYWORD_ONLY",
+      "'Execute the approved plan.'"
+     ],
+     [
+      "plan_state_key",
+      "KEYWORD_ONLY",
+      "'coco_plan_mode'"
+     ]
+    ]
+   },
+   "render_session_status": {
+    "kind": "reexport"
+   },
+   "render_transcript": {
+    "kind": "reexport"
+   },
+   "request_input": {
+    "kind": "function",
+    "params": [
+     [
+      "question",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key",
+      "KEYWORD_ONLY",
+      "'coco_input'"
+     ],
+     [
+      "default",
+      "KEYWORD_ONLY",
+      "''"
+     ],
+     [
+      "schema",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "submit_label",
+      "KEYWORD_ONLY",
+      "'Submit'"
+     ],
+     [
+      "cancel_label",
+      "KEYWORD_ONLY",
+      "'Cancel'"
+     ]
+    ]
+   },
+   "resolve_selected_labels": {
+    "kind": "reexport"
+   },
+   "send_prompt": {
+    "kind": "function",
+    "params": [
+     [
+      "session",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "prompt",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "timedelta": {
+    "kind": "reexport"
+   },
+   "tool_family": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.upload": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "CocoOptions": {
+    "kind": "reexport"
+   },
+   "Collection": {
+    "kind": "reexport"
+   },
+   "CwdUploadError": {
+    "kind": "reexport"
+   },
+   "DEFAULT_ALLOWED_EXTENSIONS": {
+    "kind": "value"
+   },
+   "DEFAULT_MAX_BYTES": {
+    "kind": "value"
+   },
+   "DEFAULT_UPLOAD_SUBDIR": {
+    "kind": "value"
+   },
+   "Literal": {
+    "kind": "function",
+    "params": [
+     [
+      "args",
+      "VAR_POSITIONAL",
+      "<required>"
+     ],
+     [
+      "kwds",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "OverwriteMode": {
+    "kind": "function",
+    "params": [
+     [
+      "args",
+      "VAR_POSITIONAL",
+      "<required>"
+     ],
+     [
+      "kwargs",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "Sequence": {
+    "kind": "reexport"
+   },
+   "UploadedPath": {
+    "fields": [
+     "path",
+     "relative",
+     "name",
+     "bytes_written",
+     "overwritten",
+     "skipped"
+    ],
+    "init": [
+     [
+      "path",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "relative",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "name",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "bytes_written",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "overwritten",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ],
+     [
+      "skipped",
+      "POSITIONAL_OR_KEYWORD",
+      "False"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "overwritten",
+     "skipped"
+    ]
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "dataclass": {
+    "kind": "reexport"
+   },
+   "format_upload_prompt": {
+    "kind": "function",
+    "params": [
+     [
+      "paths",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "user_text",
+      "KEYWORD_ONLY",
+      "''"
+     ],
+     [
+      "intro",
+      "KEYWORD_ONLY",
+      "'I uploaded the following file(s) into the agent workspace:'"
+     ]
+    ]
+   },
+   "list_cwd_uploads": {
+    "kind": "function",
+    "params": [
+     [
+      "target",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "subdir",
+      "KEYWORD_ONLY",
+      "'_uploads'"
+     ]
+    ]
+   },
+   "resolve_upload_cwd": {
+    "kind": "function",
+    "params": [
+     [
+      "target",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "sanitize_upload_name": {
+    "kind": "function",
+    "params": [
+     [
+      "filename",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "upload_to_cwd": {
+    "kind": "function",
+    "params": [
+     [
+      "target",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "files",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "subdir",
+      "KEYWORD_ONLY",
+      "'_uploads'"
+     ],
+     [
+      "overwrite",
+      "KEYWORD_ONLY",
+      "'error'"
+     ],
+     [
+      "max_bytes",
+      "KEYWORD_ONLY",
+      "10485760"
+     ],
+     [
+      "allowed_extensions",
+      "KEYWORD_ONLY",
+      "<object>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.uploader": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "CocoOptions": {
+    "kind": "reexport"
+   },
+   "CocoSession": {
+    "kind": "reexport"
+   },
+   "CwdUploadError": {
+    "kind": "reexport"
+   },
+   "DEFAULT_ALLOWED_EXTENSIONS": {
+    "kind": "value"
+   },
+   "DEFAULT_MAX_BYTES": {
+    "kind": "value"
+   },
+   "DEFAULT_UPLOAD_SUBDIR": {
+    "kind": "value"
+   },
+   "OverwriteMode": {
+    "kind": "function",
+    "params": [
+     [
+      "args",
+      "VAR_POSITIONAL",
+      "<required>"
+     ],
+     [
+      "kwargs",
+      "VAR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "Sequence": {
+    "kind": "reexport"
+   },
+   "UploadedPath": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "cwd_uploader": {
+    "kind": "function",
+    "params": [
+     [
+      "target",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "label",
+      "KEYWORD_ONLY",
+      "'Upload into agent workspace'"
+     ],
+     [
+      "subdir",
+      "KEYWORD_ONLY",
+      "'_uploads'"
+     ],
+     [
+      "overwrite",
+      "KEYWORD_ONLY",
+      "'error'"
+     ],
+     [
+      "accept_multiple_files",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "file_type",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "max_bytes",
+      "KEYWORD_ONLY",
+      "10485760"
+     ],
+     [
+      "key",
+      "KEYWORD_ONLY",
+      "'coco_cwd_uploader'"
+     ],
+     [
+      "show_inventory",
+      "KEYWORD_ONLY",
+      "True"
+     ]
+    ]
+   },
+   "list_cwd_uploads": {
+    "kind": "reexport"
+   },
+   "upload_to_cwd": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.viewer": {
+   "Callable": {
+    "kind": "reexport"
+   },
+   "Mapping": {
+    "kind": "reexport"
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "app_viewer": {
+    "kind": "function",
+    "params": [
+     [
+      "app_dir",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key",
+      "KEYWORD_ONLY",
+      "'coco_app_viewer'"
+     ],
+     [
+      "port",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "address",
+      "KEYWORD_ONLY",
+      "'127.0.0.1'"
+     ],
+     [
+      "env",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "iframe_height",
+      "KEYWORD_ONLY",
+      "520"
+     ],
+     [
+      "show_fix",
+      "KEYWORD_ONLY",
+      "True"
+     ],
+     [
+      "on_fix",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_close",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "title_extra",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "title",
+      "KEYWORD_ONLY",
+      "'Preview'"
+     ],
+     [
+      "script_name",
+      "KEYWORD_ONLY",
+      "'streamlit_app.py'"
+     ]
+    ]
+   },
+   "collect_fix_text": {
+    "kind": "function",
+    "params": [
+     [
+      "app_dir",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "last_preview_exception": {
+    "kind": "reexport"
+   },
+   "preview_log_tail": {
+    "kind": "reexport"
+   },
+   "preview_running": {
+    "kind": "reexport"
+   },
+   "preview_url": {
+    "kind": "reexport"
+   },
+   "start_app_preview": {
+    "kind": "reexport"
+   },
+   "stop_app_preview": {
+    "kind": "reexport"
+   }
+  },
+  "streamlit_coco.waits": {
+   "act": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "action",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "context",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "ask_form": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "title",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "fields",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "decline_all": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "end": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "kind",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "run",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "form_result": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "key",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "take",
+      "POSITIONAL_OR_KEYWORD",
+      "True"
+     ]
+    ]
+   },
+   "on": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "event",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "on_answer": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "item",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "answer",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "on_message": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "action",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "message",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "on_step": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "run",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "step",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "event",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "pill": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "planning": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "quiet": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "request": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "reset": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "set_planning": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ],
+     [
+      "on",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "view": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   },
+   "waits": {
+    "kind": "function",
+    "params": [
+     [
+      "conv",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ]
+   }
+  },
+  "streamlit_coco.window": {
+   "Any": {
+    "kind": "reexport"
+   },
+   "Callable": {
+    "kind": "reexport"
+   },
+   "CocoError": {
+    "kind": "reexport"
+   },
+   "PLACES": {
+    "kind": "value"
+   },
+   "Path": {
+    "kind": "reexport"
+   },
+   "STREAMLIT_FLOOR": {
+    "kind": "value"
+   },
+   "Window": {
+    "init": [
+     [
+      "key",
+      "POSITIONAL_OR_KEYWORD",
+      "<required>"
+     ]
+    ],
+    "kind": "class",
+    "members": [
+     "ask",
+     "conversation",
+     "disconnect",
+     "form",
+     "latest_answer",
+     "new",
+     "notice",
+     "open",
+     "place",
+     "result"
+    ]
+   },
+   "annotations": {
+    "kind": "value"
+   },
+   "ask_coco": {
+    "kind": "function",
+    "params": [
+     [
+      "cwd",
+      "POSITIONAL_OR_KEYWORD",
+      "'.'"
+     ],
+     [
+      "key",
+      "KEYWORD_ONLY",
+      "'coco'"
+     ],
+     [
+      "policy",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "context",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "features",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "prompts",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "labels",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "theme",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "options",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_files_changed",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "agent",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "connection",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_rail",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "on_layout",
+      "KEYWORD_ONLY",
+      "None"
+     ],
+     [
+      "split",
+      "KEYWORD_ONLY",
+      "False"
+     ],
+     [
+      "audit",
+      "KEYWORD_ONLY",
+      "None"
+     ]
+    ]
+   },
+   "get_window": {
+    "kind": "function",
+    "params": [
+     [
+      "key",
+      "POSITIONAL_OR_KEYWORD",
+      "'coco'"
+     ]
+    ]
+   },
+   "lru_cache": {
+    "kind": "reexport"
+   },
+   "partial": {
+    "kind": "reexport"
+   },
+   "request_open": {
+    "kind": "function",
+    "params": [
+     [
+      "key",
+      "POSITIONAL_OR_KEYWORD",
+      "'coco'"
+     ]
+    ]
+   }
+  }
+ },
+ "top": {
+  "ApprovalTimeoutError": {
+   "init": [
+    [
+     "tool_name",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ],
+   "kind": "class",
+   "members": []
+  },
+  "Attachments": {
+   "fields": [
+    "multi",
+    "accept",
+    "max_mb"
+   ],
+   "init": [
+    [
+     "multi",
+     "POSITIONAL_OR_KEYWORD",
+     "True"
+    ],
+    [
+     "accept",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "max_mb",
+     "POSITIONAL_OR_KEYWORD",
+     "10"
+    ]
+   ],
+   "kind": "class",
+   "members": [
+    "accept",
+    "max_mb",
+    "multi"
+   ]
+  },
+  "AuditLog": {
+   "init": [
+    [
+     "path",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "who",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "evidence_chars",
+     "KEYWORD_ONLY",
+     "2000"
+    ],
+    [
+     "redact",
+     "KEYWORD_ONLY",
+     "<object>"
+    ]
+   ],
+   "kind": "class",
+   "members": [
+    "read"
+   ]
+  },
+  "CLINotFoundError": {
+   "init": [
+    [
+     "cli_path",
+     "KEYWORD_ONLY",
+     "None"
+    ]
+   ],
+   "kind": "class",
+   "members": []
+  },
+  "CLIProbeError": {
+   "init": [
+    [
+     "cli_path",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ],
+   "kind": "class",
+   "members": []
+  },
+  "CocoChatResult": {
+   "fields": [
+    "last_prompt",
+    "last_result",
+    "pending_approval",
+    "structured_output",
+    "events",
+    "status"
+   ],
+   "init": [
+    [
+     "last_prompt",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "last_result",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "pending_approval",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "structured_output",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "events",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "status",
+     "POSITIONAL_OR_KEYWORD",
+     "<CocoRunStatus.IDLE: 'idle'>"
+    ]
+   ],
+   "kind": "class",
+   "members": [
+    "last_prompt",
+    "last_result",
+    "pending_approval",
+    "status",
+    "structured_output"
+   ]
+  },
+  "CocoConnectionError": {
+   "init": null,
+   "kind": "class",
+   "members": []
+  },
+  "CocoEnvironment": {
+   "fields": [
+    "sdk_installed",
+    "sdk_version",
+    "cli_path",
+    "cli_version",
+    "snowflake_config_file",
+    "connection_hint",
+    "toml_file",
+    "managed"
+   ],
+   "init": [
+    [
+     "sdk_installed",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "sdk_version",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "cli_path",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "cli_version",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "snowflake_config_file",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "connection_hint",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "toml_file",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "managed",
+     "POSITIONAL_OR_KEYWORD",
+     "False"
+    ]
+   ],
+   "kind": "class",
+   "members": [
+    "cli_ok",
+    "managed",
+    "ready",
+    "snowflake_config_display",
+    "snowflake_config_found",
+    "snowflake_config_missing_label",
+    "toml_file"
+   ]
+  },
+  "CocoError": {
+   "init": null,
+   "kind": "class",
+   "members": []
+  },
+  "CocoEvent": {
+   "fields": [
+    "type",
+    "id",
+    "text",
+    "delta",
+    "name",
+    "tool_use_id",
+    "input",
+    "content",
+    "is_error",
+    "request_id",
+    "tool_name",
+    "tool_input",
+    "subtype",
+    "duration_ms",
+    "structured_output",
+    "cost_usd",
+    "message",
+    "code",
+    "metadata"
+   ],
+   "init": [
+    [
+     "type",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "id",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "text",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "delta",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "name",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "tool_use_id",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "input",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "content",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "is_error",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "request_id",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "tool_name",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "tool_input",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "subtype",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "duration_ms",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "structured_output",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "cost_usd",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "message",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "code",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "metadata",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ]
+   ],
+   "kind": "class",
+   "members": [
+    "code",
+    "content",
+    "cost_usd",
+    "delta",
+    "duration_ms",
+    "from_dict",
+    "input",
+    "is_error",
+    "message",
+    "name",
+    "request_id",
+    "structured_output",
+    "subtype",
+    "text",
+    "to_dict",
+    "tool_input",
+    "tool_name",
+    "tool_use_id"
+   ]
+  },
+  "CocoOptions": {
+   "fields": [
+    "connection",
+    "cwd",
+    "model",
+    "allowed_tools",
+    "disallowed_tools",
+    "permission_mode",
+    "profile",
+    "cli_path",
+    "mcp_servers",
+    "hooks",
+    "require_approval_for",
+    "output_schema",
+    "max_turns",
+    "approval_timeout_seconds",
+    "extra_sdk_options"
+   ],
+   "init": [
+    [
+     "connection",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "cwd",
+     "POSITIONAL_OR_KEYWORD",
+     "'.'"
+    ],
+    [
+     "model",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "allowed_tools",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "disallowed_tools",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "permission_mode",
+     "POSITIONAL_OR_KEYWORD",
+     "'default'"
+    ],
+    [
+     "profile",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "cli_path",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "mcp_servers",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "hooks",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "require_approval_for",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "output_schema",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "max_turns",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "approval_timeout_seconds",
+     "POSITIONAL_OR_KEYWORD",
+     "600.0"
+    ],
+    [
+     "extra_sdk_options",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ]
+   ],
+   "kind": "class",
+   "members": [
+    "approval_timeout_seconds",
+    "auto_allow_tools",
+    "cli_path",
+    "connection",
+    "cwd",
+    "max_turns",
+    "model",
+    "options_hash",
+    "output_schema",
+    "permission_mode",
+    "profile",
+    "to_sdk_options",
+    "tools_requiring_approval"
+   ]
+  },
+  "CocoRunStatus": {
+   "kind": "enum",
+   "members": [
+    "AWAITING_USER",
+    "CANCELLED",
+    "COMPLETED",
+    "CONNECTING",
+    "ERROR",
+    "IDLE",
+    "READY",
+    "RUNNING"
+   ]
+  },
+  "CocoSession": {
+   "init": [
+    [
+     "options",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "key",
+     "KEYWORD_ONLY",
+     "None"
+    ]
+   ],
+   "kind": "class",
+   "members": [
+    "add_event_listener",
+    "cancel",
+    "chat_result",
+    "close",
+    "ensure_ready",
+    "execute_plan",
+    "get_revision",
+    "get_transcript_snapshot",
+    "is_connecting",
+    "is_ready",
+    "is_running",
+    "messages",
+    "needs_polling",
+    "reset",
+    "run",
+    "send",
+    "set_permission_mode",
+    "set_show_structured_inline",
+    "start",
+    "stream",
+    "sync_options"
+   ]
+  },
+  "CwdUploadError": {
+   "init": null,
+   "kind": "class",
+   "members": []
+  },
+  "DEFAULT_ALLOWED_EXTENSIONS": {
+   "kind": "value"
+  },
+  "DEFAULT_MAX_BYTES": {
+   "kind": "value"
+  },
+  "DEFAULT_UPLOAD_SUBDIR": {
+   "kind": "value"
+  },
+  "Features": {
+   "fields": [
+    "queue",
+    "steps",
+    "motion",
+    "copy",
+    "page_text",
+    "page_exclude",
+    "attachments",
+    "planning",
+    "display",
+    "session_details",
+    "reasoning",
+    "download_csv",
+    "dock",
+    "full_page"
+   ],
+   "init": [
+    [
+     "queue",
+     "POSITIONAL_OR_KEYWORD",
+     "True"
+    ],
+    [
+     "steps",
+     "POSITIONAL_OR_KEYWORD",
+     "True"
+    ],
+    [
+     "motion",
+     "POSITIONAL_OR_KEYWORD",
+     "True"
+    ],
+    [
+     "copy",
+     "POSITIONAL_OR_KEYWORD",
+     "True"
+    ],
+    [
+     "page_text",
+     "POSITIONAL_OR_KEYWORD",
+     "False"
+    ],
+    [
+     "page_exclude",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "attachments",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "planning",
+     "POSITIONAL_OR_KEYWORD",
+     "False"
+    ],
+    [
+     "display",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "session_details",
+     "POSITIONAL_OR_KEYWORD",
+     "False"
+    ],
+    [
+     "reasoning",
+     "POSITIONAL_OR_KEYWORD",
+     "False"
+    ],
+    [
+     "download_csv",
+     "POSITIONAL_OR_KEYWORD",
+     "False"
+    ],
+    [
+     "dock",
+     "POSITIONAL_OR_KEYWORD",
+     "True"
+    ],
+    [
+     "full_page",
+     "POSITIONAL_OR_KEYWORD",
+     "True"
+    ]
+   ],
+   "kind": "class",
+   "members": [
+    "all",
+    "attachments",
+    "copy",
+    "display",
+    "dock",
+    "download_csv",
+    "full_page",
+    "motion",
+    "page_exclude",
+    "page_text",
+    "planning",
+    "queue",
+    "reasoning",
+    "session_details",
+    "steps"
+   ]
+  },
+  "Gate": {
+   "init": [
+    [
+     "emit",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "expiry",
+     "POSITIONAL_OR_KEYWORD",
+     "600"
+    ]
+   ],
+   "kind": "class",
+   "members": [
+    "agreed",
+    "answer",
+    "begin",
+    "cancel_all",
+    "decide",
+    "granted",
+    "revoke"
+   ]
+  },
+  "ManagedOptions": {
+   "fields": [
+    "account",
+    "token",
+    "auth",
+    "base_url",
+    "workspace_mounts",
+    "stage_mounts",
+    "stage_skills",
+    "disabled_skills",
+    "models",
+    "instructions",
+    "label",
+    "connection",
+    "upload_stage",
+    "upload_mount"
+   ],
+   "init": [
+    [
+     "account",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "token",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "auth",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "base_url",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "workspace_mounts",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "stage_mounts",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "stage_skills",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "disabled_skills",
+     "POSITIONAL_OR_KEYWORD",
+     "<object>"
+    ],
+    [
+     "models",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "instructions",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "label",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "connection",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "upload_stage",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "upload_mount",
+     "POSITIONAL_OR_KEYWORD",
+     "'/uploads'"
+    ]
+   ],
+   "kind": "class",
+   "members": [
+    "account",
+    "auth",
+    "base_url",
+    "client",
+    "connection",
+    "instructions",
+    "label",
+    "models",
+    "spec",
+    "token",
+    "upload_mount",
+    "upload_stage"
+   ]
+  },
+  "QueryError": {
+   "init": null,
+   "kind": "class",
+   "members": []
+  },
+  "SANDBOX_WHERE": {
+   "kind": "value"
+  },
+  "SANDBOX_WORDS": {
+   "kind": "value"
+  },
+  "SDKNotInstalledError": {
+   "init": [
+    [
+     "message",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ]
+   ],
+   "kind": "class",
+   "members": []
+  },
+  "SessionNotReadyError": {
+   "init": null,
+   "kind": "class",
+   "members": []
+  },
+  "SessionStartError": {
+   "init": null,
+   "kind": "class",
+   "members": []
+  },
+  "SnowflakeConfigNotFoundError": {
+   "init": [],
+   "kind": "class",
+   "members": []
+  },
+  "UploadedPath": {
+   "fields": [
+    "path",
+    "relative",
+    "name",
+    "bytes_written",
+    "overwritten",
+    "skipped"
+   ],
+   "init": [
+    [
+     "path",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "relative",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "name",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "bytes_written",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "overwritten",
+     "POSITIONAL_OR_KEYWORD",
+     "False"
+    ],
+    [
+     "skipped",
+     "POSITIONAL_OR_KEYWORD",
+     "False"
+    ]
+   ],
+   "kind": "class",
+   "members": [
+    "overwritten",
+    "skipped"
+   ]
+  },
+  "app_viewer": {
+   "kind": "function",
+   "params": [
+    [
+     "app_dir",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "key",
+     "KEYWORD_ONLY",
+     "'coco_app_viewer'"
+    ],
+    [
+     "port",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "address",
+     "KEYWORD_ONLY",
+     "'127.0.0.1'"
+    ],
+    [
+     "env",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "iframe_height",
+     "KEYWORD_ONLY",
+     "520"
+    ],
+    [
+     "show_fix",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "on_fix",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_close",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "title_extra",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "title",
+     "KEYWORD_ONLY",
+     "'Preview'"
+    ],
+    [
+     "script_name",
+     "KEYWORD_ONLY",
+     "'streamlit_app.py'"
+    ]
+   ]
+  },
+  "approve_pending": {
+   "kind": "function",
+   "params": [
+    [
+     "session",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "request_id",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "always",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "updated_input",
+     "KEYWORD_ONLY",
+     "None"
+    ]
+   ]
+  },
+  "ask_coco": {
+   "kind": "function",
+   "params": [
+    [
+     "cwd",
+     "POSITIONAL_OR_KEYWORD",
+     "'.'"
+    ],
+    [
+     "key",
+     "KEYWORD_ONLY",
+     "'coco'"
+    ],
+    [
+     "policy",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "context",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "features",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "prompts",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "labels",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "theme",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "options",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_files_changed",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "agent",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "connection",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_rail",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_layout",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "split",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "audit",
+     "KEYWORD_ONLY",
+     "None"
+    ]
+   ]
+  },
+  "chat": {
+   "kind": "function",
+   "params": [
+    [
+     "session",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "options",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "key",
+     "KEYWORD_ONLY",
+     "'coco_chat'"
+    ],
+    [
+     "height",
+     "KEYWORD_ONLY",
+     "600"
+    ],
+    [
+     "show_tool_details",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "show_thinking",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "placeholder",
+     "KEYWORD_ONLY",
+     "'Ask CoCo about your data\u2026'"
+    ],
+    [
+     "use_fragment",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "run_every",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "output_container",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "output_label",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "output_mode",
+     "KEYWORD_ONLY",
+     "'transcript'"
+    ],
+    [
+     "show_transcript_in_component",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_structured_output",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "structured_output_container",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_event",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_submit_change",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_approval_change",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_cancel_change",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "mini",
+     "KEYWORD_ONLY",
+     "False"
+    ]
+   ]
+  },
+  "chat_input_bar": {
+   "kind": "function",
+   "params": [
+    [
+     "session",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "placeholder",
+     "KEYWORD_ONLY",
+     "'Ask CoCo\u2026'"
+    ],
+    [
+     "connecting_placeholder",
+     "KEYWORD_ONLY",
+     "'Starting CoCo\u2026'"
+    ],
+    [
+     "key",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "accept_file",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "file_type",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "max_upload_size",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "upload_subdir",
+     "KEYWORD_ONLY",
+     "'_uploads'"
+    ],
+    [
+     "upload_overwrite",
+     "KEYWORD_ONLY",
+     "'replace'"
+    ],
+    [
+     "inject_upload_paths",
+     "KEYWORD_ONLY",
+     "True"
+    ]
+   ]
+  },
+  "check_environment": {
+   "kind": "function",
+   "params": [
+    [
+     "connection",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "cli_path",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "toml_file",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "managed",
+     "KEYWORD_ONLY",
+     "False"
+    ]
+   ]
+  },
+  "copilot_rail": {
+   "kind": "function",
+   "params": [
+    [
+     "session",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "title",
+     "KEYWORD_ONLY",
+     "'Copilot'"
+    ],
+    [
+     "key_prefix",
+     "KEYWORD_ONLY",
+     "'coco_rail'"
+    ],
+    [
+     "connected",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "connections",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "toml_file",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "connection_name",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_connect",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_disconnect",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "connect_caption",
+     "KEYWORD_ONLY",
+     "''"
+    ],
+    [
+     "on_close",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_clear",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "job",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "job_hint",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_cancel_job",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_job_sent",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_job_finished",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_structured_output",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "show_copy",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "show_transcript_filters",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "last_messages",
+     "KEYWORD_ONLY",
+     "8"
+    ],
+    [
+     "preview_chars",
+     "KEYWORD_ONLY",
+     "200"
+    ],
+    [
+     "show_status",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "show_approvals",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "run_every",
+     "KEYWORD_ONLY",
+     "0.25"
+    ],
+    [
+     "input_placeholder",
+     "KEYWORD_ONLY",
+     "'Ask CoCo\u2026'"
+    ],
+    [
+     "status_caption",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "example_questions",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "deferred",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "render_environment",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "mini",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "ask",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "own_window",
+     "KEYWORD_ONLY",
+     "True"
+    ]
+   ]
+  },
+  "cwd_uploader": {
+   "kind": "function",
+   "params": [
+    [
+     "target",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "label",
+     "KEYWORD_ONLY",
+     "'Upload into agent workspace'"
+    ],
+    [
+     "subdir",
+     "KEYWORD_ONLY",
+     "'_uploads'"
+    ],
+    [
+     "overwrite",
+     "KEYWORD_ONLY",
+     "'error'"
+    ],
+    [
+     "accept_multiple_files",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "file_type",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "max_bytes",
+     "KEYWORD_ONLY",
+     "10485760"
+    ],
+    [
+     "key",
+     "KEYWORD_ONLY",
+     "'coco_cwd_uploader'"
+    ],
+    [
+     "show_inventory",
+     "KEYWORD_ONLY",
+     "True"
+    ]
+   ]
+  },
+  "default_fix_prompt": {
+   "kind": "function",
+   "params": [
+    [
+     "traceback",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "app_dir",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "default_snowflake_connection_name": {
+   "kind": "function",
+   "params": [
+    [
+     "toml_file",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ]
+   ]
+  },
+  "deny_pending": {
+   "kind": "function",
+   "params": [
+    [
+     "session",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "request_id",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "reason",
+     "KEYWORD_ONLY",
+     "None"
+    ]
+   ]
+  },
+  "events_to_dataframe": {
+   "kind": "function",
+   "params": [
+    [
+     "events",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "format_upload_prompt": {
+   "kind": "function",
+   "params": [
+    [
+     "paths",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "user_text",
+     "KEYWORD_ONLY",
+     "''"
+    ],
+    [
+     "intro",
+     "KEYWORD_ONLY",
+     "'I uploaded the following file(s) into the agent workspace:'"
+    ]
+   ]
+  },
+  "get_latest_assistant_text": {
+   "kind": "function",
+   "params": [
+    [
+     "session",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "get_or_create_session": {
+   "kind": "function",
+   "params": [
+    [
+     "options",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "key",
+     "KEYWORD_ONLY",
+     "'coco'"
+    ],
+    [
+     "sync_options",
+     "KEYWORD_ONLY",
+     "True"
+    ]
+   ]
+  },
+  "get_session": {
+   "kind": "function",
+   "params": [
+    [
+     "key",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "get_window": {
+   "kind": "function",
+   "params": [
+    [
+     "key",
+     "POSITIONAL_OR_KEYWORD",
+     "'coco'"
+    ]
+   ]
+  },
+  "is_ask_user_question": {
+   "kind": "function",
+   "params": [
+    [
+     "tool_name",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "is_debug_mode": {
+   "kind": "function",
+   "params": [
+    [
+     "session_state",
+     "KEYWORD_ONLY",
+     "None"
+    ]
+   ]
+  },
+  "is_exit_plan_mode": {
+   "kind": "function",
+   "params": [
+    [
+     "tool_name",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "is_sql_tool": {
+   "kind": "function",
+   "params": [
+    [
+     "tool_name",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "last_preview_exception": {
+   "kind": "function",
+   "params": [
+    [
+     "app_dir",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "list_cwd_uploads": {
+   "kind": "function",
+   "params": [
+    [
+     "target",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "subdir",
+     "KEYWORD_ONLY",
+     "'_uploads'"
+    ]
+   ]
+  },
+  "list_snowflake_connections": {
+   "kind": "function",
+   "params": [
+    [
+     "toml_file",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ]
+   ]
+  },
+  "list_snowflake_toml_files": {
+   "kind": "function",
+   "params": []
+  },
+  "managed_agent": {
+   "kind": "function",
+   "params": [
+    [
+     "options",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "options_from_connection": {
+   "kind": "function",
+   "params": [
+    [
+     "profile",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "role",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "toml_file",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "options",
+     "VAR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "panel": {
+   "kind": "function",
+   "params": [
+    [
+     "session",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "output_label",
+     "KEYWORD_ONLY",
+     "'CoCo output'"
+    ],
+    [
+     "output_mode",
+     "KEYWORD_ONLY",
+     "'transcript'"
+    ],
+    [
+     "show_tool_details",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "show_thinking",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "show_approvals",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "show_stop",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "show_status",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "show_plan_banner",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "warm_up",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "status_expanded",
+     "KEYWORD_ONLY",
+     "'auto'"
+    ],
+    [
+     "approval_key_prefix",
+     "KEYWORD_ONLY",
+     "'coco'"
+    ],
+    [
+     "use_fragment",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "run_every",
+     "KEYWORD_ONLY",
+     "0.25"
+    ],
+    [
+     "text_renderer",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "show_copy",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "max_messages",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "preview_chars",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "on_structured_output",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "structured_output_container",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "mini",
+     "KEYWORD_ONLY",
+     "False"
+    ]
+   ]
+  },
+  "policy": {
+   "kind": "value"
+  },
+  "preview_log_tail": {
+   "kind": "function",
+   "params": [
+    [
+     "app_dir",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "n",
+     "KEYWORD_ONLY",
+     "40"
+    ]
+   ]
+  },
+  "preview_running": {
+   "kind": "function",
+   "params": [
+    [
+     "app_dir",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "preview_url": {
+   "kind": "function",
+   "params": [
+    [
+     "app_dir",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "address",
+     "KEYWORD_ONLY",
+     "'127.0.0.1'"
+    ]
+   ]
+  },
+  "query": {
+   "kind": "function",
+   "params": [
+    [
+     "prompt",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "options",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "output_schema",
+     "KEYWORD_ONLY",
+     "None"
+    ]
+   ]
+  },
+  "render_approvals": {
+   "kind": "function",
+   "params": [
+    [
+     "session",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "key_prefix",
+     "KEYWORD_ONLY",
+     "'coco'"
+    ],
+    [
+     "show_tool_input",
+     "KEYWORD_ONLY",
+     "None"
+    ]
+   ]
+  },
+  "render_environment_status": {
+   "kind": "function",
+   "params": [
+    [
+     "env",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "connection",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "toml_file",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "stacked",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "show_title",
+     "KEYWORD_ONLY",
+     "True"
+    ]
+   ]
+  },
+  "render_output_field": {
+   "kind": "function",
+   "params": [
+    [
+     "session",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "container",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "label",
+     "KEYWORD_ONLY",
+     "'CoCo output'"
+    ],
+    [
+     "show_tool_details",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "text_renderer",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "show_copy",
+     "KEYWORD_ONLY",
+     "True"
+    ]
+   ]
+  },
+  "render_plan_banner": {
+   "kind": "function",
+   "params": [
+    [
+     "session",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "key_prefix",
+     "KEYWORD_ONLY",
+     "'coco'"
+    ],
+    [
+     "execute_prompt",
+     "KEYWORD_ONLY",
+     "'Execute the approved plan.'"
+    ],
+    [
+     "plan_state_key",
+     "KEYWORD_ONLY",
+     "'coco_plan_mode'"
+    ]
+   ]
+  },
+  "render_session_status": {
+   "kind": "function",
+   "params": [
+    [
+     "session",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "expanded",
+     "KEYWORD_ONLY",
+     "'auto'"
+    ]
+   ]
+  },
+  "render_start_gate": {
+   "kind": "function",
+   "params": [
+    [
+     "options",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "session_key",
+     "KEYWORD_ONLY",
+     "'coco'"
+    ],
+    [
+     "gate_key",
+     "KEYWORD_ONLY",
+     "'coco_started'"
+    ],
+    [
+     "title",
+     "KEYWORD_ONLY",
+     "'CoCo demo is ready to be instantiated'"
+    ],
+    [
+     "button_label",
+     "KEYWORD_ONLY",
+     "'Start CoCo Chat'"
+    ],
+    [
+     "body",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "warm_up",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "env",
+     "KEYWORD_ONLY",
+     "None"
+    ]
+   ]
+  },
+  "render_transcript": {
+   "kind": "function",
+   "params": [
+    [
+     "session",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "container",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "show_tool_details",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "show_thinking",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "show_streaming_cursor",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "hide_active_approval",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "text_renderer",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "show_copy",
+     "KEYWORD_ONLY",
+     "True"
+    ],
+    [
+     "max_messages",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "preview_chars",
+     "KEYWORD_ONLY",
+     "None"
+    ]
+   ]
+  },
+  "request_input": {
+   "kind": "function",
+   "params": [
+    [
+     "question",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "key",
+     "KEYWORD_ONLY",
+     "'coco_input'"
+    ],
+    [
+     "default",
+     "KEYWORD_ONLY",
+     "''"
+    ],
+    [
+     "schema",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "submit_label",
+     "KEYWORD_ONLY",
+     "'Submit'"
+    ],
+    [
+     "cancel_label",
+     "KEYWORD_ONLY",
+     "'Cancel'"
+    ]
+   ]
+  },
+  "require_environment": {
+   "kind": "function",
+   "params": [
+    [
+     "connection",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "cli_path",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "toml_file",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "require_snowflake_config",
+     "KEYWORD_ONLY",
+     "False"
+    ],
+    [
+     "managed",
+     "KEYWORD_ONLY",
+     "False"
+    ]
+   ]
+  },
+  "reset_session": {
+   "kind": "function",
+   "params": [
+    [
+     "options",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "session_key",
+     "KEYWORD_ONLY",
+     "'coco'"
+    ],
+    [
+     "warm_up",
+     "KEYWORD_ONLY",
+     "False"
+    ]
+   ]
+  },
+  "resolve_snowflake_config_path": {
+   "kind": "function",
+   "params": [
+    [
+     "toml_file",
+     "POSITIONAL_OR_KEYWORD",
+     "None"
+    ],
+    [
+     "must_exist",
+     "KEYWORD_ONLY",
+     "True"
+    ]
+   ]
+  },
+  "sanitize_upload_name": {
+   "kind": "function",
+   "params": [
+    [
+     "filename",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "send_prompt": {
+   "kind": "function",
+   "params": [
+    [
+     "session",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "prompt",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "start_app_preview": {
+   "kind": "function",
+   "params": [
+    [
+     "app_dir",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "port",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "address",
+     "KEYWORD_ONLY",
+     "'127.0.0.1'"
+    ],
+    [
+     "env",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "script_name",
+     "KEYWORD_ONLY",
+     "'streamlit_app.py'"
+    ]
+   ]
+  },
+  "stop_app_preview": {
+   "kind": "function",
+   "params": [
+    [
+     "app_dir",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "stop_session": {
+   "kind": "function",
+   "params": [
+    [
+     "session_key",
+     "KEYWORD_ONLY",
+     "'coco'"
+    ],
+    [
+     "gate_key",
+     "KEYWORD_ONLY",
+     "'coco_started'"
+    ]
+   ]
+  },
+  "tool_family": {
+   "kind": "function",
+   "params": [
+    [
+     "tool_name",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ]
+   ]
+  },
+  "transcript_display_config": {
+   "kind": "function",
+   "params": [
+    [
+     "key",
+     "KEYWORD_ONLY",
+     "'coco_transcript_display'"
+    ],
+    [
+     "last_n",
+     "KEYWORD_ONLY",
+     "8"
+    ],
+    [
+     "preview_chars",
+     "KEYWORD_ONLY",
+     "200"
+    ],
+    [
+     "default",
+     "KEYWORD_ONLY",
+     "None"
+    ]
+   ]
+  },
+  "transcript_view_pills": {
+   "kind": "function",
+   "params": [
+    [
+     "key",
+     "KEYWORD_ONLY",
+     "'coco_transcript_view'"
+    ],
+    [
+     "last_n",
+     "KEYWORD_ONLY",
+     "8"
+    ],
+    [
+     "preview_chars",
+     "KEYWORD_ONLY",
+     "200"
+    ],
+    [
+     "default",
+     "KEYWORD_ONLY",
+     "None"
+    ],
+    [
+     "label",
+     "KEYWORD_ONLY",
+     "'Transcript'"
+    ],
+    [
+     "label_visibility",
+     "KEYWORD_ONLY",
+     "'collapsed'"
+    ]
+   ]
+  },
+  "upload_to_cwd": {
+   "kind": "function",
+   "params": [
+    [
+     "target",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "files",
+     "POSITIONAL_OR_KEYWORD",
+     "<required>"
+    ],
+    [
+     "subdir",
+     "KEYWORD_ONLY",
+     "'_uploads'"
+    ],
+    [
+     "overwrite",
+     "KEYWORD_ONLY",
+     "'error'"
+    ],
+    [
+     "max_bytes",
+     "KEYWORD_ONLY",
+     "10485760"
+    ],
+    [
+     "allowed_extensions",
+     "KEYWORD_ONLY",
+     "<object>"
+    ]
+   ]
+  }
+ }
+}

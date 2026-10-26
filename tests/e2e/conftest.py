@@ -14,6 +14,7 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 HARNESS = REPO_ROOT / "examples" / "e2e_ux_harness.py"
+MANAGED_HARNESS = REPO_ROOT / "examples" / "e2e_managed_harness.py"
 
 
 @pytest.fixture(scope="session")
@@ -56,8 +57,7 @@ def workspace(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return folder
 
 
-@pytest.fixture(scope="session")
-def base_url(workspace: Path) -> Iterator[str]:
+def _serve(harness: Path, workspace: Path) -> Iterator[str]:
     port = _free_port()
     env = os.environ.copy()
     env.update(
@@ -72,7 +72,7 @@ def base_url(workspace: Path) -> Iterator[str]:
             "-m",
             "streamlit",
             "run",
-            str(HARNESS),
+            str(harness),
             "--server.port",
             str(port),
             "--server.address",
@@ -98,6 +98,24 @@ def base_url(workspace: Path) -> Iterator[str]:
         except subprocess.TimeoutExpired:
             proc.kill()
             proc.wait(timeout=5)
+
+
+@pytest.fixture(scope="session")
+def base_url(workspace: Path) -> Iterator[str]:
+    yield from _serve(HARNESS, workspace)
+
+
+@pytest.fixture(scope="session")
+def managed_workspace(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """The managed harness's working folder (it holds nothing the agent reads)."""
+    folder = tmp_path_factory.mktemp("coco_e2e_managed") / "work"
+    folder.mkdir()
+    return folder
+
+
+@pytest.fixture(scope="session")
+def managed_url(managed_workspace: Path) -> Iterator[str]:
+    yield from _serve(MANAGED_HARNESS, managed_workspace)
 
 
 def _open(page, url: str):

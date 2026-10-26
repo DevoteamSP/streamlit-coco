@@ -7,9 +7,9 @@
 | **Snow Builders level** | N0 (working toward N1) |
 | **Status** | active |
 | **Asset Owner** | Laurent Letourmy — laurent.letourmy@devoteam.com |
-| **Contributors** | DevoteamSP / streamlit-coco contributors |
+| **Asset Contributor** | Alentz Joseph — alentz.joseph@devoteam.com |
 | **Created** | 2026-07 |
-| **Last updated** | 2026-09-10 |
+| **Last updated** | 2026-10-20 |
 | **Confidentiality** | Public |
 
 ---

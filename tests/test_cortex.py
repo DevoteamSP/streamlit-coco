@@ -130,7 +130,7 @@ class TranslatorTest(unittest.TestCase):
 class AgentTest(unittest.TestCase):
     def test_the_module_imports_without_the_sdk_and_without_streamlit(self) -> None:
         code = (
-            "import sys; sys.modules['cortex_code_agent_sdk'] = None;"
+            "import sys; sys.modules['cortex_agent_sdk'] = None;"
             "import streamlit_coco.cortex as m;"
             "print(m.Agent(lambda e: None).setup()['missing'], 'streamlit' in sys.modules)"
         )
@@ -356,7 +356,7 @@ class ConnectTest(unittest.TestCase):
             PermissionResultAllow=lambda updated_input=None: ("allow", updated_input),
             PermissionResultDeny=lambda message: ("deny", message),
         )
-        patcher = patch.dict(sys.modules, {"cortex_code_agent_sdk": sdk})
+        patcher = patch.dict(sys.modules, {"cortex_agent_sdk.cortexcode": sdk})
         patcher.start()
         self.addCleanup(patcher.stop)
         sess = patch.object(session_module, "CocoSession", fake)
@@ -520,7 +520,7 @@ class WaitsTest(unittest.TestCase):
             PermissionResultAllow=lambda updated_input=None: ("allow", updated_input),
             PermissionResultDeny=lambda message: ("deny", message),
         )
-        patcher = patch.dict(sys.modules, {"cortex_code_agent_sdk": sdk})
+        patcher = patch.dict(sys.modules, {"cortex_agent_sdk.cortexcode": sdk})
         patcher.start()
         self.addCleanup(patcher.stop)
         sess = patch.object(session_module, "CocoSession", fake)
@@ -987,7 +987,7 @@ class OptionsTest(unittest.TestCase):
             connection="dev",
         )
         with (
-            patch.dict(sys.modules, {"cortex_code_agent_sdk": sdk}),
+            patch.dict(sys.modules, {"cortex_agent_sdk.cortexcode": sdk}),
             patch.object(
                 session_module,
                 "CocoSession",

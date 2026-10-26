@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "streamlit-coco"
-version = "0.2.1"
+version = "0.3.0"
 description = "Streamlit component and Python library for Snowflake CoCo (Cortex Code)"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -27,9 +27,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-sdk = ["cortex-code-agent-sdk>=1.0.7"]
+sdk = ["snowflake-cortex-agent-sdk>=0.0.3,<0.1"]
 dev = [
-    "cortex-code-agent-sdk>=1.0.7",
+    "snowflake-cortex-agent-sdk>=0.0.3,<0.1",
     "pytest>=8.0",
     "pytest-asyncio>=0.24",
     "ruff>=0.8",
@@ -81,3 +81,17 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
+
+[tool.uv]
+# The development lock covers Python 3.11 and later: Pillow 13 (it fixes the Pillow advisories)
+# and filelock 4 need 3.11, and a 3.10 branch kept pillow 12.3.0 in the lock, which Dependabot
+# reports. The package itself still declares requires-python >=3.10; only `uv sync` and
+# `uv lock` in this repository need 3.11. CI and the release workflow run on 3.11.
+# Pyodide (emscripten) is left out: uv 0.13 forks the resolution for it and playwright, which the
+# e2e extra needs, has no wheel there, so a fresh `uv sync` (the public CI has no lock) fails.
+environments = ["python_full_version >= '3.11' and sys_platform != 'emscripten'"]
+# filelock 4.2.1 fixes CVE-2026-112907, -112913 and -112940. snowflake-connector-python 4.8.0
+# (via snowflake-cortex-agent-sdk) still says filelock<4, but only uses FileLock, BaseFileLock and Timeout,
+# which 4.x keeps. Development lock only: this is not in the wheel's metadata. Drop it once the
+# connector allows filelock 4.
+override-dependencies = ["filelock>=4.2.1"]

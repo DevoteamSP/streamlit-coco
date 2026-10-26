@@ -33,7 +33,8 @@ Canonical SDK docs: https://docs.snowflake.com/en/user-guide/cortex-code-agent-s
 make install      # uv sync --extra dev
 make check        # ruff and the unit tests (not the browser tests)
 make e2e          # Playwright, the window on the scripted agent (Edge if Chromium is missing)
-make audit        # pip-audit
+make audit        # pip-audit: the root lock and every examples/*/uv.lock
+make release-check # before sync-release and the tag: version, public CHANGELOG, audits, Dependabot alerts, sync dry run
 make test-all     # check, e2e, audit
 make simple-chat # panel, a test-prompt picker, rights as pills (`make chat` still runs it)
 make modern-chat # Copilot rail, floating window, or both
@@ -68,6 +69,6 @@ Full test process: [`doc/testing.md`](doc/testing.md).
 
 - Unit tests: `tests/` (`make check`).
 - Browser tests: `tests/e2e/` (the window) and `tests/e2e_classic/` (the 0.1.9 chat helpers) (`make e2e-install` once, then `make e2e`).
-- 0.1.9 compatibility: `tests/test_compat_019.py` holds the package to `tests/fixtures/api_0.1.9.json`. A public name, parameter or default of 0.1.9 does not change; add new parameters last, keyword-only, with a default. Do not delete the 0.1.9 tests (`test_copilot_rail.py`, `test_rich_text.py`, `test_classic_*.py`, `tests/e2e_classic/`).
+- Compatibility with released versions: `tests/test_compat_019.py` holds the package to `tests/fixtures/api_0.1.9.json` `tests/test_compat_022.py` to `tests/fixtures/api_0.2.2.json` (what 0.2.0 to 0.2.2 added: `ask_coco`, `Features`, `get_window`, ...) and `tests/test_compat_030.py` to `tests/fixtures/api_0.3.0.json` (the managed agent, `AuditLog`). A public name, parameter or default of a released version does not change; add new parameters last, keyword-only, with a default. When a release is cut, add `tests/fixtures/api_X.Y.Z.json` and its `test_compat_*` (recipe in `tests/api_snapshot.py`; take the snapshot from the tag's source with the SDK that release used installed, else the SDK's own classes show as stubs). Do not delete the 0.1.9 tests (`test_copilot_rail.py`, `test_rich_text.py`, `test_classic_*.py`, `tests/e2e_classic/`).
 - Manual, live Cortex Code: [`doc/features/ask-coco/test-checklist.md`](doc/features/ask-coco/test-checklist.md) before a release.
 - Process: [`doc/testing.md`](doc/testing.md).

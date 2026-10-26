@@ -10,7 +10,7 @@ from streamlit_coco.messages import CocoEvent, message_to_events
 from streamlit_coco.options import CocoOptions
 
 try:
-    from cortex_code_agent_sdk import query as sdk_query
+    from cortex_agent_sdk.cortexcode import query as sdk_query
 except ImportError:  # pragma: no cover
     sdk_query = None  # type: ignore[assignment]
 
