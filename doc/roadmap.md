@@ -2,10 +2,10 @@
 
 Living plan. Product detail: [doc/prd.md](prd.md). Shipped history: [CHANGELOG.md](../CHANGELOG.md).
 
-**Status:** `0.3.0` published on 2026-10-26 (tag `v0.3.0` on lletourmy/streamlit-coco; the managed agent, an audit log with redaction and outcomes, managed file upload; experimental). `0.2.2` was published on 2026-10-25. The 0.1.9 chat family stays the default; Ask CoCo is opt-in ([feature file](features/ask-coco/ask-coco.md)). The last public release is `0.3.0` ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)). Next: Streamlit in Snowflake as `0.3.5`.
+**Status:** `0.3.1` is cut on 2026-11-20 (a settings file of its own for the window's Cortex Code, the full-page conversation on the whole width, fixes to what the window shows and what the policy asks; tag `v0.3.1` on lletourmy/streamlit-coco once the checklist is done). `0.3.0` was published on 2026-10-26 (the managed agent, an audit log with redaction and outcomes, managed file upload; experimental). `0.2.2` was published on 2026-10-25. The 0.1.9 chat family stays the default; Ask CoCo is opt-in ([feature file](features/ask-coco/ask-coco.md)). The last public release is `0.3.0` until `0.3.1` is tagged ([pypi.org/project/streamlit-coco](https://pypi.org/project/streamlit-coco/)). Next: Streamlit in Snowflake as `0.3.5`.
 **Publisher:** temporary Trusted Publisher on [lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco); public tree also synced to [DevoteamSP/streamlit-coco](https://github.com/DevoteamSP/streamlit-coco). Used for the last cut (`0.3.0`).
-**Last updated:** 2026-10-26
-**Last cut:** [releases/0.3.0/](releases/0.3.0/) (previous: [releases/0.2.2/](releases/0.2.2/))
+**Last updated:** 2026-11-20
+**Last cut:** [releases/0.3.1/](releases/0.3.1/) (previous: [releases/0.3.0/](releases/0.3.0/))
 **Next cuts:** `0.3.5` Streamlit in Snowflake → `0.4.0` Native App
 
 > **Before every release:** complete [releases/X.Y.Z/CHECKLIST.md](releases/README.md) (CHANGELOG, this roadmap, PRD, screenshots, [public issues](https://github.com/DevoteamSP/streamlit-coco/issues)) and outreach under `doc-dev/releases/` in the development repository, then [deployment/publish.md](deployment/publish.md).
@@ -16,11 +16,12 @@ Living plan. Product detail: [doc/prd.md](prd.md). Shipped history: [CHANGELOG.m
 
 
 
-## Now — closing `0.3.0`
+## Now — closing `0.3.1` and `0.3.0`
 
 
 | Priority | Item | Ref |
 | -------- | ---- | --- |
+| P0 | **Close `0.3.1`**: tag `v0.3.1` after the public sync and its green CI, run rows 34–36 of the [live checklist](features/ask-coco/test-checklist.md) (`settings_file`, not run live yet), then post the outreach (drafts in `doc-dev/releases/0.3.1/`) | [releases/0.3.1/CHECKLIST.md](releases/0.3.1/CHECKLIST.md) · [feature](features/settings-file/feature.md) |
 | P0 | **After `0.3.0`**: post the issue comments (drafts in `doc-dev/releases/0.3.0/ISSUES.md`), the LinkedIn visual and posts; then plan `0.3.5` (Streamlit in Snowflake) | [releases/0.3.0/CHECKLIST.md](releases/0.3.0/CHECKLIST.md) · [#4](https://github.com/DevoteamSP/streamlit-coco-dev/issues/4) |
 | P1 | **Skills shop** — what the experimental example left open (two skills in a chat, the Playwright test, the page behind the Native App ingress, caller's rights) | [brief](../doc-dev/briefs/skills-hub-managed.md) · [#12](https://github.com/DevoteamSP/streamlit-coco/issues/12) |
 
@@ -36,10 +37,10 @@ Published `2026-10-25` (`v0.2.2` on lletourmy/streamlit-coco).
 | Item | Status | Ref |
 | ---- | ------ | --- |
 | Header icons: attach the window to the left or the right edge, or fill the page; `Features(dock=, full_page=)` switch them off | ✅ | [features/ask-coco/ask-coco.md](features/ask-coco/ask-coco.md) |
-| `ask_coco(on_layout=, split=)` and `get_window(key).place`: the page learns where the window is and can take the rest of the screen | ✅ | `make modern-chat` (Split screen selector) |
+| `ask_coco(on_layout=, split=)` and `get_window(key).place`: the page learns where the window is and can take the rest of the screen | ✅ | `uv run --directory examples/modern_chat --project ../.. --extra dev python -m streamlit run app.py` (Split screen selector) |
 | A click on the title bar minimises; hints on the title-bar icons after 750 ms | ✅ | |
 | Fix: the window no longer blinks while it waits (Streamlit faded the stale component) | ✅ | |
-| App Builder and BI → Semantic: Ask CoCo only, on every screen, with the questions of each screen | ✅ | `make app-builder` · `make bi-semantic` |
+| App Builder and BI → Semantic: Ask CoCo only, on every screen, with the questions of each screen | ✅ | `uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py` · `uv run --directory examples/bi_to_semantic --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py` |
 
 ## v0.2.0 — Ask CoCo window
 
@@ -48,8 +49,8 @@ Shipped `2026-10-20`. The 0.1.9 chat family stays.
 | Item | Status | Ref |
 | ---- | ------ | --- |
 | `ask_coco(cwd)` launcher and window; `get_window`; policy; `STREAMLIT_COCO_AGENT=mock` | ✅ | [features/ask-coco/ask-coco.md](features/ask-coco/ask-coco.md) |
-| Chat, panel, and Copilot rail stay the default. `mini=True` or `ask_coco` turns the window on. Minimize / Restore move between them. | ✅ | `make simple-chat` · `make chat` |
-| `make modern-chat` — Rail, Window, or Both | ✅ | `examples/modern_chat` |
+| Chat, panel, and Copilot rail stay the default. `mini=True` or `ask_coco` turns the window on. Minimize / Restore move between them. | ✅ | `uv run --extra dev python -m streamlit run examples/chat_app.py` · `uv run --extra dev python -m streamlit run examples/chat_app.py` |
+| `uv run --directory examples/modern_chat --project ../.. --extra dev python -m streamlit run app.py` — Rail, Window, or Both | ✅ | `examples/modern_chat` |
 | API mode (`mode="api"`, no CLI) | Not this cut | Next, below |
 
 ---
@@ -63,7 +64,7 @@ Shipped in `0.1.7`. First-party examples, not the API-mode cut. Publisher switch
 
 | Item                                                                                              | Ref                                                                      |
 | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| ✅ Rename Tableau → Semantic to **BI → Semantic**; Load Tableau **or** Power BI                    | `examples/bi_to_semantic`, `make bi-semantic`                            |
+| ✅ Rename Tableau → Semantic to **BI → Semantic**; Load Tableau **or** Power BI                    | `examples/bi_to_semantic`, `uv run --directory examples/bi_to_semantic --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py`                            |
 | ✅ MIT Power BI pack + `pbixray` as the primary `.pbix` reader                                     | [examples/bi_samples/powerbi/](../examples/bi_samples/powerbi/)        |
 | ✅ Screen 4: colliding table contracts (`Fact` / `Scenario` / `Date`) — public samples have no RLS | [BRIEF](../examples/bi_to_semantic/BRIEF-powerbi-fixtures.md)            |
 | ✅ Streamlit App Viewer (`app_viewer()`)                                                           | [features/app-viewer/app-viewer.md](features/app-viewer/app-viewer.md) |
@@ -80,7 +81,7 @@ Shipped `2026-09-06`. First-party example + rail knobs. Publisher switch and FR-
 
 | Item | Status | Ref |
 | ---- | ------ | --- |
-| App Builder host — Welcome · Library · Brief · Studio · Admin; named apps; topic pills; Admin CRUD (questions as tabs) | ✅ | [features/app-builder/](features/app-builder/app-builder.md) · `make app-builder` |
+| App Builder host — Welcome · Library · Brief · Studio · Admin; named apps; topic pills; Admin CRUD (questions as tabs) | ✅ | [features/app-builder/](features/app-builder/app-builder.md) · `uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py` |
 | Profile step + `infer:` — deterministic pandas for tabular / semantic-view (KPI demo fixture). Agent-run profile for documents/URLs (UC9) is later. | ✅ tabular / semantic-view | [UX §4](features/app-builder/UX.md) · `engine/profile.py` |
 | Guidelines skills — shared pack + per-type `SKILL.md`; KPI has reference app + `CHECKLIST.md` + one automatic self-check pass after Write | ✅ | `types/shared/` · `types/semantic-kpis/` · [UX §6.1a](features/app-builder/UX.md) |
 | Live types — KPI presentation, Data quality, Call transcription, Meeting recap, Prompt library, CSV explorer. `doc-compare` and every `urls` type are later. | ✅ | [UX §5.3](features/app-builder/UX.md#53-catalog-content) |
@@ -100,7 +101,7 @@ Shipped `2026-09-07`. Patch on the `0.1.8` rail starters. Publisher switch and F
 | Item | Status | Ref |
 | ---- | ------ | --- |
 | `copilot_rail(..., deferred=True)` — click copies the question into the chat input and does not run it. Per-item `deferred` on `{title, question}` (or a 3-tuple). Default remains send-on-click. | ✅ | [features/ask-coco/ask-coco.md](features/ask-coco/ask-coco.md) · [`deferred`](features/ask-coco/ask-coco.md) |
-| BI → Semantic opts in (`deferred=True`). App Builder still sends on click. | ✅ | `make bi-semantic` |
+| BI → Semantic opts in (`deferred=True`). App Builder still sends on click. | ✅ | `uv run --directory examples/bi_to_semantic --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py` |
 
 
 ---
@@ -115,7 +116,7 @@ Shipped `2026-09-10`. Rail connection popover can choose which Snowflake TOML to
 | Item | Status | Ref |
 | ---- | ------ | --- |
 | `copilot_rail(..., toml_file=)` — Config file + Connection selectboxes on one row. Lists `~/.snowflake/*.toml`. A single file is used whatever its name. | ✅ | [features/ask-coco/ask-coco.md](features/ask-coco/ask-coco.md) · [`toml_file`](features/ask-coco/ask-coco.md) |
-| Helpers `list_snowflake_connections()`, `list_snowflake_toml_files()`, `resolve_snowflake_config_path()`. App Builder / BI → Semantic use the picker. | ✅ | `make app-builder` · `make bi-semantic` |
+| Helpers `list_snowflake_connections()`, `list_snowflake_toml_files()`, `resolve_snowflake_config_path()`. App Builder / BI → Semantic use the picker. | ✅ | `uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py` · `uv run --directory examples/bi_to_semantic --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py` |
 
 
 ---
@@ -137,7 +138,7 @@ Product-shaped ideas (examples, RFCs, later catalogue types) live in this table.
 | Prompt library player (local or GitHub) | In `0.1.8` catalogue (local; GitHub source later) | `types/prompt-library` |
 | Dashboard builder on a semantic view + agent client | Partial — KPI type is the dashboard slice; in-app agent is `ships_copilot` (later) | `types/semantic-kpis` · [UX §5.5](features/app-builder/UX.md) |
 | Data quality solutions builder | In `0.1.8` catalogue | `types/data-quality` |
-| Migration wizard | First-party slice shipped (`0.1.6` Tableau, `0.1.7` Power BI). Full cockpit still RFC. | `make bi-semantic` · [#10](https://github.com/DevoteamSP/streamlit-coco/issues/10) |
+| Migration wizard | First-party slice shipped (`0.1.6` Tableau, `0.1.7` Power BI). Full cockpit still RFC. | `uv run --directory examples/bi_to_semantic --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py` · [#10](https://github.com/DevoteamSP/streamlit-coco/issues/10) |
 | FinOps costs explorer | Later catalogue card (`warehouse-spend`). Public example still open. | [UX §5.3](features/app-builder/UX.md#53-catalog-content) · [#5](https://github.com/DevoteamSP/streamlit-coco/issues/5) |
 | Incident / query triage | Unscheduled example | [#6](https://github.com/DevoteamSP/streamlit-coco/issues/6) |
 | Multi-persona workspaces | Unscheduled example | [#7](https://github.com/DevoteamSP/streamlit-coco/issues/7) |
@@ -158,7 +159,7 @@ Product-shaped ideas (examples, RFCs, later catalogue types) live in this table.
 | Item | Status | Ref |
 | ---- | ------ | --- |
 | Transport decided: one SDK, `snowflake-cortex-agent-sdk`, for the local CLI (`cortex_agent_sdk.cortexcode`, same API as `cortex-code-agent-sdk`) and for the managed agent. `CocoOptions.mode="api"` is not built: there is no second mode to switch | ✅ | [CHANGELOG](../CHANGELOG.md) · [feature file §8](features/ask-coco/ask-coco.md) |
-| `ManagedOptions` + `managed_agent` in the same window, policy and gate; the run is always `always_ask`, only the one-call "Allow this command" is sent | ✅ | [api.md](api.md) · `make managed` |
+| `ManagedOptions` + `managed_agent` in the same window, policy and gate; the run is always `always_ask`, only the one-call "Allow this command" is sent | ✅ | [api.md](api.md) · `uv run --extra dev python -m streamlit run examples/managed_chat.py` |
 | `options_from_connection(profile, role=)`, `SANDBOX_WORDS`, `SANDBOX_WHERE` | ✅ | [api.md](api.md) |
 | `AgentBackend`: the surface of an agent (Cortex Code, managed, scripted) | ✅ | `streamlit_coco/backend.py` |
 | Its own prompt: nothing of the local computer reaches the managed agent | ✅ | `streamlit_coco/managed.py` |
@@ -167,10 +168,10 @@ Product-shaped ideas (examples, RFCs, later catalogue types) live in this table.
 | `check_environment(managed=True)`: ready with the SDK alone | ✅ | [diagnostics](../streamlit_coco/diagnostics.py) |
 | Approval audit log: `AuditLog`, `ask_coco(audit=)`, credentials redacted, the outcome of an allowed call (SEC-01) | ✅ | [api.md](api.md) · [threat-model](security/threat-model.md) |
 | Least-privilege role documentation (SEC-02) | ✅ | [threat-model §8](security/threat-model.md) |
-| Browser test of the managed window on a scripted stream | ✅ | `make e2e` · `examples/e2e_managed_harness.py` |
+| Browser test of the managed window on a scripted stream | ✅ | `uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e` · `examples/e2e_managed_harness.py` |
 | Feature doc + live checklist rows 21 to 33; PRD; release kit | ✅ | [test-checklist](features/ask-coco/test-checklist.md) · [releases/0.3.0](releases/0.3.0/CHECKLIST.md) |
-| Live run on a Cortex Code CLI (rows 2 to 5), on the managed agent (rows 21 to 31) and `make managed` in a browser on a real account (2026-10-26) | ✅ partial | [test-checklist](features/ask-coco/test-checklist.md) |
-| Skills shop example and Native App (experimental): skills on a stage, a chat with one skill, packaged as an SPCS Native App; run live | ✅ | `make skills-hub` · `make native-shop-deploy` |
+| Live run on a Cortex Code CLI (rows 2 to 5), on the managed agent (rows 21 to 31) and `uv run --extra dev python -m streamlit run examples/managed_chat.py` in a browser on a real account (2026-10-26) | ✅ partial | [test-checklist](features/ask-coco/test-checklist.md) |
+| Skills shop example and Native App (experimental): skills on a stage, a chat with one skill, packaged as an SPCS Native App; run live | ✅ | `uv run --extra dev python -m streamlit run examples/skills_hub/app.py` · the `snow` commands of [`examples/skills_hub_native/DEPLOY.md`](../examples/skills_hub_native/DEPLOY.md) |
 
 **Left after the tag**
 

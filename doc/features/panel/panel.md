@@ -17,7 +17,7 @@ Streamlit apps need a non-blocking CoCo embed: stream replies, pause for HITL, a
    `transcript_display_config()` / `copilot_rail()`.
 5. `chat_input_bar(session)` (or your own `st.chat_input` calling `send_prompt`).
 
-Demo: `make chat` → `examples/chat_app.py`.
+Demo: `uv run --extra dev python -m streamlit run examples/chat_app.py` → `examples/chat_app.py`.
 
 ## Limitations
 

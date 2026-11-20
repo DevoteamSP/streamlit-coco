@@ -6,19 +6,19 @@ How to verify a change before a merge or a release.
 
 | Gate | Command | What it covers |
 | --- | --- | --- |
-| Fast | `make check` | `ruff`, then the unit tests (`tests/`, without the browser tests) |
-| Browser | `make e2e` | Playwright against the window on the scripted agent ([`examples/e2e_ux_harness.py`](../examples/e2e_ux_harness.py)), the window on the managed agent over a scripted stream of Snowflake's client ([`examples/e2e_managed_harness.py`](../examples/e2e_managed_harness.py)), and the 0.1.9 chat helpers on their own harness ([`tests/e2e_classic/`](../tests/e2e_classic/)) |
-| Security | `make audit` | `pip-audit --skip-editable` (dependencies only) |
-| Full | `make test-all` | `check`, `e2e` and `audit` |
+| Fast | `uv run --extra dev ruff check . && uv run --extra dev python -m pytest tests/ --ignore=tests/e2e --ignore=tests/e2e_classic` | `ruff`, then the unit tests (`tests/`, without the browser tests) |
+| Browser | `uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e` | Playwright against the window on the scripted agent ([`examples/e2e_ux_harness.py`](../examples/e2e_ux_harness.py)), the window on the managed agent over a scripted stream of Snowflake's client ([`examples/e2e_managed_harness.py`](../examples/e2e_managed_harness.py)), and the 0.1.9 chat helpers on their own harness ([`tests/e2e_classic/`](../tests/e2e_classic/)) |
+| Security | `uv run --extra dev python -m pip_audit --skip-editable && uv run --extra dev python scripts/audit_locks.py` | `pip-audit --skip-editable` on the root environment, then `scripts/audit_locks.py` on every `examples/*/uv.lock` (dependencies only) |
+| Full | the three commands above, one after the other | Fast, Browser and Security |
 
 First-time Playwright setup:
 
 ```bash
-make e2e-install   # uv sync --extra e2e, then Chromium
-make e2e
+uv sync --extra e2e && uv run --extra e2e python -m playwright install chromium
+uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e
 ```
 
-`make e2e` uses the installed Edge when Playwright's Chromium is not installed. The harness runs with `STREAMLIT_COCO_AGENT=mock`: no Snowflake login, no live agent. CI (`.github/workflows/ci.yml`) runs the unit tests and the browser tests on every pull request to `main`.
+`uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e` uses the installed Edge when Playwright's Chromium is not installed. The harness runs with `STREAMLIT_COCO_AGENT=mock`: no Snowflake login, no live agent. CI (`.github/workflows/ci.yml`) runs the unit tests and the browser tests on every pull request to `main`.
 
 ## What the tests cover
 
@@ -27,17 +27,17 @@ make e2e
 - **Browser tests of the chat helpers** (`tests/e2e_classic/`): the 0.1.9 tests, unchanged, on a CoCo-free harness: SQL highlighting and the copy button, transcript windowing (**Load earlier**), and the sidebar upload into `cwd`.
 - What no test covers is listed plainly, row by row, in the no-regression table of [`features/ask-coco/ask-coco.md`](features/ask-coco/ask-coco.md) (section 3).
 
-Run the harness alone: `make e2e-harness`. Look at the window on a fixture with no server: `python -m streamlit_coco.testing.harness f38_question_choice`. Compare the window's DOM with an earlier commit: `python -m streamlit_coco.testing.domdiff --ref HEAD`.
+Run the harness alone: `STREAMLIT_COCO_AGENT=mock uv run --extra dev python -m streamlit run examples/e2e_ux_harness.py`. Look at the window on a fixture with no server: `python -m streamlit_coco.testing.harness f38_question_choice`. Compare the window's DOM with an earlier commit: `python -m streamlit_coco.testing.domdiff --ref HEAD`.
 
 ## Live product (manual, before a release)
 
-Needs the Cortex Code program (rows 1 to 20) or a Snowflake account with the Cortex Agent API (rows 21 to 33), and costs credits. Run [`features/ask-coco/test-checklist.md`](features/ask-coco/test-checklist.md) in a scratch folder, never in a customer repository. Then, as they apply to what changed: the checklists of [App viewer](features/app-viewer/test-checklist.md), [App Builder](features/app-builder/test-checklist.md) and [headless](features/headless/test-checklist.md). Exploratory prompts: [`examples/testdata/prompts.json`](../examples/testdata/prompts.json) (the **Test prompts** picker of `make chat`).
+Needs the Cortex Code program (rows 1 to 20) or a Snowflake account with the Cortex Agent API (rows 21 to 33), and costs credits. Run [`features/ask-coco/test-checklist.md`](features/ask-coco/test-checklist.md) in a scratch folder, never in a customer repository. Then, as they apply to what changed: the checklists of [App viewer](features/app-viewer/test-checklist.md), [App Builder](features/app-builder/test-checklist.md) and [headless](features/headless/test-checklist.md). Exploratory prompts: [`examples/testdata/prompts.json`](../examples/testdata/prompts.json) (the **Test prompts** picker of `uv run --extra dev python -m streamlit run examples/chat_app.py`).
 
 ## Release hygiene
 
-Before tagging (`make sync-release`, then a `v*` tag), complete the version kit under [`releases/`](releases/README.md):
+Before tagging (`bash scripts/sync_release.sh`, then a `v*` tag), complete the version kit under [`releases/`](releases/README.md):
 
-1. `make test-all`
+1. The full gate (Fast, Browser and Security, the table above)
 2. The live checklist, for what changed
 3. A clean [`CHANGELOG.md`](../CHANGELOG.md), [`roadmap.md`](roadmap.md) and [`prd.md`](prd.md); a new `tests/fixtures/api_X.Y.Z.json` and `test_compat_*` for the release (see `tests/api_snapshot.py`)
 4. Screenshots in `releases/X.Y.Z/`; outreach in [`../doc-dev/releases/`](../doc-dev/releases/README.md)
@@ -46,9 +46,9 @@ Before tagging (`make sync-release`, then a `v*` tag), complete the version kit 
 ## Layout
 
 ```text
-tests/           unit tests (make test)
-tests/e2e/       Playwright, the window (make e2e)
-tests/e2e_classic/  Playwright, the 0.1.9 chat helpers (make e2e)
+tests/           unit tests (uv run --extra dev python -m pytest tests/ --ignore=tests/e2e --ignore=tests/e2e_classic)
+tests/e2e/       Playwright, the window (uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e)
+tests/e2e_classic/  Playwright, the 0.1.9 chat helpers (same command)
 tests/fixtures/api_0.1.9.json, api_0.2.2.json, api_0.3.0.json  the released APIs the compatibility tests hold the package to
 examples/e2e_ux_harness.py
 examples/e2e_managed_harness.py

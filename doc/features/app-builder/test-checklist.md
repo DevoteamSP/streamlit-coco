@@ -1,14 +1,14 @@
 # Feature: App Builder
 
 **Checklist:** `doc/features/app-builder/test-checklist.md`
-**App:** `examples/app_builder` (`make app-builder`)
+**App:** `examples/app_builder` (`uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py`)
 **API:** compose `ask_coco()` (the Ask CoCo window) + `app_viewer()`; guidelines skills — see [`app-builder.md`](app-builder.md)
-**Status:** Shipped in `0.1.8`. Automated gate (`make test-all`) passed 2026-09-06. Live CoCo golden-path sign-off still open.
+**Status:** Shipped in `0.1.8`. Automated gate (the full gate of [`doc/testing.md`](../../testing.md)) passed 2026-09-06. Live CoCo golden-path sign-off still open.
 
 ## Preconditions
 
 - [x] Feature documented in [`app-builder.md`](app-builder.md)
-- [x] Demo make target exists (`make app-builder`)
+- [x] The demo command exists (`uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py`)
 - [x] Guidelines skills load in the CoCo session — three files per type: `SKILL.md`, `reference/streamlit_app.py`, `CHECKLIST.md`
 - [ ] CLI + writable `CocoOptions.cwd`
 - [x] `engine/profile.py` produces a profile pandas can validate without a CoCo session

@@ -180,6 +180,7 @@ def message_to_events(message: Message) -> list[CocoEvent]:
                     "num_turns": message.num_turns,
                     "session_id": message.session_id,
                     "result": message.result,
+                    "usage": message.usage,
                 },
             )
         ]
@@ -255,6 +256,7 @@ def parse_ndjson_line(line: str) -> list[CocoEvent]:
                     "num_turns": payload.get("num_turns"),
                     "session_id": payload.get("session_id"),
                     "result": payload.get("result"),
+                    "usage": payload.get("usage"),
                 },
             )
         ]

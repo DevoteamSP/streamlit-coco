@@ -1,7 +1,7 @@
 # Feature: Copilot rail
 
 **Checklist:** `doc/features/copilot-rail/test-checklist.md`  
-**App:** `make bi-semantic` (adapter) or any `panel()` app + `transcript_display_config()`  
+**App:** `uv run --directory examples/bi_to_semantic --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py` (adapter) or any `panel()` app + `transcript_display_config()`  
 **Library:** `st_coco.copilot_rail` / `st_coco.transcript_display_config`
 
 ## Preconditions

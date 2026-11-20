@@ -14,18 +14,19 @@ sed -i.bak 's#/my_db/my_schema/my_repo/#/<db>/<schema>/<repo>/#' examples/skills
 
 ```bash
 # 1. image (from the repository root)
-make native-shop-image                       # SNOW_CONNECTION=snowflake by default
+examples/skills_hub_native/containers/build_and_push.sh snowflake   # the argument is the connection (profile)
 
-# 2. package and application
-make native-shop-deploy
+# 2. package and application (snow app run)
+(cd examples/skills_hub_native && snow app run --connection snowflake)
 
 # 3. what the application needs for Cortex (read examples/skills_hub_native/scripts/grant_privileges.sql first)
 snow sql -f examples/skills_hub_native/scripts/grant_privileges.sql --connection snowflake
 
 # 4. restart the service so it starts with the grants, then look at it
-make native-shop-restart
-make native-shop-status
-make native-shop-logs
+snow sql -q "CALL coco_skills_shop.app_schema.suspend_service()" --connection snowflake
+snow sql -q "CALL coco_skills_shop.app_schema.resume_service()" --connection snowflake
+snow sql -q "CALL coco_skills_shop.app_schema.get_service_status()" --connection snowflake
+snow sql -q "CALL coco_skills_shop.app_schema.get_service_logs('0', 'streamlit')" --connection snowflake
 snow sql -q "SHOW ENDPOINTS IN SERVICE coco_skills_shop.services.shop_service" --connection snowflake   # ingress_url
 ```
 
@@ -33,16 +34,16 @@ Open `https://<ingress_url>` (you log in with your Snowflake user). The service 
 
 ## Check the Agent API from inside the service
 
-The page needs a login, so the service can also check itself: set `SKILLS_HUB_PROBE: "1"` in `containers/service_spec.yaml`, run `make native-shop-deploy` and `make native-shop-restart`, then `make native-shop-logs`. The probe lists the skills, verifies one, runs one agent turn with it (every request that asks is declined) and prints `probe: OK` or what failed. Set it back to `"0"`: each start makes one model call.
+The page needs a login, so the service can also check itself: set `SKILLS_HUB_PROBE: "1"` in `containers/service_spec.yaml`, run the deploy and the restart of the steps above, then read the logs (`get_service_logs`). The probe lists the skills, verifies one, runs one agent turn with it (every request that asks is declined) and prints `probe: OK` or what failed. Set it back to `"0"`: each start makes one model call.
 
 ## What it costs while it runs
 
-The service keeps `COCO_SKILLS_SHOP_COMPUTE_POOL` (CPU_X64_XS) active. Stop it when you do not use the app: `snow sql -q "CALL coco_skills_shop.app_schema.suspend_service()"` (the pool then suspends after 5 minutes), and `make native-shop-restart` to start it again.
+The service keeps `COCO_SKILLS_SHOP_COMPUTE_POOL` (CPU_X64_XS) active. Stop it when you do not use the app: `snow sql -q "CALL coco_skills_shop.app_schema.suspend_service()"` (the pool then suspends after 5 minutes), and `resume_service()` (the restart of step 4) to start it again.
 
 ## Teardown
 
 ```bash
-make native-shop-teardown     # snow app teardown --cascade: the application, its service and pool, the package
+(cd examples/skills_hub_native && snow app teardown --connection snowflake --force --cascade)   # the application, its service and pool, the package
 ```
 
 The image stays in the repository; drop it with `DROP IMAGE ...` or leave it.

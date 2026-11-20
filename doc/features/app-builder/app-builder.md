@@ -3,7 +3,7 @@
 Guided Streamlit app generation for **business users**, with CoCo **guidelines skills** —
 and a form that already knows the answer before it asks.
 
-**Status:** Shipped in **`0.1.8`**. Example: `examples/app_builder` (`make app-builder`).
+**Status:** Shipped in **`0.1.8`**. Example: `examples/app_builder` (`uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py`).
 **Surfaces:** `examples/app_builder` composing the Ask CoCo window (`ask_coco`) + `app_viewer()`; per-type
 skills under `types/` (rules + a reference app + a self-check checklist; shared pack in `types/shared/`).
 **Users / use cases / flows:** [`UX.md`](UX.md).
@@ -70,7 +70,7 @@ on the type.
 | **HITL** | Write summary from brief answers; diff optional. No **Always allow** on first Write. AskUser never "Always allow". A self-check pass runs automatically after Write, before Preview reaches the human — it does not skip approval, it skips the human having to notice the app crashed. |
 | **Grounding kinds without Snowflake** | Documents and URLs are fetched/extracted by the **host**, never by the CoCo session — no network tool is granted for this feature. CoCo only ever Reads local snapshots under `sources/`. |
 | **Preview** | `app_viewer()` on `out/<slug>/` — never the host app. |
-| **Rollout** | `examples/app_builder` + `make app-builder`. **Locked** live set for `0.1.8`: KPI presentation, Data quality, Call transcription, Meeting recap, Prompt library, CSV explorer. Document comparison and every `urls` type are later — see [`UX.md`](UX.md) §5.3. |
+| **Rollout** | `examples/app_builder` + `uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py`. **Locked** live set for `0.1.8`: KPI presentation, Data quality, Call transcription, Meeting recap, Prompt library, CSV explorer. Document comparison and every `urls` type are later — see [`UX.md`](UX.md) §5.3. |
 
 ## Limitations / out of scope (this slice)
 

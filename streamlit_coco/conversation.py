@@ -58,7 +58,9 @@ View:
                                           when no sentence introduced them; items may be empty: then
                                           the sentence stands alone
               | step                      a failed, declined or refused step kept outside the fold
-              | {kind: "answer", id, text, streaming}
+              | {kind: "answer", id, text, streaming}   also before a section, not streaming, when
+                                          CoCo said Markdown blocks (a table, a list...) before
+                                          its calls: a message, not a section title
               | {kind: "draft", id, title, text}
               | {kind: "system", id?, text, detail, action: "retry" | {label} | None} ]
     step      {kind: "step", id, state: run | ok | bad | no, label, note, reason, tool, input,
@@ -160,6 +162,7 @@ import itertools
 import logging
 import os
 import queue
+import re
 import threading
 import time
 import uuid
@@ -177,6 +180,10 @@ _SENT_LIMIT = (
     2_000  # sent for a step of a finished turn: the window polls, and the thread only grows
 )
 _CUT = " ... [truncated]"
+# Text CoCo writes before a call is the title of its group when it is a sentence. Markdown made of
+# blocks (a heading, a table, a list, code, a quote, two paragraphs) is a message of its own: as a
+# title its lines were joined and it showed as flat, raw Markdown.
+_BLOCKS = re.compile(r"^\s*(#{1,6}\s|\|.*\||[-*+]\s|\d+[.)]\s|```|>)|\n\s*\n", re.M)
 _PROFILES_TTL = 10  # seconds before the list of Snowflake connections is read again
 _NONE = object()
 _PARTS = (waits, extras)  # state, actions, events and view keys of the optional parts
@@ -647,6 +654,10 @@ class Conversation:
         shown = [norm(e["text"]) for e in texts]
         if not value or value in shown or value == "".join(shown):
             return
+        if "".join(shown) and value.endswith("".join(shown)):
+            # all the run's text, and a question or a plan split the run: what came before it is
+            # in an earlier turn, already shown (2026-11-19: the last message showed twice)
+            return
         if texts and seq[-1] is texts[-1] and value.startswith(shown[-1]):
             texts[-1]["text"] = result
         else:
@@ -848,6 +859,8 @@ class Conversation:
             if entry["k"] == "text" and entry["text"].strip():
                 if index == len(seq) - 1:
                     answer = entry
+                elif _BLOCKS.search(entry["text"].strip()):
+                    sections.append({"summary": None, "said": entry["text"], "items": []})
                 else:
                     sections.append({"summary": " ".join(entry["text"].split()), "items": []})
             elif entry["k"] == "reasoning":
@@ -876,17 +889,28 @@ class Conversation:
                 return False
             return self.features.steps or failed or p["kind"] == "reasoning"
 
-        out = [
-            {
-                "kind": "steps",
-                "id": f"{item['id']}-steps{n}",
-                "folded": folded,
-                "summary": sec["summary"],
-                "items": [p for p in sec["items"] if kept(p)],
-            }
-            for n, sec in enumerate(sections)
-        ]
-        out = [sec for sec in out if sec["summary"] or sec["items"]]
+        out = []
+        for n, sec in enumerate(sections):
+            if sec.get("said"):  # a message said before its calls: drawn as an answer, in its place
+                out.append(
+                    {
+                        "kind": "answer",
+                        "id": f"{item['id']}-said{n}",
+                        "text": sec["said"],
+                        "streaming": False,
+                    }
+                )
+            shown_items = [p for p in sec["items"] if kept(p)]
+            if sec["summary"] or shown_items:
+                out.append(
+                    {
+                        "kind": "steps",
+                        "id": f"{item['id']}-steps{n}",
+                        "folded": folded,
+                        "summary": sec["summary"],
+                        "items": shown_items,
+                    }
+                )
         out += [
             p
             for sec in sections

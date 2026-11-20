@@ -41,7 +41,7 @@ async def main():
 asyncio.run(main())
 ```
 
-Demo: `make headless` → `examples/headless_pipeline.py` (`query()`, a multi-turn `CocoSession`, and a `Conversation` with `policy.FolderPolicy` whose requests a script answers).
+Demo: `uv run --extra dev python examples/headless_pipeline.py` → `examples/headless_pipeline.py` (`query()`, a multi-turn `CocoSession`, and a `Conversation` with `policy.FolderPolicy` whose requests a script answers).
 
 ## Limitations
 

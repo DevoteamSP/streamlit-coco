@@ -14,7 +14,7 @@ Freeform. Feed LinkedIn / Medium / GitHub Release when this cut is published.
 
 ## Use cases to feature
 
-1. A Skills shop: skills (a `SKILL.md` folder) kept on a stage, a chat with one chosen skill on the managed agent (`make skills-hub`)
+1. A Skills shop: skills (a `SKILL.md` folder) kept on a stage, a chat with one chosen skill on the managed agent (`uv run --extra dev python -m streamlit run examples/skills_hub/app.py`)
 2. The same shop as a Snowflake Native App on SPCS (`examples/skills_hub_native`): the agent runs as the application
 
 ## Learnings (candid)

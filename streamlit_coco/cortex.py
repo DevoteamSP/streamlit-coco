@@ -392,7 +392,12 @@ class Translator:
             block = None if structured is None else _safely(data_block, "result-data", structured)
             if block:
                 out.append({"t": "structured", "tool_id": None, "data": block, "raw": structured})
-            out.append({"t": "result", "text": meta.get("result"), "error": False})
+            done = {"t": "result", "text": meta.get("result"), "error": False}
+            if meta.get(
+                "usage"
+            ):  # the tokens the CLI reports for the run: a host that counts them reads them here
+                done["usage"] = meta["usage"]
+            out.append(done)
         elif event.type in ("result", "error"):
             out.append(self.failure(event.message or meta.get("result") or event.subtype or ""))
         return out
@@ -562,6 +567,21 @@ class Agent:
                 }
             )
             return
+        from streamlit_coco.options import CocoOptions
+
+        host = self.options or CocoOptions()
+        settings = Path(host.settings_file).expanduser() if host.settings_file else None
+        if settings and not settings.is_file():
+            # The program reads this file, not the user's own settings. Never start without it:
+            # the host would think the session is protected when it is not.
+            self.emit(
+                {
+                    "t": "connect_failed",
+                    "message": f"The settings file {settings} does not exist: create it, or "
+                    "leave settings_file empty to use your own Cortex settings.",
+                }
+            )
+            return
         from cortex_agent_sdk.cortexcode import (
             HookMatcher,
             PermissionResultAllow,
@@ -571,10 +591,8 @@ class Agent:
         self._close_session(
             self.session
         )  # a second connect (after a failed first one) must not leave the first running
-        from streamlit_coco.options import CocoOptions
         from streamlit_coco.session import CocoSession
 
-        host = self.options or CocoOptions()
         profile = profile or host.connection or ""
         self._cfg, self._init, self._session_id = None, {}, None
         self.profile, self._program = profile, host.cli_path or cortex_cli()
@@ -641,6 +659,8 @@ class Agent:
         }
         if not host.mcp_servers:
             extra["no_mcp"] = True
+        if settings:
+            extra["extra_args"] = {"config": str(settings.absolute())}
         self.session = session = CocoSession(
             options=CocoOptions(
                 connection=profile,

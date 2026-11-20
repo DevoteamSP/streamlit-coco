@@ -21,7 +21,7 @@ Regenerate all of them: `.venv/bin/python scripts/capture_release_screens.py man
 
 Not captured: the Native App page behind its ingress (needs a Snowflake login), the chat with a skill (the demo chat is the scripted agent, whose first screen speaks of "project files", which would mislead on a managed-agent release).
 
-Also in the kit, dev-only: [`doc-dev/releases/0.3.0/intro-video.html`](../../../../doc-dev/releases/0.3.0/intro-video.html), a 20-second animated introduction (open it in a browser; space pauses, `r` replays, click the bar to seek).
+Also in the kit, dev-only: [`doc-dev/releases/0.3.0/intro-video.html`](../../../../doc-dev/releases/0.3.0/intro-video.html), a 20-second animated introduction (open it in a browser; space pauses, `r` replays, click the bar to seek), and its MP4 render `intro-video.mp4` (1920×1080, 30 fps, no sound).
 
 ## Optional
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""What to look at before `make sync-release` and the tag (`make release-check`).
+"""What to look at before `bash scripts/sync_release.sh` and the tag.
+
+Run it with `uv run --extra dev python scripts/release_check.py`.
 
 Five checks, each PASS, WARN, FAIL or SKIP (a network or a tool is missing: it says so):
 

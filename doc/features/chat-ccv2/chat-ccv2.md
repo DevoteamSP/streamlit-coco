@@ -16,7 +16,7 @@ session.start()
 st_coco.chat(session=session, key="coco_chat")
 ```
 
-Demo: `make approval` → `examples/approval_gate.py`.
+Demo: `uv run --extra dev python -m streamlit run examples/approval_gate.py` → `examples/approval_gate.py`.
 
 ## CCv2 skill notes
 

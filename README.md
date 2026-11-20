@@ -5,7 +5,7 @@
 [![CI](https://github.com/lletourmy/streamlit-coco/actions/workflows/ci.yml/badge.svg)](https://github.com/lletourmy/streamlit-coco/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-> `0.3.0` (alpha, the API may still move). The default interface is still the 0.1.9 chat family (`chat`, `panel`, `copilot_rail`); the floating window is opt-in (`mini=True` on those calls, or `ask_coco(cwd)`). **New and experimental:** Snowflake's managed coding agent runs in the same window with no `cortex` program, files attached in the window go to the sandbox, and `AuditLog` records who allowed what. The managed agent rests on a public-preview SDK (`snowflake-cortex-agent-sdk` 0.0.x). Details: [`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask-coco.md).
+> `0.3.1` (alpha, the API may still move). The default interface is still the 0.1.9 chat family (`chat`, `panel`, `copilot_rail`); the floating window is opt-in (`mini=True` on those calls, or `ask_coco(cwd)`). **New and experimental:** Snowflake's managed coding agent runs in the same window with no `cortex` program, files attached in the window go to the sandbox, and `AuditLog` records who allowed what. The managed agent rests on a public-preview SDK (`snowflake-cortex-agent-sdk` 0.0.x). Details: [`doc/features/ask-coco/ask-coco.md`](doc/features/ask-coco/ask-coco.md).
 
 **Repo:** [github.com/lletourmy/streamlit-coco](https://github.com/lletourmy/streamlit-coco) *(temporary PyPI source)* · **Dev:** [streamlit-coco-dev](https://github.com/DevoteamSP/streamlit-coco-dev)
 **SDK docs:** [Cortex Agent SDK](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agent-sdk/cortex-agent-sdk) · [Cortex Code Agent SDK](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
@@ -49,7 +49,7 @@ uv add "streamlit-coco[sdk]"
 # or: pip install "streamlit-coco[sdk]"
 ```
 
-From a clone (editable, with the tests): `make install`.
+From a clone (editable, with the tests): `uv sync --extra dev`.
 
 Needs:
 
@@ -176,7 +176,7 @@ st_coco.ask_coco(
 )
 ```
 
-`make managed` runs a complete example (profile and role form, then the window).
+`uv run --extra dev python -m streamlit run examples/managed_chat.py` runs a complete example (profile and role form, then the window).
 
 - **Always asks.** The run is created with `permission_policy="always_ask"`; it is not an option. Only the user's Allow becomes the server's one-call "Allow this command". The server's own "Allow all bash for this session" is never chosen.
 - **The server decides what it asks about.** A command it rates risky pauses the run and reaches your policy; one it rates harmless (`echo hello`) runs unasked. The role of the session, not the window, is the real limit: give it the least rights that work.
@@ -185,7 +185,7 @@ st_coco.ask_coco(
 - **Probe without the program:** `check_environment(managed=True)`.
 - **Not available:** the agent's own questions and plans (Cortex Code's tools), planning only.
 
-Skills on a stage and a chat with one chosen skill: `make skills-hub`, and the same as a Snowflake Native App on Snowpark Container Services: [`examples/skills_hub_native/`](examples/skills_hub_native/DEPLOY.md), which also holds a prompt for Cortex Code that asks for your parameters and deploys it ([`COCO_PROMPT.md`](examples/skills_hub_native/COCO_PROMPT.md)).
+Skills on a stage and a chat with one chosen skill: `uv run --extra dev python -m streamlit run examples/skills_hub/app.py`, and the same as a Snowflake Native App on Snowpark Container Services: [`examples/skills_hub_native/`](examples/skills_hub_native/DEPLOY.md), which also holds a prompt for Cortex Code that asks for your parameters and deploys it ([`COCO_PROMPT.md`](examples/skills_hub_native/COCO_PROMPT.md)).
 
 ---
 
@@ -235,22 +235,22 @@ Other arguments of `ask_coco`: `features` (what the window offers: attachments, 
 ## Try the demos
 
 ```bash
-make simple-chat   # panel, a test-prompt picker, rights as pills
-make modern-chat   # Copilot rail, floating window, or both
-make approval      # a listed command, a file rule, SQL, a standing permission
-make structured    # a result handed to the page as data
-make cwd-upload    # files attached in chat, and an uploader on the page
-make headless      # asyncio query() and a Conversation answered in code
-make managed       # the managed agent: profile and role, then the window (experimental)
-make skills-hub    # skills on a stage, a chat with one chosen skill (experimental)
-make backlog       # Product Backlog Desk: a multipage application
-make bi-semantic   # Tableau / Power BI to semantic view
-make app-builder   # App Builder: type library, brief, Preview
+uv run --extra dev python -m streamlit run examples/chat_app.py   # panel, a test-prompt picker, rights as pills
+uv run --directory examples/modern_chat --project ../.. --extra dev python -m streamlit run app.py   # Copilot rail, floating window, or both
+uv run --extra dev python -m streamlit run examples/approval_gate.py      # a listed command, a file rule, SQL, a standing permission
+uv run --extra dev python -m streamlit run examples/structured_output.py    # a result handed to the page as data
+uv run --extra dev python -m streamlit run examples/cwd_upload_chat.py    # files attached in chat, and an uploader on the page
+uv run --extra dev python examples/headless_pipeline.py      # asyncio query() and a Conversation answered in code
+uv run --extra dev python -m streamlit run examples/managed_chat.py       # the managed agent: profile and role, then the window (experimental)
+uv run --extra dev python -m streamlit run examples/skills_hub/app.py    # skills on a stage, a chat with one chosen skill (experimental)
+uv run --directory examples/backlog_desk --project ../.. python -m streamlit run streamlit_app.py       # Product Backlog Desk: a multipage application
+uv run --directory examples/bi_to_semantic --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py   # Tableau / Power BI to semantic view
+uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py   # App Builder: type library, brief, Preview
 ```
 
 Each Streamlit demo has an **Ask CoCo** control (Off / On) in the sidebar. Off keeps that page's chat, panel, or Copilot rail. On leaves Ask CoCo minimized until **Minimize** on that CoCo, which hides it and opens the window. **Restore** in the window closes it and brings the rail or chat back.
 
-To run them with no login: `STREAMLIT_COCO_AGENT=mock make simple-chat` (PowerShell: set `$env:STREAMLIT_COCO_AGENT` first); `make skills-hub` shows its sample skills on a scripted chat. `make chat` still launches the simple demo.
+To run them with no login: `STREAMLIT_COCO_AGENT=mock uv run --extra dev python -m streamlit run examples/chat_app.py` (PowerShell: set `$env:STREAMLIT_COCO_AGENT` first); `uv run --extra dev python -m streamlit run examples/skills_hub/app.py` shows its sample skills on a scripted chat. `uv run --extra dev python -m streamlit run examples/chat_app.py` still launches the simple demo.
 
 Exploratory prompts: [`examples/testdata/prompts.json`](examples/testdata/prompts.json).
 Backlog Desk: [`examples/backlog_desk/README.md`](examples/backlog_desk/README.md) · BI to Semantic: [`examples/bi_to_semantic/README.md`](examples/bi_to_semantic/README.md) · App Builder: [`examples/app_builder/README.md`](examples/app_builder/README.md) · Skills shop: [`examples/skills_hub/README.md`](examples/skills_hub/README.md) · Skills shop as a Native App: [`examples/skills_hub_native/DEPLOY.md`](examples/skills_hub_native/DEPLOY.md).
@@ -325,17 +325,16 @@ asyncio.run(run())
 ## Development
 
 ```bash
-make install       # uv sync --extra dev
-make check         # ruff and the unit tests (not the browser tests)
-make e2e-install   # Playwright and Chromium, once
-make e2e           # browser tests of the window, on the scripted agent and a scripted managed client
-make test-all      # check, e2e and the dependency audit
-make format        # ruff format and fix
-make build         # sdist and wheel
-make help          # every target
+uv sync --extra dev                                                  # install the package and the dev tools
+uv run --extra dev ruff check . && uv run --extra dev python -m pytest tests/ --ignore=tests/e2e --ignore=tests/e2e_classic   # ruff and the unit tests (not the browser tests)
+uv sync --extra e2e && uv run --extra e2e python -m playwright install chromium   # Playwright and Chromium, once
+uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e        # browser tests of the window, on the scripted agent and a scripted managed client
+uv run --extra dev python -m pip_audit --skip-editable && uv run --extra dev python scripts/audit_locks.py   # the dependency audit
+uv run --extra dev ruff format . && uv run --extra dev ruff check --fix .   # format
+uv build                                                             # sdist and wheel
 ```
 
-`make e2e` uses the installed Edge when Playwright's Chromium is not installed. No automated test calls a live agent. Process: [`doc/testing.md`](doc/testing.md). Live checks before a release (Cortex Code and the managed agent): [`doc/features/ask-coco/test-checklist.md`](doc/features/ask-coco/test-checklist.md).
+`uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e` uses the installed Edge when Playwright's Chromium is not installed. No automated test calls a live agent. Process: [`doc/testing.md`](doc/testing.md). Live checks before a release (Cortex Code and the managed agent): [`doc/features/ask-coco/test-checklist.md`](doc/features/ask-coco/test-checklist.md).
 
 Releases: develop here, sync and tag on [`lletourmy/streamlit-coco`](https://github.com/lletourmy/streamlit-coco) for PyPI ([guide](doc/deployment/publish.md)).
 

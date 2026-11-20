@@ -31,15 +31,15 @@
 **Current level**: N0 → closing alpha toward N1 (PyPI `0.1.9`)
 
 - Clients where used: 0 (alpha). Internal: Data Product Studio + Data Product Forge
-- Consultants trained: 0 additional. Enablement pack + workshop W01 shipped in `0.1.6`; registry `consultants_enabled: 1` is the asset owner.
-- Demo available: yes (`make chat`, `make backlog`, `make bi-semantic`, `make app-builder`, [`doc/training/`](doc/training/enablement/intro.md))
+- Consultants trained: 0 additional. Workshop W01 shipped in `0.1.6` (with an enablement pack, removed in `0.3.1`); registry `consultants_enabled: 1` is the asset owner.
+- Demo available: yes (`uv run --extra dev python -m streamlit run examples/chat_app.py`, `uv run --directory examples/backlog_desk --project ../.. python -m streamlit run streamlit_app.py`, `uv run --directory examples/bi_to_semantic --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py`, `uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py`, [`doc/marketing/demo.md`](doc/marketing/demo.md))
 - Snowflake Alliance pre-alignment: no
 
 **Next milestone**: N1 — conditions needed:
 
 - [x] Feature golden-path checklists under `doc/features/`
 - [x] CI + PR template
-- [x] Consultant enablement pack (`doc/training/`) + workshop W01 (`0.1.6`)
+- [x] Workshop W01 (`0.1.6`); the consultant enablement pack of `0.1.6` was removed in `0.3.1`
 - [x] Owner + KPIs on this sheet
 - [x] Security threat model + audit pack (`doc/security/`) — SEC-01 / SEC-02 still open for v0.2
 - [x] Marketing one-pager (`doc/marketing/one-pager.md`) — refreshed for `0.1.9`

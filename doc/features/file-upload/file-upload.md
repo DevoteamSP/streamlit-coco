@@ -41,7 +41,7 @@ st_coco.cwd_uploader(session, overwrite="replace")
 | **Write path (API)** | Later: map uploads into the Agent API sandbox workspace (`/workspace` / V-stage), not the Streamlit host disk |
 | **Guards** | Size + extension allowlist; basename sanitization (no path traversal); quarantine path outside secrets dirs |
 | **API surface** | `upload_to_cwd` returns `UploadedPath` rows; chat bar can inject paths into the next prompt |
-| **Rollout** | Example `examples/cwd_upload_chat.py` (`make cwd-upload`); documented in [`api.md`](../../api.md) |
+| **Rollout** | Example `examples/cwd_upload_chat.py` (`uv run --extra dev python -m streamlit run examples/cwd_upload_chat.py`); documented in [`api.md`](../../api.md) |
 
 ## Limitations / out of scope (this slice)
 
@@ -55,4 +55,4 @@ st_coco.cwd_uploader(session, overwrite="replace")
 
 - Checklist: [`test-checklist.md`](test-checklist.md)
 - Roadmap: [`../../roadmap.md`](../../roadmap.md) (shipped in `0.1.5`)
-- Demo: `make cwd-upload`
+- Demo: `uv run --extra dev python -m streamlit run examples/cwd_upload_chat.py`

@@ -1,10 +1,12 @@
 """Skills shop: browse the skills on a Snowflake stage and chat with one of them (experimental).
 
 A skill is a folder with a SKILL.md that Snowflake's managed coding agent loads from a stage. Only
-developers publish (`make publish-skill`); this app reads. Pick a skill, open it, and chat with that
-skill alone: the agent runs in Snowflake's sandbox, with the rights of the role you log in with.
+developers publish (`examples/skills_hub/publish.py`); this app reads. Pick a skill, open it, and
+chat with that skill alone: the agent runs in Snowflake's sandbox, with the rights of the role you
+log in with.
 
-`make skills-hub`. With STREAMLIT_COCO_AGENT=mock, or with "Sample skills" in the sidebar, no
+Run it with `uv run --extra dev python -m streamlit run examples/skills_hub/app.py`. With
+STREAMLIT_COCO_AGENT=mock, or with "Sample skills" in the sidebar, no
 Snowflake is needed: the shop shows the samples and the chat is the scripted agent.
 """
 

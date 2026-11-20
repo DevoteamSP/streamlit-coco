@@ -2,7 +2,8 @@
 
 The agent runs in Snowflake (a sandbox, with the workspace you mount), not on this computer. You
 log in with a profile of ~/.snowflake; the Snowflake connector reads its secrets and the Cortex
-Agent SDK gets the session token. Run it with `make managed`.
+Agent SDK gets the session token. Run it with
+`uv run --extra dev python -m streamlit run examples/managed_chat.py`.
 
 What differs from the other examples: no working folder (the agent cannot read this repository),
 a role you choose (the agent has the rights of that role), and Snowflake decides which commands ask

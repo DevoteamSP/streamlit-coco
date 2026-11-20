@@ -150,7 +150,7 @@ def render_copilot_rail(*, ask: bool = False) -> None:
     try:
         import streamlit_coco as st_coco
     except ImportError:
-        st.info("Copilot needs **streamlit-coco** (`make install`).", icon=":material/info:")
+        st.info("Copilot needs **streamlit-coco** (`uv sync --extra dev`).", icon=":material/info:")
         return
 
     with st.container(horizontal=True, vertical_alignment="center"):

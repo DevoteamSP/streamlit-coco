@@ -9,8 +9,8 @@ CoCo reads the files with Read/Glob/Grep and can Edit/Write only after **Approve
 From the **streamlit-coco** repo root:
 
 ```bash
-make install
-make backlog
+uv sync --extra dev
+uv run --directory examples/backlog_desk --project ../.. python -m streamlit run streamlit_app.py
 ```
 
 Or:
@@ -20,7 +20,7 @@ cd examples/backlog_desk
 uv run --project ../.. streamlit run streamlit_app.py
 ```
 
-Theme lives in [`.streamlit/config.toml`](.streamlit/config.toml) (Devoteam + Snowflake accents). Run with this folder as the working directory so Streamlit picks it up (`make backlog` does that).
+Theme lives in [`.streamlit/config.toml`](.streamlit/config.toml) (Devoteam + Snowflake accents). Run with this folder as the working directory so Streamlit picks it up (`uv run --directory examples/backlog_desk --project ../.. python -m streamlit run streamlit_app.py` does that).
 
 ## Pages
 

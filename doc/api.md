@@ -1,6 +1,6 @@
 # API reference: streamlit-coco
 
-Public surface of `import streamlit_coco as st_coco`, and of `streamlit_coco.policy` and `streamlit_coco.testing`. `0.3.0`: signatures may still move. Every signature below was read from the code.
+Public surface of `import streamlit_coco as st_coco`, and of `streamlit_coco.policy` and `streamlit_coco.testing`. `0.3.1`: signatures may still move. Every signature below was read from the code.
 
 **Related:** [README](../README.md) · [Ask CoCo feature file](features/ask-coco/ask-coco.md) (the decisions and their reasons) · [Local deployment](deployment/local.md) · [SDK docs](https://docs.snowflake.com/en/user-guide/cortex-code-agent-sdk/cortex-code-agent-sdk)
 
@@ -105,7 +105,7 @@ Mounts the launcher (bottom right) and the window, and returns the handle. Call 
 | `prompts` | First-screen prompts. Each is a text, or `{"title", "text", "fill": bool}`. At most three are shown, only on the first screen. `fill: True` puts the text in the field instead of sending it. |
 | `labels` | `{label key: text}` over [`labels.DEFAULT`](#labels-and-theme). May change between runs under the same key without resetting the conversation; existing thread text keeps its original language. |
 | `theme` | `{variable: value}` over the defaults. See [Labels and theme](#labels-and-theme). |
-| `options` | A [`CocoOptions`](#cocooptions): `model`, `connection`, `max_turns`, `mcp_servers`, `output_schema`, `cli_path`. The object you pass on the first run of a browser session is the one used, and it is read when a session connects. It refuses `allowed_tools`, `disallowed_tools` and `require_approval_for` with a `ValueError` that names `policy`. |
+| `options` | A [`CocoOptions`](#cocooptions): `model`, `connection`, `max_turns`, `mcp_servers`, `output_schema`, `cli_path`, `settings_file`. The object you pass on the first run of a browser session is the one used, and it is read when a session connects. It refuses `allowed_tools`, `disallowed_tools` and `require_approval_for` with a `ValueError` that names `policy`. |
 | `on_files_changed` | A function `([path]) -> Any`. See [Callbacks](#callbacks). |
 | `agent` | A function `(emit) -> agent`, for tests and for another adapter. `None` gives the Cortex adapter, or the scripted agent when `STREAMLIT_COCO_AGENT=mock`. |
 | `connection` | Snowflake profile name. When the window is not connected yet, it connects with this profile. The Copilot rail passes the profile it is already using, so Minimize does not ask you to connect again. |
@@ -554,6 +554,7 @@ Your configuration, converted to the SDK's `CortexCodeAgentOptions` by `to_sdk_o
 | `max_turns` | `int \| None` | `None` | Cap on agent turns. |
 | `approval_timeout_seconds` | `float` | `600.0` | Wait for an approval in a `CocoSession`. |
 | `extra_sdk_options` | `dict` | `{}` | Passed to the SDK's options, for example `add_dirs`. |
+| `settings_file` | `str \| None` | `None` | A `settings.json` the Cortex Code program reads **instead of** the user's own `~/.snowflake/cortex/settings.json` (`cortex --config`), so the user's plugins, hooks and environment do not reach the session. `~` is expanded. In the window, a file that does not exist fails the connection with a sentence and starts nothing; the file is never created or copied. Not used by the managed agent (it has no `cortex` program). Needs a Cortex Code version with `--config`. Added in 0.3.1. |
 
 Methods: `options_hash() -> str`, `to_sdk_options(*, can_use_tool=None)` (raises `SDKNotInstalledError` when the SDK is missing), `auto_allow_tools() -> list[str]`, `tools_requiring_approval()`.
 
@@ -801,5 +802,5 @@ python -m streamlit_coco.testing.domdiff [--ref HEAD] [--only REGEX]
 ## Package metadata
 
 ```python
-st_coco.__version__  # "0.3.0"
+st_coco.__version__  # "0.3.1"
 ```

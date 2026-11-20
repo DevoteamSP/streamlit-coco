@@ -48,6 +48,12 @@ def test_window_options_drop_session_tool_lists() -> None:
     assert window_opts.require_approval_for == []
 
 
+def test_window_options_keep_the_settings_file() -> None:
+    window_opts = options_for_window(CocoOptions(settings_file="/tmp/coco_settings.json"))
+    assert window_opts is not None
+    assert window_opts.settings_file == "/tmp/coco_settings.json"
+
+
 def test_a_ready_rail_hands_its_profile_to_the_window() -> None:
     from types import SimpleNamespace
 

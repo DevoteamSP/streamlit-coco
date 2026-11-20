@@ -3,8 +3,8 @@
 **Product:** `streamlit-coco` — a Streamlit component and Python library for embedding [Snowflake CoCo](https://www.snowflake.com/en/product/snowflake-coco/) (formerly Cortex Code) in Streamlit applications.
 
 **Author:** —  
-**Status:** `0.3.0` published on 2026-10-26 (the managed agent, an audit log and managed file upload, experimental). `0.2.2` was published on 2026-10-25. The 0.1.9 chat family stays the default; Ask CoCo is opt-in. Next on the [roadmap](roadmap.md): `0.3.5` (Streamlit in Snowflake), then `0.4.0`.
-**Last updated:** 2026-10-14
+**Status:** `0.3.1` is cut on 2026-11-20 (a settings file of its own for the window's Cortex Code, `CocoOptions.settings_file`). `0.3.0` published on 2026-10-26 (the managed agent, an audit log and managed file upload, experimental). `0.2.2` was published on 2026-10-25. The 0.1.9 chat family stays the default; Ask CoCo is opt-in. Next on the [roadmap](roadmap.md): `0.3.5` (Streamlit in Snowflake), then `0.4.0`.
+**Last updated:** 2026-11-20
 
 ---
 
@@ -447,7 +447,7 @@ A launcher at the bottom right of the page. It opens a window: a header (title, 
 
 ### Phase 4 — Polish & release
 
-- [x] README + Makefile + GitHub repos (`streamlit-coco-dev` + public `streamlit-coco`)
+- [x] README + uv commands + GitHub repos (`streamlit-coco-dev` + public `streamlit-coco`)
 - [ ] Theming / a11y pass (keyboard traps, ARIA) — Later / FR-S2
 - [x] PyPI publish `0.1.0` (2026-08-06); follow-ups `0.1.5`, `0.1.6`, `0.1.7`, `0.1.8`, `0.1.8.1`, `0.1.9`
 - [x] Native `copilot_rail()` + Tableau → Semantic example (`0.1.6`); **`app_viewer()`** + **BI → Semantic** Power BI (`0.1.7`); **App Builder** (`0.1.8`); **`deferred=`** rail starters (`0.1.8.1`); Config file picker (`0.1.9`)

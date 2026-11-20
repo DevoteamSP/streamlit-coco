@@ -1,12 +1,12 @@
 # Feature: Panel + chat input
 
 **Checklist:** `doc/features/panel/test-checklist.md`  
-**App:** `make chat` → `examples/chat_app.py`  
+**App:** `uv run --extra dev python -m streamlit run examples/chat_app.py` → `examples/chat_app.py`  
 **Prompts:** `examples/testdata/prompts.json` (categories `tools_auto`, `streaming`, `multi_turn`)
 
 ## Preconditions
 
-- [ ] `uv sync --extra dev` (or `make install`)
+- [ ] `uv sync --extra dev` (or `uv sync --extra dev`)
 - [ ] `cortex --version` works; Snowflake connection configured
 - [ ] Fresh browser session (or **Back to start** then **Start CoCo Chat**)
 
@@ -27,7 +27,7 @@
 
 ## Panel UX (copy / highlight / windowing)
 
-Automated coverage: `make e2e` (fixture harness). Live CoCo checks below with `make chat`.
+Automated coverage: `uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e` (fixture harness). Live CoCo checks below with `uv run --extra dev python -m streamlit run examples/chat_app.py`.
 
 | # | Step | Expected |
 | --- | --- | --- |
@@ -47,5 +47,5 @@ Automated coverage: `make e2e` (fixture harness). Live CoCo checks below with `m
 | --- | --- |
 | Tester | Cursor agent (Auto) |
 | Date | 2026-07-25 |
-| Build / commit | `p0-roadmap-items` (CCv2 register-once + live `make chat`) |
+| Build / commit | `p0-roadmap-items` (CCv2 register-once + live `uv run --extra dev python -m streamlit run examples/chat_app.py`) |
 | Pass? | **Yes** — steps 1–5 verified live (env gate → Start → ready → send prompt → assistant reply). Steps 6–10 / edge cases not fully exercised in this pass. |

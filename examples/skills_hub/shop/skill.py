@@ -1,6 +1,6 @@
 """A skill of the shop: a folder with a SKILL.md, published as skills/<id>/<version>/.
 
-Pure Python: no Streamlit, no Snowflake. `validate_folder` is the gate of `make publish-skill`: a
+Pure Python: no Streamlit, no Snowflake. `validate_folder` is the gate of `publish.py`: a
 folder that does not pass is never uploaded. A skill is instructions (and sometimes code) the agent
 follows in its sandbox, so what may be published is narrow on purpose: safe names, a short list of
 file types, size limits, no links, no obvious credentials.

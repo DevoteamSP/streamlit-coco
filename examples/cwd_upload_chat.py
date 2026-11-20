@@ -28,7 +28,9 @@ if not hasattr(st_coco, "cwd_uploader"):
     st.error(
         "This process loaded an old `streamlit_coco` without `cwd_uploader` "
         f"(`{getattr(st_coco, '__file__', '?')}`). "
-        "Stop other Streamlit servers and run `make cwd-upload` from `streamlit-coco-dev`."
+        "Stop other Streamlit servers and run "
+        "`uv run --extra dev python -m streamlit run examples/cwd_upload_chat.py` "
+        "from `streamlit-coco-dev`."
     )
     st.stop()
 

@@ -1,7 +1,7 @@
 # Feature: Legacy CCv2 chat
 
 **Checklist:** `doc/features/chat-ccv2/test-checklist.md`  
-**App:** `make approval` → `examples/approval_gate.py` (uses `st_coco.chat()`)
+**App:** `uv run --extra dev python -m streamlit run examples/approval_gate.py` → `examples/approval_gate.py` (uses `st_coco.chat()`)
 
 ## Preconditions
 
@@ -13,7 +13,7 @@
 
 | # | Step | Expected | Pass |
 | --- | --- | --- | --- |
-| 1 | Run `make approval` | CCv2 chat mounts (built-in input, transcript, header) | ✓ |
+| 1 | Run `uv run --extra dev python -m streamlit run examples/approval_gate.py` | CCv2 chat mounts (built-in input, transcript, header) | ✓ |
 | 2 | Send a simple prompt via component input | User message + streaming assistant text in component | ✓ |
 | 3 | Trigger a tool that requires approval (Write/Edit/Bash per example config) | Approval UI in component; **Approve once** · **Always allow** · **Deny** (Deny rightmost) | ✓ |
 | 4 | Approve once | Tool proceeds; transcript updates | ✓ (`tmp/coco_ccv2_probe.txt` written) |
@@ -34,4 +34,4 @@
 | Tester | Cursor agent (Auto) |
 | Date | 2026-07-27 |
 | Build / commit | `p0-roadmap-items` @ `18aaaa3` (+ `approval_gate.py` session warm-up fix) |
-| Pass? | **Yes** — live `make approval` (8503): CCv2 mount, hello turn, Write approval + file write, CoCo branding. Fixed example to use `get_or_create_session` + eager `start()` so transcript persists across fragment reruns. |
+| Pass? | **Yes** — live `uv run --extra dev python -m streamlit run examples/approval_gate.py` (8503): CCv2 mount, hello turn, Write approval + file write, CoCo branding. Fixed example to use `get_or_create_session` + eager `start()` so transcript persists across fragment reruns. |

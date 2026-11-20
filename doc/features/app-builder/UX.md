@@ -7,7 +7,7 @@
 
 **Feature:** [`app-builder.md`](app-builder.md)
 **Cut:** `0.1.8`
-**Status:** Shipped in `0.1.8` — example in `examples/app_builder` (`make app-builder`)
+**Status:** Shipped in `0.1.8` — example in `examples/app_builder` (`uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py`)
 **Last updated:** 2026-09-06
 
 This is the product brief for the **example app**, not for library integrators.
@@ -50,7 +50,7 @@ local, not a live call hidden inside the generated app.
 
 ### 1.3 Tertiary — consultant / enablement
 
-Runs `make app-builder` in a client room or W01-style lab. Needs a path that
+Runs `uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py` in a client room or W01-style lab. Needs a path that
 works **without a warehouse and without any account** (fixture pack, local
 files, or public URLs), and a path that lights up live queries when a
 Snowflake account is connected.
@@ -65,10 +65,10 @@ minutes of a room demo.
 
 | Person | They use instead |
 | --- | --- |
-| Library integrator wiring `ask_coco` | README / `doc/api.md` / `make chat` |
+| Library integrator wiring `ask_coco` | README / `doc/api.md` / `uv run --extra dev python -m streamlit run examples/chat_app.py` |
 | Someone migrating Tableau / Power BI | BI → Semantic (produces the semantic view some types then consume) |
 | Someone starting from a napkin photo *only* | RFC [#9](https://github.com/DevoteamSP/streamlit-coco/issues/9) — attaching a sketch *to a type brief* is App Builder |
-| Automation author (headless jobs) | `CocoSession` / `make headless` |
+| Automation author (headless jobs) | `CocoSession` / `uv run --extra dev python examples/headless_pipeline.py` |
 
 ---
 
@@ -658,7 +658,7 @@ fuller interview *does* become the right answer.
   policy for `page-watch` and `doc-compare` (later, with UC9).
 - Skill pack migration — moving existing `SKILL.md` files into the
   three-file layout (§7.1) without breaking `guidelines_skill` references.
-- Make target name (`make app-builder`) — unchanged.
+- Make target name (`uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py`) — unchanged.
 - Whether talking (UC3) always patches `brief.json` or only on explicit
   “update brief”.
 - `ships_copilot` target type for the first pilot (§5.5) — proposed:

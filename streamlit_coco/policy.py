@@ -75,6 +75,9 @@ WORDS = {
     "ask_create": "Allow CoCo to create a file{far}?{undo}",
     "ask_replace": "Allow CoCo to replace a file{far}?{undo}",
     "outside": "outside {scope}",
+    # A batch of several file changes asks once. {count}: how many.
+    "ask_changes": "Allow CoCo to change {count} files?{undo}",
+    "changes_count": "{count} changes",  # the "Changes" line of that request
     # ---- SQL, with `sql=True`. {verbs}: the first word of each statement. {count}.
     "where_snowflake": "Snowflake, with your account and your rights",  # the "Where" line
     "ask_query": "Allow CoCo to run a query on Snowflake?",
@@ -772,6 +775,8 @@ class FolderPolicy:
                 return None
             if kind != "other":
                 return self._read_facts(name, payload, kind)
+            if name == _BATCH and (batch := self._batch_facts(payload)):
+                return batch
         elif name in _LOOKUPS and self.lookups:
             human = _human(name)
             return request(
@@ -806,6 +811,70 @@ class FolderPolicy:
             pill=self._word("pill_tool"),
             standing=self._offer(f"tool:{name}", human, self._say("covers_tool", tool=human)),
         )
+
+    def _batch_facts(self, payload: dict) -> dict | None:
+        """The request of a batch (direct tool calling) of free reads and file changes.
+
+        The batch is judged member by member, as the same calls made one at a time: one request
+        that lists every change, and that the "File changes" tick covers only when it covers
+        each one. None for any other batch, which asks as the one tool it is. Cortex Code wraps
+        parallel edits in a batch, so without this the tick never covered an agent's edits and
+        each batch asked again."""
+        calls = payload.get("tool_calls")
+        if (
+            set(payload) != {"tool_calls"}
+            or not isinstance(calls, list)
+            or not 1 <= len(calls) <= 8
+        ):
+            return None
+        changes = []
+        for call in calls:
+            if (
+                not isinstance(call, dict)
+                or set(call) != {"name", "input"}
+                or not isinstance(call["input"], dict)
+            ):
+                return None
+            name, given = str(call["name"]).lower(), call["input"]
+            if name in _READ and self._look(name, given) is None:
+                continue
+            keys = {
+                "edit": ("file_path", "old_string", "new_string"),
+                "write": ("file_path", "content"),
+            }.get(name)
+            if keys is None or not all(isinstance(given.get(key), str) for key in keys):
+                return None
+            changes.append(self._file_facts(name, given))
+        if not changes:
+            return None
+        if len(changes) == 1:
+            return changes[0]
+        uncovered = next((facts for facts in changes if facts["standing"] is None), None)
+        first = uncovered or changes[0]
+        files = [facts["changes"]["file"] for facts in changes]
+        note = ", ".join(
+            filter(
+                None,
+                [
+                    self._say("changes_count", count=len(files)),
+                    uncovered["changes"]["note"] if uncovered else "",
+                ],
+            )
+        )
+        return {
+            **first,
+            "question": self._say("ask_changes", count=len(files)),
+            "changes": {"file": ", ".join(files), "lines": None, "note": note},
+            "evidence": [
+                item
+                for facts in changes
+                for item in (
+                    {"label": self._word("label_path"), "text": facts["changes"]["file"]},
+                    *facts["evidence"],
+                )
+            ],
+            "standing": None if uncovered else first["standing"],
+        }
 
     def _read_facts(self, name: str, payload: dict, kind) -> dict:
         what = kind[1][name != "read"]

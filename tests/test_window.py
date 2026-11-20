@@ -934,6 +934,14 @@ class MarkdownTest(unittest.TestCase):
         ):
             self.assertIn(wanted, html)
 
+    def test_bold_that_holds_code_is_bold_and_shows_no_stars(self) -> None:
+        html = self.render("- **`stage`:** the folder, and **`file_format` + `options`** too")[0]
+        self.assertIn("<b><code>stage</code>:</b> the folder", html)
+        self.assertIn("<b><code>file_format</code> + <code>options</code></b> too", html)
+        self.assertNotIn("**", html)
+        html = self.render("**plain** and `a*b` and `**not bold**`")[0]
+        self.assertIn("<b>plain</b> and <code>a*b</code> and <code>**not bold**</code>", html)
+
     def test_nested_lists_images_links_and_emphasis(self) -> None:
         html = self.render("- a\n  - b\n    - c\n- d\n\n1. one\n   - inner\n2. two")[0]
         self.assertIn("<ul><li>a<ul><li>b<ul><li>c</li></ul></li></ul></li><li>d</li></ul>", html)

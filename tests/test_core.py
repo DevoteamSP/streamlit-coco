@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 
 import pytest
 
@@ -37,6 +38,13 @@ def test_parse_result_ndjson() -> None:
     events = parse_ndjson_line(line)
     assert events[0].type == "result"
     assert events[0].structured_output == {"ok": True}
+
+
+def test_the_usage_of_a_result_is_kept() -> None:
+    usage = {"input_tokens": 4, "output_tokens": 4, "cache_creation_input_tokens": 95066}
+    line = json.dumps({"type": "result", "subtype": "success", "usage": usage})
+    assert parse_ndjson_line(line)[0].metadata["usage"] == usage
+    assert parse_ndjson_line('{"type":"result","subtype":"success"}')[0].metadata["usage"] is None
 
 
 def test_parse_user_tool_result_ndjson() -> None:
@@ -248,6 +256,35 @@ def test_to_sdk_options_omits_cli_allowed_tools_when_callback_set() -> None:
     sdk = opts.to_sdk_options(can_use_tool=_cb)
     assert not sdk.allowed_tools
     assert opts.to_sdk_options().allowed_tools == ["Read", "Glob", "Grep"]
+
+
+def test_settings_file_is_passed_to_the_program_as_config() -> None:
+    opts = CocoOptions(settings_file="/tmp/coco_settings.json")
+    assert opts.to_sdk_options().extra_args == {"config": "/tmp/coco_settings.json"}
+    assert CocoOptions().to_sdk_options().extra_args == {}
+
+
+def test_settings_file_is_merged_with_the_callers_extra_args_and_wins_for_config() -> None:
+    opts = CocoOptions(
+        settings_file="/tmp/mine.json",
+        extra_sdk_options={"extra_args": {"config": "/tmp/other.json", "verbose": None}},
+    )
+    assert opts.to_sdk_options().extra_args == {"config": "/tmp/mine.json", "verbose": None}
+    assert opts.extra_sdk_options["extra_args"]["config"] == "/tmp/other.json"  # not changed
+
+
+def test_settings_file_expands_the_home_folder() -> None:
+    import os
+
+    args = CocoOptions(settings_file="~/s.json").to_sdk_options().extra_args
+    assert args == {"config": os.path.expanduser("~/s.json")}
+
+
+def test_options_hash_changes_with_the_settings_file_only() -> None:
+    plain = CocoOptions(model="auto")
+    assert plain.options_hash() == CocoOptions(model="auto").options_hash()
+    one, two = CocoOptions(settings_file="/a.json"), CocoOptions(settings_file="/b.json")
+    assert len({plain.options_hash(), one.options_hash(), two.options_hash()}) == 3
 
 
 def test_to_sdk_options_strips_schema_meta_for_output_format() -> None:

@@ -38,6 +38,12 @@ def test_attach_left_right_and_full_page(window, ask) -> None:
     page.get_by_role("button", name="Full page").click(timeout=WAIT)
     box = _box(page)
     assert box["w"] > box["vw"] * 0.9 and box["h"] > box["vh"] * 0.9
+    # the conversation uses the width of the page, not a column in the middle
+    text = page.locator("section.cc .bd").evaluate(
+        "(bd) => { const s = getComputedStyle(bd); "
+        "return bd.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight); }"
+    )
+    assert text > box["vw"] * 0.9
 
     page.get_by_role("button", name="Floating window").click(timeout=WAIT)  # back
     assert _box(page) == floating

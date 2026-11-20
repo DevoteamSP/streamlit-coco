@@ -3,9 +3,9 @@
 
 usage: python scripts/audit_locks.py [lock ...]      (default: every tracked uv.lock but the root)
 
-`make audit` audits the root environment (`pip-audit --skip-editable`); this script covers the
-examples that have a lock of their own (examples/app_builder/uv.lock), which the root audit
-cannot see and which Dependabot reports separately. Each lock is exported without hashes and
+`uv run --extra dev python -m pip_audit --skip-editable` audits the root environment; this script
+covers the examples that have a lock of their own (examples/app_builder/uv.lock), which the root
+audit cannot see and which Dependabot reports separately. Each lock is exported without hashes and
 without the project itself, then audited with the pip-audit of the current environment.
 
 Exit status: 0 when every lock is clean, 1 when one has a known vulnerability, 2 when a lock
@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def tracked_locks() -> list[Path]:
-    """Every uv.lock under version control except the root one (`make audit` has it)."""
+    """Every uv.lock under version control except the root one (the root audit has it)."""
     out = subprocess.run(
         ["git", "ls-files", "*uv.lock"], cwd=ROOT, capture_output=True, text=True, check=True
     ).stdout.split()

@@ -81,6 +81,9 @@ const E = (key, vars) => esc(L(key, vars));
 // everything is escaped first; the only tags that exist are the ones written below; links keep http(s) and mailto only.
 const SAFE_URL = /^(https?:\/\/|mailto:)/i;
 function inline(text) {
+  // bold that holds code (**`stage`:**): the code spans below would cut its stars apart; a code span is one token, so a star inside it closes nothing
+  const bold = text.split(/\*\*(?=\S)((?:[^*`\n]|`[^`\n]+`)*?`[^`\n]+`(?:[^*`\n]|`[^`\n]+`)*)(?<=\S)\*\*/);
+  if (bold.length > 1) return bold.map((part, i) => (i % 2 ? `<b>${inline(part)}</b>` : inline(part))).join('');
   const out = [];
   text.split(/(`[^`\n]+`)/).forEach((part, i) => {
     if (i % 2) return out.push(`<code>${esc(part.slice(1, -1))}</code>`);

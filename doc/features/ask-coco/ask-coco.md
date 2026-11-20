@@ -255,7 +255,7 @@ only), `app_viewer` and the preview helpers, `tool_family`, `is_sql_tool`, `is_a
 
 Rows are those of the inventory (`COCO_PACKAGE_FEATURES.md` section 1). "Proved by" names a test (file and name) or an
 example that exists in this repository **[changed]**. A test file is `tests/test_<name>.py`; **e2e** is `tests/e2e/`, run by
-`make e2e` in Edge on the scripted agent. "Not proved" means no test and no recorded run covers it. An example named
+`uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e` in Edge on the scripted agent. "Not proved" means no test and no recorded run covers it. An example named
 alone is code that shows the feature; no test runs it. Nothing here was proved against a live Cortex Code agent: see
 [`test-checklist.md`](test-checklist.md).
 
@@ -391,13 +391,25 @@ caller's rights, two skills in one conversation, a file attached to a stage that
 cannot write (the window says why; the exact text of the account's error is not fixed), the
 `workspace_mounts` path (a Snowflake workspace; the library only passes the field).
 
+## 9. A settings file of its own (0.3.1)
+
+`CocoOptions(settings_file="~/.my_app/coco_settings.json")` makes the Cortex Code program that the window starts read **that file** (`cortex --config`) instead of the user's own `~/.snowflake/cortex/settings.json`. Nothing changes when it is not set. Feature file: [`../settings-file/feature.md`](../settings-file/feature.md).
+
+- **Why.** The user's settings can switch on plugins, hooks, `env`, `permissions` and instruction patterns the application knows nothing about. Found live: a plugin whose hooks did not match an MCP server's version made every tool call of an application session fail.
+- **A minimal file** keeps the connection and the model: `{"cortexAgentConnectionName": "my_profile", "sqlConnectionName": "my_profile", "model": "auto"}`. The library writes nothing and never reads or copies the user's settings.
+- **A file that is not there stops the connection** (`connect_failed`, a sentence that names the path); the program is never started without it, so the host is not left thinking the session is protected. `~` is expanded and the path made absolute.
+- **The file replaces the user's settings.** What is not in it is not read (a theme, `disableBundledSkills`). The user's own skills and MCP servers are not settings: this option does not change them (the window already starts with no MCP server when the host gives none).
+- **Headless too:** `to_sdk_options()` passes it as `extra_args["config"]`, merged with the caller's own `extra_args` (the settings file wins for `config`).
+- **Not used by the managed agent** (no `cortex` program). A Cortex Code without `--config` refuses the flag at start; the start error then shows.
+- Not offered: a pass-through of any command-line flag (it could switch off the window's own protections), and `--setting-sources` (measured: it does not change what Cortex Code loads).
+
 ## Limitations
 
 - The window, the conversation, the gate and the policy are verified on the scripted agent; the managed agent also on a scripted stream of Snowflake's client. The live run needs a Snowflake login and is listed in
   [`test-checklist.md`](test-checklist.md).
 - One window per page: two `ask_coco` calls with different keys draw two launchers at the same place.
 - The window ignores the system's reduced-motion setting **(client)**; `Features(motion=False)` restores it.
-- The window has three places **(client)**: floating (default), attached to the left or the right edge on the full height of the page (30 rem wide), or the full page (one rem around, the conversation 52 rem wide in the middle). Three icons in the header, the pressed one goes back to floating; `Features(dock=False)` removes the two attach icons and `Features(full_page=False)` the full page one; both are on by default. A click on the title bar (not on one of its buttons) minimises the window. The window then covers Streamlit's header and sidebar (z-index 1000000, under its dialogs and popovers). The page is not pushed aside unless `ask_coco(split=True)`: then the app container takes the rest of the screen while the window is attached. `ask_coco(on_layout=fn)` calls `fn(place)` on each change (`closed`, `float`, `left`, `right`, `full`) and reruns the page once; `get_window(key).place` reads it on any run; the browser writes `data-coco-place` and `--coco-dock-w` on `<html>`. Each icon of the title bar shows its hint after 750 ms (no native tooltip).
+- The window has three places **(client)**: floating (default), attached to the left or the right edge on the full height of the page (30 rem wide), or the full page (one rem around, the conversation on the whole width, two rem in from each edge). Three icons in the header, the pressed one goes back to floating; `Features(dock=False)` removes the two attach icons and `Features(full_page=False)` the full page one; both are on by default. A click on the title bar (not on one of its buttons) minimises the window. The window then covers Streamlit's header and sidebar (z-index 1000000, under its dialogs and popovers). The page is not pushed aside unless `ask_coco(split=True)`: then the app container takes the rest of the screen while the window is attached. `ask_coco(on_layout=fn)` calls `fn(place)` on each change (`closed`, `float`, `left`, `right`, `full`) and reruns the page once; `get_window(key).place` reads it on any run; the browser writes `data-coco-place` and `--coco-dock-w` on `<html>`. Each icon of the title bar shows its hint after 750 ms (no native tooltip).
 - With the keyboard, Allow and Decline are reached with Shift+Tab from the field; a request that arrives under a
   Streamlit dialog cannot be clicked until the dialog is closed.
 

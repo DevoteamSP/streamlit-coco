@@ -414,14 +414,22 @@ class ReadingTest(PolicyCase):
                 {"tool_calls": [read, {"name": "Bash", "input": {"command": "git status"}}]},
             ),
             (
-                "write",
+                "a change with a missing key",
                 {
                     "tool_calls": [
                         read,
+                        {"name": "Write", "input": {"file_path": self.path("specs/a.md")}},
+                    ]
+                },
+            ),
+            (
+                "a change with an input that is not text",
+                {
+                    "tool_calls": [
                         {
-                            "name": "Write",
-                            "input": {"file_path": self.path("specs/a.md"), "content": "x"},
-                        },
+                            "name": "Edit",
+                            "input": {"file_path": 3, "old_string": "a", "new_string": "b"},
+                        }
                     ]
                 },
             ),
@@ -1269,6 +1277,74 @@ class FileChangeTest(PolicyCase):
         self.assertEqual(again["kind"], "change")
 
 
+class BatchOfChangesTest(PolicyCase):
+    """Cortex Code wraps parallel edits in one direct tool calling call: each change is judged as if
+    it were made alone, so the tick for file changes covers the batch."""
+
+    def edit(self, relative: str, new: str = "b") -> dict:
+        return {
+            "name": "Edit",
+            "input": {"file_path": self.path(relative), "old_string": "a", "new_string": new},
+        }
+
+    def write(self, relative: str) -> dict:
+        return {"name": "Write", "input": {"file_path": self.path(relative), "content": "x"}}
+
+    def batch(self, *calls) -> dict:
+        return self.ask(self.manager, "direct_tool_calling", {"tool_calls": list(calls)})
+
+    def test_one_change_in_a_batch_asks_as_the_same_change_alone(self) -> None:
+        alone = self.ask(self.manager, "Edit", self.edit("specs/functional_spec.md")["input"])
+        read = {"name": "Read", "input": {"file_path": self.path("specs/functional_spec.md")}}
+        self.assertEqual(self.batch(read, self.edit("specs/functional_spec.md")), alone)
+
+    def test_several_changes_ask_once_and_show_every_change(self) -> None:
+        facts = self.batch(
+            self.edit("specs/functional_spec.md"), self.write("98_project/weeklies/new.md")
+        )
+        self.assertEqual(
+            facts["question"], "Allow CoCo to change 2 files? The Cockpit cannot undo it."
+        )
+        self.assertEqual(
+            facts["changes"],
+            {
+                "file": "specs/functional_spec.md, 98_project/weeklies/new.md",
+                "lines": None,
+                "note": "2 changes",
+            },
+        )
+        self.assertEqual(
+            [
+                (item["label"], item["text"])
+                for item in facts["evidence"]
+                if item["label"] == "Path"
+            ],
+            [("Path", "specs/functional_spec.md"), ("Path", "98_project/weeklies/new.md")],
+        )
+        self.assertEqual(
+            [item["label"] for item in facts["evidence"]],
+            ["Path", "Replaces", "With", "Path", "New content"],
+        )
+        self.assertEqual(
+            facts["standing"]["id"], "files"
+        )  # the tick that covers one edit covers them
+
+    def test_a_change_the_tick_never_covers_keeps_the_whole_batch_out_of_it(self) -> None:
+        facts = self.batch(
+            self.edit("specs/functional_spec.md"),
+            {"name": "Write", "input": {"file_path": str(self.tmp / "outside.md"), "content": "x"}},
+        )
+        self.assertIsNone(facts["standing"])
+        self.assertIn("outside", facts["changes"]["note"])
+
+    def test_a_batch_with_a_member_that_is_not_a_read_or_a_change_is_still_one_tool(self) -> None:
+        facts = self.batch(
+            self.edit("specs/functional_spec.md"), {"name": "Bash", "input": {"command": "ls"}}
+        )
+        self.assertIn("direct tool calling", facts["question"])
+        self.assertEqual(facts["standing"]["id"], "tool:direct_tool_calling")
+
+
 class SqlTest(PolicyCase):
     """SQL runs on the user's Snowflake connection, reads and changes alike, and never without
     being asked (or standing)."""
@@ -1696,6 +1772,43 @@ class DefaultTest(FolderCase):
         self.assertNotIn("query", rights["refused"])  # SQL is off: a query is a tool like another
         self.assertEqual(rights["running_without_asking_now"], ["x"])
         self.assertNotIn("commands", rights)
+
+
+class BatchWithTickTest(FolderCase):
+    def test_a_batch_of_changes_inside_the_folder_is_covered_by_the_files_tick(self) -> None:
+        policy = self.policy(standing=True)
+        facts = self.ask(
+            policy,
+            "direct_tool_calling",
+            {
+                "tool_calls": [
+                    {
+                        "name": "Edit",
+                        "input": {"file_path": "notes.md", "old_string": "a", "new_string": "b"},
+                    },
+                    {"name": "Write", "input": {"file_path": "docs/new.md", "content": "x"}},
+                ]
+            },
+        )
+        self.assertEqual(facts["standing"]["id"], "files")
+        self.assertEqual(facts["changes"]["file"], "notes.md, docs/new.md")
+
+    def test_a_change_outside_what_the_host_allows_keeps_the_tick_away(self) -> None:
+        policy = self.policy(
+            standing=True, changes=lambda path: None if path.name != "guide.md" else "elsewhere"
+        )
+        facts = self.ask(
+            policy,
+            "direct_tool_calling",
+            {
+                "tool_calls": [
+                    {"name": "Write", "input": {"file_path": "docs/new.md", "content": "x"}},
+                    {"name": "Write", "input": {"file_path": "docs/guide.md", "content": "x"}},
+                ]
+            },
+        )
+        self.assertIsNone(facts["standing"])
+        self.assertIn("elsewhere", facts["changes"]["note"])
 
 
 class SwitchTest(FolderCase):
@@ -2285,7 +2398,11 @@ class WordsTableTest(FolderCase):
                 self.no_english(facts["reads"], about)
             if facts["changes"]:
                 self.no_english(facts["changes"]["note"], about)
-                if str(tool).lower() not in ("edit", "write"):  # else it is the file's path
+                paths = (
+                    str(tool).lower() in ("edit", "write")
+                    or "«changes_count»" in facts["changes"]["note"]
+                )
+                if not paths:  # else it is the path of a file, or of several
                     self.no_english(facts["changes"]["file"], about)
             for evidence in facts["evidence"]:
                 self.no_english(evidence["label"], about)
@@ -2330,6 +2447,22 @@ class WordsTableTest(FolderCase):
             ("Grep", {"pattern": "x", "path": str(self.tmp), "include": "*.md"}),
             ("direct_tool_calling", {"tool_calls": [read, read]}),
             ("direct_tool_calling", {"tool_calls": []}),
+            (
+                "direct_tool_calling",
+                {
+                    "tool_calls": [
+                        {
+                            "name": "Edit",
+                            "input": {
+                                "file_path": "notes.md",
+                                "old_string": "a",
+                                "new_string": "b",
+                            },
+                        },
+                        {"name": "Write", "input": {"file_path": "new.md", "content": "x"}},
+                    ]
+                },
+            ),
             # commands: listed, unlisted, of several lines, with another input
             ("Bash", {"command": full.commands()[0].line}),
             ("Bash", {"command": full.commands()[1].line}),

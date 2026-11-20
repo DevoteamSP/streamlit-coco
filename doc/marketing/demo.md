@@ -4,7 +4,7 @@
 
 **Audience**: Technical decision-makers, data engineers, Snowflake practitioners  
 **Prerequisites**: Snowflake account with Cortex Code access, CoCo CLI installed, Python 3.11+  
-**Demo app**: `examples/chat_app.py` (via `make chat`)
+**Demo app**: `examples/chat_app.py` (via `uv run --extra dev python -m streamlit run examples/chat_app.py`)
 
 ---
 
@@ -25,7 +25,7 @@
 ### Steps
 
 1. Show `examples/chat_app.py` — highlight it's ~20 lines of Python
-2. Run: `make chat`
+2. Run: `uv run --extra dev python -m streamlit run examples/chat_app.py`
 3. Browser opens → show the panel UI (empty state, model/connection header)
 4. Type: *"What tables are available in SNOWFLAKE_SAMPLE_DATA.TPCH_SF1?"*
 5. Watch the streaming transcript render in real-time
@@ -65,7 +65,7 @@
 
 ### Steps
 
-1. Switch to `examples/structured_output.py`: `make structured`
+1. Switch to `examples/structured_output.py`: `uv run --extra dev python -m streamlit run examples/structured_output.py`
 2. Show the code: `output_schema` defines what we expect back
 3. Type: *"Give me a breakdown of orders by status"*
 4. Agent returns structured JSON → app renders it as a Streamlit bar chart
@@ -84,7 +84,7 @@
 ### Steps
 
 1. Show `examples/headless_pipeline.py` — pure async Python
-2. Run: `make headless`
+2. Run: `uv run --extra dev python examples/headless_pipeline.py`
 3. Terminal shows events streaming as the agent works
 4. Point out: same `query()` function, same approval hooks available programmatically
 

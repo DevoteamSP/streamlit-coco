@@ -10,7 +10,7 @@ Two GitHub repos:
 Package name on PyPI is always `streamlit-coco`.
 
 > **Temporary publisher (2026-08):** DevoteamSP is not yet validated on PyPI, so
-> Trusted Publishing and `make sync-release` target
+> Trusted Publishing and `bash scripts/sync_release.sh` target
 > [`lletourmy/streamlit-coco`](https://github.com/lletourmy/streamlit-coco).
 > When the org is validated, switch `RELEASE_REMOTE`, `release.yml` gate,
 > package URLs, and the PyPI Trusted Publisher back to
@@ -55,12 +55,12 @@ cp -R doc-dev/releases/_template/. "doc-dev/releases/${VER}/"
   (current: [`doc-dev/releases/0.1.9/`](../../doc-dev/releases/0.1.9/)) — **never synced** to the public repo
 
 ```bash
-make test-all
-make release-check   # version free on PyPI and the public tags, public CHANGELOG known, every lock audited, Dependabot alerts, sync dry run
+uv run --extra dev ruff check . && uv run --extra dev python -m pytest tests/ --ignore=tests/e2e --ignore=tests/e2e_classic && uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e && uv run --extra dev python -m pip_audit --skip-editable && uv run --extra dev python scripts/audit_locks.py
+uv run --extra dev python scripts/release_check.py   # version free on PyPI and the public tags, public CHANGELOG known, every lock audited, Dependabot alerts, sync dry run
 # Manual UI checklists under doc/features/ before 0.x / 1.0 cuts
 ```
 
-`make release-check` fails when the version is already on PyPI or tagged on the public repository, when the public CHANGELOG has a release this one lacks (the sync would overwrite it), when any `uv.lock` (the root one and `examples/*/uv.lock`) has a known vulnerability, or when the sync dry run would publish generated `out/` files or dev-only paths. It warns on open Dependabot alerts (GitHub rescans after a push) and on deletions in the public tree. After the tag, the version check fails by design: it is a pre-release check.
+`uv run --extra dev python scripts/release_check.py` fails when the version is already on PyPI or tagged on the public repository, when the public CHANGELOG has a release this one lacks (the sync would overwrite it), when any `uv.lock` (the root one and `examples/*/uv.lock`) has a known vulnerability, or when the sync dry run would publish generated `out/` files or dev-only paths. It warns on open Dependabot alerts (GitHub rescans after a push) and on deletions in the public tree. After the tag, the version check fails by design: it is a pre-release check.
 
 **Required before tagging (do not skip):**
 
@@ -75,16 +75,16 @@ make release-check   # version free on PyPI and the public tags, public CHANGELO
 
 ```bash
 # Preview
-DRY_RUN=1 make sync-release
+DRY_RUN=1 bash scripts/sync_release.sh
 
 # Write + commit + push to lletourmy/streamlit-coco (PyPI Trusted Publisher)
-COMMIT=1 PUSH=1 MESSAGE="Release X.Y.Z" make sync-release
+COMMIT=1 PUSH=1 MESSAGE="Release X.Y.Z" bash scripts/sync_release.sh
 
 # Also mirror to the org public repo (same tree; PyPI still gates on lletourmy until validated)
 COMMIT=1 PUSH=1 MESSAGE="Release X.Y.Z" \
   RELEASE_REPO="$PWD/../streamlit-coco-org" \
   RELEASE_REMOTE="https://github.com/DevoteamSP/streamlit-coco.git" \
-  make sync-release
+  bash scripts/sync_release.sh
 ```
 
 Default target clone: `../streamlit-coco` (override with `RELEASE_REPO=`).
@@ -125,8 +125,8 @@ pip install "streamlit-coco[sdk]==X.Y.Z"
 From a clean synced tree (or `-dev` if you must):
 
 ```bash
-make build
-make publish   # uv publish — needs credentials if Trusted Publisher is unavailable
+uv build
+uv publish   # needs credentials if Trusted Publisher is unavailable
 ```
 
 Prefer the tagged CI path on `streamlit-coco`.

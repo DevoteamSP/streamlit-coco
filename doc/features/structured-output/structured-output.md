@@ -14,7 +14,7 @@ Downstream Streamlit widgets (metrics, dataframes, forms) should consume typed a
 2. **Callback:** `panel(..., on_structured_output=fn)` or legacy `chat(..., on_structured_output=fn)` — default inline structured panel is skipped.
 3. **Schema (SDK):** set `CocoOptions.output_schema={...}` so the agent is constrained; read `session.chat_result().structured_output`.
 
-Demos: `make structured` (`examples/structured_output.py`); chat prompt `structured-json`.
+Demos: `uv run --extra dev python -m streamlit run examples/structured_output.py` (`examples/structured_output.py`); chat prompt `structured-json`.
 
 ## Limitations
 

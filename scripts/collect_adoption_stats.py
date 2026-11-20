@@ -301,7 +301,7 @@ def _github_window_count(series: dict[str, dict[str, int]], as_of: date) -> int:
 def backfill_missing_history() -> list[dict[str, Any]]:
     """Fill history.jsonl gaps from PyPI overall + stitched GitHub daily series.
 
-    Live ``make adoption-stats`` only writes *today*. GitHub's traffic API keeps
+    Live ``scripts/collect_adoption_stats.py`` only writes *today*. GitHub's traffic API keeps
     ~14 days, so missing dates are reconstructed — not re-fetched as of that day.
     """
     rows = _history_rows()

@@ -68,12 +68,12 @@ button, textarea, select { font: inherit; color: inherit; }
 @keyframes cc-in { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
 /* Other places for the window (header icons; Features(dock=False) and Features(full_page=False) remove them). --wh is the window's height everywhere
    (the confirm and panel heights read it), so it follows the place. The dock is the whole height of the page and square on the
-   edge it touches; the full page leaves one rem around, and its conversation keeps a readable width in the middle. */
+   edge it touches; the full page leaves one rem around, and its conversation uses the whole width, two rem in from the edges. */
 .cc[data-l] { z-index: 1000000; max-height: none; }   /* over Streamlit's header, menu bar and sidebar (999990-999995; coco.js raises it if this Streamlit uses more), under its dialogs and popovers (1000061 and up) */
 .cc[data-l=left], .cc[data-l=right] { --wh: 100dvh; top: 0; bottom: 0; width: min(calc(var(--r) * 30), 100vw); }
 .cc[data-l=left] { left: 0; right: auto; border-width: 0 1px 0 0; border-radius: 0 var(--coco-radius) var(--coco-radius) 0; transform-origin: 0 50%; }
 .cc[data-l=right] { right: 0; border-width: 0 0 0 1px; border-radius: var(--coco-radius) 0 0 var(--coco-radius); transform-origin: 100% 50%; }
-.cc[data-l=full] { --wh: calc(100dvh - var(--r) * 2); --lane: max(var(--r), calc((100% - var(--r) * 52) / 2)); top: var(--r); left: var(--r); right: var(--r); bottom: var(--r); width: auto; transform-origin: 50% 50%; }
+.cc[data-l=full] { --wh: calc(100dvh - var(--r) * 2); --lane: calc(var(--r) * 2); top: var(--r); left: var(--r); right: var(--r); bottom: var(--r); width: auto; transform-origin: 50% 50%; }
 .cc[data-l=full] :is(.bd, .ft, .rq, .ag-off) { padding-inline: var(--lane); }
 .cc[data-l=full] :is(.ag-cf, .ag-pan) { left: 50%; right: auto; width: min(calc(var(--r) * 40), calc(100% - var(--r) * 1.5)); transform: translateX(-50%); }
 .ib[aria-pressed=true] { background: rgba(255, 255, 255, .22); }

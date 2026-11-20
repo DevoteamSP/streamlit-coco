@@ -15,7 +15,7 @@ You are helping me deploy the "Skills shop" Snowflake Native App of this reposit
 account. Work from the repository root. The files that matter are all in examples/skills_hub_native/
 (read DEPLOY.md, snowflake.yml, snowflake.local.yml.example, manifest.yml, containers/service_spec.yaml,
 containers/build_and_push.sh, scripts/setup_script.sql and scripts/grant_privileges.sql first) and in
-the Makefile targets native-shop-*. Do not change anything under streamlit_coco/ or examples/skills_hub/.
+the commands of DEPLOY.md. Do not change anything under streamlit_coco/ or examples/skills_hub/.
 
 HOW YOU WORK
 - Ask me for the parameters below with your question tool, at most three questions at a time, and show
@@ -40,7 +40,7 @@ PARAMETERS TO ASK (in this order)
    repository COCO_IMAGES). Check whether it exists (SHOW IMAGE REPOSITORIES IN SCHEMA ...). If not, offer
    to create it (CREATE IMAGE REPOSITORY ...).
 5. Names: keep the defaults coco_skills_shop (application), coco_skills_shop_pkg (package) and
-   COCO_SKILLS_SHOP_COMPUTE_POOL. Strongly recommend keeping them: the Makefile targets and the SQL of
+   COCO_SKILLS_SHOP_COMPUTE_POOL. Strongly recommend keeping them: the commands of DEPLOY.md and the SQL of
    scripts/grant_privileges.sql use these names. If I want others, list every file you would have to
    change and ask again.
 6. Start-up check: run the in-service probe once (one model call: it proves the Agent API answers from
@@ -68,11 +68,11 @@ THE STEPS (each one after my "yes")
      Do not commit these two edits.
    - If I chose a probe: set SKILLS_HUB_PROBE to "1" in containers/service_spec.yaml (show the diff).
 2. Image repository: CREATE IMAGE REPOSITORY if it does not exist (show the SQL first).
-3. Image: `make native-shop-image SNOW_CONNECTION=<profile>`. It logs in to the registry, builds linux/amd64
+3. Image: `examples/skills_hub_native/containers/build_and_push.sh <profile>`. It logs in to the registry, builds linux/amd64
    and pushes <registry host>/<db>/<schema>/<repo>/coco-skills-shop:dev. Tell me it takes a few minutes.
    Check the image is there: SHOW IMAGES IN IMAGE REPOSITORY <db>.<schema>.<repo>.
-4. Package and application: `make native-shop-deploy SNOW_CONNECTION=<profile>` (it is `snow app run`:
-   it uploads the files, creates the package and the application, which creates the compute pool and
+4. Package and application: `snow app run --connection <profile>`, run in `examples/skills_hub_native`
+   (it uploads the files, creates the package and the application, which creates the compute pool and
    the service). If it says the image is not accessible to the package, show me the grants of the
    Snowflake Native App container tutorial (USAGE on the database and the schema, READ on the image
    repository, to the application package) and ask before you run them. (Not needed in the author's own
@@ -82,14 +82,15 @@ THE STEPS (each one after my "yes")
    roles SNOWFLAKE.CORTEX_USER and SNOWFLAKE.CORTEX_AGENT_USER, so the agent running as the application
    may call Cortex; it needs ACCOUNTADMIN; the grants are lost if the application is torn down. Run it
    only after I answer yes to this exact question.
-6. Restart so the service starts with the grants: `make native-shop-restart`, then wait and poll
-   `make native-shop-status` (at most ~5 minutes, every 20 seconds) until the service is READY. If it is
-   not, read `make native-shop-logs` and tell me what it says.
+6. Restart so the service starts with the grants: `suspend_service()` then `resume_service()` (the `CALL coco_skills_shop.app_schema....` of
+   DEPLOY.md, with `snow sql -q ... --connection <profile>`), then wait and poll
+   `get_service_status()` (at most ~5 minutes, every 20 seconds) until the service is READY. If it is
+   not, read `get_service_logs('0', 'streamlit')` and tell me what it says.
 7. The address: `SHOW ENDPOINTS IN SERVICE coco_skills_shop.services.shop_service` and give me
    `https://<ingress_url>`. Say that I open it in my browser and log in with my Snowflake user; you cannot.
-8. If I chose the probe: read `make native-shop-logs` and report whether it ends with `probe: OK`; if not,
+8. If I chose the probe: read `get_service_logs('0', 'streamlit')` and report whether it ends with `probe: OK`; if not,
    what failed. Then set SKILLS_HUB_PROBE back to "0" in containers/service_spec.yaml and ask whether to
-   run `make native-shop-deploy` and `make native-shop-restart` again so the service stops making a
+   run the deploy and the restart again so the service stops making a
    model call at every start.
 
 AT THE END, report in this order
@@ -97,8 +98,8 @@ AT THE END, report in this order
 - What now exists in my account (application, package, compute pool, service, stage
   coco_skills_shop.data.skills_stage with the bundled skills, the image, the grants) and the address.
 - What runs up costs and how to stop it: `snow sql -q "CALL coco_skills_shop.app_schema.suspend_service()"
-  --connection <profile>` (the pool suspends five minutes later); `make native-shop-restart` starts it again.
-- How to remove everything: `make native-shop-teardown` (do not run it), and that the image stays in the
+  --connection <profile>` (the pool suspends five minutes later); `resume_service()` starts it again.
+- How to remove everything: `snow app teardown --connection <profile> --force --cascade`, run in `examples/skills_hub_native` (do not run it), and that the image stays in the
   repository.
 - What I did not check: that the page works for my user behind the ingress, that chat answers as my
   role (it runs as the application, with the application's rights), and how long the session lasts.
@@ -110,7 +111,7 @@ AT THE END, report in this order
 
 ## Notes for whoever maintains this prompt
 
-- It follows [`DEPLOY.md`](DEPLOY.md) and the `native-shop-*` targets of the Makefile; change them together.
-- The default names are kept on purpose: `coco_skills_shop` is written in the Makefile, in `scripts/grant_privileges.sql` and in the procedures of `scripts/setup_script.sql`.
+- It follows [`DEPLOY.md`](DEPLOY.md) and its commands; change them together.
+- The default names are kept on purpose: `coco_skills_shop` is written in the commands of `DEPLOY.md`, in `scripts/grant_privileges.sql` and in the procedures of `scripts/setup_script.sql`.
 - The container-tutorial grants in step 4 were **not needed** in the author's run (`ACCOUNTADMIN`, the repository in the same account); they are offered for a role that is not the owner of the repository, and are untested here.
 - Nothing in the prompt runs a grant, a creation or a push without an explicit yes. That is the contract to keep when editing it.

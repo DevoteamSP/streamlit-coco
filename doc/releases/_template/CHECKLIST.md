@@ -5,7 +5,7 @@
 **GitHub Release:** _(fill after)_  
 **PyPI:** https://pypi.org/project/streamlit-coco/X.Y.Z/
 
-Do not run `make sync-release` / tag `vX.Y.Z` until Product docs + QA are done. Marketing can ship the same day or within 48h.
+Do not run `bash scripts/sync_release.sh` / tag `vX.Y.Z` until Product docs + QA are done. Marketing can ship the same day or within 48h.
 
 Outreach drafts (LinkedIn / Medium / community) live in **`doc-dev/releases/X.Y.Z/`** (not synced publicly).
 
@@ -25,9 +25,9 @@ Outreach drafts (LinkedIn / Medium / community) live in **`doc-dev/releases/X.Y.
 
 ## 2. Quality gates (required)
 
-- [ ] `make test-all` (lint + unit + Playwright e2e + audit) — see [`doc/testing.md`](../../testing.md)
+- [ ] the full gate (lint + unit + Playwright e2e + audit) — see [`doc/testing.md`](../../testing.md)
 - [ ] Manual feature checklists for touched areas — [`doc/features/README.md`](../../features/README.md)
-- [ ] Live CoCo demos smoke (`make chat`, `make cwd-upload`, …) as needed
+- [ ] Live CoCo demos smoke (`uv run --extra dev python -m streamlit run examples/chat_app.py`, `uv run --extra dev python -m streamlit run examples/cwd_upload_chat.py`, …) as needed
 
 ## 3. Visuals (required for community posts)
 
@@ -40,7 +40,7 @@ Outreach drafts (LinkedIn / Medium / community) live in **`doc-dev/releases/X.Y.
 Follow [`doc/deployment/publish.md`](../../deployment/publish.md):
 
 - [ ] Merge to `-dev` `main`
-- [ ] `COMMIT=1 PUSH=1 MESSAGE="Release X.Y.Z" make sync-release`
+- [ ] `COMMIT=1 PUSH=1 MESSAGE="Release X.Y.Z" bash scripts/sync_release.sh`
 - [ ] Tag `vX.Y.Z` on public `streamlit-coco` and push
 - [ ] Confirm GitHub Release + PyPI wheel; SBOM asset if workflow attaches it
 - [ ] GitHub Release body: CHANGELOG excerpt + 2–4 screenshots / GIF

@@ -14,8 +14,8 @@
 
 ### Code
 - [ ] Tests added or updated (`tests/`)
-- [ ] All existing tests pass (`make test`)
-- [ ] No new linting errors (`make lint`)
+- [ ] All existing tests pass (`uv run --extra dev python -m pytest tests/ --ignore=tests/e2e --ignore=tests/e2e_classic`)
+- [ ] No new linting errors (`uv run --extra dev ruff check .`)
 
 ### Documentation
 - [ ] `CHANGELOG.md` updated (under `[Unreleased]`)

@@ -1,7 +1,7 @@
 # Feature: Tool approvals
 
 **Checklist:** `doc/features/approvals/test-checklist.md`  
-**App:** `make chat` (or `make approval`)  
+**App:** `uv run --extra dev python -m streamlit run examples/chat_app.py` (or `uv run --extra dev python -m streamlit run examples/approval_gate.py`)  
 **Prompts:** `examples/testdata/prompts.json` (category `approval`)
 
 ## Preconditions
@@ -38,4 +38,4 @@
 | Tester | Cursor agent (Auto) |
 | Date | 2026-07-26 |
 | Build / commit | `p0-roadmap-items` @ `18aaaa3` |
-| Pass? | **Yes** — golden path 1–10 live (`make chat`): Deny / Approve once / Always allow Write (+ follow-up no re-prompt) / Bash approve with output / Bash destructive Deny / Glob auto then Write gate / buttons stable while pending / Stop clears pending Write. Edge: Reset clears Always allow. Overlap (auto∩approval) not run. |
+| Pass? | **Yes** — golden path 1–10 live (`uv run --extra dev python -m streamlit run examples/chat_app.py`): Deny / Approve once / Always allow Write (+ follow-up no re-prompt) / Bash approve with output / Bash destructive Deny / Glob auto then Write gate / buttons stable while pending / Stop clears pending Write. Edge: Reset clears Always allow. Overlap (auto∩approval) not run. |

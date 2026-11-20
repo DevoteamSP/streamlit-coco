@@ -12,6 +12,32 @@ Living plan (what’s next): [`doc/roadmap.md`](doc/roadmap.md).
 
 ## [Unreleased]
 
+## [0.3.1] — 2026-11-20
+
+A settings file of its own for the window's Cortex Code, and fixes to what the window shows and what the policy asks. Upgrading from 0.3.0: nothing to change; the new option is opt-in and an application that does not set it behaves as before.
+
+### Added
+
+- The window can start Cortex Code with a settings file of its own (`CocoOptions.settings_file`, passed to the program as `cortex --config`), so the user's own plugins, hooks and environment do not reach the application's sessions. It replaces the user's `~/.snowflake/cortex/settings.json` for those sessions (what is not in the file is not read); a file that does not exist fails the connection with a sentence and starts nothing; the managed agent does not use it. Headless sessions get it too (`to_sdk_options()` merges it into `extra_args`, the settings file winning for `config`). Nothing changes for an application that does not set it. Needs a Cortex Code with `--config` (1.2.45 has it).
+
+### Changed
+
+- **No Makefile.** Every `make` target is now a `uv` command, listed in [`AGENTS.md`](AGENTS.md), the README and [`doc/testing.md`](doc/testing.md) (`uv sync --extra dev`, `uv run --extra dev ruff check .`, `uv run --extra dev python -m pytest tests/ --ignore=tests/e2e --ignore=tests/e2e_classic`, `uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e`, `uv run --extra dev python -m streamlit run examples/chat_app.py`, ...). The examples that have a folder of their own run with `uv run --directory examples/<name> --project ../..`. The package, its API and CI are unchanged. The `native-shop-*` targets are the `snow` commands of `examples/skills_hub_native/DEPLOY.md`.
+- **The consultant training pack (`doc/training/`) is removed**: the enablement guides, the quiz app and their translations. Workshop W01 now points to the README, the local setup guide and the demo script.
+- In the full-page window the conversation uses the whole width of the window (two rem in from each edge) instead of a 52 rem column in the middle. The confirmation and panel boxes keep their width.
+
+### Fixed
+
+- A turn's `result` event carries the `usage` the CLI reports (input, output and cache tokens), so an application that counts tokens can read them. It was dropped on the way. An event with no usage looks as before.
+- Markdown that CoCo writes before a call (a heading, a table, a list, code, two paragraphs) shows as a message of its own. It was the title of the call's group, with its lines joined: before a question card, a table showed as one flat line of raw Markdown. A one-line sentence is still the group's title.
+- Bold text that holds code (`**`stage`:**`) shows in bold, without its stars. The code inside it cut the stars apart.
+- Edits that Cortex Code sends together in one *direct tool calling* call are judged one by one, like the same edits sent alone. A batch of reads and file changes asks once, lists every change, and the tick *Do not ask again for changes in this folder* covers it. Before, the tick never covered a batch, so it asked again each time.
+- The last message of a turn no longer shows twice after a question or a plan. The final result repeats all the text of the run, and the part said before the question was already in an earlier turn.
+
+### Security
+
+- The development lock moves `msgpack` from 1.2.1 to 1.2.4 (CVE-2026-114613). It is a transitive dependency of `pip-audit` (a dev tool), not of the wheel: nothing changes for an installed package.
+
 ## [0.3.0] — 2026-10-26
 
 Snowflake's managed coding agent runs in the same window, with no `cortex` program, and every decision can be written to an audit log. The SDK is now `snowflake-cortex-agent-sdk` for both. Upgrading from 0.2.x: nothing to change for an application that uses the Cortex Code program (`pip install streamlit-coco[sdk]` installs the new package; replace a pinned `cortex-code-agent-sdk` in your own requirements). Everything new is opt-in, and every new parameter is keyword-only with a default that keeps today's behaviour. The managed agent and the Native App example are experimental (the SDK is a public preview, `0.0.x`).

@@ -1,14 +1,14 @@
 # Feature: File upload into `cwd`
 
 **Checklist:** `doc/features/file-upload/test-checklist.md`  
-**App:** `examples/cwd_upload_chat.py` (`make cwd-upload`)  
+**App:** `examples/cwd_upload_chat.py` (`uv run --extra dev python -m streamlit run examples/cwd_upload_chat.py`)  
 **API:** `upload_to_cwd` / `cwd_uploader` / `chat_input_bar(accept_file=…)` — see [`file-upload.md`](file-upload.md)  
 **Status:** Implemented for CLI / local `cwd` (sign off before `0.1.5`)
 
 ## Preconditions
 
 - [ ] Feature documented in [`../../api.md`](../../api.md)
-- [ ] Demo available: `make cwd-upload`
+- [ ] Demo available: `uv run --extra dev python -m streamlit run examples/cwd_upload_chat.py`
 - [ ] CLI mode: writable `CocoOptions.cwd`
 - [ ] Unit tests: `uv run pytest tests/test_upload.py`
 

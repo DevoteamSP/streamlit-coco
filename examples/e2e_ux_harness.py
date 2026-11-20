@@ -1,4 +1,4 @@
-"""CoCo-free Streamlit harness for the Playwright tests (``make e2e``).
+"""CoCo-free Streamlit harness for the Playwright tests (run by ``tests/e2e``).
 
 The window on the scripted agent (the tests set ``STREAMLIT_COCO_AGENT=mock``: no Snowflake login)
 and the page's own ``cwd_uploader``. ``?mode=default`` draws the default window; ``?mode=fixed`` and

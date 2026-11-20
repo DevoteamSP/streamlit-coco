@@ -1,9 +1,10 @@
-"""`make publish-skill`: validate a skill folder and put it on the shop's stage (or a local folder).
+"""`publish.py`: validate a skill folder and put it on the shop's stage (or a local folder).
 
-    make publish-skill SKILL=examples/skills_hub/samples/csv-profile \\
-        ARGS="--stage DB.SCHEMA.STAGE --profile snowflake --role MY_ROLE"
-    make publish-skill SKILL=... ARGS="--local /tmp/shop"             # no Snowflake
-    make publish-skill SKILL=... ARGS="--dry-run"                      # validate only
+    P="uv run --extra dev python examples/skills_hub/publish.py"
+    $P examples/skills_hub/samples/csv-profile \\
+        --stage DB.SCHEMA.STAGE --profile snowflake --role MY_ROLE
+    $P SKILL --local /tmp/shop      # no Snowflake
+    $P SKILL --dry-run              # validate only
 
 A published version never changes: publishing it again is refused (`--force` replaces it, for a
 fix made by the developer who published it). The role of the connection must be able to write to the

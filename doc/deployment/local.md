@@ -26,7 +26,7 @@ The `[sdk]` extra pulls in `snowflake-cortex-agent-sdk`.
 git clone https://github.com/DevoteamSP/streamlit-coco.git
 cd streamlit-coco
 # Contributors developing the library: clone streamlit-coco-dev instead
-make install   # uv sync --extra dev
+uv sync --extra dev   # uv sync --extra dev
 ```
 
 Verify the package:
@@ -112,16 +112,16 @@ In a Streamlit application you need not call it: the Ask CoCo window checks the 
 
 ## 5. Run the examples
 
-From the repo root (after `make install`):
+From the repo root (after `uv sync --extra dev`):
 
 | Command | App | What it exercises |
 | --- | --- | --- |
-| `make chat` | `examples/chat_app.py` | The window, a test-prompt picker, rights as pills |
-| `make approval` | `examples/approval_gate.py` | A listed command, a file rule, SQL, a standing permission |
-| `make structured` | `examples/structured_output.py` | A structured result handed to the page (`coco.result`) |
-| `make cwd-upload` | `examples/cwd_upload_chat.py` | Files attached in the window, and an uploader on the page |
-| `make headless` | `examples/headless_pipeline.py` | `query()`, a `CocoSession` and a `Conversation` without Streamlit |
-| `make backlog` | `examples/backlog_desk/` | Multipage product backlog desk (file-backed, no SQL) |
+| `uv run --extra dev python -m streamlit run examples/chat_app.py` | `examples/chat_app.py` | The window, a test-prompt picker, rights as pills |
+| `uv run --extra dev python -m streamlit run examples/approval_gate.py` | `examples/approval_gate.py` | A listed command, a file rule, SQL, a standing permission |
+| `uv run --extra dev python -m streamlit run examples/structured_output.py` | `examples/structured_output.py` | A structured result handed to the page (`coco.result`) |
+| `uv run --extra dev python -m streamlit run examples/cwd_upload_chat.py` | `examples/cwd_upload_chat.py` | Files attached in the window, and an uploader on the page |
+| `uv run --extra dev python examples/headless_pipeline.py` | `examples/headless_pipeline.py` | `query()`, a `CocoSession` and a `Conversation` without Streamlit |
+| `uv run --directory examples/backlog_desk --project ../.. python -m streamlit run streamlit_app.py` | `examples/backlog_desk/` | Multipage product backlog desk (file-backed, no SQL) |
 
 No login yet? Set `STREAMLIT_COCO_AGENT=mock` (PowerShell: `$env:STREAMLIT_COCO_AGENT="mock"`) and any of them runs on a scripted agent.
 
@@ -131,7 +131,7 @@ Or run Streamlit directly:
 uv run streamlit run examples/chat_app.py
 ```
 
-Exploratory prompts: [`examples/testdata/prompts.json`](../../examples/testdata/prompts.json) (use the **Test prompts** sidebar in `make chat`).
+Exploratory prompts: [`examples/testdata/prompts.json`](../../examples/testdata/prompts.json) (use the **Test prompts** sidebar in `uv run --extra dev python -m streamlit run examples/chat_app.py`).
 
 ---
 
@@ -153,7 +153,7 @@ The rights, the features and the two applications of the README: [`README.md`](.
 
 | Symptom | Likely cause | Fix |
 | --- | --- | --- |
-| `SDKNotInstalledError` | Missing Python SDK | `pip install streamlit-coco[sdk]` or `make install` |
+| `SDKNotInstalledError` | Missing Python SDK | `pip install streamlit-coco[sdk]` or `uv sync --extra dev` |
 | `CLINotFoundError` | `cortex` not on PATH | Install CLI; set `CORTEX_CODE_CLI_PATH` |
 | `CLIProbeError` | Binary exists but `--version` fails | Reinstall CLI; check permissions |
 | `CocoConnectionError` | Bad connection name or auth | Fix `connections.toml`; test with Snowflake CLI |
@@ -163,7 +163,7 @@ The rights, the features and the two applications of the README: [`README.md`](.
 Run the test suite locally:
 
 ```bash
-make check   # ruff + pytest (includes NDJSON fixture regression tests)
+uv run --extra dev ruff check . && uv run --extra dev python -m pytest tests/ --ignore=tests/e2e --ignore=tests/e2e_classic   # ruff + pytest (includes NDJSON fixture regression tests)
 ```
 
 ---

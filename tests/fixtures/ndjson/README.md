@@ -16,12 +16,12 @@ Recorded **cortex CLI** NDJSON lines for parser regression tests. Each file is o
 
 **Manifest:** [`manifest.json`](manifest.json) — expected event types/fields per file.
 
-**Tests:** `tests/test_ndjson_fixtures.py` (run via `make check`).
+**Tests:** `tests/test_ndjson_fixtures.py` (run with the unit tests).
 
 To add a fixture:
 
 1. Append a `.ndjson` file with representative lines.
 2. Add an entry to `manifest.json` with `expect` assertions (subset of `CocoEvent` fields).
-3. Run `make test`.
+3. Run `uv run --extra dev python -m pytest tests/ --ignore=tests/e2e --ignore=tests/e2e_classic`.
 
 Live prompts for manual UI validation remain in [`../../examples/testdata/prompts.json`](../../examples/testdata/prompts.json).

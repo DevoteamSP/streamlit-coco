@@ -1,7 +1,7 @@
 # Feature: Headless query & multi-turn
 
 **Checklist:** `doc/features/headless/test-checklist.md`  
-**App:** `make headless` → `examples/headless_pipeline.py`  
+**App:** `uv run --extra dev python examples/headless_pipeline.py` → `examples/headless_pipeline.py`  
 **API:** `streamlit_coco.query()`, `CocoSession.run()`, `CocoSession.stream()`
 
 ## Preconditions
@@ -14,7 +14,7 @@
 
 | # | Step | Expected |
 | --- | --- | --- |
-| 1 | Run `make headless` (or `uv run python examples/headless_pipeline.py`) | Process starts; events print / complete without Streamlit |
+| 1 | Run `uv run --extra dev python examples/headless_pipeline.py` (or `uv run python examples/headless_pipeline.py`) | Process starts; events print / complete without Streamlit |
 | 2 | Observe `query()` section | Assistant and/or tool-related events, then a `result` |
 | 3 | Observe `session.run()` / `session.stream()` | Multi-turn completes; script exits cleanly |
 | 4 | Optional: pending AskUser / ExitPlan auto-resolved by the example loop | No hung approval |
@@ -34,4 +34,4 @@
 | Tester | Cursor agent (steps 1 to 4 only; step 5 was added in 0.2.0 and has not been run live) |
 | Date | 2026-07-27 |
 | Build / commit | `feature/phase3-hitl-headless` (uncommitted) |
-| Pass? | **Yes** — `make headless` completed: `query()` success (~18s); `session.run()` `completed` (211 events); `session.stream()` success; script asserted `streamlit` not loaded; clean exit. |
+| Pass? | **Yes** — `uv run --extra dev python examples/headless_pipeline.py` completed: `query()` success (~18s); `session.run()` `completed` (211 events); `session.stream()` success; script asserted `streamlit` not loaded; clean exit. |

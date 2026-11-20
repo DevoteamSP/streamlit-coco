@@ -2,7 +2,7 @@
 
 **Checklist:** `doc/features/tools-display/test-checklist.md`  
 **Spec:** [`SPEC.md`](SPEC.md)  
-**App:** `make chat`  
+**App:** `uv run --extra dev python -m streamlit run examples/chat_app.py`  
 **Prompts:** `examples/testdata/prompts.json` — prefer categories `display_*`
 
 ## Preconditions
@@ -52,4 +52,4 @@
 | Tester | Cursor agent (Auto) |
 | Date | 2026-07-27 |
 | Build / commit | `p0-roadmap-items` @ `18aaaa3` (+ example fixes unstaged) |
-| Pass? | **Yes (core)** — live `make chat`: Glob/Grep/Read cards; Write + Edit Before/After approval UX; no default JSON expanders on tool cards. Bash approval card covered via approvals checklist. SQL / AskUser / ExitPlan / debug families not run this pass (enable SQL + plan/debug in Settings for follow-up). |
+| Pass? | **Yes (core)** — live `uv run --extra dev python -m streamlit run examples/chat_app.py`: Glob/Grep/Read cards; Write + Edit Before/After approval UX; no default JSON expanders on tool cards. Bash approval card covered via approvals checklist. SQL / AskUser / ExitPlan / debug families not run this pass (enable SQL + plan/debug in Settings for follow-up). |

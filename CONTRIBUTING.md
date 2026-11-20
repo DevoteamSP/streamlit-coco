@@ -45,10 +45,10 @@ Requires Python 3.10+ and [uv](https://docs.astral.sh/uv/).
 ```bash
 git clone https://github.com/DevoteamSP/streamlit-coco
 cd streamlit-coco
-make install          # uv sync with dev dependencies
-make check            # ruff + unit/smoke (excludes browser e2e)
-make e2e-install      # optional: Playwright + Chromium
-make e2e              # browser tests of the window, on the scripted agent (no login)
+uv sync --extra dev          # uv sync with dev dependencies
+uv run --extra dev ruff check . && uv run --extra dev python -m pytest tests/ --ignore=tests/e2e --ignore=tests/e2e_classic   # ruff + unit/smoke (excludes browser e2e)
+uv sync --extra e2e && uv run --extra e2e python -m playwright install chromium   # optional: Playwright + Chromium
+uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e              # browser tests of the window, on the scripted agent (no login)
 ```
 
 To run an application kept in another folder (a scratch folder outside the repository, to try the README's examples), use this repository's environment without syncing it:
@@ -73,7 +73,7 @@ uv run streamlit run examples/chat_app.py
 ## Pull requests
 
 - Branch from `main`, one concern per PR.
-- `make check` passes (`make e2e` when touching the window, the conversation or uploads). New behaviour comes with a test.
+- The fast gate passes (`uv run --extra dev ruff check .` and the unit tests, see above; `uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e` when touching the window, the conversation or uploads). New behaviour comes with a test.
 - Add a line to the `[Unreleased]` section of [`CHANGELOG.md`](CHANGELOG.md).
 - Explain *why* in the PR description. The diff already says what.
 

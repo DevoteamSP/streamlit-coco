@@ -1,7 +1,7 @@
 # Feature: App viewer
 
 **Checklist:** `doc/features/app-viewer/test-checklist.md`  
-**App:** `make bi-semantic` (adapter)  
+**App:** `uv run --directory examples/bi_to_semantic --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py` (adapter)  
 **Library:** `st_coco.app_viewer` / `st_coco.default_fix_prompt` / `st_coco.last_preview_exception`
 
 ## Preconditions

@@ -13,11 +13,11 @@ This is **not** a pixel-perfect BI clone and **not** chat-with-your-data. See [P
 From the repo root:
 
 ```bash
-make install
-make bi-semantic
+uv sync --extra dev
+uv run --directory examples/bi_to_semantic --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py
 ```
 
-`make tableau-semantic` is a deprecated alias for the same target.
+`uv run --directory examples/bi_to_semantic --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py` is a deprecated alias for the same target.
 
 Or, from this folder (editable **repo** `streamlit-coco`; PyPI `0.1.7` includes `app_viewer` + `copilot_rail`):
 
@@ -27,7 +27,7 @@ uv sync
 uv run streamlit run app.py
 ```
 
-`make bi-semantic` uses the repo checkout of `streamlit-coco` (so it tracks this
+`uv run --directory examples/bi_to_semantic --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py` uses the repo checkout of `streamlit-coco` (so it tracks this
 tree) and pulls in `streamlit-extras` (`resizable_columns` for the page / Preview split).
 The agent is Ask CoCo (`ask_coco()`), the window at the bottom right, with the suggested questions of each screen.
 

@@ -1,7 +1,7 @@
 # Feature: Text renderer
 
 **Checklist:** `doc/features/text-renderer/test-checklist.md`  
-**App:** `make chat`  
+**App:** `uv run --extra dev python -m streamlit run examples/chat_app.py`  
 **API:** `panel(..., text_renderer=...)`, `render_transcript`, `render_output_field`
 
 ## Preconditions

@@ -2,7 +2,7 @@
 
 Idempotent: a version that is on the stage is left alone (published versions never change), so a
 restart publishes nothing and a new image adds only its new skills or versions. It uses the same
-gate and the same store as `make publish-skill`.
+gate and the same store as `publish.py`.
 """
 
 from __future__ import annotations

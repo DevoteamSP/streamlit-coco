@@ -89,6 +89,13 @@ class TranslatorTest(unittest.TestCase):
         )
         self.assertEqual(out, [{"t": "result", "text": "Je lis. Réponse.", "error": False}])
 
+    def test_the_result_carries_the_tokens_the_cli_reports(self) -> None:
+        usage = {"input_tokens": 6, "output_tokens": 133, "cache_creation_input_tokens": 95252}
+        out = self.feed(
+            event("result", is_error=False, metadata={"result": "Done.", "usage": usage})
+        )
+        self.assertEqual(out, [{"t": "result", "text": "Done.", "error": False, "usage": usage}])
+
     def test_the_last_block_stays_a_snapshot_when_the_result_is_an_aggregate(self) -> None:
         out = self.feed(
             event("assistant_text", text="Réponse."),
@@ -1011,3 +1018,55 @@ class OptionsTest(unittest.TestCase):
         self.assertEqual(options.mcp_servers, {"x": {"command": "y"}})
         self.assertNotIn("no_mcp", options.extra_sdk_options)
         self.assertEqual(options.require_approval_for, [])
+
+    def _connect(self, host: CocoOptions) -> tuple[list[StubSession], list[dict]]:
+        sessions: list[StubSession] = []
+        events: list[dict] = []
+        sdk = SimpleNamespace(
+            HookMatcher=lambda **kw: SimpleNamespace(**kw),
+            PermissionResultAllow=None,
+            PermissionResultDeny=None,
+        )
+        with (
+            patch.dict(sys.modules, {"cortex_agent_sdk.cortexcode": sdk}),
+            patch.object(
+                session_module,
+                "CocoSession",
+                lambda options: sessions.append(StubSession(options)) or sessions[-1],
+            ),
+        ):
+            agent = Agent(events.append, host)
+            agent.connect("", "C:/work")
+            agent.close()
+        return sessions, events
+
+    def test_a_settings_file_goes_to_the_program_as_an_absolute_path(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "coco_settings.json"
+            path.write_text("{}")
+            sessions, events = self._connect(CocoOptions(settings_file=str(path)))
+        extra = sessions[0].options.extra_sdk_options
+        self.assertEqual(extra["extra_args"], {"config": str(path.absolute())})
+        self.assertEqual(extra["mode"], "cli")  # what the window sets itself stays
+        self.assertNotIn("connect_failed", [e["t"] for e in events])
+
+    def test_a_home_folder_mark_in_the_settings_path_is_expanded(self) -> None:
+        with tempfile.TemporaryDirectory() as home:
+            (Path(home) / "s.json").write_text("{}")
+            with patch.dict("os.environ", {"HOME": home, "USERPROFILE": home}):
+                sessions, _ = self._connect(CocoOptions(settings_file="~/s.json"))
+        config = sessions[0].options.extra_sdk_options["extra_args"]["config"]
+        self.assertEqual(Path(config), (Path(home) / "s.json").absolute())
+
+    def test_without_a_settings_file_the_program_gets_no_extra_args(self) -> None:
+        sessions, _ = self._connect(CocoOptions(model="auto"))
+        self.assertNotIn("extra_args", sessions[0].options.extra_sdk_options)
+
+    def test_a_missing_settings_file_fails_the_connection_and_starts_nothing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            missing = Path(tmp) / "nope.json"
+            sessions, events = self._connect(CocoOptions(settings_file=str(missing)))
+        self.assertEqual(sessions, [])  # the program is never started without it
+        self.assertEqual([e["t"] for e in events], ["connect_failed"])
+        self.assertIn(f"The settings file {missing} does not exist", events[0]["message"])
+        self.assertIn("leave settings_file empty", events[0]["message"])

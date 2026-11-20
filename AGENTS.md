@@ -1,4 +1,4 @@
-# AGENTS.md: streamlit-coco
+# AGENTS.md: streamlit-coco (reviewed)
 
 Guidance for coding agents working in this repository.
 
@@ -25,30 +25,43 @@ Canonical SDK docs: https://docs.snowflake.com/en/user-guide/cortex-code-agent-s
 - `doc/deployment/publish.md`: dual-repo sync, then a tag to PyPI (`streamlit-coco`)
 - `CHANGELOG.md`: shipped history (not the roadmap)
 
-**Repos:** develop in `DevoteamSP/streamlit-coco-dev`; publish from `lletourmy/streamlit-coco` (`make sync-release`, then tag `v*`) until DevoteamSP is PyPI-validated.
+**Repos:** develop in `DevoteamSP/streamlit-coco-dev`; publish from `lletourmy/streamlit-coco` (`bash scripts/sync_release.sh`, then tag `v*`) until DevoteamSP is PyPI-validated.
 
 ## Commands
 
+No Makefile: everything runs through `uv`. The examples run from the repository root (the ones with their own folder use `--directory ... --project ../..`).
+
 ```bash
-make install      # uv sync --extra dev
-make check        # ruff and the unit tests (not the browser tests)
-make e2e          # Playwright, the window on the scripted agent (Edge if Chromium is missing)
-make audit        # pip-audit: the root lock and every examples/*/uv.lock
-make release-check # before sync-release and the tag: version, public CHANGELOG, audits, Dependabot alerts, sync dry run
-make test-all     # check, e2e, audit
-make simple-chat # panel, a test-prompt picker, rights as pills (`make chat` still runs it)
-make modern-chat # Copilot rail, floating window, or both
-make approval     # a listed command, a file rule, SQL, a standing permission
-make structured   # a result handed to the page as data
-make cwd-upload   # files attached in the field, and an uploader
-make headless     # query(), a CocoSession, a Conversation answered in code
-make backlog      # Product Backlog Desk
-make bi-semantic  # Tableau / Power BI to semantic view
-make app-builder  # App Builder
-make adoption-stats  # daily PyPI and GitHub traffic into doc-dev/metrics/
+uv sync --extra dev                                                  # install the package and the dev tools
+uv run --extra dev ruff check .                                      # lint
+uv run --extra dev ruff format . && uv run --extra dev ruff check --fix .   # format
+uv run --extra dev python -m pytest tests/ --ignore=tests/e2e --ignore=tests/e2e_classic   # the unit tests (not the browser tests)
+uv sync --extra e2e && uv run --extra e2e python -m playwright install chromium   # once: Playwright and Chromium
+uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e         # Playwright, the window on the scripted agent (Edge if Chromium is missing)
+uv run --extra dev python -m pip_audit --skip-editable && uv run --extra dev python scripts/audit_locks.py   # the root lock and every examples/*/uv.lock
+uv run --extra dev python scripts/release_check.py                   # before sync and the tag: version, public CHANGELOG, audits, Dependabot alerts, sync dry run
+uv run --extra dev python -m streamlit run examples/chat_app.py      # panel, a test-prompt picker, rights as pills
+uv run --directory examples/modern_chat --project ../.. --extra dev python -m streamlit run app.py   # Copilot rail, floating window, or both
+uv run --extra dev python -m streamlit run examples/approval_gate.py     # a listed command, a file rule, SQL, a standing permission
+uv run --extra dev python -m streamlit run examples/managed_chat.py      # Snowflake's managed coding agent, no cortex program
+uv run --extra dev python -m streamlit run examples/structured_output.py # a result handed to the page as data
+uv run --extra dev python -m streamlit run examples/cwd_upload_chat.py   # files attached in the field, and an uploader
+uv run --extra dev python examples/headless_pipeline.py              # query(), a CocoSession, a Conversation answered in code
+uv run --directory examples/backlog_desk --project ../.. python -m streamlit run streamlit_app.py   # Product Backlog Desk
+uv run --directory examples/bi_to_semantic --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' --with 'pbixray>=0.15.4' python -m streamlit run app.py   # Tableau / Power BI to semantic view
+uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py   # App Builder
+uv run --extra dev python scripts/collect_adoption_stats.py          # daily PyPI and GitHub traffic into doc-dev/metrics/
+uv build                                                             # sdist and wheel into dist/
 ```
 
-No login needed: set `STREAMLIT_COCO_AGENT=mock` and any example runs on the scripted agent. Adoption KPIs: [`doc-dev/metrics/README.md`](doc-dev/metrics/README.md). Refresh `doc/roadmap.md` Currents only when asked (`make adoption-stats UPDATE_ROADMAP=1`).
+The two gates, as one line each (`doc/testing.md` explains them):
+
+```bash
+# fast: ruff, then the unit tests
+uv run --extra dev ruff check . && uv run --extra dev python -m pytest tests/ --ignore=tests/e2e --ignore=tests/e2e_classic
+# full: the fast gate, the browser tests, the dependency audit
+uv run --extra dev ruff check . && uv run --extra dev python -m pytest tests/ --ignore=tests/e2e --ignore=tests/e2e_classic && uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e && uv run --extra dev python -m pip_audit --skip-editable && uv run --extra dev python scripts/audit_locks.py
+```
 
 Full test process: [`doc/testing.md`](doc/testing.md).
 
@@ -67,8 +80,8 @@ Full test process: [`doc/testing.md`](doc/testing.md).
 
 ## Testing
 
-- Unit tests: `tests/` (`make check`).
-- Browser tests: `tests/e2e/` (the window) and `tests/e2e_classic/` (the 0.1.9 chat helpers) (`make e2e-install` once, then `make e2e`).
+- Unit tests: `tests/` (the fast gate above).
+- Browser tests: `tests/e2e/` (the window) and `tests/e2e_classic/` (the 0.1.9 chat helpers) (install Playwright and Chromium once, then `uv run --extra e2e python -m pytest tests/e2e tests/e2e_classic -m e2e`).
 - Compatibility with released versions: `tests/test_compat_019.py` holds the package to `tests/fixtures/api_0.1.9.json` `tests/test_compat_022.py` to `tests/fixtures/api_0.2.2.json` (what 0.2.0 to 0.2.2 added: `ask_coco`, `Features`, `get_window`, ...) and `tests/test_compat_030.py` to `tests/fixtures/api_0.3.0.json` (the managed agent, `AuditLog`). A public name, parameter or default of a released version does not change; add new parameters last, keyword-only, with a default. When a release is cut, add `tests/fixtures/api_X.Y.Z.json` and its `test_compat_*` (recipe in `tests/api_snapshot.py`; take the snapshot from the tag's source with the SDK that release used installed, else the SDK's own classes show as stubs). Do not delete the 0.1.9 tests (`test_copilot_rail.py`, `test_rich_text.py`, `test_classic_*.py`, `tests/e2e_classic/`).
 - Manual, live Cortex Code: [`doc/features/ask-coco/test-checklist.md`](doc/features/ask-coco/test-checklist.md) before a release.
 - Process: [`doc/testing.md`](doc/testing.md).

@@ -1,4 +1,4 @@
-"""CoCo-free Streamlit harness for the managed window (``make e2e``).
+"""CoCo-free Streamlit harness for the managed window (run by ``tests/e2e``).
 
 The window on the managed agent (managed.py) with a scripted stand-in for Snowflake's client and
 for the connector: no login, no network. The stand-in answers what it is told, so a test can read

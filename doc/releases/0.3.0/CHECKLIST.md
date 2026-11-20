@@ -26,14 +26,14 @@ Outreach drafts: [`../../../doc-dev/releases/0.3.0/`](../../../doc-dev/releases/
 
 ## 2. Quality gates (required)
 
-- [x] `make test-all` — lint, 775 passed and 1 skipped (a Windows-only 8.3 names test), 20 browser tests, `pip-audit`: no known vulnerabilities (2026-10-26, Streamlit 1.66.1)
+- [x] the full gate (`doc/testing.md`) — lint, 775 passed and 1 skipped (a Windows-only 8.3 names test), 20 browser tests, `pip-audit`: no known vulnerabilities (2026-10-26, Streamlit 1.66.1)
 - [x] Browser tests include `tests/e2e/test_managed_window.py` (the managed window on a scripted stream)
-- [x] `make audit` — no known vulnerabilities, root lock and `examples/app_builder/uv.lock` (2026-10-26)
-- [x] `make release-check` — 5 PASS: version free on PyPI and the public tags, the public CHANGELOG known, locks audited, no open Dependabot alert, sync dry run clean (2026-10-26)
+- [x] the audit (`pip-audit` and `scripts/audit_locks.py`) — no known vulnerabilities, root lock and `examples/app_builder/uv.lock` (2026-10-26)
+- [x] `uv run --extra dev python scripts/release_check.py` — 5 PASS: version free on PyPI and the public tags, the public CHANGELOG known, locks audited, no open Dependabot alert, sync dry run clean (2026-10-26)
 - [x] **Compatibility with released versions** — `tests/test_compat_019.py`, `test_compat_022.py` and the new `test_compat_030.py` (`tests/fixtures/api_0.1.9.json`, `api_0.2.2.json`, `api_0.3.0.json`); every new parameter is keyword-only, last, with a default. Also checked once by hand: the current package accepts the public API of **all 10 tags** (v0.1.0 to v0.2.2), 0 incompatibilities, with the old SDK installed for the snapshots
 - [x] **Wheel and sdist** — built (`uv build`): wheel 0.5 MB, 78 files, `Version: 0.3.0`, the SDK extra `>=0.0.3,<0.1`, the static assets, `audit.py`, `managed.py` and `backend.py` inside, no `doc-dev`; installed with the `sdk` extra in a clean Python 3.11 environment: imports, `check_environment(managed=True).ready`, and `ask_coco` on the scripted agent runs with no exception
 - [x] Manual feature checklist — [`features/ask-coco/test-checklist.md`](../../features/ask-coco/test-checklist.md): rows 2 to 5 and 21 to 31 run on 2026-10-26 on the real agents through the window's conversation (Cortex Code 1.2.18; `snowflake-cortex-agent-sdk` 0.0.3 on a Snowflake test account), results in the table. **Not run:** rows 1, 6 to 20 (not repeated: nothing they test changed except the gate's audit hook), row 33's page behind the ingress (needs a login)
-- [x] The managed window **in a browser on a real account** (`make managed`, 2026-10-26): logged in with a profile and role `PUBLIC`; the first screen said "It works in a Snowflake sandbox, not on this computer"; "Write a file" asked **"Allow CoCo to run a command in the Snowflake sandbox?"** with **Where: The Snowflake sandbox** and the exact command behind **Show command**; Allow ran it and the answer came back; no console error, no warning in the server log
+- [x] The managed window **in a browser on a real account** (`uv run --extra dev python -m streamlit run examples/managed_chat.py`, 2026-10-26): logged in with a profile and role `PUBLIC`; the first screen said "It works in a Snowflake sandbox, not on this computer"; "Write a file" asked **"Allow CoCo to run a command in the Snowflake sandbox?"** with **Where: The Snowflake sandbox** and the exact command behind **Show command**; Allow ran it and the answer came back; no console error, no warning in the server log
 - [ ] Token renewal over many hours, sandbox SQL under caller's rights, two skills in one conversation: not tested (stated in the feature file)
 
 ## 3. Visuals (required for community posts)
@@ -54,7 +54,7 @@ Follow [`doc/deployment/publish.md`](../../deployment/publish.md).
 - [x] Tag `v0.3.0` on public `streamlit-coco`, annotated, pushed (on `3b2bab9`)
 - [x] Confirm GitHub Release + PyPI: the Release workflow succeeded; the GitHub Release has the wheel, the sdist and the CycloneDX SBOM; PyPI lists `streamlit_coco-0.3.0-py3-none-any.whl` and `streamlit_coco-0.3.0.tar.gz`; `pip install "streamlit-coco[sdk]==0.3.0"` in a clean Python 3.11 environment imports, reports `0.3.0` with `snowflake-cortex-agent-sdk` 0.0.3, and runs `ask_coco` on the scripted agent
 - [ ] GitHub Release body: the CHANGELOG excerpt is there (generated); `hero.png` is not in it yet
-- [ ] Mirror the commit and the tag on `DevoteamSP/streamlit-coco` (optional)
+- [x] Mirrored on `DevoteamSP/streamlit-coco` (2026-10-26): the same tree as one commit `2bf9f60` "Release 0.3.0" on top of 0.2.1 (the org repo never got 0.2.2), CI and Security green, annotated tag `v0.3.0`; its Release workflow created the GitHub Release (wheel, sdist, SBOM) and, by design, did not upload to PyPI (still one 0.3.0 with two files)
 
 ## 5. Narrative & outreach (strongly recommended — `doc-dev`)
 
@@ -74,6 +74,7 @@ Follow [`doc/deployment/publish.md`](../../deployment/publish.md).
 | Medium | | |
 | Streamlit Forum | | |
 | Snowflake Community | | |
+| GitHub Release (DevoteamSP mirror) | https://github.com/DevoteamSP/streamlit-coco/releases/tag/v0.3.0 | 2026-10-26 |
 | Other | | |
 
 ## 6. Sign-off

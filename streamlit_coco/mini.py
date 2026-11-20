@@ -66,6 +66,7 @@ def options_for_window(options: CocoOptions | None) -> CocoOptions | None:
         max_turns=options.max_turns,
         approval_timeout_seconds=options.approval_timeout_seconds,
         extra_sdk_options=dict(options.extra_sdk_options or {}),
+        settings_file=options.settings_file,
     )
 
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from typing import Any
@@ -43,6 +44,8 @@ class CocoOptions:
     max_turns: int | None = None
     approval_timeout_seconds: float = 600.0
     extra_sdk_options: dict[str, Any] = field(default_factory=dict)
+    # A settings.json for the program (`cortex --config`); None: the user's own settings.
+    settings_file: str | None = None
 
     def options_hash(self) -> str:
         import hashlib
@@ -66,6 +69,8 @@ class CocoOptions:
                 str(path) for path in (self.extra_sdk_options or {}).get("add_dirs") or []
             ],
         }
+        if self.settings_file:  # another file is another session; absent keeps the old hash
+            payload["settings_file"] = str(self.settings_file)
         return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:16]
 
     def to_sdk_options(
@@ -102,6 +107,12 @@ class CocoOptions:
                 "schema": _schema_for_sdk(self.output_schema),
             }
         kwargs.update(self.extra_sdk_options)
+        if self.settings_file:
+            # merged with the caller's own flags; the settings file wins for `config`
+            kwargs["extra_args"] = {
+                **(self.extra_sdk_options.get("extra_args") or {}),
+                "config": os.path.expanduser(str(self.settings_file)),
+            }
         return CortexCodeAgentOptions(**{k: v for k, v in kwargs.items() if v is not None})
 
     def tools_requiring_approval(self) -> Iterable[str]:

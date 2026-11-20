@@ -19,7 +19,7 @@ Teams building Streamlit apps on Snowflake need AI-assisted data exploration, co
 | `panel()` | Streaming agent transcript with tool cards (SQL, Read, Write, Grep) |
 | `copilot_rail()` | Right-rail Copilot: connection, queued jobs, compact transcript; `example_questions=` / `deferred=` / `toml_file=` (`0.1.8` / `0.1.8.1` / `0.1.9`) |
 | `app_viewer()` | Child Streamlit process + iframe + **Fix with CoCo** (`0.1.7`) |
-| App Builder | Type library → brief → CoCo Write → Preview (`0.1.8`, `make app-builder`) |
+| App Builder | Type library → brief → CoCo Write → Preview (`0.1.8`, `uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py`) |
 | Approval gates | Human-in-the-loop pause before destructive tools execute |
 | `chat_input_bar()` | App-integrated chat input with session management |
 | `query()` | Headless async API for scripts and CI — no UI needed |

@@ -190,6 +190,42 @@ class ThreadTest(ConversationCase):
         )
         self.assertNotEqual(first["id"], second["id"])
 
+    def test_markdown_blocks_said_before_a_call_stay_a_message_and_are_not_flattened(self) -> None:
+        # 2026-11-19, a real design: a verdict with a table, then a question card; the table
+        # showed as one flat line of raw Markdown, as the title of the question's group
+        said = "## Verdict\nOption A.\n\n| | A | B |\n|---|---|---|\n| Size | 2 | 3 |"
+        self.send()
+        self.tell(self.step("t1"), {"t": "text", "text": said}, self.step("t2"))
+        kinds = [(i["kind"], i.get("summary"), i.get("text")) for i in self.conv.thread()]
+        self.assertIn(("answer", None, said), kinds)  # the text kept as written, lines included
+        said_at = next(n for n, i in enumerate(kinds) if i[0] == "answer")
+        after = self.conv.thread()[said_at + 1]
+        self.assertEqual(
+            (after["kind"], after["summary"], [s["id"] for s in after["items"]]),
+            ("steps", None, ["t2"]),
+        )
+
+    def test_a_final_result_that_repeats_the_text_of_an_earlier_turn_is_not_shown_twice(
+        self,
+    ) -> None:
+        self.send()
+        self.tell({"t": "text", "text": "I record your answers."}, self.step("t1"))
+        turn = self.conv.run["turn"]
+        self.conv.run["turn"] = {
+            "kind": "turn",
+            "id": "t-next",
+            "seq": [],
+            "done": False,
+        }  # a question split the run
+        self.conv.items.append(self.conv.run["turn"])
+        self.tell(
+            {"t": "text", "text": "Both products exist."},
+            {"t": "result", "text": "I record your answers.Both products exist.", "error": False},
+        )
+        answers = [i["text"] for i in self.conv.thread() if i["kind"] == "answer"]
+        self.assertEqual(answers, ["Both products exist."])
+        self.assertTrue(turn["seq"])
+
     def test_a_step_is_named_by_the_policy_and_keeps_tool_input_and_result(self) -> None:
         self.send()
         self.tell(self.step(), {"t": "tool_result", "id": "t1", "content": "text", "error": False})

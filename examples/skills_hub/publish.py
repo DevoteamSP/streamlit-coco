@@ -1,4 +1,7 @@
-"""Publish a skill folder to the shop's stage: see shop/cli.py. Run it with `make publish-skill`."""
+"""Publish a skill folder to the shop's stage: see shop/cli.py.
+
+Run it with `uv run --extra dev python examples/skills_hub/publish.py <skill folder>`.
+"""
 
 from __future__ import annotations
 

@@ -7,8 +7,8 @@ A skill is a folder with a `SKILL.md` (front matter, then instructions) and opti
 ## Run
 
 ```bash
-make install
-make skills-hub
+uv sync --extra dev
+uv run --extra dev python -m streamlit run examples/skills_hub/app.py
 ```
 
 - **Sample skills (no Snowflake)**: the shop shows three samples from `samples/` and the chat is the scripted agent. Also what `STREAMLIT_COCO_AGENT=mock` gives.
@@ -17,9 +17,9 @@ make skills-hub
 ## Publish a skill (developers)
 
 ```bash
-make publish-skill SKILL=examples/skills_hub/samples/csv-profile \
-  ARGS="--stage DB.SCHEMA.SKILL_STAGE --profile snowflake --role MY_PUBLISHER_ROLE"
-make publish-skill SKILL=examples/skills_hub/samples/csv-profile ARGS="--dry-run"
+uv run --extra dev python examples/skills_hub/publish.py examples/skills_hub/samples/csv-profile \
+  --stage DB.SCHEMA.SKILL_STAGE --profile snowflake --role MY_PUBLISHER_ROLE
+uv run --extra dev python examples/skills_hub/publish.py examples/skills_hub/samples/csv-profile --dry-run
 ```
 
 The command validates the folder first (safe names, a short list of file types, size limits, no links, no obvious credentials; `scripts/` are listed as a warning), then uploads it to `skills/<id>/<version>/` and updates `skills/index.json`. A published version never changes: publishing it again is refused. Give the shop's users **read** on the stage and keep **write** for the publishers' role.
@@ -49,7 +49,7 @@ skills/<skill_id>/<version>/references|assets|scripts/...
 | `shop/skill.py` | the model, `validate_folder` (the publish gate), hashing |
 | `shop/stores.py` | `LocalFolderStore`, `StageStore`, `CachedStore`; publish |
 | `shop/service.py` | `Shop`: search, versions, `verify`, `chat_options` |
-| `shop/cli.py`, `publish.py` | `make publish-skill` |
+| `shop/cli.py`, `publish.py` | `publish.py` is run with `uv run --extra dev python examples/skills_hub/publish.py <skill folder>` |
 | `shop/native.py`, `shop/bootstrap.py`, `shop/probe.py` | inside the Native App: the service's connection and stage, publishing the bundled skills at start, a one-turn probe |
 | `samples/` | three sample skills (one carries a script) |
 

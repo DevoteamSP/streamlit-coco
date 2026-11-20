@@ -11,8 +11,8 @@ This is **not** a BI migration (see [BI → Semantic](../bi_to_semantic/)) and n
 From the repo root:
 
 ```bash
-make install
-make app-builder
+uv sync --extra dev
+uv run --directory examples/app_builder --project ../.. --extra dev --with 'streamlit-extras>=1.3.0' python -m streamlit run app.py
 ```
 
 Or:
